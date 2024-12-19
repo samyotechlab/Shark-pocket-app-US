@@ -72,7 +72,7 @@ playWin: {
     fontSize: 16,
     fontWeight: 'light',
     textAlign: 'center',
-    top: 3,  // Adjust as needed to position text above the Win image
+    top: 3, 
   }
 });
 

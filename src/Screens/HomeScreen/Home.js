@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import sharkLogo from '../../../assets/images/Screens/sharkLogo.png'
@@ -12,6 +12,7 @@ import Lighting from '../../../assets/images/Screens/Lighting.png'
 import PinkPrizeCard from '../../Components/PinkPrizeCard'
 import GoldenCard from '../../Components/GoldenCard'
 import AvailbleGameCard from '../../Components/AvailableGameCard'
+import UpcomingGameCard from '../../Components/UpcomingGameCard'
 
 export default function HomeScreen() {
   return (
@@ -50,7 +51,7 @@ export default function HomeScreen() {
             <View style={{flex:0.5,flexDirection:'row',alignItems:'center',paddingLeft:22}}>
                 <Image source={Lighting} style={styles.light}/>
                 <Text style={styles.myGame}>AVAILABLE GAMES </Text>
-                <Text style={styles.view}>VIEW ALL</Text>
+                <TouchableOpacity><Text style={styles.view}>View All</Text></TouchableOpacity>
               </View>
               <View style={{flex:1.5}}>
               <AvailbleGameCard/>
@@ -59,10 +60,11 @@ export default function HomeScreen() {
             <View style={{flex:0.8,margin:wp('2%')}}>
             <View style={{flex:0.5,flexDirection:'row',alignItems:'center',paddingLeft:22}}>
                 <Image source={Lighting} style={styles.light}/>
-                <Text style={styles.myGame}>UPCOMING GAMES </Text>
-                <Text style={styles.view}>VIEW ALL</Text>
+                <Text style={styles.myGame}>UPCOMING GAMES</Text>
+                <TouchableOpacity><Text style={styles.view}>View All</Text></TouchableOpacity>
               </View>
               <View style={{flex:1.5,flexDirection:'row'}}>
+                <UpcomingGameCard/>
               {/* <AvailbleGameCard/> */}
               </View>
             </View>
