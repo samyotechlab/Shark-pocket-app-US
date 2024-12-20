@@ -23,7 +23,7 @@ const UpcomingGameCard = () => {
           <Image source={Trophy} style={styles.trophyIcon} />
         </View>
         <Text style={styles.amountText}>₹7000</Text>
-      </LinearGradient>x
+      </LinearGradient>
 
       {/* Second Card */}
        <LinearGradient

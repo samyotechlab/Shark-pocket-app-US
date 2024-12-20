@@ -7,7 +7,12 @@ import OtpVerify from '../../Screens/LoginScreen/OtpVerify';
 import Disclaimer from '../../Screens/LoginScreen/Disclaimer';
 import TabNavigation from '../TabNavigation';
 import Home from '../../Screens/HomeScreen/Home';
-import PrizeCard from '../../Components/PinkPrizeCard';
+import LocalGameBoard from '../../Components/LocalGameBoard';
+import WalletDetails from '../../Screens/WalletScreen/WalletDetails';
+import AvailableGame from '../../Screens/AvailableGame/AvailableGame';
+import GameName from '../../Screens/GameName.js/GameName';
+import PlayingInstruction from '../../Screens/PlayingInstruction/PlayingInstruction';
+import FloatingBoxGame from '../../Screens/GameScreens/FloatingBox';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -56,6 +61,48 @@ export default function AppNavigation() {
            <Stack.Screen
           name="Home"
           component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+          <Stack.Screen
+          name="LocalGameBoard"
+          component={LocalGameBoard}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="WalletDetails"
+          component={WalletDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="AvailableGame"
+          component={AvailableGame}
+          options={{
+            headerShown: false,
+          }}
+        />
+          <Stack.Screen
+          name="GameName"
+          component={GameName}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="PlayingInstruction"
+          component={PlayingInstruction}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="GameScreen"
+          component={FloatingBoxGame}
           options={{
             headerShown: false,
           }}

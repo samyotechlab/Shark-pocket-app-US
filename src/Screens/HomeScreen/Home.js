@@ -54,7 +54,7 @@ export default function HomeScreen() {
                 <TouchableOpacity><Text style={styles.view}>View All</Text></TouchableOpacity>
               </View>
               <View style={{flex:1.5}}>
-              <AvailbleGameCard/>
+              <AvailbleGameCard />
               </View>
             </View>
             <View style={{flex:0.8,margin:wp('2%')}}>

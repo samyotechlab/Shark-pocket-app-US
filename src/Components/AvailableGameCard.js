@@ -2,10 +2,26 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import Game from '../../assets/images/Screens/game1.png'
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation, useRoute } from '@react-navigation/native';
 const AvailbleGameCard = () => {
+    const route = useRoute();
+
+    const navigation = useNavigation();
+
+    const handleNavigation = ()=>{
+        if(route.name === "Result"){
+            navigation.navigate('LocalGameBoard')
+        }else if(route.name === "Home"){
+            navigation.navigate("AvailableGame")
+        }else{
+            navigation.navigate("GameName")
+        }
+    }
+    
     return (
-        <SafeAreaView style={styles.container}>
-            {/* <View style={styles.card}> */}
+        <TouchableOpacity style={styles.container} onPress={()=>{
+            handleNavigation()
+        }}>
             <LinearGradient
                 colors={['#F38424', '#F7A552', '#F9D479']} 
                 start={{ x: 0, y: 0.5 }}
@@ -36,14 +52,13 @@ const AvailbleGameCard = () => {
                     </View>
                 </View>
             </LinearGradient>
-            {/* </View> */}
-        </SafeAreaView>
+        </TouchableOpacity>
     );
 };
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingLeft: 20
+        paddingLeft: 20,
     },
     card: {
         // backgroundColor: '#F8B600',
@@ -63,7 +78,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         flex: 1,
-        // backgroundColor:'black'
     },
     characterImage: {
         width: 100,
@@ -109,7 +123,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 30,
         alignItems: 'center',
-        borderColor: '#F5D236',       // Border color
+        borderColor: '#F5D236',     
         borderWidth: 2,
     },
     buttonText: {

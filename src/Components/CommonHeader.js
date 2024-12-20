@@ -1,16 +1,18 @@
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp} from 'react-native-responsive-screen'
-import Backarrow from '../../assets/images/Applogo/arrow_back.png'
+import Iconics from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CommonHeader({title}) {
-
+  const navigation = useNavigation()
   return (
       <View style={styles.headerContent}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={{position: 'absolute', top: hp('1.3%'), left: hp('1.8%')}}>
-           <Image source={Backarrow} style={styles.icon}/>
+          style={styles.back}
+          >
+          <Iconics name="chevron-back" size={27} color={'white'} />
         </TouchableOpacity>
         <View style={styles.headerLeft}>
           <Text style={styles.headerText}>{title}</Text>
@@ -21,15 +23,20 @@ export default function CommonHeader({title}) {
 
 export const styles = StyleSheet.create({
       headerContent: {
-        flex: 1,
-        paddingTop: 10,
-        position: 'relative',
+        paddingTop: 20,
+        marginTop:wp('8%'),
+        flexDirection:'row'
       },
       headerLeft: {
-        marginLeft: '20%',
+        marginLeft: wp('5%'),
+        justifyContent:'center'
       },
       headerText: {
-        fontSize: hp('2.5%'),
+        fontSize: hp('2.3%'),
         color: '#FFFFFF',
+        fontFamily:'Montserrat-SemiBold'
       },
+      back:{
+        paddingLeft:wp('6%')
+      }
 })
