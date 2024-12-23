@@ -5,11 +5,13 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp} from 'react-nat
 import CommonButton from '../../Components/CommonButton'
 import call from '../../../assets/images/Applogo/call.png'
 import { useNavigation } from '@react-navigation/native'
+import { login } from '../../Service/Login'
 
 export default function Login() {
     const navigation = useNavigation();
     const handleNavigation = ()=>{
       navigation.navigate('OtpScreen')
+      login();
     }
   return (
  <>

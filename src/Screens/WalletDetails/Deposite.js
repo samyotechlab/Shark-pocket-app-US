@@ -18,13 +18,13 @@ export default function Deposite() {
 
   return (
     <>
-    <View style={{flex: 1}}>
       <View
         style={{
           flex:1,
           flexDirection: 'row',
          padding: hp('2%'),
-         gap:wp('3%')
+         gap:wp('3%'),
+
         }}>
         <TouchableOpacity
           onPress={() => {
@@ -61,6 +61,7 @@ export default function Deposite() {
           </Text>
         </TouchableOpacity>
       </View>
+  <View style={{flex:17}}>
       {selectedTab === 'All' ? (
       !loader ? ( <All/>):(<Loader/>)
     ) : selectedTab === 'Debit' ? (
@@ -68,8 +69,7 @@ export default function Deposite() {
     ) : (
       !loader ? ( <Credit/>):(<Loader/>)  
     )}
-    
-  </View>
+    </View>
     </>
   )
 }

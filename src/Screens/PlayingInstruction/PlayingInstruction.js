@@ -8,6 +8,7 @@ import ModalScreen from '../../Components/ModalScreen';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CommonHeader from '../../Components/CommonHeader';
+import CommonButton from '../../Components/CommonButton';
 
 export default function PlayingInstruction() {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -39,8 +40,8 @@ export default function PlayingInstruction() {
         onYes={handleOnYes}
         title="Are you sure you want to Quit game?"
       /> */}
-      <View style={{flex: 1,backgroundColor:'black'}}>
-          {/* <View style={styles.container}>
+      <View style={{flex: 1}}>
+          <View style={styles.container}>
             <Text style={styles.heading}>Odd Number</Text>
              <LinearGradient
                         colors={['#999999', '#FFFFFF', '#999999']} 
@@ -83,7 +84,7 @@ export default function PlayingInstruction() {
                           marginBottom:10
                         }}
                       />
-          </View> */}
+          </View>
           <View style={styles.container}>
             <Text style={styles.heading}>Select one super number</Text>
             <LinearGradient
@@ -144,13 +145,7 @@ export default function PlayingInstruction() {
                         }}
                       />
           </View>
-        {/* <View
-          style={{
-            flex: 1.1,
-            padding: hp(1.5),
-            justifyContent: 'center',
-          }}>
-          <View style={styles.container2}>
+          <View style={styles.container}>
             <Text style={styles.heading}>Bonus Number</Text>
             <LinearGradient
                         colors={['#999999', '#FFFFFF', '#999999']} 
@@ -187,13 +182,6 @@ export default function PlayingInstruction() {
                         }}
                       />
           </View>
-        </View> */}
-        {/* <View
-          style={{
-            flex: 1,
-            padding: hp(1.5),
-            justifyContent: 'center',
-          }}>
           <View style={styles.container}>
             <Text style={styles.heading}>Negative Score</Text>
             <LinearGradient
@@ -213,12 +201,12 @@ export default function PlayingInstruction() {
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
               2 Digit Number = 0.30
             </Text>
-            <Text style={[styles.oddtext,{       fontFamily:'Montserrat-SemiBold',}]}>
+            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold',}]}>
               {' '}
               3 Digit Number ={' '}
              0.45
             </Text>
-            <Text style={[styles.oddtext,{       fontFamily:'Montserrat-SemiBold',}]}>
+            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold',}]}>
               {' '}
               4 DIgit Number ={' '}
              0.60
@@ -235,35 +223,19 @@ export default function PlayingInstruction() {
                         }}
                       />
           </View>
-        </View> */}
-        {/* <View
+        <View
           style={{
             flex: 0.5,
-
             justifyContent: 'flex-start',
           }}>
-          <TouchableOpacity
-            onPress={handleStartGame}
-            style={{
-              padding: hp(1.5),
-              backgroundColor: '#FF671F',
-              marginHorizontal: hp(4),
+            <View  style={{
+              marginHorizontal: hp(3),
               borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: hp(2.5),
+              marginVertical: hp(4),
             }}>
-            <Text
-              style={{
-                fontSize: 20,
-                color: 'white',
-                letterSpacing: 1,
-                fontWeight: '500',
-              }}>
-              START GAME
-            </Text>
-          </TouchableOpacity>
-        </View> */}
+            <CommonButton title={'Start Game'}  onPress={handleStartGame}/>
+          </View>
+        </View>
       </View>
     </LinearGradient>
   </ScrollView>
@@ -277,15 +249,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor:'#A38C85',
-        margin:10
+        margin:15,
+        borderRadius:20,
+        paddingLeft: hp(1),
+        paddingVertical: hp(1),
+        marginBottom:-5
       },
       container2: {
         flex: 1,
         backgroundColor:'#A38C85',
         borderRadius: 10,
         justifyContent: 'center',
-        // paddingLeft: hp(1),
-        // paddingVertical: hp(1),
+        paddingLeft: hp(1),
+        paddingVertical: hp(1),
       },
       oddtext: {marginHorizontal: 10, color: '#FFFFFF',fontFamily:'Montserrat-Regular'},
       heading: {
@@ -303,14 +279,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: hp(1),
+        borderColor:'#000000',
+        backgroundColor:'#A1A1A1'
       },
       selectedBox: {
-        backgroundColor: '#FF671F',
+        backgroundColor: '#FFA402',
       },
       boxText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#FF671F',
+        fontSize: 20,
+        color: '#FFFFFF',
+        fontFamily:'Montserrat-SemiBold'
       },
       selectedBoxText: {
         color: 'white',

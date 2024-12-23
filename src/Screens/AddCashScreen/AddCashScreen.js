@@ -1,13 +1,17 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Iconics from "react-native-vector-icons/Ionicons";
+import CommonHeader from '../../Components/CommonHeader';
+import { useNavigation } from '@react-navigation/native';
 
 const AddCashScreen = () => {
+  const navigation = useNavigation();
   return (
+    <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Iconics name="chevron-back" size={wp("6%")} color={"white"} />
         </TouchableOpacity>
         <Text style={styles.title}>Add Cash</Text>
@@ -54,6 +58,7 @@ const AddCashScreen = () => {
         <Image source={require("../../../assets/images/Screens/referal.png")} />
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 };
 
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   header: {
-    backgroundColor: "#4B2D2D",
+    backgroundColor: "#361911",
     height: hp("15%"),
     justifyContent: 'flex-end',
     padding: wp("4%"),
@@ -73,7 +78,6 @@ const styles = StyleSheet.create({
     paddingBottom: hp("7%"),
   },
   backButton: {
-    left: wp("2%"),
     top: hp("4%"),
     padding: wp("2%"),
   },

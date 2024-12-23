@@ -27,8 +27,8 @@ const WalletDetailsCard = () => {
       </View>
     </View>
   );
-
   return (
+    <>
     <View style={styles.container}>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>12 November 2024</Text>
@@ -40,6 +40,7 @@ const WalletDetailsCard = () => {
         contentContainerStyle={styles.list}
       />
     </View>
+    </>
   );
 };
 

@@ -74,7 +74,8 @@ const WalletScreen = () => {
       </View>
       <TouchableOpacity style={styles.transactionContainer} 
       onPress={()=>{
-        handleNavigation("PaymentDetails")
+        // handleNavigation("PaymentDetails")
+        handleNavigation('WalletDetails')
       }}
       >
         <Text style={styles.transactionText}>My Transactions</Text>

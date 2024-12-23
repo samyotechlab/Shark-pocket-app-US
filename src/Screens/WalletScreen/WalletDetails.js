@@ -7,7 +7,7 @@ import Bonus from '../WalletDetails/Bonus';
 import Winning from '../WalletDetails/Winning';
 import WithDraw from '../WalletDetails/WithDraw';
 import { Loader } from '../../Components/Loader';
-import WalletDetailsCard from '../../Components/WalletDetailsCard';
+
 
 export default function WalletDetails() {
     const [selectedTab, setSelectedTab] = useState('Deposite');
@@ -19,7 +19,7 @@ export default function WalletDetails() {
   return (
     <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
       <CommonHeader title={"Wallet  Details"}/>
-    <View style={{marginTop:10}}>
+    <View style={{marginTop:10,flex:1}}>
       <View
         style={{
           flexDirection: 'row',
@@ -51,7 +51,7 @@ export default function WalletDetails() {
           </Text>
         </TouchableOpacity>
       </View>
-
+      <View style={{flex:1}}>
       {selectedTab === 'Deposite' ? (
         !loader ? ( <Deposite/>):(<Loader/>)
       ) : selectedTab === 'Bonus' ? (
@@ -61,9 +61,8 @@ export default function WalletDetails() {
       ):(
         !loader ? ( <WithDraw/>):(<Loader/>) 
       )}
+      </View>
     </View>
-    <WalletDetailsCard />
-
     </SafeAreaView>
   )
 }

@@ -70,19 +70,5 @@ export default function GameName() {
             borderBottomColor: selectedTab === 'PlayedHistory' ? '#FEB801':'#565656', 
             color: selectedTab === 'PlayedHistory' ? '#FEB801' : '#FFFFFF',
             fontFamily: selectedTab === 'PlayedHistory' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-          },
-          winning: {
-            fontSize: 18,
-            borderBottomWidth: 3,
-            borderBottomColor: selectedTab === 'Winning' ? '#FEB801':'#565656', 
-            color: selectedTab === 'Winning' ? '#FEB801' : '#FFFFFF',
-            fontFamily: selectedTab === 'Winning' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-          },
-          withdraw: {
-            fontSize: 18,
-            borderBottomWidth: 3,
-            borderBottomColor: selectedTab === 'Withdraw' ? '#FEB801':'#565656', 
-            color: selectedTab === 'Withdraw' ? '#FEB801' : '#FFFFFF',
-            fontFamily: selectedTab === 'Withdraw' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-          },
+          }
         });
