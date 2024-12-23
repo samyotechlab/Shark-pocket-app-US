@@ -13,6 +13,9 @@ import AvailableGame from '../../Screens/AvailableGame/AvailableGame';
 import GameName from '../../Screens/GameName.js/GameName';
 import PlayingInstruction from '../../Screens/PlayingInstruction/PlayingInstruction';
 import FloatingBoxGame from '../../Screens/GameScreens/FloatingBox';
+import PaymentDetails from '../../Screens/PaymentDetails.js/PaymentDetails';
+import AddCashScreen from '../../Screens/AddCashScreen/AddCashScreen';
+import WithdrawWalletScreen from '../../Screens/WithdrawWalletScreen/WithdrawWalletScreen';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -103,6 +106,27 @@ export default function AppNavigation() {
          <Stack.Screen
           name="GameScreen"
           component={FloatingBoxGame}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="PaymentDetails"
+          component={PaymentDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="AddCash"
+          component={AddCashScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="WithdrawWallet"
+          component={WithdrawWalletScreen}
           options={{
             headerShown: false,
           }}

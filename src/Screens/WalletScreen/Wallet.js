@@ -8,8 +8,9 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 const WalletScreen = () => {
   const navigation = useNavigation()
-  const handleNavigation = ()=>{
-    navigation.navigate("WalletDetails")
+  const handleNavigation = (name)=>{
+    // navigation.navigate("WalletDetails")
+    navigation.navigate(name)
   }
   return (
      <LinearGradient
@@ -42,7 +43,12 @@ const WalletScreen = () => {
       <View style={styles.cardContainer}>
         <View style={styles.row}>
           <Text style={styles.label}>Deposit</Text>
-          <TouchableOpacity style={styles.addCashButton}>
+          <TouchableOpacity style={styles.addCashButton}
+          onPress={()=>{
+            handleNavigation("AddCash")
+          }
+        }
+          >
             <Text style={styles.buttonText}>ADD CASH</Text>
           </TouchableOpacity>
         </View>
@@ -55,15 +61,22 @@ const WalletScreen = () => {
         <View style={styles.divider} />
         <View style={styles.row}>
           <Text style={styles.label}>Winning</Text>
-          <TouchableOpacity style={styles.withdrawButton}>
+          <TouchableOpacity 
+          style={styles.withdrawButton}
+          onPress={()=>{
+            handleNavigation("WithdrawWallet")
+          }}
+          >
             <Text style={styles.withdrawText}>WITHDRAW</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.amount}>₹ 0000</Text>
       </View>
-      <TouchableOpacity style={styles.transactionContainer} onPress={()=>{
-        handleNavigation()
-      }}>
+      <TouchableOpacity style={styles.transactionContainer} 
+      onPress={()=>{
+        handleNavigation("PaymentDetails")
+      }}
+      >
         <Text style={styles.transactionText}>My Transactions</Text>
         <Text style={styles.subText}>Deposit and withdrawal history</Text>
       </TouchableOpacity>

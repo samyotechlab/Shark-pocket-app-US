@@ -5,6 +5,7 @@ import { Loader } from '../../Components/Loader';
 import Debit from '../Deposite/Debit';
 import Credit from '../Deposite/Credit';
 import All from '../Deposite/All';
+import WalletDetailsCard from '../../Components/WalletDetailsCard';
 
 export default function Deposite() {
 
@@ -67,8 +68,8 @@ export default function Deposite() {
     ) : (
       !loader ? ( <Credit/>):(<Loader/>)  
     )}
-  </View>
     
+  </View>
     </>
   )
 }

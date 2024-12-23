@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   Image,
+  ImageBackground,
 } from 'react-native';
 import ClockImage from '../../../assets/images/GameImage/clock-image.png';
 import LogoutIcon from '../../../assets/images/GameImage/logoutM.png';
@@ -154,11 +155,11 @@ export default function FloatingBoxGame({route}) {
     setScore(100)
 
     const isOdd = box.number % 2 !== 0;
-    const feedbackColor = isOdd ? 'transparent' : 'black';
+    const feedbackColor = isOdd ? '#6AB365' : "#D28989";
     const feedbackImage = isOdd ? StarImage : BombImage;
-    const feedbackBgColor = isOdd ? '#ff5722' : 'black';
-    const feedbackBorderColor = isOdd ? '#ff5722' : 'black';
-    const textColor = isOdd ? 'white' : 'black';
+    const feedbackBgColor = isOdd ? '#6AB365' :  "#D28989";
+    const feedbackBorderColor = isOdd ? '#6AB365' :  "#D28989";
+    const textColor ='white';
 
     Animated.parallel([
       Animated.timing(box.opacityAnim, {
@@ -252,6 +253,10 @@ export default function FloatingBoxGame({route}) {
   }, [isGameOver]);
 
   return (
+    <ImageBackground
+    source={require("../../../assets/images/Screens/background-image.png")} 
+    style={styles.background}
+  >
     <View style={styles.container}>
       {/* Header */}
 
@@ -409,23 +414,25 @@ export default function FloatingBoxGame({route}) {
         </>
       )}
     </View>
+    </ImageBackground>
   );
 }
 
 // Styles
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    position: 'relative',
   },
-
   magicNumberContainer: {
     position: 'absolute',
     left: 0,
     top: 70,
     left: 20,
-    backgroundColor: '#ff5722',
+    backgroundColor:"#7C7FDF",
     zIndex: 9999,
     height: 45,
     width: 45,
@@ -486,7 +493,7 @@ const styles = StyleSheet.create({
   numberBox: {
     width: widthPercentageToDP(21),
     height: heightPercentageToDP(11),
-    backgroundColor: '#ff5722',
+    backgroundColor: "#7C7FDF",
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',

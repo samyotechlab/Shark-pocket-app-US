@@ -9,6 +9,7 @@ import PlayedHistory from './PlayedHistory'
 
 export default function GameName() {
         const [selectedTab, setSelectedTab] = useState('Tickets');
+        
         const [loader, setLoader] = useState(false);
         const handlePress = tab => {
             setSelectedTab(tab);

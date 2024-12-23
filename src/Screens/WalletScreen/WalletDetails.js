@@ -7,6 +7,7 @@ import Bonus from '../WalletDetails/Bonus';
 import Winning from '../WalletDetails/Winning';
 import WithDraw from '../WalletDetails/WithDraw';
 import { Loader } from '../../Components/Loader';
+import WalletDetailsCard from '../../Components/WalletDetailsCard';
 
 export default function WalletDetails() {
     const [selectedTab, setSelectedTab] = useState('Deposite');
@@ -61,6 +62,8 @@ export default function WalletDetails() {
         !loader ? ( <WithDraw/>):(<Loader/>) 
       )}
     </View>
+    <WalletDetailsCard />
+
     </SafeAreaView>
   )
 }
