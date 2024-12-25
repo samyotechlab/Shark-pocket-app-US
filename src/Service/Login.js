@@ -1,14 +1,17 @@
 import apiInstance from "./AxiosInstance";
 import Config from "../Utilities/Config";
 
-export const login = async () => {
-        try {
-          const response = await apiInstance.post(`${Config.Login}`, {
-            trainer_id: id,
-          });
-          return response.data;
-        } catch (error) {
-          console.error(error);
-          throw error;
-        }
+export const userDetail = async user_id => {
+  try {
+    const response = await apiInstance.post(`${Config.Profile}`, {
+      user_id,
+    });
+    console.log("response 0000000 ",response.data)
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.log('error======>', error);
+    throw error;
+  }
 };

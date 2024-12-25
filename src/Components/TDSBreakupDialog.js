@@ -7,7 +7,10 @@ import {
   Modal,
   Dimensions,
   ScrollView,
+  Image,
 } from 'react-native';
+import Tds from '../../assets/images/Screens/tds.png';
+import Iconics from 'react-native-vector-icons/Ionicons';
 
 const { height } = Dimensions.get('window');
 
@@ -23,14 +26,14 @@ const TDSBreakupDialog = () => {
       {/* Button to open the dialog */}
       <TouchableOpacity style={styles.buttonContainer} onPress={toggleModal}>
       <View style={styles.iconContainer}>
-        {/* <Image
-          source={require('./path-to-your-icon.png')} 
+      <Image
+          source={Tds} 
           style={styles.icon}
-        /> */}
+        />
       </View>
       <Text style={styles.buttonText}>Download TDS Certificate</Text>
       <View style={styles.arrowContainer}>
-        <Text style={styles.arrow}>{'>'}</Text> 
+      <Iconics name="chevron-forward-outline" size={20} color={'black'} />
       </View> 
     </TouchableOpacity>
 
@@ -50,7 +53,7 @@ const TDSBreakupDialog = () => {
             <View style={styles.dialogHeader}>
               <Text style={styles.dialogTitle}>Govt Tax (TDS) Breakup</Text>
               <TouchableOpacity onPress={toggleModal}>
-                <Text style={styles.closeButton}>×</Text>
+                <Iconics name="close" size={30} color={'black'} />
               </TouchableOpacity>
             </View>
             <Text style={styles.subHeader}>Financial Year 2024-25</Text>
@@ -130,18 +133,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F9F9F9',
+    backgroundColor: 'white',
   },
   button: {
     backgroundColor: '#4CAF50',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   overlay: {
     flex: 1,
@@ -246,14 +244,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 8,
+    borderColor: '#00000033',
+    borderWidth: 1,
+    borderRadius: 15,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
     marginHorizontal: 16,
   },
   iconContainer: {
@@ -266,8 +261,8 @@ const styles = StyleSheet.create({
   buttonText: {
     flex: 1,
     fontSize: 16,
-    fontWeight: '500',
-    color: '#333333',
+    fontFamily:"Montserrat-Medium",
+    color: '#696969',
   },
   arrowContainer: {
     marginLeft: 8,

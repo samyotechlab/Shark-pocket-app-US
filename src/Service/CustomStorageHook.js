@@ -3,10 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const useLoginDataStorage = () => {
   const [loginData, setLoginData] = useState(null);
+  const [isReady, setIsReady] = useState(false); 
 
   const storeLoginData = async data => {
     try {
-      await AsyncStorage.setItem('@loginData', JSON.stringify(data));
+      const jsonData = JSON.stringify(data);
+       await AsyncStorage.setItem('@loginData', jsonData);
       setLoginData(data);
     } catch (error) {
       console.error('Error storing login data in AsyncStorage:', error);
@@ -19,6 +21,8 @@ const useLoginDataStorage = () => {
       setLoginData(jsonValue != null ? JSON.parse(jsonValue) : null);
     } catch (error) {
       console.error('Error getting login data from AsyncStorage:', error);
+    }finally {
+      setIsReady(true); // Mark as ready after fetching
     }
   };
   const clearLoginData = async () => {
@@ -44,6 +48,7 @@ const useLoginDataStorage = () => {
 
   return {
     loginData,
+    isReady,
     storeLoginData,
     updateLoginData,
     clearLoginData,

@@ -1,35 +1,39 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import Iconics from "react-native-vector-icons/Ionicons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import CommonHeader from "./CommonHeader";
+import Iconics from "react-native-vector-icons/Feather";
 
 const HeaderComponent = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Iconics name="chevron-back" size={wp("6%")} color={"white"} />
-        <Text style={styles.title}>Payment Details</Text>
-      </View>
-
+<>
+    <View style={styles.main}>
+      <CommonHeader title={"Deposite Details"}/>
+      <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.amount}>₹77</Text>
-        <Icon name="check-circle" size={wp("7%")} color="#fff" />
+        <Iconics name="check-circle" size={wp("7%")} color="#fff" />
       </View>
 
       <View style={styles.statusRow}>
       <View style={styles.successBadge}>
           <Text style={styles.successText}>Successful</Text>
         </View>       
-         <Text style={styles.date}>• 12 November 2024, 7:33 PM</Text>
+         <Text style={styles.date}>•  12 November 2024, 7:33 PM</Text>
       </View>
     </View>
+    </View>
+  </>
   );
 };
 
 const styles = StyleSheet.create({
+  main: {
+    backgroundColor: "#361911",
+  },
   container: {
-    backgroundColor: "#4B2D2D",
+    backgroundColor: "#361911",
     paddingHorizontal: wp("5%"),
     paddingVertical: hp("2%"),
     borderBottomWidth: 1,
@@ -39,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: hp("1%"),
-    marginTop:hp("2.5%")
+    marginTop:hp("2.5%"),
   },
   title: {
     color: "#fff",
@@ -72,18 +76,18 @@ const styles = StyleSheet.create({
   date: {
     color: "#fff",
     marginLeft: wp("1%"),
-    fontSize: wp("4%"), 
+    fontSize: wp("4%"),
+    fontFamily:"Montserrat-Regular"
   },
   successBadge: {
-    backgroundColor: "#00C853", 
     paddingVertical: hp("0.5%"),
-    paddingHorizontal: wp("4%"),
+    paddingHorizontal: wp("2%"),
     borderRadius: 20, 
   },
   successText: {
     color: "#fff",
-    fontWeight: "600",
-    fontSize: wp("3.5%"),
+    fontFamily:"Montserrat-SemiBold",
+    fontSize: wp("4%"),
   },
 });
 

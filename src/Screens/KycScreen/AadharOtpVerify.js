@@ -9,19 +9,17 @@ import axios from 'axios'
 import {API_URL} from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
-import useLoginDataStorage from '../../Service/CustomStorageHook'
 
 
 const headers = {
   'Content-Type': 'application/json',
 };
 
-export default function OtpVerify() {
-
+export default function AadharOtpVerify() {
   const route = useRoute()
-  const data = route.params.data
+  console.log('route--->', route.params);
+  const data = route.params
   const navigation = useNavigation()
-  const {storeLoginData} = useLoginDataStorage();
   const [otp, setOtp] = useState(['', '', '', '']);
   const inputs = useRef([]);
 
@@ -33,8 +31,7 @@ export default function OtpVerify() {
     if (text && index < 3) {
       inputs.current[index + 1].focus();
     }
-  };
-
+  }
   const handleBackspace = (text, index) => {
     if (!text && index > 0) {
       inputs.current[index - 1].focus();
@@ -55,8 +52,7 @@ export default function OtpVerify() {
           )
           .then(res => {
             console.log('res--->', res.data.data);
-            storeLoginData(res.data)
-            if (res.data.status === 1) {        
+            if (res.data.status === 1) {
               Toast.show({
                 type: 'success', 
                 position: 'top', 
@@ -64,14 +60,7 @@ export default function OtpVerify() {
                 text2: 'Otp Send Succesffully in the given Number', 
                 visibilityTime: 5000
               }); 
-              setTimeout(() => {
-                if(res.data.data.is_aadhar_verified === 1){
-                  navigation.navigate('DisclaimerScreen', {data:res.data.data});
-                  }else{
-                    navigation.navigate('HomeScreen', {data:res.data.data});
-                  }
-              }, 3000);
-              
+              navigation.navigate('DisclaimerScreen', {data:res.data.data});
             } else {
               Toast.show({
                 type: 'error', 
@@ -106,7 +95,7 @@ export default function OtpVerify() {
             </View>
           </View>
           <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 4-digit code sent to your
-            phone number {data.mobile} for verification.</Text>
+            phone number {data.aadhaar_number} for verification.</Text>
         </View>
         <View style={[styles.box, { justifyContent: 'center' }]}>
           <View style={styles.inputContainer}>
@@ -131,7 +120,7 @@ export default function OtpVerify() {
           <Text style={styles.timer}>00:30</Text>
           <Text style={styles.resendOtp}>Resend OTP</Text>
         </View>
-         <Toast ref={Toast.setRef}/>
+         <Toast ref={(ref) => Toast.setRef(ref)} />
       </View>
     
     </>

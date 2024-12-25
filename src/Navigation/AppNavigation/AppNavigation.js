@@ -16,6 +16,10 @@ import FloatingBoxGame from '../../Screens/GameScreens/FloatingBox';
 import PaymentDetails from '../../Screens/PaymentDetails.js/PaymentDetails';
 import AddCashScreen from '../../Screens/AddCashScreen/AddCashScreen';
 import WithdrawWalletScreen from '../../Screens/WithdrawWalletScreen/WithdrawWalletScreen';
+import DepositeDetails from '../../Components/DepositeDetails';
+import ViewProfile from '../../Screens/ProfileScreen/ViewProfile';
+import AadharDetail from '../../Screens/KycScreen/AadharDetail';
+import AadharOtpVerify from '../../Screens/KycScreen/AadharOtpVerify';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -127,6 +131,34 @@ export default function AppNavigation() {
          <Stack.Screen
           name="WithdrawWallet"
           component={WithdrawWalletScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="DepositeDetails"
+          component={DepositeDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
+          <Stack.Screen
+          name="ViewProfile"  
+          component={ViewProfile}
+          options={{
+            headerShown: false,
+          }}
+        />
+          <Stack.Screen
+          name="AadharDetail"  
+          component={AadharDetail}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="AadharOtpVerify"  
+          component={AadharOtpVerify}
           options={{
             headerShown: false,
           }}

@@ -15,7 +15,7 @@ export default function All() {
   const navigation = useNavigation()
 
   const handleNavigation = () =>{
-    navigation.navigate('PaymentDetails')
+    navigation.navigate('DepositeDetails')
   }
     const renderItem = ({ item }) => (
       <TouchableOpacity style={styles.itemContainer} onPress={
@@ -57,7 +57,7 @@ export default function All() {
 const styles = StyleSheet.create({
   container: {
       flex: 1,
-      backgroundColor: '#F5F5F5',
+      backgroundColor: 'white',
       paddingVertical: hp('1.5%'),
     },
     dateContainer: {
@@ -79,9 +79,9 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: 'ffff',
-      padding: wp('4%'),
+      padding: wp('3%'),
       borderRadius: wp('2%'),
-      marginBottom: hp('1.5%'),
+      marginBottom: hp('1%'),
       borderBottomColor: '#0000003A',
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomEndRadius:50,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     note: {
       fontSize: wp('4%'),
       color: '#696969',
-      fontFamily:'Montserrat-Regular'
+      fontFamily:'Montserrat-medium'
     },
     time: {
       fontSize: wp('3%'),

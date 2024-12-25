@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 const AddCashScreen = () => {
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
+  <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>

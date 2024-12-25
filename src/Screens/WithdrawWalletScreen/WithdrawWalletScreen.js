@@ -53,7 +53,7 @@ const WithdrawWalletScreen = () => {
 
         </View>
         {selectedTab === 'Withdraw' ? (
-          !loader ? (<Withdraw/>) : (<Loader />)
+          !loader ? (<Withdraw/>) : (<Loader />) 
         ) : (
           !loader ? (<WithdrawHistory />) : (<Loader />)
         )}

@@ -5,7 +5,7 @@ import {Text} from 'react-native-svg';
 export const Loader = () => {
   return (
     <View style={styles.loader}>
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color="red" />
       <Text>Loading...</Text>
     </View>
   );
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },

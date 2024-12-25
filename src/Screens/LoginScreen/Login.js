@@ -1,80 +1,189 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
-import { widthPercentageToDP as wp , heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
 import call from '../../../assets/images/Applogo/call.png'
 import { useNavigation } from '@react-navigation/native'
 import { login } from '../../Service/Login'
+import axios from 'axios'
+import Toast from 'react-native-toast-message'
+import { API_URL } from '@env';
+import Config from '../../Utilities/Config'
+import { Loader } from '../../Components/Loader'
+
+
+const headers = {
+  'Content-Type': 'application/json',
+};
 
 export default function Login() {
-    const navigation = useNavigation();
-    const handleNavigation = ()=>{
-      navigation.navigate('OtpScreen')
-      login();
+  const navigation = useNavigation();
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [mobileError, setMobileError] = useState('');
+  const [loader, setLoader] = useState(false);
+
+  const validateInputs = () => {
+    let valid = true;
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!phoneNumber.trim()) {
+      setMobileError('Mobile number is required');
+      valid = false;
+    } else if (!mobileRegex.test(phoneNumber)) {
+      setMobileError('Mobile number must be 10 digits');
+      valid = false;
+    } else {
+      setMobileError('');
     }
+    return valid;
+  };
+
+
+
+  const handleLogin = () => {
+    console.log('phoneNumber', phoneNumber);
+    setLoader(true);
+    try {
+      if (validateInputs()) {
+        console.log('phoneNumber', `${API_URL}/${Config.Login}`);
+        axios
+          .post(
+            `${API_URL}/${Config.Login}`,
+            {
+              phoneNumber,
+            },
+            headers,
+          )
+          .then(res => {
+            console.log('res--->', res.data);
+            if (res.data.status === 1) {
+              Toast.show({
+                type: 'success',
+                position: 'top',
+                text1: 'Otp Send!',
+                text2: 'Otp Send Succesffully in the given Number',
+                visibilityTime: 3000
+              });
+              setTimeout(() => {
+                navigation.navigate('OtpScreen', { data: res.data.data });
+              }, 3000);
+            } else {
+              Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error!',
+                text2: 'Authentication Failed',
+                visibilityTime: 3000,
+              });
+            }
+          })
+          .catch(err => {
+            console.log('error--->', err);
+          });
+      }
+    } catch (error) {
+      console.log('An error occurred:', error);
+    } finally {
+      setLoader(false);
+    }
+  };
   return (
- <>
- <BackgroundScreen/>
- <View style={styles.container}>
-           <View style={[styles.box,{justifyContent:'center'}]}>
-             <Text style={[styles.text, {fontSize:hp('3%'),
-        fontFamily:'Montserrat-Bold'}]}>Welcome Back!</Text>
-             <Text style={[styles.text,{fontFamily:'Montserrat-Light'}]}>Please enter your phone number</Text>
-           </View>
-           <View style={[styles.box, {justifyContent:'center'}]}>
-            <View style={styles.inputContainer}>
-                 <Image source={call}   style={styles.icon} />
-                 <TextInput
-                   style={styles.input}
-                   placeholder='Phone Number'
-                   placeholderTextColor="gray"
-                   keyboardType='numeric'
-                 />
-               </View>
-           </View>
-           <View style={[styles.box,{padding:hp('2%')}]}>
-            <CommonButton title={'Log in'} onPress={handleNavigation}/>
-           </View>
-       </View>
- </>
+    <>
+      <BackgroundScreen />
+      <View style={styles.container}>
+        <View style={[styles.box, { justifyContent: 'center' }]}>
+          <Text style={[styles.text, {
+            fontSize: hp('3%'),
+            fontFamily: 'Montserrat-Bold'
+          }]}>Welcome Back!</Text>
+          <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter your phone number</Text>
+        </View>
+        <View style={[styles.box, { justifyContent: 'center' }]}>
+          <View style={styles.inputContainer}>
+            <Image source={call} style={styles.icon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Phone Number"
+              placeholderTextColor="gray"
+              keyboardType="numeric"
+              maxLength={10}
+              value={phoneNumber}
+              onChangeText={(text) => setPhoneNumber(text)}
+              error={Boolean(mobileError)}
+            />
+
+          </View>
+          {Boolean(mobileError) && (
+            <Text style={styles.errorText}>{mobileError}</Text>
+          )}
+        </View>
+        <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
+          {
+            !loader ? (
+              <CommonButton title={'Log in'} onPress={handleLogin} />
+            ) : (
+              <Loader />
+            )
+          }
+        </View>
+        <Toast ref={Toast.setRef} />
+      </View>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:0.5,
-        margin:hp(2),
-        marginTop:hp(10),
-      },
-      box:{
-        flex:1,
-      },
-      text:{
-        textAlign:'center',
-        color:'#FFFFFF'
-      },
-      inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-        elevation: 2,
-        width: '100%',
-    
-      },
-      icon: {
-        marginRight: 10,
-      },
-      input: {
-        flex: 1,
-        fontSize: 16,
-        color: '#000',
-      },
+  container: {
+    flex: 0.5,
+    margin: hp(2),
+    marginTop: hp(10),
+  },
+  box: {
+    flex: 1,
+  },
+  text: {
+    textAlign: 'center',
+    color: '#FFFFFF'
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+    width: '100%',
+
+  },
+  icon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: '#000',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginTop: 10,
+    marginLeft: 10
+  },
+  loaderOverlay: {
+    position: 'absolute', // Ensures overlay positioning
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dimmed background
+    borderRadius: 10, // Matches button shape
+    zIndex: 10,
+  },
 })

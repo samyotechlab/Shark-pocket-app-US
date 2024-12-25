@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import CheckBox from 'react-native-check-box'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { userDetail } from '../../Service/Login';
 const Disclaimer = () => {
+    const route = useRoute()
+    console.log('route--->------->', route.params.data);
+    const data = route.params.data._id
     const navigation  = useNavigation()
   const [isChecked, setIsChecked] = useState(false);
+
   return (
      <LinearGradient  
             colors={['#361911', '#361911', '#6A1700']}
@@ -37,7 +42,7 @@ const Disclaimer = () => {
           style={[styles.button, !isChecked && styles.buttonDisabled]}
           disabled={!isChecked}
           onPress={()=>{
-            navigation.navigate('HomeScreen')
+            navigation.navigate('AadharDetail')
           }}
         >
           <Text style={styles.buttonText}>VERIFY AADHAR CARD</Text>

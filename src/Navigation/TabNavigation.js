@@ -90,17 +90,23 @@ const CustomTabButton = props => {
         {...props}
         style={[props.style, styles.touchable]}
       >
+        {isSelected ? (
         <LinearGradient
-          colors={['#67170080', '#FAB41D80']} 
-          start={{ x: 0, y: 0 }} 
-          end={{ x: 0, y: 1 }}   
+          colors={['#67170080', '#FAB41D80']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
           style={[
             styles.gradient,
-            isSelected && styles.selectedGradient, 
+            isSelected ? styles.selectedGradient : styles.inactiveGradient,
           ]}
         >
           {props.children}
         </LinearGradient>
+      ) : (
+        <View style={styles.iconContainer}>
+          {props.children}
+        </View>
+      )}
       </TouchableOpacity>
     );
   };
@@ -120,5 +126,19 @@ const styles = StyleSheet.create({
         width: wp('20%'),               
         alignSelf: 'center',  
         top:hp('1%')
+      },
+      inactiveGradient: {
+        backgroundColor:'transparent',
+        borderBottomWidth: 0,
+        width: wp('20%'),
+        alignSelf: 'center',
+        top:hp('1%')
+      },
+      iconContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',  
+        top:hp('1%')
+
       },
 })

@@ -15,8 +15,7 @@ const WalletScreen = () => {
   return (
      <LinearGradient
             colors={['#361911', '#361911', '#6A1700']}
-            style={styles.linearGradient}>
-      
+            style={styles.linearGradient}>      
           <View style={styles.topBar}>
         <Text style={styles.topBarTitle}>Wallet</Text>
         <Iconics name="help-circle-outline" size={20} color={'white'} style={{paddingLeft:wp('44%'),marginBottom:4}}/>
@@ -25,8 +24,6 @@ const WalletScreen = () => {
         </TouchableOpacity>
       </View>
       <LinearGradient colors={['#3B191080','#FFFFFF80','#FFFFFF80']} style={styles.balanceContainer}>
-
-
   <View style={styles.balanceRow}>
     <View>
     <Text style={styles.sectionTitle}>BALANCE</Text>
@@ -42,6 +39,18 @@ const WalletScreen = () => {
     </LinearGradient>
       <View style={styles.cardContainer}>
         <View style={styles.row}>
+        <LinearGradient
+      colors={['#3E180E1A', '#FFFFFF1A']}
+      style={{
+        height: wp('8%'),
+        width: wp('8%'),
+        borderRadius: wp('4%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Iconics name="wallet-outline" size={20} color={'white'} />
+    </LinearGradient>
           <Text style={styles.label}>Deposit</Text>
           <TouchableOpacity style={styles.addCashButton}
           onPress={()=>{
@@ -53,13 +62,56 @@ const WalletScreen = () => {
           </TouchableOpacity>
         </View>
         <Text style={styles.amount}>₹ 0000</Text>
-        <View style={styles.divider} />
+         <LinearGradient
+                colors={['#999999', '#FFFFFF', '#999999']} 
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{
+                  height: 1,              
+                  // marginTop: 10,          
+                  marginHorizontal: wp(2), 
+                }}
+              />
+        {/* <View style={styles.divider} /> */}
         <View style={styles.row}>
+        <LinearGradient
+      colors={['#3E180E1A', '#FFFFFF1A']}
+      style={{
+        height: wp('8%'),
+        width: wp('8%'),
+        borderRadius: wp('4%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Iconics name="wallet-outline" size={20} color={'white'} />
+    </LinearGradient>
           <Text style={styles.label}>Bonus</Text>
         </View>
         <Text style={styles.amount}>₹ 0000</Text>
-        <View style={styles.divider} />
+        {/* <View style={styles.divider} /> */}
+        <LinearGradient
+                colors={['#999999', '#FFFFFF', '#999999']} 
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={{
+                  height: 1,                      
+                  marginHorizontal: wp(2), 
+                }}
+              />
         <View style={styles.row}>
+        <LinearGradient
+      colors={['#3E180E1A', '#FFFFFF1A']}
+      style={{
+        height: wp('8%'),
+        width: wp('8%'),
+        borderRadius: wp('4%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Iconics name="wallet-outline" size={20} color={'white'} />
+    </LinearGradient>
           <Text style={styles.label}>Winning</Text>
           <TouchableOpacity 
           style={styles.withdrawButton}
@@ -74,7 +126,6 @@ const WalletScreen = () => {
       </View>
       <TouchableOpacity style={styles.transactionContainer} 
       onPress={()=>{
-        // handleNavigation("PaymentDetails")
         handleNavigation('WalletDetails')
       }}
       >
@@ -156,17 +207,20 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 20,
     alignItems: 'center',
   },
   label: {
     color: '#fff',
     fontSize: 16,
+    fontFamily:'Montserrat-Medium'
   },
   amount: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 20,
     marginBottom: 10,
+    paddingHorizontal: wp('13%'),
+        fontFamily:'Montserrat-Bold'
   },
   addCashButton: {
     backgroundColor: '#32CD32',

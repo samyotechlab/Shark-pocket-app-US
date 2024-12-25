@@ -1,16 +1,3 @@
-// import { StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-
-// export default function ProfileScreen() {
-//   return (
-//     <View>
-//       <Text>ProfileScreen</Text>
-//     </View>
-//   )
-// }
-
-// const styles = StyleSheet.create({})
-
 import React, {useState} from 'react';
 import {
   Image,
@@ -24,6 +11,7 @@ import {
   FlatList,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -31,7 +19,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
+import AlertDialog from '../../Components/AlertDialog';
 const SharkPocketScreen = () => {
+  const navigation = useNavigation();
+  const {clearLoginData} = useLoginDataStorage();
+  const [visible, setVisible] = useState(false);
   const data2 = [
     {
       title: 'Notification',
@@ -82,9 +76,35 @@ const SharkPocketScreen = () => {
       icon: 'logout',
     },
   ];
+
+  const handleNavigation = () => {
+    navigation.navigate('ViewProfile');
+  }
+
+  const  handleLogout = async () => {
+    try {
+      await clearLoginData();
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'SplashScreen'}],
+        }),
+      );
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+  
   const _renderCard = ({item}) => {
     return (
-      <TouchableOpacity style={styles.cardContainer}>
+      <>
+      <TouchableOpacity style={styles.cardContainer} onPress={() => {
+        if (item.title === 'Log out') {
+          setVisible(true);
+        } else {
+          Alert.alert(item.title, 'This item was clicked.');
+        }
+      }}>
         <View>
           <LinearGradient
             colors={['#3D1911', '#6A1701']}
@@ -111,6 +131,8 @@ const SharkPocketScreen = () => {
           />
         </View>
       </TouchableOpacity>
+      <AlertDialog visible={visible} onClose={() => setVisible(false)} onOkPress={handleLogout} />
+      </>
     );
   };
   return (
@@ -133,9 +155,9 @@ const SharkPocketScreen = () => {
                   <Text style={styles.profileDot}>...</Text>
                 </View>
               </View>
-              <View style={styles.profileActionContainer}>
+              <TouchableOpacity style={styles.profileActionContainer} onPress={()=>{handleNavigation()}}>
                 <Text style={styles.viewProfileText}>View Profile</Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
