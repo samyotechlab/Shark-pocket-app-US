@@ -1,28 +1,67 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
   } from 'react-native-responsive-screen';
 import ModalScreen from '../../Components/ModalScreen';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CommonHeader from '../../Components/CommonHeader';
 import CommonButton from '../../Components/CommonButton';
+import { gameRule } from '../../Service/Game';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
 
 export default function PlayingInstruction() {
+  const route = useRoute();
+  const {game_id} = route.params;
+  const {ticket_id} = route.params; 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedNumber, setSelectedNumber] = useState(null);
+    const [gameRuleData, setGameRuleData] = useState({});
+    const {loginData,isReady} = useLoginDataStorage();
     const navigation = useNavigation()
     const handleNumberSelect = number => {
         setSelectedNumber(number);
       };
+      const data = isReady && loginData && loginData?.data 
 
-      const handleStartGame = ()=>{
-        navigation.navigate("GameScreen",{
-            selectedNumber: 5,
-        })
-      }
+
+      const gameRuleList = async () => {
+        try {
+          const response = await gameRule();
+          setGameRuleData(response);
+        } catch (error) {
+          console.log('error', error);
+        }
+      };
+    
+      const handleOnYes = () => {
+        navigation.goBack();
+      };
+    
+      useEffect(() => { 
+         try {
+             gameRuleList();
+          } catch (error) {
+            console.log('error in getList', error);
+          }
+      }, []);
+    
+      const handleStartGame = () => {
+        if (selectedNumber) {
+          console.log('Starting game with super number:', selectedNumber);
+          navigation.navigate('GameScreen', {
+            selectedNumber: selectedNumber,
+            game_id:game_id,
+            ticket_id: ticket_id,
+            user_id: data._id,
+            gameRuleData: gameRuleData,
+          });
+        } else {
+          setIsModalVisible(true);
+        }
+      };
   return (
     <ScrollView>
     <LinearGradient colors={['#361911', '#361911', '#6A1700']}

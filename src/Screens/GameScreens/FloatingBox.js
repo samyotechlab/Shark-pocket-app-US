@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -12,34 +12,34 @@ import {
 import ClockImage from '../../../assets/images/GameImage/clock-image.png';
 import LogoutIcon from '../../../assets/images/GameImage/logoutM.png';
 import Icon from 'react-native-vector-icons/Feather';
-
 import StarImage from '../../../assets/images/GameImage/star.png';
 import BombImage from '../../../assets/images/GameImage/smash-icon.png';
 import Sound from 'react-native-sound';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import { useGameLogic } from './GameLogic';
 import GameFinishScreen from './GameFinishScreen';
-import {finalScore} from '../../Service/FinalScore';
+import { finalScore } from '../../Service/FinalScore';
+import LinearGradient from 'react-native-linear-gradient';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const getRandomNumber = () => Math.floor(Math.random() * 300) + 1;
 
 const getRandomX = () => Math.random() * (width - 100);
 
-export default function FloatingBoxGame({route}) {
-//   const {
-//     handleNumberClick,
-//     primeCount,
-//     oddCounts,
-//     superNumberCount,
-//     negativePoint,
-//     numberStringData,
-//   } = useGameLogic();
+export default function FloatingBoxGame() {
+  const {
+    handleNumberClick,
+    primeCount,
+    oddCounts,
+    superNumberCount,
+    negativePoint,
+    numberStringData,
+  } = useGameLogic();
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
@@ -47,7 +47,8 @@ export default function FloatingBoxGame({route}) {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
   const [generatedBoxes, setGeneratedBoxes] = useState(0);
-  // const route = useRoute();
+  const route = useRoute();
+  // console.log('floatinfgggggg',route.params);
   const routeData = route.params;
 
   const soundRef = useRef(null);
@@ -149,17 +150,18 @@ export default function FloatingBoxGame({route}) {
   const handleBoxClick = box => {
     if (!box.canClick || box.feedbackColor) return;
 
-    // const points = handleNumberClick(box.number);
+    const points = handleNumberClick(box.number);
 
-    // setScore(points);
-    setScore(100)
+    setScore(points);
 
     const isOdd = box.number % 2 !== 0;
     const feedbackColor = isOdd ? '#6AB365' : "#D28989";
     const feedbackImage = isOdd ? StarImage : BombImage;
-    const feedbackBgColor = isOdd ? '#6AB365' :  "#D28989";
-    const feedbackBorderColor = isOdd ? '#6AB365' :  "#D28989";
-    const textColor ='white';
+    const feedbackBgColor = isOdd ? ['#438301','#84CB3C','#438301'] : ['#830101','#BF7474','#830101'];
+
+
+    const feedbackBorderColor = isOdd ? '#569218' : "#921818";
+    const textColor = 'white';
 
     Animated.parallel([
       Animated.timing(box.opacityAnim, {
@@ -213,14 +215,14 @@ export default function FloatingBoxGame({route}) {
       prev.map(item =>
         item.id === box.id
           ? {
-              ...item,
-              feedbackColor: feedbackColor,
-              feedbackImage: feedbackImage,
-              textColor: textColor,
-              feedbackBgColor: feedbackBgColor,
-              feedbackBorderColor: feedbackBorderColor,
-              canClick: false,
-            }
+            ...item,
+            feedbackColor: feedbackColor,
+            feedbackImage: feedbackImage,
+            textColor: textColor,
+            feedbackBgColor: feedbackBgColor,
+            feedbackBorderColor: feedbackBorderColor,
+            canClick: false,
+          }
           : item,
       ),
     );
@@ -254,13 +256,13 @@ export default function FloatingBoxGame({route}) {
 
   return (
     <ImageBackground
-    source={require("../../../assets/images/Screens/background-image.png")} 
-    style={styles.background}
-  >
-    <View style={styles.container}>
-      {/* Header */}
+      source={require("../../../assets/images/Screens/background-image.png")}
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        {/* Header */}
 
-      {/* <ConfirmationModal
+        {/* <ConfirmationModal
         visible={isModalVisible2}
         onClose={() => setIsModalVisible2(false)}
         onYes={handleOnYes}
@@ -269,151 +271,189 @@ export default function FloatingBoxGame({route}) {
         //  heading="Confirmation"
       /> */}
 
-      {isGameOver ? (
-        <GameFinishScreen        />
-      ) : (
-        <>
-          <View style={styles.header}>
-            <View style={styles.timerContainer}>
-              <Image source={ClockImage} style={styles.clockImage} />
-              <Text style={styles.timerText}>
-                {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}
-                {timeLeft % 60}
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.score}>{score}</Text>
-            </View>
-            <View
-              style={{
-                fontSize: 20,
-                position: 'relative',
-                zIndex: 9999,
-                flexDirection: 'row',
-                gap: 10,
-              }}>
+        {isGameOver ? (
+          <GameFinishScreen
+            gameHistoryData={{
+              bonus_point_score: { bonusPoints: 10, superPoints: 20 },
+              double_digit: {
+                assignedScore: 2,
+                score: oddCounts.two * 2,
+                selected: oddCounts.two,
+              },
+              prime_number: {
+                assignedScore: 10,
+                score: primeCount * 10,
+                selected: primeCount,
+              },
+              quadruple_digit: {
+                assignedScore: 4,
+                score: oddCounts.three * 4,
+                selected: oddCounts.four,
+              },
+              score: score,
+              super_number: {
+                assignedScore: 5, 
+                score: 5 * superNumberCount, 
+                selected: superNumberCount,
+              },
+              triple_digit: {
+                assignedScore: 3,
+                score: oddCounts.three * 3,
+                selected: oddCounts.three,
+              },
+              wrong_selection_score: negativePoint,
+            }} />
+        ) : (
+          <>
+            <View style={styles.header}>
+              <View style={styles.timerContainer}>
+                <Image source={ClockImage} style={styles.clockImage} />
+                <Text style={styles.timerText}>
+                  {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}
+                  {timeLeft % 60}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.score}>{score}</Text>
+              </View>
               <View
                 style={{
-                  backgroundColor: isMusicPlaying ? '#ff5722' : 'grey',
-                  borderRadius: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: 7,
-                  elevation: 5,
-                  alignContent: 'center',
+                  fontSize: 20,
+                  position: 'relative',
+                  zIndex: 9999,
+                  flexDirection: 'row',
+                  gap: 10,
                 }}>
-                <Icon
-                  name={isMusicPlaying ? 'volume-1' : 'volume-x'}
-                  size={25}
-                  color={'white'}
-                  onPress={toggleMusic}
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsModalVisible2(true);
-                }}
-                style={{
-                  backgroundColor: '#ff5722',
-                  borderRadius: 20,
-                  padding: 7,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  elevation: 5,
-                  alignContent: 'center',
-                }}>
-                <Image
-                  source={LogoutIcon}
-                  style={{width: 25, height: 25, alignSelf: 'center'}}
-                  tintColor={'white'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.magicNumberContainer}>
-            <Text style={styles.magicNumberText}>{superNumber}</Text>
-          </View>
-
-          {/* Game Area */}
-          <View style={styles.gameArea}>
-            {floatingBoxes.map(box => (
-              <Animated.View
-                key={box.id}
-                style={[
-                  styles.floatingBox,
-                  {
-                    transform: [
-                      {translateX: box.x},
-                      {translateY: box.y},
-                      {
-                        rotate: box.shakeAnimation.interpolate({
-                          inputRange: [-1, 1],
-                          outputRange: ['-10deg', '10deg'],
-                        }),
-                      },
-                    ],
-                    backgroundColor: box.feedbackBgColor,
-                    borderColor: box.feedbackBorderColor,
-                    borderWidth: box.feedbackColor === 'transparent' ? 5 : 1,
-                    color: box.textColor,
-                    borderRadius: 10,
-                  },
-                ]}>
+                <View
+                  style={{
+                    backgroundColor: isMusicPlaying ? '#ff5722' : 'grey',
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 7,
+                    elevation: 5,
+                    alignContent: 'center',
+                  }}>
+                  <Icon
+                    name={isMusicPlaying ? 'volume-1' : 'volume-x'}
+                    size={25}
+                    color={'white'}
+                    onPress={toggleMusic}
+                  />
+                </View>
                 <TouchableOpacity
-                  onPress={() => handleBoxClick(box)}
-                  style={styles.boxButton}>
-                  <View
-                    style={[
-                      styles.numberBox,
-                      box.feedbackColor && styles.highlighedtBox,
-                    ]}>
-                    {box.feedbackImage ? (
-                      <View
-                        style={[
-                          styles.feedbackBoxwrapper,
-                          {
-                            backgroundColor:
-                              box.feedbackColor === 'black'
-                                ? 'transparent'
-                                : 'white',
-                            borderWidth: box.feedbackColor === 'black' ? 0 : 5,
-                          },
-                        ]}>
-                        <Animated.Image
-                          source={box.feedbackImage}
+                  onPress={() => {
+                    setIsModalVisible2(true);
+                  }}
+                  style={{
+                    backgroundColor: '#ff5722',
+                    borderRadius: 20,
+                    padding: 7,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    elevation: 5,
+                    alignContent: 'center',
+                  }}>
+                  <Image
+                    source={LogoutIcon}
+                    style={{ width: 25, height: 25, alignSelf: 'center' }}
+                    tintColor={'white'}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.magicNumberContainer}>
+              <Text style={styles.magicNumberText}>{superNumber}</Text>
+            </View>
+
+            {/* Game Area */}
+            <View style={styles.gameArea}>
+              {floatingBoxes.map(box => (
+                <Animated.View
+                  key={box.id}
+                  style={[
+                    styles.floatingBox,
+                    {
+                      transform: [
+                        { translateX: box.x },
+                        { translateY: box.y },
+                        {
+                          rotate: box.shakeAnimation.interpolate({
+                            inputRange: [-1, 1],
+                            outputRange: ['-10deg', '10deg'],
+                          }),
+                        },
+                      ],
+                      backgroundColor: box.feedbackBgColor,
+                      borderColor: box.feedbackBorderColor,
+                      borderWidth: box.feedbackColor === 'transparent' ? 5 : 1,
+                      color: box.textColor,
+                      borderRadius: 10,
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => handleBoxClick(box)}
+                    style={styles.boxButton}>
+                        <LinearGradient
+                      colors={['#0916B9', '#7F71BF', '#0916B9']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={styles.gradientBorder}>
+                    <LinearGradient colors={['#0916B9', '#7F71BF','#0916B9']}
+                                   start={{ x: 1, y: 0}}
+                                   end={{ x: 1, y: 1 }} 
+                      style={[
+                        styles.numberBox,
+                        box.feedbackColor && styles.highlighedtBox,
+                      ]}>
+                      {box.feedbackImage ? (
+                        <View
                           style={[
-                            styles.feedbackImage,
+                            styles.feedbackBoxwrapper,
                             {
-                              transform: [{scale: box.scaleAnim}],
-                              opacity: box.opacityAnim,
-                            },
-                          ]}
-                        />
-                        <Text
-                          style={[
-                            styles.boxText2,
-                            {
-                              color:
+                              backgroundColor:
                                 box.feedbackColor === 'black'
-                                  ? 'white'
-                                  : '#ff5722',
+                                  ? 'transparent'
+                                  : 'white',
+                              borderWidth: box.feedbackColor === 'black' ? 0 : 5,
                             },
                           ]}>
-                          {box.number}
-                        </Text>
-                      </View>
-                    ) : (
-                      <Text style={styles.boxText}>{box.number}</Text>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </Animated.View>
-            ))}
-          </View>
-        </>
-      )}
-    </View>
+                          <Animated.Image
+                            source={box.feedbackImage}
+                            style={[
+                              styles.feedbackImage,
+                              {
+                                transform: [{ scale: box.scaleAnim }],
+                                opacity: box.opacityAnim,
+                              },
+                            ]}
+                          />
+                          <Text
+                            style={[
+                              styles.boxText2,
+                              {
+                                color:
+                                  box.feedbackColor === 'black'
+                                    ? 'white'
+                                    : '#ff5722',
+                              },
+                            ]}>
+                            {box.number}
+                          </Text>
+                        </View>
+                      ) : (
+                        <Text style={styles.boxText}>{box.number}</Text>
+                      )}
+                    </LinearGradient>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </Animated.View>
+              ))}
+            </View>
+          </>
+        )}
+      </View>
     </ImageBackground>
   );
 }
@@ -432,7 +472,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 70,
     left: 20,
-    backgroundColor:"#7C7FDF",
+    backgroundColor: "#7C7FDF",
     zIndex: 9999,
     height: 45,
     width: 45,
@@ -489,19 +529,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'red'
+  },
+  gradientBorder: {
+    width: widthPercentageToDP(21) + 6, 
+    height: heightPercentageToDP(11) + 6, 
+    borderRadius: 14, 
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#7C7FDF',
+    shadowOffset: { width: 3, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   numberBox: {
     width: widthPercentageToDP(21),
     height: heightPercentageToDP(11),
-    backgroundColor: "#7C7FDF",
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    // elevation: 5,
+    
   },
   boxText: {
     color: 'white',
@@ -567,6 +616,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     position: 'relative',
     zIndex: -1,
+
   },
 
   highlighedtBox: {

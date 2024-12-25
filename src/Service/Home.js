@@ -7,7 +7,6 @@ export const getGameData = async _id => {
       const response = await apiInstance.post(`${Config.Home_Api}`, {
         user_id: _id,
       });
-      console.log('response home scren ---->', response.data);
       return response.data;
     } catch (error) {
       console.log('errror', error);

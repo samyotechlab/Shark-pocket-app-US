@@ -16,19 +16,21 @@ import UpcomingGameCard from '../../Components/UpcomingGameCard'
 import { useRoute } from '@react-navigation/native'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { getGameData } from '../../Service/Home'
+import { Loader } from '../../Components/Loader'
+import { useNavigation } from '@react-navigation/native'
 
 export default function HomeScreen({route}) {
-
-
+  const navigation = useNavigation()
   const {loginData,isReady} = useLoginDataStorage();
   const [loader,setLoader] = useState(false)
-
+  const [gameData,setGameData] =useState([]);
   const data = isReady && loginData && loginData?.data 
 
   const getAllData = async()=>{
     setLoader(true)
     try {
       const response =await  getGameData(data._id)
+      setGameData(response.data)
     } catch (error) {
       console.log("error",error)
     }finally{
@@ -41,7 +43,7 @@ export default function HomeScreen({route}) {
     }else{
       setLoader(true)
     }
-  },[])
+  },[isReady, loginData])
 
 
   return (
@@ -50,7 +52,9 @@ export default function HomeScreen({route}) {
       style={styles.linearGradient}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
+        {
+          !loader ? (<>
+                  <View style={styles.container}>
           {/* Logo Section */}
           <View style={styles.logoContainer}>
             <Image source={sharkLogo} style={styles.logo} />
@@ -93,12 +97,14 @@ export default function HomeScreen({route}) {
           <View style={{ flex: 0.5, flexDirection: 'row', alignItems: 'center', paddingLeft: 22 }}>
             <Image source={Lighting} style={styles.light} />
             <Text style={styles.myGame}>AVAILABLE GAMES </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate('AvailableGame',{gameData})
+            }}>
               <Text style={styles.view}>View All</Text>
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1.5,marginTop:10 }}>
-            <AvailbleGameCard />
+            <AvailbleGameCard gameData={gameData}/>
           </View>
         </View>
 
@@ -112,9 +118,11 @@ export default function HomeScreen({route}) {
           </View>
           <View style={{ flex: 1.5, flexDirection: 'row'}}>
             <UpcomingGameCard />
-            {/* <AvailbleGameCard /> */}
           </View>
         </View>
+          </>):(<Loader/>)
+        }
+
       </ScrollView>
     </LinearGradient>
   )

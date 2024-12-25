@@ -1,0 +1,20 @@
+import Config from "../Utilities/Config";
+import apiInstance from "./AxiosInstance";
+
+export const gameRule = async () => {
+    try {
+      const response = await apiInstance.get(Config.Game_Rule);
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error(
+          'Failed to fetch game rules. Status code:',
+          response.status,
+        );
+        throw new Error(`Failed to fetch game rules: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error fetching game rules:', error.message || error);
+      throw error;
+    }
+  };

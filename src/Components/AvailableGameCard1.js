@@ -5,18 +5,18 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
 const AvailbleGameCard = (props) => {
     const route = useRoute();
-    console.log(route.name)
     const navigation = useNavigation();
     const myGames= props.gameData
     const handleNavigation = ()=>{
         if(route.name === "Result"){
             navigation.navigate('LocalGameBoard')
         }else if(route.name === "Home"){
-            navigation.navigate("AvailableGame",{gameData:myGames})
+            navigation.navigate("AvailableGame",{myGames})
         }else{
             navigation.navigate("GameName")
         }
     }
+    
     return (
         <TouchableOpacity style={styles.container} onPress={()=>{
             handleNavigation()
