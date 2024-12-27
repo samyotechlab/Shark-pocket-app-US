@@ -18,3 +18,22 @@ export const gameRule = async () => {
       throw error;
     }
   };
+
+
+export const gameList = async () => {
+  try {
+    const response = await apiInstance.post(Config.Game_List);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error(
+        'Failed to fetch game list. Status code:',
+        response.status,
+      );
+      throw new Error(`Failed to fetch games list:  ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error fetching game list:', error.message || error);
+    throw error;
+  }
+};

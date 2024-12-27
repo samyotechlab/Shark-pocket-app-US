@@ -5,7 +5,7 @@ import {Text} from 'react-native-svg';
 export const Loader = () => {
   return (
     <View style={styles.loader}>
-      <ActivityIndicator size="large" color="red" />
+      <ActivityIndicator size="large" color="black" />
       <Text>Loading...</Text>
     </View>
   );

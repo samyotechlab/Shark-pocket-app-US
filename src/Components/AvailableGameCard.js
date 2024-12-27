@@ -3,20 +3,21 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'r
 import Game from '../../assets/images/Screens/game1.png'
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { formatDate } from '../Utilities/utilies';
 const AvailbleGameCard = (props) => {
     const route = useRoute();
-    console.log(route.name)
     const navigation = useNavigation();
     const myGames= props.gameData
     const handleNavigation = ()=>{
         if(route.name === "Result"){
-            navigation.navigate('LocalGameBoard')
+            navigation.navigate('LocalGameBoard',{game_id:myGames._id})
         }else if(route.name === "Home"){
             navigation.navigate("AvailableGame",{gameData:myGames})
         }else{
             navigation.navigate("GameName")
         }
     }
+     const formattedDate = formatDate(myGames.start_date);
     return (
         <TouchableOpacity style={styles.container} onPress={()=>{
             handleNavigation()
@@ -34,18 +35,18 @@ const AvailbleGameCard = (props) => {
                     />
                     <View style={styles.textContainer}>
                         <Text style={styles.headerText}>
-                            GET ₹3000 & PLAY NOW
+                            GET {myGames.enroll_cost} & PLAY NOW
                         </Text>
                         <Text style={styles.description}>
                             You will get the ₹3000 prize money
                             enroll yourself before game start
                         </Text>
                         <Text style={styles.startText}>
-                            Start <Text style={styles.dateText}>30 October</Text>
+                            Start <Text style={styles.dateText}>{formattedDate}</Text>
                         </Text>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.button}>
-                                <Text style={styles.buttonText}>₹ 3000 CASH WIN</Text>
+                                <Text style={styles.buttonText}>{myGames.winning_cost} CASH WIN</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

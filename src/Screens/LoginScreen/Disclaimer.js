@@ -6,8 +6,9 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { userDetail } from '../../Service/Login';
 const Disclaimer = () => {
     const route = useRoute()
-    console.log('route--->------->', route.params.data);
-    const data = route.params.data._id
+    console.log('route--->------->', route.params);
+
+    const user_id = route.params.data._id
     const navigation  = useNavigation()
   const [isChecked, setIsChecked] = useState(false);
 
@@ -42,7 +43,7 @@ const Disclaimer = () => {
           style={[styles.button, !isChecked && styles.buttonDisabled]}
           disabled={!isChecked}
           onPress={()=>{
-            navigation.navigate('AadharDetail')
+            navigation.navigate('AadharDetail',{user_id})
           }}
         >
           <Text style={styles.buttonText}>VERIFY AADHAR CARD</Text>

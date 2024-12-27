@@ -157,19 +157,19 @@ export default function Tickets() {
 
     return (
         <>
-        {
-            !loader ? ( <View style={styles.container}>
-                <FlatList
-                    data={ticketData}
-                    renderItem={renderItem}
-                    keyExtractor={(item, index) => index.toString()}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.scrollContainer}
-                />
-            </View>):(<Loader/>)
-        }
+            {
+                !loader ? (<View style={styles.container}>
+                    <FlatList
+                        data={ticketData}
+                        renderItem={renderItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.scrollContainer}
+                    />
+                </View>) : (<Loader />)
+            }
         </>
-       
+
     )
 }
 const styles = StyleSheet.create({

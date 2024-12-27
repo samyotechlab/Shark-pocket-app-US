@@ -65,7 +65,7 @@ export default function OtpVerify() {
                 visibilityTime: 5000
               }); 
               setTimeout(() => {
-                if(res.data.data.is_aadhar_verified === 1){
+                if(res.data.data.is_aadhar_verified === 0){
                   navigation.navigate('DisclaimerScreen', {data:res.data.data});
                   }else{
                     navigation.navigate('HomeScreen', {data:res.data.data});

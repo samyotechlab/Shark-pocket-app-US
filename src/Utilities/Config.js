@@ -10,4 +10,6 @@ export default {
     Game_Ticket_List: 'api/ticket/getUserTicket',
     Store_Ticket: 'api/purchase_ticket/store',
     Game_Rule: 'api/getGameRules/list',
+    Game_List: 'api/availableGame/list',
+    LeaderBoardByGameId: 'api/game_score/byGameId',
 };

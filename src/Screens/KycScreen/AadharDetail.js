@@ -5,13 +5,17 @@ import CommonButton from '../../Components/CommonButton'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Toast from 'react-native-toast-message'
 import CommonHeader from '../../Components/CommonHeader'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 
 
 export default function AadharDetail() {
+    const route = useRoute()
+    const {user_id} = route.params
+    console.log(user_id)
     const [aadhaar_number, setAadharNumber] = useState('')
     const [aadharError, setAadharError] = useState('')
+    const [aadharCard,setAadharCard] = useState({})
     const navigation = useNavigation()
 
     const validateInputs = () => {
@@ -32,6 +36,10 @@ export default function AadharDetail() {
         try {
             const response = await AdharVerificationSendOtp(aadhaar_number);
             console.log("response",response)
+            if(response.status === 1 ){
+                setAadharCard(response.data)
+                navigation.navigate("AadharOtpVerify",{data:response.data,user_id})
+            }
         } catch (error) {
             console.log("error",error)
         }finally{

@@ -9,11 +9,11 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import ClockImage from '../../../assets/images/GameImage/clock-image.png';
-import LogoutIcon from '../../../assets/images/GameImage/logoutM.png';
-import Icon from 'react-native-vector-icons/Feather';
+import Coin from '../../../assets/images/Screens/CoinStack.png'
+import Iconicons from 'react-native-vector-icons/Entypo';
 import StarImage from '../../../assets/images/GameImage/star.png';
 import BombImage from '../../../assets/images/GameImage/smash-icon.png';
+import Speaker from '../../../assets/images/Screens/speaker.png'
 import Sound from 'react-native-sound';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
@@ -254,6 +254,10 @@ export default function FloatingBoxGame() {
     }
   }, [isGameOver]);
 
+  const closeModal = () => {
+    setIsGameOver(false);
+  };
+
   return (
     <ImageBackground
       source={require("../../../assets/images/Screens/background-image.png")}
@@ -273,6 +277,8 @@ export default function FloatingBoxGame() {
 
         {isGameOver ? (
           <GameFinishScreen
+          isVisible={isGameOver}
+          onClose={closeModal}
             gameHistoryData={{
               bonus_point_score: { bonusPoints: 10, superPoints: 20 },
               double_digit: {
@@ -307,15 +313,24 @@ export default function FloatingBoxGame() {
           <>
             <View style={styles.header}>
               <View style={styles.timerContainer}>
-                <Image source={ClockImage} style={styles.clockImage} />
+                {/* <Image source={ClockImage} style={styles.clockImage} /> */}
                 <Text style={styles.timerText}>
                   {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}
                   {timeLeft % 60}
                 </Text>
               </View>
-              <View>
+              <LinearGradient 
+               colors={['#00E000', '#00B300', '#00B300']}
+               start={{ x: 0, y: 0.5 }}
+               end={{ x: 1, y: 0.5 }}
+              style={{flexDirection:'row',paddingVertical:widthPercentageToDP('1.5%'),paddingHorizontal:widthPercentageToDP('5%'),borderRadius:10}}>
+
+                <Image source={Coin}/>
                 <Text style={styles.score}>{score}</Text>
-              </View>
+              </LinearGradient>
+              <View style={styles.magicNumberContainer}>
+              <Text style={styles.magicNumberText}>{superNumber}</Text>
+            </View>
               <View
                 style={{
                   fontSize: 20,
@@ -323,49 +338,34 @@ export default function FloatingBoxGame() {
                   zIndex: 9999,
                   flexDirection: 'row',
                   gap: 10,
+                  
                 }}>
-                <View
-                  style={{
-                    backgroundColor: isMusicPlaying ? '#ff5722' : 'grey',
-                    borderRadius: 20,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: 7,
-                    elevation: 5,
-                    alignContent: 'center',
-                  }}>
-                  <Icon
-                    name={isMusicPlaying ? 'volume-1' : 'volume-x'}
-                    size={25}
-                    color={'white'}
-                    onPress={toggleMusic}
-                  />
-                </View>
                 <TouchableOpacity
                   onPress={() => {
                     setIsModalVisible2(true);
-                  }}
-                  style={{
-                    backgroundColor: '#ff5722',
-                    borderRadius: 20,
-                    padding: 7,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    elevation: 5,
-                    alignContent: 'center',
+                  }}  
+
+                  >
+                 <Image
+                    source={Speaker}
+                    style={{ width: 30, height: 30, alignSelf: 'center',marginTop:10}}
+                    // tintColor={'white'}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsModalVisible2(true);
                   }}>
-                  <Image
-                    source={LogoutIcon}
-                    style={{ width: 25, height: 25, alignSelf: 'center' }}
-                    tintColor={'white'}
+                   <Iconicons
+                    name={'cross'}
+                    size={50}
+                    color={'red'}
                   />
                 </TouchableOpacity>
               </View>
             </View>
 
-            <View style={styles.magicNumberContainer}>
-              <Text style={styles.magicNumberText}>{superNumber}</Text>
-            </View>
+           
 
             {/* Game Area */}
             <View style={styles.gameArea}>
@@ -468,33 +468,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   magicNumberContainer: {
-    position: 'absolute',
-    left: 0,
-    top: 70,
     left: 20,
-    backgroundColor: "#7C7FDF",
-    zIndex: 9999,
-    height: 45,
-    width: 45,
+    backgroundColor: "#D5B723",
+    height: 35,
+    width: 35,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor:'#EFD635',
+    borderWidth:2
   },
   magicNumberText: {
-    fontSize: 20,
+    fontSize: 22,
     color: 'white',
-    fontWeight: '700',
+    fontFamily:'LilitaOne-Regular'
   },
   header: {
     height: 80,
     width: '100%',
-    backgroundColor: 'none',
+    backgroundColor: 'transparent',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     position: 'absolute',
     zIndex: 9999,
+    marginTop:10
+    
   },
   timerContainer: {
     flexDirection: 'row',
@@ -506,14 +506,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   timerText: {
-    fontSize: 20,
-    color: 'black',
-    fontWeight: '700',
+    fontSize: 25,
+    color: '#FFFFFFCC',
+    fontFamily:'LilitaOne-Regular'
   },
   score: {
-    color: 'black',
-    fontSize: 24,
-    fontWeight: '700',
+    color: '#FFFFFF',
+    fontSize: 26,
+      fontFamily:'LilitaOne-Regular'
   },
   gameArea: {
     flex: 1,

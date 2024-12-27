@@ -7,13 +7,12 @@ export const AdharVerificationSendOtp = async aadhaar_number => {
   console.log('adhar_number', aadhaar_number);
   console.log( `${API_URL}/${Config.AdharOptSend}`)
   try {
-    const response = await axios.post( `${API_URL}/${Config.AdharOptSend}`, {
+    const response = await axios.post(`${API_URL}/${Config.AdharOptSend}`, {
       aadhaar_number,
     });
-    console.log('response for userData', response.data);
     return response.data;
   } catch (error) {
-    console.log('error-->', error);
+    console.log('error =====>', error);
     throw error;
   }
 };

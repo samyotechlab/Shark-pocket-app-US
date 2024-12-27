@@ -1,5 +1,5 @@
 import { FlatList, Image, SafeAreaView, SafeAreaViewBase, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import LeaderBoard from './LeaderBoard'
 import Iconics from 'react-native-vector-icons/Ionicons';
@@ -10,13 +10,64 @@ import Person4 from '../../assets/images/Screens/Person4.jpeg'
 import Person from '../../assets/images/Screens/person.jpeg'
 import Frame from '../../assets/images/Screens/Frame.png'
 import SearchField from './SearchField';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { leaderBoard } from '../Service/LeaderBoard';
+import Toast from 'react-native-toast-message';
 
 export default function LocalGameBoard() {
-  const navigation = useNavigation()
+  const route = useRoute();
+  const{game_id} = route.params
+  const navigation = useNavigation();
+  const [loader,setLoader] = useState(false)
+  const [gameData,setGameData] = useState([])
+  const [firstRanking, setFirstRanking] = useState(null);
+  const [secondRanking, setSecondRanking] = useState(null);
+  const [thirdRanking, setThirdRanking] = useState(null);
+
   const handleNavigation=()=>{
     navigation.goBack()
   }
+
+  const leaderBoardData = async () => {
+    setLoader(true);
+    try {
+      const response = await leaderBoard(game_id);
+      console.log("response",response)
+      if (response) {
+        console.log('res======>', response?.data);
+        setGameData(response.data);
+      } else {
+        Toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+      Toast.error(error);
+    }finally{
+      setLoader(false);
+    }
+  };
+
+  useEffect(()=>{
+    console.log("hello")
+    leaderBoardData();
+  },[])
+
+  useEffect(() => {
+    rakingData();
+  }, [gameData]);
+
+  const rakingData = () => {
+    gameData.map(item => {
+      if (item.ranking === 1) {
+        setFirstRanking(item);
+      } else if (item.ranking === 2) {
+        setSecondRanking(item);
+      } else if (item.ranking === 3) {
+        setThirdRanking(item);
+        console.log('itemmmmmmmmmm', item);
+      }
+    });
+  };
 
     const data = [
         {
@@ -233,7 +284,7 @@ export default function LocalGameBoard() {
                    <View style={{flex:6, backgroundColor: 'rgba(255, 255, 255, 0.5)', margin: wp('6%'), borderRadius: 15}}>
                          <SafeAreaView style={{ flex: 1,margin:wp('4%')}}>
                               <FlatList
-                                data={data}
+                                data={gameData}
                                 renderItem={renderItem}
                                 keyExtractor={(item, index) => index.toString()}
                                 showsVerticalScrollIndicator={false}

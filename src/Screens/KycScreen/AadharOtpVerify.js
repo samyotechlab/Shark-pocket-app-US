@@ -6,7 +6,7 @@ import CommonButton from '../../Components/CommonButton'
 import Backarrow from '../../../assets/images/Applogo/arrow_back.png'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import axios from 'axios'
-import {API_URL} from '@env';
+import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 
@@ -18,9 +18,11 @@ const headers = {
 export default function AadharOtpVerify() {
   const route = useRoute()
   console.log('route--->', route.params);
-  const data = route.params
-  const navigation = useNavigation()
-  const [otp, setOtp] = useState(['', '', '', '']);
+  const { data } = route.params
+  const { user_id } = route.params
+  console.log("data========>", user_id)
+  const navigation = useNavigation();
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
 
   const handleChange = (text, index) => {
@@ -28,7 +30,7 @@ export default function AadharOtpVerify() {
     newOtp[index] = text;
     setOtp(newOtp);
 
-    if (text && index < 3) {
+    if (text && index < 5) {
       inputs.current[index + 1].focus();
     }
   }
@@ -38,43 +40,47 @@ export default function AadharOtpVerify() {
     }
   };
   const handleOtp = () => {
+    const verificationData = {
+      user_id: user_id,
+      otp: otp.join(''),
+      status: data.status,
+      ref_id: data.ref_id
+    }
     try {
-        console.log('phoneNumber',`${API_URL}/${Config.OtpVerify}`);
-        axios
-          .post(
-           `${API_URL}/${Config.OtpVerify}`,
-            {
-              user_id: data.user_id,
-              otp: otp.join(''),
-              mobile:data.mobile
-            },
-            headers,
-          )
-          .then(res => {
-            console.log('res--->', res.data.data);
-            if (res.data.status === 1) {
-              Toast.show({
-                type: 'success', 
-                position: 'top', 
-                text1: 'Otp Send!', 
-                text2: 'Otp Send Succesffully in the given Number', 
-                visibilityTime: 5000
-              }); 
-              navigation.navigate('DisclaimerScreen', {data:res.data.data});
-            } else {
-              Toast.show({
-                type: 'error', 
-                position: 'top', 
-                text1: 'Error!', 
-                text2: 'Authentication Failed',
-                visibilityTime: 4000,
-              });
-            }
-          })
-          .catch(err => {
-            console.log('error--->', err); 
-          });
-      
+      console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
+      axios
+        .post(
+          `${API_URL}/${Config.AdharVerifyOtp}`,
+          {
+            verificationData
+          },
+          headers,
+        )
+        .then(res => {
+          console.log('res--->', res.data.data);
+          if (res.data.status === 1) {
+            Toast.show({
+              type: 'success',
+              position: 'top',
+              text1: 'Otp Send!',
+              text2: 'Otp Send Succesffully in the given Number',
+              visibilityTime: 5000
+            });
+            navigation.navigate('HomeScreen', { data: res.data.data });
+          } else {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: 'Error!',
+              text2: 'Authentication Failed',
+              visibilityTime: 4000,
+            });
+          }
+        })
+        .catch(err => {
+          console.log('error--->', err);
+        });
+
     } catch (error) {
       console.log('An error occurred:', error);
     }
@@ -94,8 +100,8 @@ export default function AadharOtpVerify() {
               <Text style={styles.headerText}>Verification</Text>
             </View>
           </View>
-          <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 4-digit code sent to your
-            phone number {data.aadhaar_number} for verification.</Text>
+          <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 6-digit code sent to your
+            phone number for verification.</Text>
         </View>
         <View style={[styles.box, { justifyContent: 'center' }]}>
           <View style={styles.inputContainer}>
@@ -116,13 +122,13 @@ export default function AadharOtpVerify() {
           </View>
         </View>
         <View style={[styles.box, { paddingVertical: hp('4%'), padding: hp('2%') }]}>
-          <CommonButton title={'Verify'} onPress={handleOtp}/>
+          <CommonButton title={'Verify'} onPress={handleOtp} />
           <Text style={styles.timer}>00:30</Text>
           <Text style={styles.resendOtp}>Resend OTP</Text>
         </View>
-         <Toast ref={(ref) => Toast.setRef(ref)} />
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </View>
-    
+
     </>
   )
 }
@@ -147,8 +153,9 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: wp('10%'),
+    paddingHorizontal: wp('3%'),
     marginTop: hp('0%'),
+
   },
   icon: {
     height: hp('2.5%'),
@@ -176,6 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 5,
     backgroundColor: '#f9f9f9',
+
   },
   resendOtp: {
     textDecorationLine: 'underline',
@@ -191,9 +199,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     fontSize: hp('1.5%')
   },
-  footerText:{
-    color:'#FFFFFF',
-    textAlign:'center',
-    paddingTop:hp('10%')
+  footerText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    paddingTop: hp('10%')
   }
 })
