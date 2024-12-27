@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -9,23 +9,23 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import Coin from '../../../assets/images/Screens/CoinStack.png'
+import Coin from '../../../assets/images/Screens/CoinStack.png';
 import Iconicons from 'react-native-vector-icons/Entypo';
 import StarImage from '../../../assets/images/GameImage/star.png';
 import BombImage from '../../../assets/images/GameImage/smash-icon.png';
-import Speaker from '../../../assets/images/Screens/speaker.png'
+import Speaker from '../../../assets/images/Screens/speaker.png';
 import Sound from 'react-native-sound';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import { useGameLogic } from './GameLogic';
+import {useGameLogic} from './GameLogic';
 import GameFinishScreen from './GameFinishScreen';
-import { finalScore } from '../../Service/FinalScore';
 import LinearGradient from 'react-native-linear-gradient';
+import {finalScore} from '../../Service/Game';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const getRandomNumber = () => Math.floor(Math.random() * 300) + 1;
 
@@ -155,12 +155,13 @@ export default function FloatingBoxGame() {
     setScore(points);
 
     const isOdd = box.number % 2 !== 0;
-    const feedbackColor = isOdd ? '#6AB365' : "#D28989";
+    const feedbackColor = isOdd ? '#6AB365' : '#D28989';
     const feedbackImage = isOdd ? StarImage : BombImage;
-    const feedbackBgColor = isOdd ? ['#438301','#84CB3C','#438301'] : ['#830101','#BF7474','#830101'];
+    const feedbackBgColor = isOdd
+      ? ['#438301', '#84CB3C', '#438301']
+      : ['#830101', '#BF7474', '#830101'];
 
-
-    const feedbackBorderColor = isOdd ? '#569218' : "#921818";
+    const feedbackBorderColor = isOdd ? '#569218' : '#921818';
     const textColor = 'white';
 
     Animated.parallel([
@@ -215,33 +216,41 @@ export default function FloatingBoxGame() {
       prev.map(item =>
         item.id === box.id
           ? {
-            ...item,
-            feedbackColor: feedbackColor,
-            feedbackImage: feedbackImage,
-            textColor: textColor,
-            feedbackBgColor: feedbackBgColor,
-            feedbackBorderColor: feedbackBorderColor,
-            canClick: false,
-          }
+              ...item,
+              feedbackColor: feedbackColor,
+              feedbackImage: feedbackImage,
+              textColor: textColor,
+              feedbackBgColor: feedbackBgColor,
+              feedbackBorderColor: feedbackBorderColor,
+              canClick: false,
+            }
           : item,
       ),
     );
   };
 
   const handleCallApi = async () => {
-    console.log("hello")
-    // try {
-    //   const response = await finalScore(
-    //     numberStringData,
-    //     superNumber,
-    //     routeData.game_id,
-    //     routeData.ticket_id,
-    //     routeData.user_id,
-    //   );
-    //   console.log('i want response hereeeeee', response);
-    // } catch (error) {
-    //   console.log('error--------------->>>>>>>', error);
-    // }
+    console.log('hello');
+    try {
+      console.log(
+        'numberStringData',
+        numberStringData,
+        superNumber,
+        routeData.game_id,
+        routeData.ticket_id,
+        routeData.user_id,
+      );
+      const response = await finalScore(
+        numberStringData,
+        superNumber,
+        routeData.game_id,
+        routeData.ticket_id,
+        routeData.user_id,
+      );
+      console.log('i want response hereeeeee', response);
+    } catch (error) {
+      console.log('error--------------->>>>>>>', error);
+    }
   };
 
   const handleOnYes = () => {
@@ -260,9 +269,8 @@ export default function FloatingBoxGame() {
 
   return (
     <ImageBackground
-      source={require("../../../assets/images/Screens/background-image.png")}
-      style={styles.background}
-    >
+      source={require('../../../assets/images/Screens/background-image.png')}
+      style={styles.background}>
       <View style={styles.container}>
         {/* Header */}
 
@@ -277,10 +285,10 @@ export default function FloatingBoxGame() {
 
         {isGameOver ? (
           <GameFinishScreen
-          isVisible={isGameOver}
-          onClose={closeModal}
+            isVisible={isGameOver}
+            onClose={closeModal}
             gameHistoryData={{
-              bonus_point_score: { bonusPoints: 10, superPoints: 20 },
+              bonus_point_score: {bonusPoints: 10, superPoints: 20},
               double_digit: {
                 assignedScore: 2,
                 score: oddCounts.two * 2,
@@ -298,8 +306,8 @@ export default function FloatingBoxGame() {
               },
               score: score,
               super_number: {
-                assignedScore: 5, 
-                score: 5 * superNumberCount, 
+                assignedScore: 5,
+                score: 5 * superNumberCount,
                 selected: superNumberCount,
               },
               triple_digit: {
@@ -308,7 +316,8 @@ export default function FloatingBoxGame() {
                 selected: oddCounts.three,
               },
               wrong_selection_score: negativePoint,
-            }} />
+            }}
+          />
         ) : (
           <>
             <View style={styles.header}>
@@ -319,18 +328,22 @@ export default function FloatingBoxGame() {
                   {timeLeft % 60}
                 </Text>
               </View>
-              <LinearGradient 
-               colors={['#00E000', '#00B300', '#00B300']}
-               start={{ x: 0, y: 0.5 }}
-               end={{ x: 1, y: 0.5 }}
-              style={{flexDirection:'row',paddingVertical:widthPercentageToDP('1.5%'),paddingHorizontal:widthPercentageToDP('5%'),borderRadius:10}}>
-
-                <Image source={Coin}/>
+              <LinearGradient
+                colors={['#00E000', '#00B300', '#00B300']}
+                start={{x: 0, y: 0.5}}
+                end={{x: 1, y: 0.5}}
+                style={{
+                  flexDirection: 'row',
+                  paddingVertical: widthPercentageToDP('1.5%'),
+                  paddingHorizontal: widthPercentageToDP('5%'),
+                  borderRadius: 10,
+                }}>
+                <Image source={Coin} />
                 <Text style={styles.score}>{score}</Text>
               </LinearGradient>
               <View style={styles.magicNumberContainer}>
-              <Text style={styles.magicNumberText}>{superNumber}</Text>
-            </View>
+                <Text style={styles.magicNumberText}>{superNumber}</Text>
+              </View>
               <View
                 style={{
                   fontSize: 20,
@@ -338,17 +351,19 @@ export default function FloatingBoxGame() {
                   zIndex: 9999,
                   flexDirection: 'row',
                   gap: 10,
-                  
                 }}>
                 <TouchableOpacity
                   onPress={() => {
                     setIsModalVisible2(true);
-                  }}  
-
-                  >
-                 <Image
+                  }}>
+                  <Image
                     source={Speaker}
-                    style={{ width: 30, height: 30, alignSelf: 'center',marginTop:10}}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      alignSelf: 'center',
+                      marginTop: 10,
+                    }}
                     // tintColor={'white'}
                   />
                 </TouchableOpacity>
@@ -356,16 +371,10 @@ export default function FloatingBoxGame() {
                   onPress={() => {
                     setIsModalVisible2(true);
                   }}>
-                   <Iconicons
-                    name={'cross'}
-                    size={50}
-                    color={'red'}
-                  />
+                  <Iconicons name={'cross'} size={50} color={'red'} />
                 </TouchableOpacity>
               </View>
             </View>
-
-           
 
             {/* Game Area */}
             <View style={styles.gameArea}>
@@ -376,8 +385,8 @@ export default function FloatingBoxGame() {
                     styles.floatingBox,
                     {
                       transform: [
-                        { translateX: box.x },
-                        { translateY: box.y },
+                        {translateX: box.x},
+                        {translateY: box.y},
                         {
                           rotate: box.shakeAnimation.interpolate({
                             inputRange: [-1, 1],
@@ -395,57 +404,59 @@ export default function FloatingBoxGame() {
                   <TouchableOpacity
                     onPress={() => handleBoxClick(box)}
                     style={styles.boxButton}>
-                        <LinearGradient
+                    <LinearGradient
                       colors={['#0916B9', '#7F71BF', '#0916B9']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 1}}
                       style={styles.gradientBorder}>
-                    <LinearGradient colors={['#0916B9', '#7F71BF','#0916B9']}
-                                   start={{ x: 1, y: 0}}
-                                   end={{ x: 1, y: 1 }} 
-                      style={[
-                        styles.numberBox,
-                        box.feedbackColor && styles.highlighedtBox,
-                      ]}>
-                      {box.feedbackImage ? (
-                        <View
-                          style={[
-                            styles.feedbackBoxwrapper,
-                            {
-                              backgroundColor:
-                                box.feedbackColor === 'black'
-                                  ? 'transparent'
-                                  : 'white',
-                              borderWidth: box.feedbackColor === 'black' ? 0 : 5,
-                            },
-                          ]}>
-                          <Animated.Image
-                            source={box.feedbackImage}
+                      <LinearGradient
+                        colors={['#0916B9', '#7F71BF', '#0916B9']}
+                        start={{x: 1, y: 0}}
+                        end={{x: 1, y: 1}}
+                        style={[
+                          styles.numberBox,
+                          box.feedbackColor && styles.highlighedtBox,
+                        ]}>
+                        {box.feedbackImage ? (
+                          <View
                             style={[
-                              styles.feedbackImage,
+                              styles.feedbackBoxwrapper,
                               {
-                                transform: [{ scale: box.scaleAnim }],
-                                opacity: box.opacityAnim,
-                              },
-                            ]}
-                          />
-                          <Text
-                            style={[
-                              styles.boxText2,
-                              {
-                                color:
+                                backgroundColor:
                                   box.feedbackColor === 'black'
-                                    ? 'white'
-                                    : '#ff5722',
+                                    ? 'transparent'
+                                    : 'white',
+                                borderWidth:
+                                  box.feedbackColor === 'black' ? 0 : 5,
                               },
                             ]}>
-                            {box.number}
-                          </Text>
-                        </View>
-                      ) : (
-                        <Text style={styles.boxText}>{box.number}</Text>
-                      )}
-                    </LinearGradient>
+                            <Animated.Image
+                              source={box.feedbackImage}
+                              style={[
+                                styles.feedbackImage,
+                                {
+                                  transform: [{scale: box.scaleAnim}],
+                                  opacity: box.opacityAnim,
+                                },
+                              ]}
+                            />
+                            <Text
+                              style={[
+                                styles.boxText2,
+                                {
+                                  color:
+                                    box.feedbackColor === 'black'
+                                      ? 'white'
+                                      : '#ff5722',
+                                },
+                              ]}>
+                              {box.number}
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text style={styles.boxText}>{box.number}</Text>
+                        )}
+                      </LinearGradient>
                     </LinearGradient>
                   </TouchableOpacity>
                 </Animated.View>
@@ -469,19 +480,19 @@ const styles = StyleSheet.create({
   },
   magicNumberContainer: {
     left: 20,
-    backgroundColor: "#D5B723",
+    backgroundColor: '#D5B723',
     height: 35,
     width: 35,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor:'#EFD635',
-    borderWidth:2
+    borderColor: '#EFD635',
+    borderWidth: 2,
   },
   magicNumberText: {
     fontSize: 22,
     color: 'white',
-    fontFamily:'LilitaOne-Regular'
+    fontFamily: 'LilitaOne-Regular',
   },
   header: {
     height: 80,
@@ -493,8 +504,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     position: 'absolute',
     zIndex: 9999,
-    marginTop:10
-    
+    marginTop: 10,
   },
   timerContainer: {
     flexDirection: 'row',
@@ -508,12 +518,12 @@ const styles = StyleSheet.create({
   timerText: {
     fontSize: 25,
     color: '#FFFFFFCC',
-    fontFamily:'LilitaOne-Regular'
+    fontFamily: 'LilitaOne-Regular',
   },
   score: {
     color: '#FFFFFF',
     fontSize: 26,
-      fontFamily:'LilitaOne-Regular'
+    fontFamily: 'LilitaOne-Regular',
   },
   gameArea: {
     flex: 1,
@@ -529,17 +539,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red'
+    backgroundColor: 'red',
   },
   gradientBorder: {
-    width: widthPercentageToDP(21) + 6, 
-    height: heightPercentageToDP(11) + 6, 
-    borderRadius: 14, 
+    width: widthPercentageToDP(21) + 6,
+    height: heightPercentageToDP(11) + 6,
+    borderRadius: 14,
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#7C7FDF',
-    shadowOffset: { width: 3, height: 2 },
+    shadowOffset: {width: 3, height: 2},
     shadowOpacity: 1,
     shadowRadius: 3.84,
     elevation: 5,
@@ -550,7 +560,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    
   },
   boxText: {
     color: 'white',
@@ -616,7 +625,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     position: 'relative',
     zIndex: -1,
-
   },
 
   highlighedtBox: {
