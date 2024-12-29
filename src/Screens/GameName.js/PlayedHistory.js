@@ -1,37 +1,53 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import trophy from '../../../assets/images/Screens/trophy2.png'
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
+import { Loader } from '../../Components/Loader';
+import Toast from 'react-native-toast-message';
+import { historyData } from '../../Service/GameHistory';
+import { useNavigation } from '@react-navigation/native';
 
 const PlayedHistory = () => {
-  const myGames = [{
-    id: 1,
-    date: '27-02-2024',
-    time: '02:23 Pm',
-    score: '2236.2',
-  }, {
-    id: 2,
-    date: '27-02-2024',
-    time: '02:23 Pm',
-    score: '2236.2',
-  }, {
-    id: 3,
-    date: '27-02-2024',
-    time: '02:23 Pm',
-    score: '2236.2',
-  }, {
-    id: 4,
-    date: '27-02-2024',
-    time: '02:23 Pm',
-    score: '2236.2',
-  }]
+  const [loader,setLoader] = useState(false)
+  const {loginData,isReady} = useLoginDataStorage()
+  const [history, setHistory] = useState([]);
+  const data = isReady && loginData && loginData?.data 
+  const navigation = useNavigation()
+
+  const historyDataList = async () => {
+    setLoader(true)
+    try {
+      const response = await historyData(data._id);
+      console.log('response', response);
+      if (response) {
+        setHistory(response?.data);
+      } else {
+        Toast.error(response?.message);
+      }
+    } catch (error) {
+      console.log('error', error);
+    }finally{
+      setLoader(false);
+    }
+  };
+    useEffect(()=>{
+      if(isReady){
+        historyDataList();
+      }else{
+        setLoader(true)
+      }
+    },[isReady, loginData])
 
   const renderItem = ({ item }) => {
+    console.log("item",item)
     return (
       <>
        <View style={styles.container1} >
-        <View style={styles.cardOuterContainer}>
+        <TouchableOpacity style={styles.cardOuterContainer} onPress={()=>{
+          navigation.navigate('GameFinishHistory',{_id:item._id,user_id:item.user_id})
+        }}>
           <LinearGradient
             colors={['#F38424', '#F7A552', '#F9D479']}
             start={{ x: 0, y: 0.5 }}
@@ -47,7 +63,7 @@ const PlayedHistory = () => {
             <View style={styles.detailsContainer}>
               <Text style={styles.titleText}>Played On</Text>
               <View style={styles.dateTimeRow}>
-                <Text style={styles.dateText}>{item.date}{item.time}</Text>
+                <Text style={styles.dateText}>{item.start_date}</Text>
                 {/* <Text style={styles.timeText}>02:23 Pm</Text> */}
               </View>
             </View>
@@ -55,7 +71,7 @@ const PlayedHistory = () => {
             {/* Score */}
             <Text style={styles.scoreText}>{item.score}</Text>
           </LinearGradient>
-        </View>
+        </TouchableOpacity>
         </View>
       </>
     )
@@ -63,13 +79,16 @@ const PlayedHistory = () => {
   return (
 
     <View style={styles.container}>
-      <FlatList
-        data={myGames}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}
-      />
+      {
+        !loader ?( <FlatList
+          data={history}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+        />) : (<Loader/>)
+      }
+     
     </View>
 
   );

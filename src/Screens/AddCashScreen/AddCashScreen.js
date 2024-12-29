@@ -1,14 +1,124 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Iconics from "react-native-vector-icons/Ionicons";
 import CommonHeader from '../../Components/CommonHeader';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service/Transaction';
+import ModalScreen from '../../Components/ModalScreen';
+// import PhonePePaymentSDK from 'react-native-phonepe-pg';
 
 const AddCashScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute()
+   const {user_id} = route.params
+   const [amount, setAmount] = useState(null);
+   const [isModalVisible, setIsModalVisible] = useState(false);
+   const [data, setData] = useState({});
+   const [message, setMessage] = useState('');
+   const [dialog, setDialog] = useState(false);
+   const [isLoading, setisLoading] = useState(false);
+   const [checksPaymentStatus,setCheckPaymentStatus] =useState({})
+   const [paymentStatus, setPaymentStatus] = useState(null);
+   
+
+
+  const handleAddCash = async () => {
+    // setDialog(true);
+    if (amount) {
+      try {
+        const response = await TransactionStore(user_id, amount);
+        addBonusWallet(response)
+        initPhonePeSDK(response);
+        setData(response);
+      } catch (error) {
+        console.log('error', error);
+      }
+    } else {
+      setIsModalVisible(true);
+    }
+  };
+
+  const addBonusWallet = async (res) => {
+    try {
+      const response = await bonusWallet(res);
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
+  const initPhonePeSDK = response => {
+    PhonePePaymentSDK.init(
+      response.environment_type,
+      response.merchant_id,
+      '',
+      true,
+    )
+      .then(result => {
+        console.log("result",result)
+        setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
+        handleStartTransaction(
+          response.base64,
+          response.checksum,
+          response.callBack_url,
+          response?.transaction_id,
+        );
+      })
+      .catch(error => {
+        setMessage('error:' + error.message);
+      });
+  };
+
+
+  const handleStartTransaction = (
+    base64,
+    checksum,
+    callBack_url,
+    transaction_id,
+  ) => {
+    PhonePePaymentSDK.startTransaction(
+      base64,
+      checksum,
+      'com.sharkpocket',
+      callBack_url,
+    )
+      .then(async res => {
+        console.log('aaaa', res);
+        setMessage(JSON.stringify(res));
+        setDialog(true);
+        setisLoading(true);
+        if (res.status) {
+          const response = await checkPaymentStatus(transaction_id);
+          setCheckPaymentStatus(response.data.data)
+          setTimeout(() => {
+            setisLoading(false);
+            if (response?.data?.status == 1 && response.data.data.status == 1) {
+              setPaymentStatus(response?.data?.message);
+            }else{
+              setPaymentStatus("Transaction Failed")
+            }
+          }, 3000);
+        }
+      })
+      .catch(error => {
+        setMessage('error:' + error.message);
+      });
+  };
+
+
+    const handleAmountPress = value => {
+    setAmount(value);
+  };
+
   return (
   <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
+    <ModalScreen
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        title={' Please Enter Amount'}
+        closeTitle={'Close'}
+        heading={'Alert'}
+      />
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -25,16 +135,17 @@ const AddCashScreen = () => {
           style={styles.input}
           placeholder="Enter Amount"
           placeholderTextColor="#999"
-          value="₹200"
+          value={amount}
+          onChangeText={text => setAmount(text)}
         />
         <View style={styles.buttonsRow}>
           {["₹100", "₹500", "₹1000", "₹5000"].map((amount) => (
-            <TouchableOpacity key={amount} style={styles.amountButton}>
+            <TouchableOpacity key={amount} style={styles.amountButton} onPress={() => handleAmountPress(amount)}>
               <Text style={styles.amountText}>{amount}</Text>
             </TouchableOpacity>
           ))}
         </View>
-        <TouchableOpacity style={styles.addCashButton}>
+        <TouchableOpacity style={styles.addCashButton} onPress={handleAddCash}>
           <Text style={styles.addCashButtonText}>ADD CASH</Text>
         </TouchableOpacity>
       </View>

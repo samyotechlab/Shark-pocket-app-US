@@ -13,6 +13,8 @@ import SearchField from './SearchField';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { leaderBoard } from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
+import { Loader } from './Loader';
+import { truncateName } from '../Utilities/utilies';
 
 export default function LocalGameBoard() {
   const route = useRoute();
@@ -64,40 +66,22 @@ export default function LocalGameBoard() {
         setSecondRanking(item);
       } else if (item.ranking === 3) {
         setThirdRanking(item);
-        console.log('itemmmmmmmmmm', item);
       }
     });
   };
 
-    const data = [
-        {
-          name:"Deepak",
-          score:"1132.2",
-          rank:"#1",
-          image:'../../assets/images/Screens/Person4.jpeg'
-        },
-        {
-          name:"Deepak",
-          score:"1132.2",
-          rank:"#1",
-          image:'../../assets/images/Screens/Person4.jpeg'
-        },
-        {
-          name:"Deepak",
-          score:"1132.2",
-          rank:"#1",
-          image:'../../assets/images/Screens/Person4.jpeg'
-        }
-      ]
 
       const renderItem = (items)=>{
+  
+        const {item} = items
+        console.log("items",item)
         return(<>
         <View style={{flex:1,paddingBottom:10}}>
           <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
             <Image source={Person4} style={{height:hp(3),width:wp(6),borderRadius:wp(3)}}/>
-           <Text style={[styles.txt,{paddingRight:hp('15%')}]}>Deepak</Text>
-           <Text style={styles.txt}>1132.2</Text>
-           <Text style={styles.txt}>#1</Text>
+           <Text style={[styles.txt,{paddingRight:hp('15%')}]}> {truncateName(item?.user_name, 1)}</Text>
+           <Text style={styles.txt}>{item.score}</Text>
+           <Text style={styles.txt}>{item.ranking}</Text>
            </View>
            <LinearGradient
             colors={['#999999', '#FFFFFF', '#999999']} 
@@ -174,7 +158,9 @@ export default function LocalGameBoard() {
                                   fontSize: 14,
                                   paddingTop: wp('3%'),
                                 }}>
-                                Bryan Wolf
+                               {secondRanking?.user_name
+                  ? truncateName(secondRanking?.user_name, 1)
+                  : 'user'}
                               </Text>
                             </View>
                             <View
@@ -230,7 +216,9 @@ export default function LocalGameBoard() {
                                   fontSize: 14,
                                   fontFamily: 'PlusJakartaSans-Bold',
                                 }}>
-                                Bryan Wolf
+                                {firstRanking?.user_name
+                  ? truncateName(firstRanking?.user_name, 1)
+                  : 'user'}
                               </Text>
                             </View>
                     
@@ -276,19 +264,24 @@ export default function LocalGameBoard() {
                                   paddingTop: wp('3%'),
                                   fontFamily: 'PlusJakartaSans-Bold',
                                 }}>
-                                Bryan Wolf
+                              {thirdRanking?.user_name
+                  ? truncateName(thirdRanking?.user_name, 1)
+                  : 'user'}
                               </Text>
                             </View>
                     
                    </View>
                    <View style={{flex:6, backgroundColor: 'rgba(255, 255, 255, 0.5)', margin: wp('6%'), borderRadius: 15}}>
                          <SafeAreaView style={{ flex: 1,margin:wp('4%')}}>
-                              <FlatList
-                                data={gameData}
-                                renderItem={renderItem}
-                                keyExtractor={(item, index) => index.toString()}
-                                showsVerticalScrollIndicator={false}
-                              />
+                          {
+                            !loader ? ( <FlatList
+                              data={gameData}
+                              renderItem={renderItem}
+                              keyExtractor={(item, index) => index.toString()}
+                              showsVerticalScrollIndicator={false}
+                            />):(<Loader/>)
+                          }
+                             
                             </SafeAreaView>
                    </View>
          </LinearGradient>

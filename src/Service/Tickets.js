@@ -25,6 +25,7 @@ export const ticketList = async (game_id, user_id) => {
 };
 
 export const storeTicket = async (gameId, ticketId, userId) => {
+  console.log("")
   try {
     const response = await apiInstance.post(`${Config.Store_Ticket}`, {
       game_id: gameId,
@@ -38,3 +39,5 @@ export const storeTicket = async (gameId, ticketId, userId) => {
     throw error;
   }
 };
+
+

@@ -37,3 +37,4 @@ export const gameList = async () => {
     throw error;
   }
 };
+

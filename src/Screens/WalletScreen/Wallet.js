@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import gst from '../../../assets/images/Screens/Gst.png'
 import wallet from '../../../assets/images/Screens/rupees.png'
@@ -6,11 +6,44 @@ import LinearGradient from 'react-native-linear-gradient';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
+import { userDetail } from '../../Service/Login';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
 const WalletScreen = () => {
   const navigation = useNavigation()
-  const handleNavigation = (name)=>{
+  const {loginData,isReady} = useLoginDataStorage()
+  const [loader,setLoader] = useState(false)
+  const [dataUser, setData] = useState({});
+  const data = isReady && loginData && loginData?.data 
+
+  const userData = async () => {
+    setLoader(true)
+    try {
+      const response = await userDetail(data._id);
+      const formattedData = {
+        ...response.data,
+        bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
+    };
+      setData(formattedData);
+    } catch (error) {
+      console.log('error', error);
+    }
+    finally {
+      setLoader(false)
+    }
+  };
+
+    useEffect(()=>{
+      if(isReady){
+        userData();
+      }else{
+        setLoader(true)
+      }
+    },[isReady, loginData])
+
+
+  const handleNavigation = (name,user_id)=>{
     // navigation.navigate("WalletDetails")
-    navigation.navigate(name)
+    navigation.navigate(name,user_id)
   }
   return (
      <LinearGradient
@@ -52,24 +85,26 @@ const WalletScreen = () => {
       <Iconics name="wallet-outline" size={20} color={'white'} />
     </LinearGradient>
           <Text style={styles.label}>Deposit</Text>
-          <TouchableOpacity style={styles.addCashButton}
+          <LinearGradient colors={['#67FF00','#3E9900']}  style={styles.addCashButton}>
+          <TouchableOpacity 
           onPress={()=>{
-            handleNavigation("AddCash")
+            handleNavigation("AddCash",{user_id:dataUser._id})
           }
         }
           >
             <Text style={styles.buttonText}>ADD CASH</Text>
           </TouchableOpacity>
+          </LinearGradient>
         </View>
-        <Text style={styles.amount}>₹ 0000</Text>
+        <Text style={styles.amount}>₹ {dataUser.total_balance}</Text>
          <LinearGradient
                 colors={['#999999', '#FFFFFF', '#999999']} 
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={{
-                  height: 1,              
-                  // marginTop: 10,          
+                  height: 1,                        
                   marginHorizontal: wp(2), 
+                  marginBottom:hp('1%')
                 }}
               />
         {/* <View style={styles.divider} /> */}
@@ -84,11 +119,11 @@ const WalletScreen = () => {
         alignItems: 'center',
       }}
     >
-      <Iconics name="wallet-outline" size={20} color={'white'} />
+      <Iconics name="gift-outline" size={20} color={'white'} />
     </LinearGradient>
           <Text style={styles.label}>Bonus</Text>
         </View>
-        <Text style={styles.amount}>₹ 0000</Text>
+        <Text style={styles.amount}>₹ {dataUser.bonus_wallet}</Text>
         {/* <View style={styles.divider} /> */}
         <LinearGradient
                 colors={['#999999', '#FFFFFF', '#999999']} 
@@ -97,8 +132,11 @@ const WalletScreen = () => {
                 style={{
                   height: 1,                      
                   marginHorizontal: wp(2), 
+                  marginBottom:hp('1%')
                 }}
               />
+
+
         <View style={styles.row}>
         <LinearGradient
       colors={['#3E180E1A', '#FFFFFF1A']}
@@ -108,9 +146,10 @@ const WalletScreen = () => {
         borderRadius: wp('4%'),
         justifyContent: 'center',
         alignItems: 'center',
+
       }}
     >
-      <Iconics name="wallet-outline" size={20} color={'white'} />
+      <Iconics name="trophy-outline" size={20} color={'white'} />
     </LinearGradient>
           <Text style={styles.label}>Winning</Text>
           <TouchableOpacity 
@@ -122,7 +161,7 @@ const WalletScreen = () => {
             <Text style={styles.withdrawText}>WITHDRAW</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.amount}>₹ 0000</Text>
+        <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
       </View>
       <TouchableOpacity style={styles.transactionContainer} 
       onPress={()=>{
@@ -192,7 +231,7 @@ const styles = StyleSheet.create({
   balanceAmount: {
     color: '#fff',
     fontSize: 22,
-    fontFamily:'PatuaOne-Regular'
+    fontFamily:'LuckiestGuy-Regular'
   },
   sectionTitle: {
     color: '#FFFFFF',
@@ -207,7 +246,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    gap: 20,
+    gap: wp('5%'),
     alignItems: 'center',
   },
   label: {
@@ -218,22 +257,23 @@ const styles = StyleSheet.create({
   amount: {
     color: '#fff',
     fontSize: 20,
-    marginBottom: 10,
+    // marginBottom: 10,
     paddingHorizontal: wp('13%'),
         fontFamily:'Montserrat-Bold'
   },
   addCashButton: {
     backgroundColor: '#32CD32',
-    paddingHorizontal: 30,
-    paddingVertical: 4,
+    paddingHorizontal: wp('7%'),
+    paddingVertical: wp('1%'),
     borderRadius: 5,
+    marginHorizontal:hp('6%')
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontFamily:'Montserrat-Bold'
   },
   withdrawButton: {
-    backgroundColor: '#A1A1A1',
+    backgroundColor: '#FFFFFF33',
     paddingHorizontal: 30,
     paddingVertical: 4,
     borderRadius: 5,

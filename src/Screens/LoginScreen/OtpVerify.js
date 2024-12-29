@@ -54,20 +54,20 @@ export default function OtpVerify() {
             headers,
           )
           .then(res => {
-            console.log('res--->', res.data.data);
-            storeLoginData(res.data)
+            console.log('res--->', res.data);
             if (res.data.status === 1) {        
               Toast.show({
                 type: 'success', 
                 position: 'top', 
-                text1: 'Otp Send!', 
-                text2: 'Otp Send Succesffully in the given Number', 
+                text1: 'Welcome!', 
+                text2: 'Otp Verify Succesffully', 
                 visibilityTime: 5000
               }); 
               setTimeout(() => {
                 if(res.data.data.is_aadhar_verified === 0){
                   navigation.navigate('DisclaimerScreen', {data:res.data.data});
                   }else{
+                    storeLoginData(res.data)
                     navigation.navigate('HomeScreen', {data:res.data.data});
                   }
               }, 3000);

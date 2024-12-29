@@ -11,11 +11,11 @@ import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 
 export default function AadharDetail() {
     const route = useRoute()
-    const {user_id} = route.params
+    const { user_id } = route.params
     console.log(user_id)
     const [aadhaar_number, setAadharNumber] = useState('')
     const [aadharError, setAadharError] = useState('')
-    const [aadharCard,setAadharCard] = useState({})
+    const [aadharCard, setAadharCard] = useState({})
     const navigation = useNavigation()
 
     const validateInputs = () => {
@@ -32,17 +32,26 @@ export default function AadharDetail() {
         }
         return valid;
     };
-    const handleAadharDetail =async () => {
+    const handleAadharDetail = async () => {
         try {
             const response = await AdharVerificationSendOtp(aadhaar_number);
-            console.log("response",response)
-            if(response.status === 1 ){
+            console.log("response", response)
+            if (response.status === 1) {
                 setAadharCard(response.data)
-                navigation.navigate("AadharOtpVerify",{data:response.data,user_id})
+                Toast.show({
+                    type: 'success',
+                    position: 'top',
+                    text1: 'Otp Send Successfully',
+                    text2: 'Otp Send Succesffully in your given phone Number',
+                    visibilityTime: 5000
+                });
+                setTimeout(() => {
+                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id })
+                }, 3000);
             }
         } catch (error) {
-            console.log("error",error)
-        }finally{
+            console.log("error", error)
+        } finally {
 
         }
     }
@@ -72,13 +81,13 @@ export default function AadharDetail() {
                     )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton title={'Save'} onPress={handleAadharDetail}/>
+                    <CommonButton title={'Save'} onPress={handleAadharDetail} />
                     <Text style={styles.kycText}>
                         Why do we need KYC Verification?
-                        <Text style={{textDecorationLine:'underline',fontFamily:'Montserrat-Bold'}}> Read FAQ’s</Text>
+                        <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>
                     </Text>
                 </View>
-                <Toast ref={(ref) => Toast.setRef(ref)} />
+                <Toast ref={Toast.setRef} />
             </View>
         </>
     )

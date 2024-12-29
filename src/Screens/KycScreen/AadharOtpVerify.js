@@ -9,6 +9,7 @@ import axios from 'axios'
 import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
+import useLoginDataStorage from '../../Service/CustomStorageHook'
 
 
 const headers = {
@@ -18,6 +19,7 @@ const headers = {
 export default function AadharOtpVerify() {
   const route = useRoute()
   console.log('route--->', route.params);
+  const {storeLoginData} = useLoginDataStorage();
   const { data } = route.params
   const { user_id } = route.params
   console.log("data========>", user_id)
@@ -57,15 +59,16 @@ export default function AadharOtpVerify() {
           headers,
         )
         .then(res => {
-          console.log('res--->', res.data.data);
+          console.log('res--->', res.data);
           if (res.data.status === 1) {
             Toast.show({
               type: 'success',
               position: 'top',
-              text1: 'Otp Send!',
-              text2: 'Otp Send Succesffully in the given Number',
+              text1: 'Welcome!',
+              text2: 'Otp Verify Successfully',
               visibilityTime: 5000
             });
+            storeLoginData(res.data.data)
             navigation.navigate('HomeScreen', { data: res.data.data });
           } else {
             Toast.show({
@@ -126,7 +129,7 @@ export default function AadharOtpVerify() {
           <Text style={styles.timer}>00:30</Text>
           <Text style={styles.resendOtp}>Resend OTP</Text>
         </View>
-        <Toast ref={(ref) => Toast.setRef(ref)} />
+        <Toast ref={Toast.setRef} />
       </View>
 
     </>

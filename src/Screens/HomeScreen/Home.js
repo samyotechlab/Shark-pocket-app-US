@@ -63,7 +63,7 @@ export default function HomeScreen({route}) {
           {/* Rupee Wallet Section */}
           <View style={styles.walletContainer}>
             <Image source={rupees} style={styles.walletIcon} />
-            <Text style={styles.walletText}>{data.total_balance}</Text>
+            <Text style={styles.walletText}>{data?.total_balance || 0}</Text>
           </View>
 
           {/* Icons Section */}

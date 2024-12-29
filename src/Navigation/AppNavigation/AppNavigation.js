@@ -21,6 +21,7 @@ import ViewProfile from '../../Screens/ProfileScreen/ViewProfile';
 import AadharDetail from '../../Screens/KycScreen/AadharDetail';
 import AadharOtpVerify from '../../Screens/KycScreen/AadharOtpVerify';
 import GameFinishScreen from '../../Screens/GameScreens/GameFinishScreen';
+import GameFinishHistory from '../../Screens/GameScreens/GameFinishHistory';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -167,6 +168,13 @@ export default function AppNavigation() {
          <Stack.Screen
           name="GameFinish"  
           component={GameFinishScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="GameFinishHistory"  
+          component={GameFinishHistory}
           options={{
             headerShown: false,
           }}
