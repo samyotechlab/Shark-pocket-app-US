@@ -34,32 +34,3 @@ export const gameList = async () => {
   }
 };
 
-<<<<<<< HEAD
-=======
-export const finalScore = async (
-  numberStringData,
-  superNumber,
-  game_id,
-  ticket_id,
-  user_id,
-) => {
-  try {
-    const response = await apiInstance.post(Config.finalScore, {
-      number: numberStringData,
-      superNumber,
-      game_id,
-      ticket_id,
-      user_id,
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      console.error('Failed to fetch game list. Status code:', response.status);
-      throw new Error(`Failed to fetch games list:  ${response.statusText}`);
-    }
-  } catch (error) {
-    console.error('Error fetching game list:', error.message || error);
-    throw error;
-  }
-};
->>>>>>> origin/ReVampSharkPocket

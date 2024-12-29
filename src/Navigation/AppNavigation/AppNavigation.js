@@ -22,6 +22,14 @@ import AadharDetail from '../../Screens/KycScreen/AadharDetail';
 import AadharOtpVerify from '../../Screens/KycScreen/AadharOtpVerify';
 import GameFinishScreen from '../../Screens/GameScreens/GameFinishScreen';
 import GameFinishHistory from '../../Screens/GameScreens/GameFinishHistory';
+import AmountDetails from '../../Components/AmountDetails';
+import Notification from '../../Screens/Notification/Notification';
+import BankAccount from '../../Screens/BankAccount/BankAccount';
+import PanVerfication from '../../Screens/PanVerfication/PanVerification';
+import ContactScreen from '../../Screens/Screens/ContactScreen';
+import TCScreen from '../../Screens/Screens/TCScreen';
+import RefundPolicyScreen from '../../Screens/Screens/RefundPolicyScreen';
+import SupportScreen from '../../Screens/Screens/SupportScreen';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -175,6 +183,62 @@ export default function AppNavigation() {
         <Stack.Screen
           name="GameFinishHistory"  
           component={GameFinishHistory}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="AmountDetails"  
+          component={AmountDetails}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="Notification"  
+          component={Notification}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="BankAccount"  
+          component={BankAccount}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="PanVerification"  
+          component={PanVerfication}
+          options={{
+            headerShown: false,
+          }}
+        />
+          <Stack.Screen
+          name="ContactUs"  
+          component={ContactScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="T&CScreen"  
+          component={TCScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Refund"  
+          component={RefundPolicyScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Support"  
+          component={SupportScreen}
           options={{
             headerShown: false,
           }}

@@ -12,8 +12,6 @@ import timer from '../../../assets/images/Screens/timer.png'
 import AlertDialog from '../../Components/AlertDialog';
 import { Loader } from '../../Components/Loader';
 
-
-
 export default function Tickets() {
     const navigation = useNavigation();
     const { loginData, isReady } = useLoginDataStorage();

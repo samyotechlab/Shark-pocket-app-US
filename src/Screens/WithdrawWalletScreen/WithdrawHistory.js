@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import All from '../Deposite/All';
+import Success from '../WithDrawHistory/Success';
 import { Loader } from '../../Components/Loader';
-import Debit from '../Deposite/Debit';
-import Credit from '../Deposite/Credit';
+import Failed from '../WithDrawHistory/Failed';
+import Pending from '../WithDrawHistory/Pending';
 
 
 const WithdrawHistory = () => {
 
-      const [selectedTab, setSelectedTab] = useState('All');
+      const [selectedTab, setSelectedTab] = useState('Success');
       const [loader, setLoader] = useState(false);
     
       const handlePress = tab => {
@@ -29,46 +29,46 @@ const WithdrawHistory = () => {
             }}>
             <TouchableOpacity
               onPress={() => {
-                handlePress('All');
+                handlePress('Success');
               }}
-              style={[styles.common,{ backgroundColor: selectedTab === 'All' ? '#FEB801' : '#FFFFFF4D'}]}>
+              style={[styles.common,{ backgroundColor: selectedTab === 'Success' ? '#FEB801' : '#FFFFFF4D'}]}>
               <Text
                 style={styles.txt}>
-                All
+                Success
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                handlePress('Credit');
+                handlePress('Pending');
               }}
               style={[styles.common,{
-                backgroundColor: selectedTab === 'Credit' ? '#FEB801' : '#FFFFFF4D',
+                backgroundColor: selectedTab === 'Pending' ? '#FEB801' : '#FFFFFF4D',
               }]}>
               <Text
                 style={styles.txt}>
-               Credit
+               Pending
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                handlePress('Debit');
+                handlePress('Failed');
               }}
               style={[styles.common,{
-                backgroundColor: selectedTab === 'Debit' ? '#FEB801' : '#FFFFFF4D',
+                backgroundColor: selectedTab === 'Failed' ? '#FEB801' : '#FFFFFF4D',
               }]}>
               <Text
                 style={styles.txt}>
-                Debit
+                Failed
               </Text>
             </TouchableOpacity>
           </View>
       <View style={{flex:17}}>
-          {selectedTab === 'All' ? (
-          !loader ? ( <All/>):(<Loader/>)
-        ) : selectedTab === 'Debit' ? (
-          !loader ? ( <Debit/>):(<Loader/>)  
+          {selectedTab === 'Success' ? (
+          !loader ? ( <Success/>):(<Loader/>)
+        ) : selectedTab === 'Failed' ? (
+          !loader ? ( <Failed/>):(<Loader/>)  
         ) : (
-          !loader ? ( <Credit/>):(<Loader/>)  
+          !loader ? ( <Pending/>):(<Loader/>)  
         )}
         </View>
         </>

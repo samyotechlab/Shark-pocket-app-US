@@ -13,8 +13,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import TDSBreakupDialog from '../../Components/TDSBreakupDialog';
 import CommonHeader from '../../Components/CommonHeader';
-import Tickets from '../GameName.js/Tickets';
-import PlayedHistory from '../GameName.js/PlayedHistory';
 import { Loader } from '../../Components/Loader';
 import Withdraw from './Withdraw';
 import WithdrawHistory from './WithdrawHistory';

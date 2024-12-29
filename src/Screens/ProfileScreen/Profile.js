@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   Modal,
@@ -22,63 +22,83 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import AlertDialog from '../../Components/AlertDialog';
+import profile from '../../../assets/images/Screens/profile.jpeg';
+import { userDetail } from '../../Service/Login';
 const SharkPocketScreen = () => {
   const navigation = useNavigation();
+  const {isReady,loginData} = useLoginDataStorage()
   const {clearLoginData} = useLoginDataStorage();
   const [visible, setVisible] = useState(false);
+  const [loader,setLoader] = useState(false)
+  const [userData,setUserData] = useState({})
+  const data = isReady && loginData && loginData?.data 
   const data2 = [
     {
       title: 'Notification',
       icon: 'bell-outline',
+      url:'Notification'
     },
     {
       title: 'Game History',
       icon: 'gamepad-variant-outline',
+         url:'GameHistory'
     },
     {
       title: 'Bank Account',
       icon: 'bank-outline',
+      url:'BankAccount'
     },
     {
       title: 'Pan verification',
       icon: 'security',
+      url:'PanVerification'
     },
     {
       title: 'Aadhar Verification',
       icon: 'security',
+      url:'AadharDetail'
     },
     {
       title: 'Contact us',
       icon: 'phone-outline',
+      url:'ContactUs'
     },
     {
       title: 'How To Play',
       icon: 'message-arrow-right-outline',
+      url:'HowtoPlay'
     },
+
     {
       title: 'Refund and Policy',
       icon: 'undo',
+      url:'Refund'
     },
     {
       title: 'Terms & Conditions',
       icon: 'bookmark-outline',
+      url:'T&CScreen'
     },
     {
       title: "FAQ's",
       icon: 'bookmark-outline',
+      url:'Faq'
     },
     {
       title: 'Support',
       icon: 'help-circle-outline',
+      url:'Support'
     },
     {
       title: 'Log out',
       icon: 'logout',
+      url:'Logout'
     },
   ];
 
-  const handleNavigation = () => {
-    navigation.navigate('ViewProfile');
+  const handleNavigation = (url) => {
+    navigation.navigate(url,{user_id:data._id});
+
   }
 
   const  handleLogout = async () => {
@@ -94,16 +114,35 @@ const SharkPocketScreen = () => {
       console.error('Logout error:', error);
     }
   };
+
+  const viewProfile = async ()=>{
+    setLoader(true)
+    try {
+      const response = await userDetail(data._id);
+      if(response.status === 1 ){
+        setUserData(response.data)
+      }
+    } catch (error) {
+      
+    }finally{
+      setLoader(false)
+    }
+  }
+
+    useEffect(()=>{
+      if(isReady){
+        viewProfile();
+      }else{
+        setLoader(true)
+      }
+    },[isReady, loginData])
+
   
   const _renderCard = ({item}) => {
     return (
       <>
       <TouchableOpacity style={styles.cardContainer} onPress={() => {
-        if (item.title === 'Log out') {
-          setVisible(true);
-        } else {
-          Alert.alert(item.title, 'This item was clicked.');
-        }
+       handleNavigation(item.url)
       }}>
         <View>
           <LinearGradient
@@ -125,8 +164,8 @@ const SharkPocketScreen = () => {
         <View style={styles.cardArrowContainer}>
           <Icon
             name="chevron-right"
-            size={wp('6%')}
-            color="#361911"
+            size={wp('7%')}
+            color="#000000"
             style={styles.arrowImage}
           />
         </View>
@@ -137,25 +176,27 @@ const SharkPocketScreen = () => {
   };
   return (
     <>
-      <ScrollView style={styles.container}>
         <View colors={['#3D1911', '#6A1701']} style={styles.profileContainer}>
           <View>
             <Text style={styles.profileTitle}>Profile</Text>
           </View>
           <View style={styles.profileHeader}>
             <View style={styles.profileImageContainer}>
-              <Text style={styles.profileImageText}>Image</Text>
+               <Image
+                          source={profile}
+                          style={styles.profileImage}
+                        />
             </View>
             <View style={styles.profileDetailsContainer}>
               <View>
-                <Text style={styles.profileName}>amit123</Text>
-                <Text style={styles.profilePhone}>(+91) 8789546587</Text>
+                <Text style={styles.profileName}>{userData.name}</Text>
+                <Text style={styles.profilePhone}>(+91) {userData.mobile}</Text>
                 <View style={styles.profileInfoContainer}>
-                  <Text style={styles.profileFullName}>Amit Sharma</Text>
+                  <Text style={styles.profileFullName}>{userData.name}</Text>
                   <Text style={styles.profileDot}>...</Text>
                 </View>
               </View>
-              <TouchableOpacity style={styles.profileActionContainer} onPress={()=>{handleNavigation()}}>
+              <TouchableOpacity style={styles.profileActionContainer} onPress={()=>{navigation.navigate('ViewProfile')}}>
                 <Text style={styles.viewProfileText}>View Profile</Text>
               </TouchableOpacity>
             </View>
@@ -173,7 +214,6 @@ const SharkPocketScreen = () => {
             </View>
           </View>
         </SafeAreaView>
-      </ScrollView>
     </>
   );
 };
@@ -197,7 +237,7 @@ const styles = StyleSheet.create({
   profileTitle: {
     fontSize: wp('5%'),
     fontWeight: '500',
-    marginBottom: hp('3%'),
+    marginBottom: hp('2%'),
     color: 'white',
   },
   profileHeader: {
@@ -208,13 +248,19 @@ const styles = StyleSheet.create({
   },
   profileImageContainer: {
     backgroundColor: '#9C4831',
-    width: wp('15%'),
-    height: wp('15%'),
-    borderRadius: wp('7.5%'),
+    width: wp('17%'),
+    height: wp('17%'),
+    borderRadius: wp('8.5%'),
     borderWidth: 3,
     borderColor: '#FFB700',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: wp('7.5%'),
+    resizeMode: 'cover',
   },
   profileImageText: {
     color: 'white',
@@ -230,12 +276,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: wp('5%'),
     marginBottom: hp('0.6%'),
-    fontWeight: '500',
+    fontFamily:'Montserrat-Bold'
   },
   profilePhone: {
     color: 'white',
     marginBottom: hp('0.6%'),
     fontSize: wp('3%'),
+      fontFamily:'Montserrat-Medium'
   },
   profileInfoContainer: {
     flexDirection: 'row',
@@ -244,6 +291,7 @@ const styles = StyleSheet.create({
   profileFullName: {
     color: 'white',
     fontSize: wp('3%'),
+      fontFamily:'Montserrat-Medium'
   },
   profileDot: {
     color: 'black',
@@ -268,7 +316,7 @@ const styles = StyleSheet.create({
     borderRadius: wp('5%'),
     paddingLeft: wp('4%'),
     paddingRight: wp('4%'),
-    fontWeight: '500',
+    fontFamily:'Montserrat-Medium',
     fontSize: wp('3.5%'),
     textAlign: 'center',
   },
@@ -277,7 +325,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.8,
     borderBottomColor: 'lightgray',
     marginLeft: wp('4%'),
-    marginTop: hp('2%'),
+    marginTop: hp('1.8%'),
     width: '90%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -306,9 +354,8 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: wp('3.5%'),
-    fontWeight: '700',
-    color: 'black',
-    opacity: 0.7,
+    fontFamily:'Montserrat-SemiBold',
+    color: '#361911',
   },
   cardArrowContainer: {
     width: wp('20%'),
@@ -317,6 +364,7 @@ const styles = StyleSheet.create({
     height: hp('6%'),
     width: wp('6%'),
     resizeMode: 'contain',
+    paddingTop:wp(3)
   },
   button: {
     backgroundColor: '#596AFD',

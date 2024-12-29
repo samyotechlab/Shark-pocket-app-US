@@ -13,4 +13,8 @@ export default {
     LeaderBoardByGameId: 'api/game_score/byGameId',
     History_Api: 'api/game_score/getPlayedGamesByUserId',
     Game_History: 'api/game_score/by_user_id_and_game_id',
+    Contact:'contactUs',
+    Refund:'refundPolicy',
+    HelpSupport:'helpAndSupport',
+    TermCondition:'termsAndCondition'
 };
