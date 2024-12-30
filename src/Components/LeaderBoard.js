@@ -1,6 +1,6 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useCallback, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient'; // Import LinearGradient
 import {
   heightPercentageToDP as hp,
@@ -13,24 +13,24 @@ import Iconics from 'react-native-vector-icons/Ionicons';
 export default function LeaderBoard() {
   const [selectedTab, setSelectedTab] = useState('Local');
 
-  const handlePress = (tab) => {
+  const handlePress = tab => {
     setSelectedTab(tab);
   };
 
   useFocusEffect(
     useCallback(() => {
       setSelectedTab('Local');
-    }, [])
+    }, []),
   );
 
   return (
     <>
-      <View style={{ flex: 1.5 }}>
+      <View style={{flex: 1.5}}>
         <View style={styles.leaderBoard}>
           <Text style={styles.leaderTxt}>Leader Board</Text>
           <Iconics name="search-sharp" size={25} color={'white'} />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <View
             style={{
               flex: 1,
@@ -39,7 +39,7 @@ export default function LeaderBoard() {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View style={{ flex: 1, marginHorizontal: hp('0.5%') }}>
+            <View style={{flex: 1, marginHorizontal: hp('0.5%')}}>
               <TouchableOpacity
                 onPress={() => {
                   handlePress('Local');
@@ -49,7 +49,9 @@ export default function LeaderBoard() {
                   alignItems: 'center',
                   borderRadius: hp('1%'),
                   backgroundColor:
-                    selectedTab === 'Local' ? 'rgba(255, 255, 255, 0.1)' : '#361911',
+                    selectedTab === 'Local'
+                      ? 'rgba(255, 255, 255, 0.1)'
+                      : '#361911',
                   height: hp('5%'),
                 }}>
                 <Text
@@ -64,8 +66,8 @@ export default function LeaderBoard() {
               {selectedTab === 'Local' && (
                 <LinearGradient
                   colors={['#FEB801', '#361911']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
                   style={{
                     height: hp('0.5%'),
                     borderRadius: hp('0.25%'),
@@ -74,8 +76,7 @@ export default function LeaderBoard() {
               )}
             </View>
 
-
-            <View style={{ flex: 1, marginHorizontal: hp('0.5%') }}>
+            <View style={{flex: 1, marginHorizontal: hp('0.5%')}}>
               <TouchableOpacity
                 onPress={() => {
                   handlePress('Global');
@@ -85,7 +86,9 @@ export default function LeaderBoard() {
                   alignItems: 'center',
                   borderRadius: hp('1%'),
                   backgroundColor:
-                    selectedTab === 'Global' ? 'rgba(255, 255, 255, 0.1)' : '#361911',
+                    selectedTab === 'Global'
+                      ? 'rgba(255, 255, 255, 0.1)'
+                      : '#361911',
                   height: hp('5%'),
                 }}>
                 <Text
@@ -100,8 +103,8 @@ export default function LeaderBoard() {
               {selectedTab === 'Global' && (
                 <LinearGradient
                   colors={['#FEB801', '#361911']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
                   style={{
                     height: hp('0.5%'),
                     borderRadius: hp('0.25%'),
@@ -112,10 +115,9 @@ export default function LeaderBoard() {
           </View>
         </View>
       </View>
-      <View style={{ flex: 6}}>
-      {selectedTab === 'Local' ? <LocalLeaderBoard /> : <GlobalLeaderBoard />}
+      <View style={{flex: 6}}>
+        {selectedTab === 'Local' ? <LocalLeaderBoard /> : <GlobalLeaderBoard />}
       </View>
-
     </>
   );
 }
@@ -126,12 +128,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     padding: wp('4%'),
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   leaderTxt: {
     color: 'white',
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 20,
+    fontSize: wp('5'),
     // letterSpacing:hp('0.2%')
-  }
+  },
 });

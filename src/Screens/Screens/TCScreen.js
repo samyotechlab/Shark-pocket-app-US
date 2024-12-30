@@ -4,11 +4,17 @@ import {WebView} from 'react-native-webview';
 import {API_URL} from '@env';
 import CommonHeader from '../../Components/CommonHeader';
 import Config from '../../Utilities/Config';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const TCScreen = () => {
   return (
-    <View style={styles.container}>
-      <CommonHeader title={'Terms And Conditions'} />
+    <View style={{flex: 1}}>
+      <View style={styles.container}>
+        <CommonHeader title={'Terms And Conditions'} />
+      </View>
       <WebView
         source={{uri: `${API_URL}/${Config.TermCondition}`}}
         style={styles.webview}
@@ -20,8 +26,8 @@ const TCScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#361911',
+    paddingBottom: wp('4%'),
   },
 
   webview: {

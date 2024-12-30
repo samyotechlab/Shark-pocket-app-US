@@ -1,183 +1,177 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import gst from '../../../assets/images/Screens/Gst.png'
-import wallet from '../../../assets/images/Screens/rupees.png'
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import gst from '../../../assets/images/Screens/Gst.png';
+import wallet from '../../../assets/images/Screens/rupees.png';
 import LinearGradient from 'react-native-linear-gradient';
 import Iconics from 'react-native-vector-icons/Ionicons';
-import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { useNavigation } from '@react-navigation/native';
-import { userDetail } from '../../Service/Login';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {useNavigation} from '@react-navigation/native';
+import {userDetail} from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 const WalletScreen = () => {
-  const navigation = useNavigation()
-  const {loginData,isReady} = useLoginDataStorage()
-  const [loader,setLoader] = useState(false)
+  const navigation = useNavigation();
+  const {loginData, isReady} = useLoginDataStorage();
+  const [loader, setLoader] = useState(false);
   const [dataUser, setData] = useState({});
-  const data = isReady && loginData && loginData?.data 
+  const data = isReady && loginData && loginData?.data;
 
   const userData = async () => {
-    setLoader(true)
+    setLoader(true);
     try {
       const response = await userDetail(data._id);
       const formattedData = {
         ...response.data,
         bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
-    };
+      };
       setData(formattedData);
     } catch (error) {
       console.log('error', error);
-    }
-    finally {
-      setLoader(false)
+    } finally {
+      setLoader(false);
     }
   };
 
-    useEffect(()=>{
-      if(isReady){
-        userData();
-      }else{
-        setLoader(true)
-      }
-    },[isReady, loginData])
+  useEffect(() => {
+    if (isReady) {
+      userData();
+    } else {
+      setLoader(true);
+    }
+  }, [isReady, loginData]);
 
-
-  const handleNavigation = (name,user_id)=>{
+  const handleNavigation = (name, user_id) => {
     // navigation.navigate("WalletDetails")
-    navigation.navigate(name,user_id)
-  }
+    navigation.navigate(name, user_id);
+  };
   return (
-     <LinearGradient
-            colors={['#361911', '#361911', '#6A1700']}
-            style={styles.linearGradient}>      
-          <View style={styles.topBar}>
+    <LinearGradient
+      colors={['#361911', '#361911', '#6A1700']}
+      style={styles.linearGradient}>
+      <View style={styles.topBar}>
         <Text style={styles.topBarTitle}>Wallet</Text>
-        <Iconics name="help-circle-outline" size={20} color={'white'} style={{paddingLeft:wp('44%'),marginBottom:4}}/>
+        <Iconics
+          name="help-circle-outline"
+          size={20}
+          color={'white'}
+          style={{paddingLeft: wp('44%'), marginBottom: 4}}
+        />
         <TouchableOpacity style={styles.needHelpButton}>
           <Text style={styles.needHelpText}>Need Help</Text>
         </TouchableOpacity>
       </View>
-      <LinearGradient colors={['#3B191080','#FFFFFF80','#FFFFFF80']} style={styles.balanceContainer}>
-  <View style={styles.balanceRow}>
-    <View>
-    <Text style={styles.sectionTitle}>BALANCE</Text>
-    </View>
-    <View style={styles.balanceContent}>
-      <Image
-        source={wallet}
-        style={styles.walletIcon}
-      />
-      <Text style={styles.balanceAmount}>₹ 1000</Text>
-    </View>
-  </View>
-    </LinearGradient>
+      <LinearGradient
+        colors={['#3B191080', '#FFFFFF80', '#FFFFFF80']}
+        style={styles.balanceContainer}>
+        <View style={styles.balanceRow}>
+          <View>
+            <Text style={styles.sectionTitle}>BALANCE</Text>
+          </View>
+          <View style={styles.balanceContent}>
+            <Image source={wallet} style={styles.walletIcon} />
+            <Text style={styles.balanceAmount}>₹ 1000</Text>
+          </View>
+        </View>
+      </LinearGradient>
       <View style={styles.cardContainer}>
         <View style={styles.row}>
-        <LinearGradient
-      colors={['#3E180E1A', '#FFFFFF1A']}
-      style={{
-        height: wp('8%'),
-        width: wp('8%'),
-        borderRadius: wp('4%'),
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Iconics name="wallet-outline" size={20} color={'white'} />
-    </LinearGradient>
+          <LinearGradient
+            colors={['#3E180E1A', '#FFFFFF1A']}
+            style={{
+              height: wp('8%'),
+              width: wp('8%'),
+              borderRadius: wp('4%'),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Iconics name="wallet-outline" size={20} color={'white'} />
+          </LinearGradient>
           <Text style={styles.label}>Deposit</Text>
-          <LinearGradient colors={['#67FF00','#3E9900']}  style={styles.addCashButton}>
-          <TouchableOpacity 
-          onPress={()=>{
-            handleNavigation("AddCash",{user_id:dataUser._id})
-          }
-        }
-          >
-            <Text style={styles.buttonText}>ADD CASH</Text>
-          </TouchableOpacity>
+          <LinearGradient
+            colors={['#67FF00', '#3E9900']}
+            style={styles.addCashButton}>
+            <TouchableOpacity
+              onPress={() => {
+                handleNavigation('AddCash', {user_id: dataUser._id});
+              }}>
+              <Text style={styles.buttonText}>ADD CASH</Text>
+            </TouchableOpacity>
           </LinearGradient>
         </View>
         <Text style={styles.amount}>₹ {dataUser.total_balance}</Text>
-         <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']} 
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  height: 1,                        
-                  marginHorizontal: wp(2), 
-                  marginBottom:hp('1%')
-                }}
-              />
+        <LinearGradient
+          colors={['#999999', '#FFFFFF', '#999999']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={{
+            height: 1,
+            marginHorizontal: wp(2),
+            marginBottom: hp('1%'),
+          }}
+        />
         {/* <View style={styles.divider} /> */}
         <View style={styles.row}>
-        <LinearGradient
-      colors={['#3E180E1A', '#FFFFFF1A']}
-      style={{
-        height: wp('8%'),
-        width: wp('8%'),
-        borderRadius: wp('4%'),
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Iconics name="gift-outline" size={20} color={'white'} />
-    </LinearGradient>
+          <LinearGradient
+            colors={['#3E180E1A', '#FFFFFF1A']}
+            style={{
+              height: wp('8%'),
+              width: wp('8%'),
+              borderRadius: wp('4%'),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Iconics name="gift-outline" size={20} color={'white'} />
+          </LinearGradient>
           <Text style={styles.label}>Bonus</Text>
         </View>
         <Text style={styles.amount}>₹ {dataUser.bonus_wallet}</Text>
         {/* <View style={styles.divider} /> */}
         <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']} 
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  height: 1,                      
-                  marginHorizontal: wp(2), 
-                  marginBottom:hp('1%')
-                }}
-              />
-
+          colors={['#999999', '#FFFFFF', '#999999']}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={{
+            height: 1,
+            marginHorizontal: wp(2),
+            marginBottom: hp('1%'),
+          }}
+        />
 
         <View style={styles.row}>
-        <LinearGradient
-      colors={['#3E180E1A', '#FFFFFF1A']}
-      style={{
-        height: wp('8%'),
-        width: wp('8%'),
-        borderRadius: wp('4%'),
-        justifyContent: 'center',
-        alignItems: 'center',
-
-      }}
-    >
-      <Iconics name="trophy-outline" size={20} color={'white'} />
-    </LinearGradient>
+          <LinearGradient
+            colors={['#3E180E1A', '#FFFFFF1A']}
+            style={{
+              height: wp('8%'),
+              width: wp('8%'),
+              borderRadius: wp('4%'),
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Iconics name="trophy-outline" size={20} color={'white'} />
+          </LinearGradient>
           <Text style={styles.label}>Winning</Text>
-          <TouchableOpacity 
-          style={styles.withdrawButton}
-          onPress={()=>{
-            handleNavigation("WithdrawWallet")
-          }}
-          >
+          <TouchableOpacity
+            style={styles.withdrawButton}
+            onPress={() => {
+              handleNavigation('WithdrawWallet');
+            }}>
             <Text style={styles.withdrawText}>WITHDRAW</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
       </View>
-      <TouchableOpacity style={styles.transactionContainer} 
-      onPress={()=>{
-        handleNavigation('WalletDetails',{user_id:dataUser._id})
-      }}
-      >
+      <TouchableOpacity
+        style={styles.transactionContainer}
+        onPress={() => {
+          handleNavigation('WalletDetails', {user_id: dataUser._id});
+        }}>
         <Text style={styles.transactionText}>My Transactions</Text>
         <Text style={styles.subText}>Deposit and withdrawal history</Text>
-  
       </TouchableOpacity>
-      <Image
-        source={gst}
-        style={styles.bannerImage}
-        resizeMode="contain"
-      />
-       </LinearGradient>
+      <Image source={gst} style={styles.bannerImage} resizeMode="contain" />
+    </LinearGradient>
   );
 };
 const styles = StyleSheet.create({
@@ -190,22 +184,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop:40,
+    marginTop: wp('5%'),
     marginBottom: 20,
   },
   topBarTitle: {
-          color: 'white',
-      fontFamily: 'Montserrat-SemiBold',
-      fontSize: 24,
+    color: 'white',
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: wp('5'),
   },
   needHelpButton: {
     backgroundColor: 'transparent',
-    padding: 5,
+    padding: 2,
   },
   needHelpText: {
     color: 'white',
-      fontFamily: 'Montserrat-Regular',
-      fontSize: 16,
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 16,
   },
   balanceContainer: {
     backgroundColor: '#6C2A1F',
@@ -217,8 +211,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth:1,
-    borderColor:'transparent'
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
   balanceContent: {
     flexDirection: 'row',
@@ -232,15 +226,15 @@ const styles = StyleSheet.create({
   balanceAmount: {
     color: '#fff',
     fontSize: 22,
-    fontFamily:'LuckiestGuy-Regular'
+    fontFamily: 'LuckiestGuy-Regular',
   },
   sectionTitle: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontFamily:'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
   },
   cardContainer: {
-    backgroundColor: "#A38C85",
+    backgroundColor: '#A38C85',
     padding: 20,
     borderRadius: 10,
     marginBottom: 15,
@@ -253,32 +247,32 @@ const styles = StyleSheet.create({
   label: {
     color: '#fff',
     fontSize: 16,
-    fontFamily:'Montserrat-Medium'
+    fontFamily: 'Montserrat-Medium',
   },
   amount: {
     color: '#fff',
     fontSize: 20,
     // marginBottom: 10,
     paddingHorizontal: wp('13%'),
-        fontFamily:'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
   },
   addCashButton: {
     backgroundColor: '#32CD32',
     paddingHorizontal: wp('7%'),
     paddingVertical: wp('1%'),
     borderRadius: 5,
-    marginHorizontal:hp('6%')
+    marginHorizontal: hp('6%'),
   },
   buttonText: {
     color: '#fff',
-    fontFamily:'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
   },
   withdrawButton: {
     backgroundColor: '#FFFFFF33',
     paddingHorizontal: 30,
     paddingVertical: 4,
     borderRadius: 5,
-    marginHorizontal:hp('5%')
+    marginHorizontal: hp('5%'),
   },
   withdrawText: {
     color: '#444',
@@ -290,7 +284,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   transactionContainer: {
-    backgroundColor: "#A38C85",
+    backgroundColor: '#A38C85',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
@@ -306,11 +300,9 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: '100%',
-    height: wp('90%'),
-    borderRadius: 10,
-    marginTop:20
+    height: wp('75%'),
+    // borderRadius: 10,
+    // marginTop: 20,
   },
 });
 export default WalletScreen;
-
-

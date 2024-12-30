@@ -1,63 +1,91 @@
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Person from '../../assets/images/Screens/person.jpeg'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import Frame from '../../assets/images/Screens/Frame.png'
-import Person2 from '../../assets/images/Screens/Person2.jpeg'
-import Person3 from '../../assets/images/Screens/Person3.jpeg'
-import Person4 from '../../assets/images/Screens/Person4.jpeg'
-import { Divider } from 'react-native-elements'
-import LinearGradient from 'react-native-linear-gradient'
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React from 'react';
+import Person from '../../assets/images/Screens/person.jpeg';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import Frame from '../../assets/images/Screens/Frame.png';
+import Person2 from '../../assets/images/Screens/Person2.jpeg';
+import Person3 from '../../assets/images/Screens/Person3.jpeg';
+import Person4 from '../../assets/images/Screens/Person4.jpeg';
+import {Divider} from 'react-native-elements';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function GlobalLeaderBoard() {
-
   const data = [
     {
-      name:"Deepak",
-      score:"1132.2",
-      rank:"#1",
-      image:'../../assets/images/Screens/Person4.jpeg'
+      name: 'Deepak',
+      score: '1132.2',
+      rank: '#1',
+      image: '../../assets/images/Screens/Person4.jpeg',
     },
     {
-      name:"Deepak",
-      score:"1132.2",
-      rank:"#1",
-      image:'../../assets/images/Screens/Person4.jpeg'
+      name: 'Deepak',
+      score: '1132.2',
+      rank: '#1',
+      image: '../../assets/images/Screens/Person4.jpeg',
     },
     {
-      name:"Deepak",
-      score:"1132.2",
-      rank:"#1",
-      image:'../../assets/images/Screens/Person4.jpeg'
-    }
-  ]
+      name: 'Deepak',
+      score: '1132.2',
+      rank: '#1',
+      image: '../../assets/images/Screens/Person4.jpeg',
+    },
+  ];
 
-  const renderItem = (items)=>{
-    return(<>
-    <View style={{flex:1,paddingBottom:10}}>
-      <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-        <Image source={Person4} style={{height:hp(3),width:wp(6),borderRadius:wp(3)}}/>
-       <Text style={[styles.txt,{paddingRight:hp('15%')}]}>Deepak</Text>
-       <Text style={styles.txt}>1132.2</Text>
-       <Text style={styles.txt}>#1</Text>
-       </View>
-       <LinearGradient
-        colors={['#999999', '#FFFFFF', '#999999']} 
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={{
-          height: 1,              
-          marginTop: 10,          
-          marginHorizontal: wp(2), 
-        }}
-      />
-     </View>
-    </>)
-}
+  const renderItem = items => {
+    return (
+      <>
+        <View style={{flex: 1, paddingBottom: 10}}>
+          <View
+            style={{
+              flex: 1,
+              width: wp('100%'),
+              flexDirection: 'row',
+              paddingBlock: 6,
+            }}>
+            <View style={{flex: 0.4}}>
+              <Image
+                source={Person4}
+                style={{height: hp(3), width: wp(6), borderRadius: wp(3)}}
+              />
+            </View>
+            <View style={{flex: 1.5}}>
+              <Text style={styles.txt}>sanskruti</Text>
+            </View>
+            <View style={{flex: 1}}>
+              <Text style={styles.txt}>1509.6</Text>
+            </View>
+            <View style={{flex: 1}}>
+              <Text style={styles.txt}>#1</Text>
+            </View>
+          </View>
+          <LinearGradient
+            colors={['#999999', '#FFFFFF', '#999999']}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={{
+              height: 1,
+              marginTop: 10,
+              marginHorizontal: wp(2),
+            }}
+          />
+        </View>
+      </>
+    );
+  };
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ flex: 0.5, flexDirection: 'row' }}>
+    <View style={{flex: 1}}>
+      <View style={{flex: 0.5, flexDirection: 'row'}}>
         <View
           style={{
             flex: 1,
@@ -76,10 +104,10 @@ export default function GlobalLeaderBoard() {
             }}>
             <Image
               source={Person2}
-              style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
+              style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
             />
           </View>
-          <View style={{ position: 'absolute' }}>
+          <View style={{position: 'absolute'}}>
             <View
               style={{
                 height: hp(3),
@@ -89,9 +117,8 @@ export default function GlobalLeaderBoard() {
                 top: hp('2%'),
                 alignItems: 'center',
                 justifyContent: 'center',
-
               }}>
-              <Text style={{ color: '#000000CC' }}>2</Text>
+              <Text style={{color: '#000000CC'}}>2</Text>
             </View>
           </View>
           <Text
@@ -116,8 +143,7 @@ export default function GlobalLeaderBoard() {
               width: wp('10%'),
               justifyContent: 'flex-end',
               alignItems: 'center',
-              top: wp('2%')
-
+              top: wp('2%'),
             }}>
             <Image source={Frame} />
           </View>
@@ -133,10 +159,10 @@ export default function GlobalLeaderBoard() {
             }}>
             <Image
               source={Person}
-              style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
+              style={{height: hp(10), width: hp(10), borderRadius: hp(10)}}
             />
           </View>
-          <View style={{ position: 'absolute' }}>
+          <View style={{position: 'absolute'}}>
             <View
               style={{
                 height: hp(3),
@@ -147,7 +173,7 @@ export default function GlobalLeaderBoard() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{ color: '#000000CC' }}>1</Text>
+              <Text style={{color: '#000000CC'}}>1</Text>
             </View>
           </View>
           <Text
@@ -179,10 +205,10 @@ export default function GlobalLeaderBoard() {
             }}>
             <Image
               source={Person3}
-              style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
+              style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
             />
           </View>
-          <View style={{ position: 'absolute' }}>
+          <View style={{position: 'absolute'}}>
             <View
               style={{
                 height: hp(3),
@@ -193,7 +219,7 @@ export default function GlobalLeaderBoard() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{ color: '#000000CC' }}>3</Text>
+              <Text style={{color: '#000000CC'}}>3</Text>
             </View>
           </View>
           <Text
@@ -206,10 +232,15 @@ export default function GlobalLeaderBoard() {
             Bryan Wolf
           </Text>
         </View>
-
       </View>
-      <View style={{ flex: 1.5, backgroundColor: 'rgba(255, 255, 255, 0.5)', margin: wp('6%'), borderRadius: 15 }}>
-        <SafeAreaView style={{ flex: 1,margin:wp('4%')}}>
+      <View
+        style={{
+          flex: 1.5,
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          margin: wp('6%'),
+          borderRadius: 15,
+        }}>
+        <SafeAreaView style={{flex: 1, margin: wp('4%')}}>
           <FlatList
             data={data}
             renderItem={renderItem}
@@ -219,16 +250,17 @@ export default function GlobalLeaderBoard() {
         </SafeAreaView>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  txt:{
-    color:'#FFFFFF',
-    fontFamily:'Montserrat-Bold',
-    fontSize:16
-  }
-})
+  txt: {
+    color: '#FFFFFF',
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 16,
+  },
+});
 
-
-{/* <Image source={require('../../assets/Frame.png')} /> */ }
+{
+  /* <Image source={require('../../assets/Frame.png')} /> */
+}

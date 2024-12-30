@@ -4,15 +4,23 @@ import {WebView} from 'react-native-webview';
 import {API_URL} from '@env';
 import Config from '../../Utilities/Config';
 import CommonHeader from '../../Components/CommonHeader';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const RefundPolicyScreen = () => {
   return (
-    <View style={styles.container}>
-      <CommonHeader title={'Refund Policy'} />
+    <View style={{flex: 1}}>
+      <View style={styles.container}>
+        <CommonHeader title={'Refund Policy'} />
+      </View>
       <WebView
         source={{uri: `${API_URL}/${Config.Refund}`}}
         style={styles.webview}
         startInLoadingState={true}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
       />
     </View>
   );
@@ -20,8 +28,8 @@ const RefundPolicyScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#361911',
+    paddingBottom: wp('4%'),
   },
 
   webview: {
