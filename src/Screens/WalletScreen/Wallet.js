@@ -155,7 +155,7 @@ const WalletScreen = () => {
           <TouchableOpacity 
           style={styles.withdrawButton}
           onPress={()=>{
-            handleNavigation("WithdrawWallet")
+            handleNavigation("WithdrawWallet",{dataUser:dataUser})
           }}
           >
             <Text style={styles.withdrawText}>WITHDRAW</Text>
