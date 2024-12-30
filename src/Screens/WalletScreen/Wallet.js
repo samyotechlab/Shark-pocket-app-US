@@ -165,11 +165,12 @@ const WalletScreen = () => {
       </View>
       <TouchableOpacity style={styles.transactionContainer} 
       onPress={()=>{
-        handleNavigation('WalletDetails')
+        handleNavigation('WalletDetails',{user_id:dataUser._id})
       }}
       >
         <Text style={styles.transactionText}>My Transactions</Text>
         <Text style={styles.subText}>Deposit and withdrawal history</Text>
+  
       </TouchableOpacity>
       <Image
         source={gst}
@@ -277,6 +278,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 4,
     borderRadius: 5,
+    marginHorizontal:hp('5%')
   },
   withdrawText: {
     color: '#444',
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
   },
   bannerImage: {
     width: '100%',
-    height: 200,
+    height: wp('90%'),
     borderRadius: 10,
     marginTop:20
   },

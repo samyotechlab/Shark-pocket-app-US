@@ -1,122 +1,168 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
+const groupByDateAndType = (data) => {
+  return data.reduce((acc, item) => {
+    const date = item.created_at.split(' ')[0];
+    const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
+    if (!acc[typeKey]) acc[typeKey] = [];
+    acc[typeKey].push(item);
+    return acc;
+  }, {});
+};
 
-const data = [
-  { id: '1', time: '07:33 pm', amount: '₹77', note: 'Credit Note' },
-  { id: '2', time: '07:33 pm', amount: '₹77', note: 'Credit Note' },
-];
-export default function All() {
-  const navigation = useNavigation()
+export default function All(props) {
+  const { walletData = [] } = props;
+  const navigation = useNavigation();
 
-  const handleNavigation = () =>{
-    navigation.navigate('DepositeDetails')
-  }
-    const renderItem = ({ item }) => (
-      <TouchableOpacity style={styles.itemContainer} onPress={
-       ()=>{
-        handleNavigation()
-       }
-      }>
-        <View style={styles.circle} >
-          <Image source={require("../../../assets/images/Screens/arrow.png")} 
-          style={{height:20,width:20}}
+  // Group walletData by date
+  const groupedData = groupByDateAndType(walletData);
+  console.log("dtatrtt",groupedData)
+
+  const handleNavigation = () => {
+    navigation.navigate('DepositeDetails');
+  };
+
+  const renderTransaction = ({ item }) => {
+    const isDebit = item.type === 0;
+  
+    return (
+      <TouchableOpacity
+        style={[
+          styles.itemContainer,
+        ]}
+        onPress={handleNavigation}
+      >
+        <View
+          style={[
+            styles.circle,
+            { backgroundColor: isDebit ? '#F100001A' : '#03C5263A' },
+          ]}
+        >
+          <Image
+            source={require('../../../assets/images/Screens/arrow.png')}
+            style={{
+              height: 20,
+              width: 20,
+              tintColor: isDebit ? 'red' : '#03C526',
+            }}
           />
-          </View>
+        </View>
         <View style={styles.textContainer}>
-          <Text style={styles.note}>{item.note}</Text>
-          <Text style={styles.time}>{item.time}</Text>
+          <Text
+            style={[
+              styles.note,
+              { color: isDebit ? '#F10000' : '#696969' },
+            ]}
+          >
+            {item.transaction_note || 'No Note'}
+          </Text>
+          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
         </View>
         <View>
-        <Text style={styles.amount}>{item.amount}</Text>
+          <Text style={styles.amount}>{item.transaction_amount || '0'}</Text>
         </View>
       </TouchableOpacity>
     );
-  return (
-    <>
- <View style={styles.container}>
+  };
+
+  const renderSection = ({ item }) => (
+    
+    <View>
       <View style={styles.dateContainer}>
-        <Text style={styles.date}>12 November 2024</Text>
+        <Text style={styles.date}>{item.date}</Text>
       </View>
       <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
+        data={item.transactions}
+        renderItem={renderTransaction}
+        keyExtractor={(transaction) => transaction._id}
       />
     </View>
-    </>
-  )
+  );
+
+  const sectionData = Object.keys(groupedData).map((key) => {
+    const [date] = key.split('.');
+  
+    return {
+      date: `${date}`, 
+      transactions: groupedData[key], 
+    };
+  });
+
+  return (
+    <View style={styles.container}>
+    <FlatList
+      data={sectionData}
+      renderItem={renderSection}
+      keyExtractor={(item) => item.date}
+      contentContainerStyle={styles.list}
+    />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor: 'white',
-      paddingVertical: hp('1.5%'),
-    },
-    dateContainer: {
-      width: wp('100%'),
-      backgroundColor: '#E0E0E0',
-      alignItems: 'flex-start',
-      paddingVertical: hp('0.7%'),
-      paddingHorizontal: wp('3%'),
-    },
-    date: {
-      fontSize: wp('3.5%'),
-      color: '#696969',
-      fontFamily:'Montserrat-Regular'
-    },
-    list: {
-      paddingVertical: hp('1%'),
-    },
-    itemContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: 'ffff',
-      padding: wp('3%'),
-      borderRadius: wp('2%'),
-      marginBottom: hp('1%'),
-      borderBottomColor: '#0000003A',
-      borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomEndRadius:50,
-      borderBottomStartRadius:50
-    },
-    circle: {
-      width: wp('10%'),
-      height: wp('10%'),
-      borderRadius: wp('5%'),
-      backgroundColor: '#03C5263A',
-      opacity:0.5,
-      alignItems:"center",
-      justifyContent:"center"
-    },
-    textContainer: {
-      flex: 1,
-      marginLeft: wp('3%'),
-    
-    },
-    note: {
-      fontSize: wp('4%'),
-      color: '#696969',
-      fontFamily:'Montserrat-medium'
-    },
-    time: {
-      fontSize: wp('3%'),
-      fontFamily:'Montserrat-Regular',
-      color: '#696969',
-      marginTop: hp('0.5%'),
-    },
-    amount: {
-      fontSize: wp('4%'),
-      fontFamily:'Montserrat-Medium',
-      color: '#696969',
-      marginBottom: hp('2%'),
-  
-    },
-})
+    flex: 1,
+    backgroundColor: 'white',
+    // paddingVertical: hp('1.5%'),
+  },
+  dateContainer: {
+    width: wp('100%'),
+    backgroundColor: '#E0E0E0',
+    alignItems: 'flex-start',
+    paddingVertical: hp('0.7%'),
+    paddingHorizontal: wp('3%'),
+  },
+  date: {
+    fontSize: wp('3.5%'),
+    color: '#696969',
+    fontFamily: 'Montserrat-Regular',
+  },
+  list: {
+    paddingVertical: hp('1%'),
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: wp('3%'),
+    borderRadius: wp('2%'),
+    marginBottom: hp('1%'),
+    borderBottomColor: '#0000003A',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  circle: {
+    width: wp('10%'),
+    height: wp('10%'),
+    borderRadius: wp('5%'),
+    backgroundColor: '#03C5263A',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: wp('3%'),
+  },
+  note: {
+    fontSize: wp('4%'),
+    color: '#696969',
+    fontFamily: 'Montserrat-Medium',
+  },
+  time: {
+    fontSize: wp('3%'),
+    fontFamily: 'Montserrat-Regular',
+    color: '#696969',
+    marginTop: hp('0.5%'),
+  },
+  amount: {
+    fontSize: wp('4%'),
+    fontFamily: 'Montserrat-Medium',
+    color: '#696969',
+  },
+});

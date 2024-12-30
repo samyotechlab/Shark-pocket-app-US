@@ -1,20 +1,39 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Loader } from '../../Components/Loader';
 import Debit from '../Deposite/Debit';
 import Credit from '../Deposite/Credit';
 import All from '../Deposite/All';
 import WalletDetailsCard from '../../Components/WalletDetailsCard';
+import { WalletTransactionList } from '../../Service/Wallet';
 
-export default function Deposite() {
+export default function Deposite(props) {
 
+  const  {user_id} = props
   const [selectedTab, setSelectedTab] = useState('All');
   const [loader, setLoader] = useState(false);
+  const [walletData, setWalletData] = useState([]);
 
   const handlePress = tab => {
     setSelectedTab(tab);
   };
+
+  const WalletRequest = async () => {
+    setLoader(true)
+    try {
+      const response = await WalletTransactionList(user_id);
+      setWalletData(response?.data);
+    } catch (error) {
+      console.log('error', error);
+    }finally{
+      setLoader(false)
+    }
+  };
+
+  useEffect(()=>{
+    WalletRequest()
+  },[])
 
   return (
     <>
@@ -63,11 +82,11 @@ export default function Deposite() {
       </View>
   <View style={{flex:17}}>
       {selectedTab === 'All' ? (
-      !loader ? ( <All/>):(<Loader/>)
+      !loader ? ( <All walletData={walletData}/>):(<Loader/>)
     ) : selectedTab === 'Debit' ? (
-      !loader ? ( <Debit/>):(<Loader/>)  
+      !loader ? ( <Debit walletData={walletData}/>):(<Loader/>)  
     ) : (
-      !loader ? ( <Credit/>):(<Loader/>)  
+      !loader ? ( <Credit walletData={walletData}/>):(<Loader/>)  
     )}
     </View>
     </>

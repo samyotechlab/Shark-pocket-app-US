@@ -6,8 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Tickets from './Tickets'
 import PlayedHistory from './PlayedHistory'
 import { useRoute } from '@react-navigation/native'
-import { ticketList } from '../../Service/Tickets'
-import useLoginDataStorage from '../../Service/CustomStorageHook'
+
 
 export default function GameName() {
   const route = useRoute();

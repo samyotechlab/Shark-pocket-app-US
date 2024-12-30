@@ -107,43 +107,48 @@ export default function Tickets() {
                                     enroll yourself before game start
                                 </Text>
                                 <View style={styles.boxContainer}>
-                                    {/* Box 1 */}
+                                 
                                     <LinearGradient
                                         colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
-                                        locations={[0, 0.5, 1]} // Centralizes '#F8CB1F'
+                                        locations={[0, 0.5, 1]} 
                                         style={styles.box}
                                     >
                                         <Image source={coin} style={styles.boxIcon} />
                                         <Text style={styles.boxText}>{item.price}</Text>
                                     </LinearGradient>
-                                    {/* Box 2 */}
+                                  
                                     <LinearGradient
                                         colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
-                                        locations={[0, 0.5, 1]} // Centralizes '#F8CB1F'
+                                        locations={[0, 0.5, 1]} 
                                         style={styles.box}
                                     >
                                         <Image source={ticket} style={styles.boxIcon1} />
                                         <Text style={styles.boxText}>{item.entries}</Text>
                                     </LinearGradient>
-                                    {/* Box 3 */}
+
                                     <LinearGradient
                                         colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
-                                        locations={[0, 0.5, 1]} // Centralizes '#F8CB1F'
+                                        locations={[0, 0.5, 1]} 
                                         style={styles.box}
                                     >
                                         <Image source={timer} style={styles.boxIcon} />
                                         <Text style={styles.boxText}>{item.remaining_entries}</Text>
                                     </LinearGradient>
                                 </View>
-                                <TouchableOpacity style={[styles.playButton, { backgroundColor: isPurchased ? '#EF8523' : '#2DF300' }]} onPress={isPurchased ? handlePlay : handlePurchaseModal}>
+                          
+                                <TouchableOpacity style={[styles.playButton, { backgroundColor: isPurchased ? '#EFC328' : '#2DF300' }]} onPress={isPurchased ? handlePlay : handlePurchaseModal}>
+                               
                                     <Text style={styles.playButtonText}> {isPurchased ? 'Play Now' : 'Purchase'}</Text>
+                    
                                 </TouchableOpacity>
+
+                
 
                             </View>
                         </View>
@@ -170,27 +175,136 @@ export default function Tickets() {
 
     )
 }
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//     },
+//     container1: {
+//         flex: 1,
+//         paddingLeft: 20,
+//         marginBottom: 20
+//     },
+//     card: {
+//         // backgroundColor: '#F8B600',
+//         borderRadius: 6,
+//         // padding: 5,
+//         width: '95%',
+//         height: 160,
+//         shadowColor: '#000',
+//         shadowOffset: { width: 0, height: 3 },
+//         shadowOpacity: 0.3,
+//         shadowRadius: 5,
+//         elevation: 5,
+//         borderWidth: 4,
+//         borderColor: '#F2E30B',
+//     },
+//     content: {
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         flex: 1,
+//     },
+//     characterImage: {
+//         width: 100,
+//         height: '120%',
+//         resizeMode: 'contain',
+//     },
+//     textContainer: {
+//         flex: 1,
+//         paddingLeft: 10,
+//         justifyContent: 'space-between',
+//         // paddingTop:10
+//     },
+//     description: {
+//         fontSize: 14,
+//         color: '#000000',
+//         fontFamily: 'Audiowide-Regular'
+//     },
+//     boxContainer: {
+//         flexDirection: 'row',
+//         justifyContent: 'space-between',
+//         marginVertical: 10,
+//     },
+//     box: {
+//         borderRadius: 8,
+//         padding: 3,
+//         alignItems: 'center',
+//         width: 80,
+//         flexDirection: 'row',
+//         borderColor: '#C59900',
+//         borderWidth: 1,
+//         justifyContent: 'space-evenly'
+//     },
+//     boxIcon: {
+//         width: 20,
+//         height: 20,
+//         marginBottom: 5,
+//     },
+//     boxIcon1: {
+//         width: 20,
+//         height: 20,
+//         marginBottom: 5,
+//         resizeMode: 'contain'
+//     },
+//     boxText: {
+//         fontSize: 15,
+//         fontWeight: 'bold',
+//         color: 'white',
+//     },
+//     playButton: {
+//         backgroundColor: '#FFD700',
+//         borderRadius: 8,
+//         paddingVertical: 6,
+//         alignItems: 'center',
+//     },
+//     playButtonText: {
+//         fontSize: 20,
+//         fontWeight: 'bold',
+//         color: 'white',
+//     },
+
+//     buttonContainer: {
+//         alignItems: 'flex-start',
+//         marginTop: 10,
+//     },
+//     button: {
+//         backgroundColor: '#3E2723',
+//         borderRadius: 8,
+//         paddingVertical: 10,
+//         paddingHorizontal: 30,
+//         alignItems: 'center',
+//         borderColor: '#F5D236',
+//         borderWidth: 2,
+//     },
+//     buttonText: {
+//         fontSize: 18,
+//         fontFamily: 'Inter_18pt-Bold',
+//         color: '#FFDC4D',
+//         letterSpacing: 1,
+//         textShadowColor: '#F88600',
+//         textShadowOffset: { width: 0, height: 2 },
+//         textShadowRadius: 15,
+//     },
+// })
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
     container1: {
         flex: 1,
-        paddingLeft: 20,
-        marginBottom: 20
+        paddingLeft: wp('3%'),
+        marginBottom: hp('2%'),
     },
     card: {
-        // backgroundColor: '#F8B600',
-        borderRadius: 6,
-        // padding: 5,
-        width: '95%',
-        height: 160,
+        borderRadius: wp('2%'),
+        width: wp('95%'),
+        height: hp('20%'),
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
+        shadowOffset: { width: 0, height: hp('0.4%') },
         shadowOpacity: 0.3,
-        shadowRadius: 5,
+        shadowRadius: wp('1.2%'),
         elevation: 5,
-        borderWidth: 4,
+        borderWidth: wp('1%'),
         borderColor: '#F2E30B',
     },
     content: {
@@ -199,84 +313,93 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     characterImage: {
-        width: 100,
-        height: '120%',
+        width: wp('25%'),
+        height: hp('20%'),
         resizeMode: 'contain',
     },
     textContainer: {
         flex: 1,
-        paddingLeft: 10,
+        paddingLeft: wp('3%'),
         justifyContent: 'space-between',
-        // paddingTop:10
     },
     description: {
-        fontSize: 14,
+        fontSize: wp('3.5%'),
         color: '#000000',
-        fontFamily: 'Audiowide-Regular'
+        fontFamily: 'Audiowide-Regular',
     },
     boxContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 10,
+        marginVertical: hp('1%'),
     },
     box: {
-        borderRadius: 8,
-        padding: 3,
+        borderRadius: wp('2%'),
+        padding: wp('1%'),
         alignItems: 'center',
-        width: 80,
+        width: wp('20%'),
         flexDirection: 'row',
         borderColor: '#C59900',
-        borderWidth: 1,
-        justifyContent: 'space-evenly'
+        borderWidth: wp('0.3%'),
+        justifyContent: 'space-evenly',
     },
     boxIcon: {
-        width: 20,
-        height: 20,
-        marginBottom: 5,
+        width: wp('5%'),
+        height: wp('5%'),
+        marginBottom: hp('0.5%'),
     },
     boxIcon1: {
-        width: 20,
-        height: 20,
-        marginBottom: 5,
-        resizeMode: 'contain'
+        width: wp('5%'),
+        height: wp('5%'),
+        marginBottom: hp('0.5%'),
+        resizeMode: 'contain',
     },
     boxText: {
-        fontSize: 15,
-        fontWeight: 'bold',
+        fontSize: wp('3.5%'),
+        fontFamily:'LilitaOne-Regular',
         color: 'white',
+        textShadowColor: 'black', 
+        textShadowOffset: { width: -1, height: 1 }, 
+        textShadowRadius: 1, 
     },
     playButton: {
-        backgroundColor: '#FFD700',
-        borderRadius: 8,
-        paddingVertical: 6,
+        borderRadius: wp('1%'),
+        paddingVertical: hp('1%'),
         alignItems: 'center',
+        borderWidth:1,
+        borderColor:'black',
+        marginRight:wp('25%'),
+        marginTop:hp('1%')
     },
     playButtonText: {
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: wp('4%'),
+        fontFamily:'LilitaOne-Regular',
         color: 'white',
+        textShadowColor: 'black', 
+        textShadowOffset: { width: -1, height: 1 }, 
+        textShadowRadius: 1, 
+        textTransform:'uppercase',
+        letterSpacing:2
     },
-
     buttonContainer: {
         alignItems: 'flex-start',
-        marginTop: 10,
+        marginTop: hp('1%'),
     },
     button: {
         backgroundColor: '#3E2723',
-        borderRadius: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 30,
+        borderRadius: wp('2%'),
+        paddingVertical: hp('1.5%'),
+        paddingHorizontal: wp('8%'),
         alignItems: 'center',
         borderColor: '#F5D236',
-        borderWidth: 2,
+        borderWidth: wp('0.5%'),
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: wp('4.5%'),
         fontFamily: 'Inter_18pt-Bold',
         color: '#FFDC4D',
-        letterSpacing: 1,
+        letterSpacing: wp('0.5%'),
         textShadowColor: '#F88600',
-        textShadowOffset: { width: 0, height: 2 },
-        textShadowRadius: 15,
+        textShadowOffset: { width: 0, height: hp('0.3%') },
+        textShadowRadius: wp('2%'),
     },
-})
+});

@@ -11,13 +11,16 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import profile from '../../../assets/images/Screens/profile.jpeg';
 import Iconics from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const ViewProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const navigation = useNavigation();
-
+  const route = useRoute()
+  const {userData} = route.params
+  
+  console.log("userData",userData)
   const selectImage = () => {
     launchImageLibrary(
       {
@@ -59,22 +62,22 @@ const ViewProfile = () => {
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
           <Icon name="account-outline" size={25} color="#000000B2" />
-          <TextInput value="amit123"  style={styles.input} />
+          <TextInput value={userData.name}  style={styles.input} />
         </View>
 
         <View style={styles.inputWrapper}>
           <Icon name="map-marker-outline" size={25} color="#000000B2" />
-          <TextInput value="Madhya Pradesh"  style={styles.input} />
+          <TextInput value={userData.state}  style={styles.input} />
         </View>
 
         <View style={styles.inputWrapper}>
           <Icon name="gender-male" size={25} color="#000000B2" />
-          <TextInput value="Male"  style={styles.input} />
+          <TextInput value={userData.gender}  style={styles.input} />
         </View>
 
         <View style={styles.inputWrapper}>
           <Icon name="phone-outline" size={25} color="#000000B2" />
-          <TextInput value="0236598742" style={styles.input} />
+          <TextInput value={userData.mobile} style={styles.input} />
           <TouchableOpacity style={{backgroundColor:'#F1F1F1',borderRadius:20,padding:10}}>
             <Text style={styles.changeText}>CHANGE</Text>
           </TouchableOpacity>

@@ -2,14 +2,12 @@ import Config from "../Utilities/Config";
 import apiInstance from "./AxiosInstance";
 
 export const ticketList = async (game_id, user_id) => {
-  console.log("ticket", user_id)
   try {
     const response = await apiInstance.post(Config.Game_Ticket_List, {
       game_id,
       user_id
     });
     if (response.status === 200) {
-      console.log('Game Ticket list', response.data);
       return response.data;
     } else {
       console.error(

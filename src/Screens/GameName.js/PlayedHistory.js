@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import trophy from '../../../assets/images/Screens/trophy2.png'
 import LinearGradient from 'react-native-linear-gradient';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp ,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { Loader } from '../../Components/Loader';
 import Toast from 'react-native-toast-message';
@@ -20,7 +20,6 @@ const PlayedHistory = () => {
     setLoader(true)
     try {
       const response = await historyData(data._id);
-      console.log('response', response);
       if (response) {
         setHistory(response?.data);
       } else {
@@ -41,7 +40,6 @@ const PlayedHistory = () => {
     },[isReady, loginData])
 
   const renderItem = ({ item }) => {
-    console.log("item",item)
     return (
       <>
        <View style={styles.container1} >
@@ -97,26 +95,23 @@ const PlayedHistory = () => {
 const styles = StyleSheet.create({
   cardOuterContainer: {
     backgroundColor: '#F2E30B',
-    borderRadius: 12,
-    padding: 4,
-
-
+    borderRadius: wp('3%'),
+    padding: wp('1%'),
   },
-          container:{
-                flex:1,
-            },
-            container1: {
-              flex: 1,
-              margin:10
-          },
+  container:{
+    flex:1,
+  },
+  container1: {
+    flex: 1,
+    margin: wp('1%')
+  },
   cardContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
-    borderRadius: 10,
-    paddingHorizontal: 13,
-    paddingVertical: 18,
+    borderRadius: wp('2%'),
+    paddingHorizontal: wp('3%'),
+    paddingVertical: hp('2%'),
     elevation: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -124,9 +119,9 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   trophyIcon: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
+    width: wp('12%'),
+    height: wp('12%'),
+    marginRight: wp('2%'),
   },
   detailsContainer: {
     flex: 1,
@@ -134,9 +129,9 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: '#2A1610',
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontFamily: 'Audiowide-Regular',
-    marginBottom: 5,
+    marginBottom: hp('0.5%'),
   },
   dateTimeRow: {
     flexDirection: 'row',
@@ -144,16 +139,16 @@ const styles = StyleSheet.create({
   },
   dateText: {
     color: '#000000B2',
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     fontFamily: 'Montserrat-SemiBold',
   },
   timeText: {
     color: '#000',
-    fontSize: 14,
+    fontSize: wp('3.5%'),
   },
   scoreText: {
     color: '#2A1610',
-    fontSize: 24,
+    fontSize: wp('6%'),
     fontFamily: 'Audiowide-Regular',
   },
 });

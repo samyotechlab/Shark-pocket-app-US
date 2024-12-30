@@ -13,10 +13,7 @@ export default function GameFinishHistory() {
   const [gameHistoryData, setGameHistory] = useState([]);
   const [loader,setLoader] = useState(false)
   const route = useRoute()
-  const {_id} = route.params
-  const {user_id} = route.params
-
-
+  const {_id,user_id} = route.params
   const allGameHistory = async () => {
     setLoader(true)
     try {
@@ -37,10 +34,11 @@ export default function GameFinishHistory() {
     }
   };
 
-  useEffect(()=>{
-    console.log("hello")
+  useEffect(() => {
+    console.log("user_id:", user_id);
     allGameHistory();
-  },[])
+  }, []);
+  
 
   
   return (
@@ -171,7 +169,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    // margin: wp('5%'),,
+
 
   },
   underContainer: {
@@ -257,7 +255,6 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     flex: 1,
-    // backgroundColor: 'rgba(255, 255, 255, 0.3)',
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 10,
     paddingVertical: 10,
@@ -270,8 +267,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   gradientBorder: {
-    height: 1.5, // Border thickness
-    width: '90%', // Full width of the row
+    height: 1.5, 
+    width: '90%',
     alignSelf: 'center'
   },
   rowText: {

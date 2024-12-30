@@ -7,9 +7,12 @@ import Bonus from '../WalletDetails/Bonus';
 import Winning from '../WalletDetails/Winning';
 import WithDraw from '../WalletDetails/WithDraw';
 import { Loader } from '../../Components/Loader';
+import { useRoute } from '@react-navigation/native';
 
 
 export default function WalletDetails() {
+  const route = useRoute()
+  const {user_id} = route.params
     const [selectedTab, setSelectedTab] = useState('Deposite');
     const [loader, setLoader] = useState(false);
     const handlePress = tab => {
@@ -53,7 +56,7 @@ export default function WalletDetails() {
       </View>
       <View style={{flex:1}}>
       {selectedTab === 'Deposite' ? (
-        !loader ? ( <Deposite/>):(<Loader/>)
+        !loader ? ( <Deposite user_id={user_id}/>):(<Loader/>)
       ) : selectedTab === 'Bonus' ? (
         !loader ? (  <Bonus/>):(<Loader/>)  
       ) :selectedTab === 'Winning' ? (

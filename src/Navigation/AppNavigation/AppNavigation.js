@@ -30,6 +30,8 @@ import ContactScreen from '../../Screens/Screens/ContactScreen';
 import TCScreen from '../../Screens/Screens/TCScreen';
 import RefundPolicyScreen from '../../Screens/Screens/RefundPolicyScreen';
 import SupportScreen from '../../Screens/Screens/SupportScreen';
+import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
+import AllGameName from '../../Screens/GameHistory/AllGameName';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -239,6 +241,20 @@ export default function AppNavigation() {
         <Stack.Screen
           name="Support"  
           component={SupportScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="GameHistory"  
+          component={AllPlayedGames}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="AllGameName"  
+          component={AllGameName}
           options={{
             headerShown: false,
           }}

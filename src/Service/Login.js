@@ -2,12 +2,10 @@ import apiInstance from "./AxiosInstance";
 import Config from "../Utilities/Config";
 
 export const userDetail = async user_id => {
-  console.log("profle",user_id)
   try {
     const response = await apiInstance.post(`${Config.Profile}`, {
       user_id,
     });
-    console.log("response 0000000 ",response.data)
     if (response.status === 200) {
       return response.data;
     }
