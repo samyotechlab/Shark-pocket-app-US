@@ -58,11 +58,11 @@ export default function WalletDetails() {
       {selectedTab === 'Deposite' ? (
         !loader ? ( <Deposite user_id={user_id}/>):(<Loader/>)
       ) : selectedTab === 'Bonus' ? (
-        !loader ? (  <Bonus/>):(<Loader/>)  
+        !loader ? (  <Bonus user_id={user_id}/>):(<Loader/>)  
       ) :selectedTab === 'Winning' ? (
-        !loader ? ( <Winning/>):(<Loader/>)  
+        !loader ? ( <Winning user_id={user_id}/>):(<Loader/>)  
       ):(
-        !loader ? ( <WithDraw/>):(<Loader/>) 
+        !loader ? ( <WithDraw user_id={user_id}/>):(<Loader/>) 
       )}
       </View>
     </View>

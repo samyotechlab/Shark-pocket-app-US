@@ -152,11 +152,12 @@ const WalletScreen = () => {
             <Iconics name="trophy-outline" size={20} color={'white'} />
           </LinearGradient>
           <Text style={styles.label}>Winning</Text>
-          <TouchableOpacity
-            style={styles.withdrawButton}
-            onPress={() => {
-              handleNavigation('WithdrawWallet');
-            }}>
+          <TouchableOpacity 
+          style={styles.withdrawButton}
+          onPress={()=>{
+            handleNavigation("WithdrawWallet")
+          }}
+          >
             <Text style={styles.withdrawText}>WITHDRAW</Text>
           </TouchableOpacity>
         </View>

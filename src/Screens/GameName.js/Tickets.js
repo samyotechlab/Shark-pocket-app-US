@@ -9,7 +9,7 @@ import useLoginDataStorage from '../../Service/CustomStorageHook';
 import coin from '../../../assets/images/Screens/coin.png'
 import ticket from '../../../assets/images/Screens/ticket.png'
 import timer from '../../../assets/images/Screens/timer.png'
-import AlertDialog from '../../Components/AlertDialog';
+import AlertDialog from '../../Components/AlertDialogRed';
 import { Loader } from '../../Components/Loader';
 
 export default function Tickets() {

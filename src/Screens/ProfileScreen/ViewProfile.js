@@ -12,15 +12,21 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import profile from '../../../assets/images/Screens/profile.jpeg';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const ViewProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
+  const [genderOpen, setGenderOpen] = useState(false);
+  const [genderValue, setGenderValue] = useState(null);
   const navigation = useNavigation();
   const route = useRoute()
+  const [gender, setGender] = useState([
+    {label: 'Male', value: 0},
+    {label: 'Female', value: 1},
+  ]);
   const {userData} = route.params
-  
-  console.log("userData",userData)
+
   const selectImage = () => {
     launchImageLibrary(
       {
@@ -55,7 +61,7 @@ const ViewProfile = () => {
             <Icon name="camera-outline" size={20} color="#fff" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.profileName}>Amit Sharma</Text>
+        <Text style={styles.profileName}>{userData.name}</Text>
       </View>
 
       {/* Input Fields */}
@@ -70,9 +76,55 @@ const ViewProfile = () => {
           <TextInput value={userData.state}  style={styles.input} />
         </View>
 
-        <View style={styles.inputWrapper}>
+        <View style={[styles.inputWrapper,{ zIndex: 1000 }]}>
           <Icon name="gender-male" size={25} color="#000000B2" />
-          <TextInput value={userData.gender}  style={styles.input} />
+          <DropDownPicker
+          open={genderOpen}
+          value={genderValue}
+          items={gender}
+          setOpen={setGenderOpen}
+          setValue={callback => {
+            const value = callback(genderValue);
+            setGenderValue(value);
+            handleInputChange('gender', value);
+          }}
+          setItems={setGender}
+          placeholder="Choose a Gender"
+          style={{
+            backgroundColor: 'white',
+            borderWidth: 1,
+            borderColor: '#ccc',
+            borderRadius: 8,
+            marginBottom: 1,
+            width:'90%'
+          }}
+          dropDownContainerStyle={{
+            backgroundColor: '#ffffff',
+            // backgroundColor: 'red',
+            borderColor: '#ddd',
+            borderRadius: 8,
+              width:'90%'
+          }}
+          textStyle={{
+            fontSize: 16,
+            color: '#414141',
+          }}
+          placeholderStyle={{
+            color: '#414141',
+            fontSize: 16,
+          }}
+          selectedItemLabelStyle={{
+            fontWeight: 'bold',
+          }}
+          listItemLabelStyle={{
+            color: '#414141',
+          }}
+          arrowIconStyle={{
+            width: 20,
+            height: 20,
+            tintColor: '#333',
+          }}
+        />
         </View>
 
         <View style={styles.inputWrapper}>

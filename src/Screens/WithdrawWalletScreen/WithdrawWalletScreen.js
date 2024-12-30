@@ -16,8 +16,11 @@ import CommonHeader from '../../Components/CommonHeader';
 import { Loader } from '../../Components/Loader';
 import Withdraw from './Withdraw';
 import WithdrawHistory from './WithdrawHistory';
+import { useRoute } from '@react-navigation/native';
 
 const WithdrawWalletScreen = () => {
+  const route = useRoute();
+  const {dataUser} = route.params
 
   const [selectedTab, setSelectedTab] = useState('Withdraw');
 
@@ -51,9 +54,9 @@ const WithdrawWalletScreen = () => {
 
         </View>
         {selectedTab === 'Withdraw' ? (
-          !loader ? (<Withdraw/>) : (<Loader />) 
+          !loader ? (<Withdraw dataUser={dataUser}/>) : (<Loader />) 
         ) : (
-          !loader ? (<WithdrawHistory />) : (<Loader />)
+          !loader ? (<WithdrawHistory  dataUser={dataUser}/>) : (<Loader />)
         )}
     
       </View>

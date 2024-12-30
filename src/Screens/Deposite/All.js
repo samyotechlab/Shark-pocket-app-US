@@ -20,12 +20,13 @@ export default function All(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
 
+
+
   // Group walletData by date
   const groupedData = groupByDateAndType(walletData);
-  console.log("dtatrtt",groupedData)
 
-  const handleNavigation = () => {
-    navigation.navigate('DepositeDetails');
+  const handleNavigation = (item) => {
+    navigation.navigate('DepositeDetails',{item});
   };
 
   const renderTransaction = ({ item }) => {
@@ -36,7 +37,7 @@ export default function All(props) {
         style={[
           styles.itemContainer,
         ]}
-        onPress={handleNavigation}
+        onPress={()=>handleNavigation(item)}
       >
         <View
           style={[
@@ -71,8 +72,7 @@ export default function All(props) {
     );
   };
 
-  const renderSection = ({ item }) => (
-    
+  const renderSection = ({ item }) => (   
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>

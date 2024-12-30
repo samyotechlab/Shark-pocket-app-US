@@ -21,10 +21,12 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import AlertDialog from '../../Components/AlertDialog';
+import AlertDialog from '../../Components/AlertDialogRed';
 import profile from '../../../assets/images/Screens/profile.jpeg';
-import {userDetail} from '../../Service/Login';
-import {truncateName} from '../../Utilities/utilies';
+import { userDetail } from '../../Service/Login';
+import AlertDialogRed from '../../Components/AlertDialogRed';
+import AlertDialogGreen from '../../Components/AlertDialogGreen';
+import { truncateName } from '../../Utilities/utilies';
 const SharkPocketScreen = () => {
   const navigation = useNavigation();
   const {isReady, loginData} = useLoginDataStorage();
@@ -97,9 +99,13 @@ const SharkPocketScreen = () => {
     },
   ];
 
-  const handleNavigation = url => {
-    navigation.navigate(url, {user_id: data._id});
-  };
+  const handleNavigation = (url) => {
+    if(url === "Logout"){
+      setVisible(true)
+    }else{
+      navigation.navigate(url,{user_id:data._id});
+    }
+   
 
   const handleLogout = async () => {
     try {
@@ -161,20 +167,19 @@ const SharkPocketScreen = () => {
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardText}>{item.title}</Text>
           </View>
-          <View style={styles.cardArrowContainer}>
-            <Icon
-              name="chevron-right"
-              size={wp('7%')}
-              color="#000000"
-              style={styles.arrowImage}
-            />
-          </View>
-        </TouchableOpacity>
-        <AlertDialog
-          visible={visible}
-          onClose={() => setVisible(false)}
-          onOkPress={handleLogout}
-        />
+          
+        
+        <View style={styles.cardArrowContainer}>
+          <Icon
+            name="chevron-right"
+            size={wp('7%')}
+            color="#000000"
+            style={styles.arrowImage}
+          />
+        </View>
+      </TouchableOpacity>
+      <AlertDialogGreen visible={visible} onClose={() => setVisible(false)} onOkPress={handleLogout}  message={"Are You Sure You Want to Logout?"} ok={"Yes"}/>
+
       </>
     );
   };

@@ -50,3 +50,26 @@ export const TransactionStore = async (user_id, amount) => {
       throw error;
     }
   };
+
+  export const transactionDepositeData = async (transaction_id) => {
+    const url = Config.DepositeTransaction+"/"+transaction_id
+  
+    try {
+      const response = await apiInstance.post(url,{
+        user_id:data.user_id
+      });
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error(
+          'Failed transaction:',
+          response.status,
+        );
+        throw new Error(`Failed transaction: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error fetching transaction', error.message || error);
+      throw error;
+    }
+  };
+  

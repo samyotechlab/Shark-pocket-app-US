@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -6,12 +6,22 @@ import {
     heightPercentageToDP as hp,
   } from 'react-native-responsive-screen';
 
-export default function Pending() {
+export default function Pending({data}) {
+  const filteredData = data.filter((item) => item.status === 0);
 
-    const data = [
-        { id: '1', time: '07:33 pm', amount: '₹77', note: 'Pending' },
-        { id: '2', time: '07:33 pm', amount: '₹77', note: 'Pending' },
-      ];
+  const groupedData = filteredData.reduce((groups, item) => {
+    const [date] = item.created_at.split(' ');
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(item);
+    return groups;
+  }, {});
+
+  const sections = Object.keys(groupedData).map((date) => ({
+    title: date,
+    data: groupedData[date],
+  }));
 
      const navigation = useNavigation()
     
@@ -30,27 +40,34 @@ export default function Pending() {
               />
               </View>
             <View style={styles.textContainer}>
-              <Text style={styles.note}>{item.note}</Text>
-              <Text style={styles.time}>{item.time}</Text>
+              <Text style={styles.note}>Pending</Text>
+              <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
             </View>
             <View>
-            <Text style={styles.amount}>{item.amount}</Text>
+            <Text style={styles.amount}>₹{item.amount}</Text>
             </View>
           </TouchableOpacity>
         );
+
+         const renderSectionHeader = ({ section: { title } }) =>{
+            console.log(title)
+            return(
+              <View style={styles.dateContainer}>
+              <Text style={styles.date}>{title}</Text>
+            </View>
+            )
+          }
   return (
        <>
-    <View style={styles.container}>
-         <View style={styles.dateContainer}>
-           <Text style={styles.date}>12 November 2024</Text>
-         </View>
-         <FlatList
-           data={data}
-           renderItem={renderItem}
-           keyExtractor={(item) => item.id}
-           contentContainerStyle={styles.list}
-         />
-       </View>
+      <View style={styles.container}>
+        <SectionList
+          sections={sections}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+        />
+      </View>
        </>
   )
 }
@@ -118,6 +135,7 @@ const styles = StyleSheet.create({
           fontFamily:'Montserrat-Medium',
           color: '#696969',
           marginBottom: hp('2%'),
+          marginRight:hp('1%')
       
         },
 })

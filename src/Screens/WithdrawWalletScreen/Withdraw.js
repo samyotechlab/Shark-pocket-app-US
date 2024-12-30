@@ -9,11 +9,53 @@ import Iconics from 'react-native-vector-icons/FontAwesome';
 import secure from '../../../assets/images/Screens/Safe.png';
 import light from '../../../assets/images/Screens/light.png';
 import profile from '../../../assets/images/Screens/profile.png';
+import AlertDialogRed from '../../Components/AlertDialogRed';
+import { withdrawCash } from '../../Service/WithDraw';
+import Toast from 'react-native-toast-message';
 
-export default function Withdraw() {
-  const [value, setValue] = useState('');
+export default function Withdraw({ dataUser }) {
+  const [amount, setAmount] = useState('');
+  const [visible, setVisible] = useState(false)
+  const [message, setMessage] = useState('')
+
+  const handleWithdraw = () => {
+    console.log("value", amount)
+    if (parseFloat(amount) > dataUser.total_earning) {
+      setVisible(true);
+      setMessage(`Your wallet balance is ₹${dataUser.total_earning}. Please enter a valid amount.`)
+    } else {
+      console.log('Withdrawal successful:', amount);
+      handleCick();
+    }
+  };
+  const handleCick = async () => {
+    try {
+      if (amount) {
+        if (amount >= 50) {
+          const response = await withdrawCash(dataUser._id, amount);
+           console.log("response",response)
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Otp Send!',
+            text2: 'Otp Send Succesffully in the given Number',
+            visibilityTime: 3000
+          })
+        } else {
+          setVisible(true);
+          setMessage('Minimun Withdrawl amount is 50 Rupees');
+        }
+      } else {
+        setVisible(true);
+        setMessage('please enter amount');
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   return (
     <>
+      <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} />
       <View style={{ flex: 1, backgroundColor: '#F3F3F3' }}>
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <LinearGradient
@@ -24,7 +66,7 @@ export default function Withdraw() {
           >
             <Icons name="account-balance-wallet" size={24} color={'white'} />
             <Text style={styles.text}>Withdraw wallet Balance</Text>
-            <Text style={styles.amount}>₹200</Text>
+            <Text style={styles.amount}>{dataUser.total_earning}</Text>
           </LinearGradient>
           <View style={{ marginTop: 5 }}>
             <Text style={styles.title}>Withdraw Balance</Text>
@@ -36,8 +78,8 @@ export default function Withdraw() {
               <Text style={styles.label}>Enter Amount</Text>
               <TextInput
                 style={styles.input}
-                value={value}
-                onChangeText={setValue}
+                value={amount}
+                onChangeText={setAmount}
                 placeholderTextColor="#aaa"
                 placeholderStyle={{ alignSelf: 'center' }}
               />
@@ -50,7 +92,7 @@ export default function Withdraw() {
           </Text>
 
           {/* Withdraw Button */}
-          <TouchableOpacity style={styles.withdrawButton}>
+          <TouchableOpacity style={styles.withdrawButton} onPress={handleWithdraw}>
             <Text style={styles.withdrawButtonText}>WITHDRAW CASH</Text>
           </TouchableOpacity>
         </View>
@@ -66,33 +108,34 @@ export default function Withdraw() {
               </View>
             </View>
           </View>
-           <TDSBreakupDialog />
-              <View style={styles.featuresRow}>
-              <View style={styles.feature}>
-                 <Image
-                          source={secure} 
-                          style={styles.icon}
-                        />
-                <Text style={styles.featureText}>100% Safe Payments</Text>
-              </View>
-              <View style={styles.feature}>
-               <Image
-                        source={light} 
-                        style={styles.icon}
-                      />
-                <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
-              </View>
-              <View style={styles.feature}>
-                <Image
-                         source={profile} 
-                         style={styles.icon}
-                       />
-                <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
-              </View>
+          <TDSBreakupDialog />
+          <View style={styles.featuresRow}>
+            <View style={styles.feature}>
+              <Image
+                source={secure}
+                style={styles.icon}
+              />
+              <Text style={styles.featureText}>100% Safe Payments</Text>
             </View>
+            <View style={styles.feature}>
+              <Image
+                source={light}
+                style={styles.icon}
+              />
+              <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
+            </View>
+            <View style={styles.feature}>
+              <Image
+                source={profile}
+                style={styles.icon}
+              />
+              <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
+            </View>
+          </View>
         </View>
-        
+
       </View>
+       <Toast ref={Toast.setRef} />
     </>
   )
 }
