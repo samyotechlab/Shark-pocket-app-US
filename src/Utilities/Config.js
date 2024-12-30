@@ -32,14 +32,9 @@ export default {
 
 
 // export default {
-
 //     Final_Score: 'api/finalScore',
 //     Global_ByDate: 'api/game_score/byDate',
-
-
-
 //     EditProfile: 'api/editprofile',
-
 //     TaxInvoice:'api/taxInvoice',
 //     GenerateTaxInvoice:'download/',
 //     GeneratePdf : 'taxInvoiceById/'

@@ -6,14 +6,15 @@ import CommonHeader from '../../Components/CommonHeader';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service/Transaction';
 import ModalScreen from '../../Components/ModalScreen';
-// import PhonePePaymentSDK from 'react-native-phonepe-pg';
+import PhonePePaymentSDK from 'react-native-phonepe-pg';
+import AlertDialogRed from '../../Components/AlertDialogRed';
 
 const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
    const {user_id} = route.params
    const [amount, setAmount] = useState(null);
-   const [isModalVisible, setIsModalVisible] = useState(false);
+   const [visible, setVisible] = useState(false);
    const [data, setData] = useState({});
    const [message, setMessage] = useState('');
    const [dialog, setDialog] = useState(false);
@@ -25,6 +26,7 @@ const AddCashScreen = () => {
     if (amount) {
       try {
         const response = await TransactionStore(user_id, amount);
+        console.log("response",response)
         addBonusWallet(response)
         initPhonePeSDK(response);
         setData(response);
@@ -32,7 +34,8 @@ const AddCashScreen = () => {
         console.log('error', error);
       }
     } else {
-      setIsModalVisible(true);
+      setVisible(true);
+      setMessage('Enter a amount')
     }
   };
 
@@ -109,13 +112,6 @@ const AddCashScreen = () => {
 
   return (
   <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
-    <ModalScreen
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-        title={' Please Enter Amount'}
-        closeTitle={'Close'}
-        heading={'Alert'}
-      />
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -145,7 +141,7 @@ const AddCashScreen = () => {
             </TouchableOpacity>
           ))}
         </View>
-        <TouchableOpacity style={styles.withdrawButton}>
+        <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
                    <Text style={styles.withdrawButtonText}>ADD CASH</Text>
                  </TouchableOpacity>
       </View>
@@ -169,6 +165,7 @@ const AddCashScreen = () => {
         <Image source={require("../../../assets/images/Screens/referal.png")} />
       </TouchableOpacity>
     </View>
+    <AlertDialogRed visible={visible} onClose={() => setVisible(false)}  message={message}/>
     </SafeAreaView>
   );
 };

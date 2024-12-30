@@ -11,14 +11,19 @@ import CommonHeader from '../../Components/CommonHeader';
 import CommonButton from '../../Components/CommonButton';
 import { gameRule } from '../../Service/Game';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
+import AlertDialogRed from '../../Components/AlertDialogRed';
 
 export default function PlayingInstruction() {
   const route = useRoute();
   const {game_id} = route.params;
   const {ticket_id} = route.params; 
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const [selectedNumber, setSelectedNumber] = useState(null);
-    const [gameRuleData, setGameRuleData] = useState({});
+    const [oddData, setOddData] = useState({});
+    const [negativeData, setNegativeData] = useState({});
+    const [superData, setSuperNumber] = useState({});
+    const [bonusPoint, setBonusPoint] = useState({});
+
     const {loginData,isReady} = useLoginDataStorage();
     const navigation = useNavigation()
     const handleNumberSelect = number => {
@@ -30,7 +35,12 @@ export default function PlayingInstruction() {
       const gameRuleList = async () => {
         try {
           const response = await gameRule();
-          setGameRuleData(response);
+          console.log("hello",response.bonusPoint)
+          setOddData(response.oddSelection);
+          setNegativeData(response.negativePoint)
+          setSuperNumber(response.superNumber)
+          setBonusPoint(response.bonusPoint)
+
         } catch (error) {
           console.log('error', error);
         }
@@ -59,26 +69,18 @@ export default function PlayingInstruction() {
             gameRuleData: gameRuleData,
           });
         } else {
-          setIsModalVisible(true);
+          setVisible(true);
         }
       };
+
+      const str =superData.supernumber
+      const arr = str.split(',').map(Number);
+
   return (
     <ScrollView>
     <LinearGradient colors={['#361911', '#361911', '#6A1700']}
             style={styles.linearGradient}>
-      <ModalScreen
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-        title={' Please select a super number first.'}
-        closeTitle={'Close'}
-      />
               <CommonHeader title={'Playing Instruction'}/>
-      {/* <ConfirmationModal
-        visible={isModalVisible2}
-        onClose={() => setIsModalVisible2(false)}
-        onYes={handleOnYes}
-        title="Are you sure you want to Quit game?"
-      /> */}
       <View style={{flex: 1}}>
           <View style={styles.container}>
             <Text style={styles.heading}>Odd Number</Text>
@@ -99,18 +101,15 @@ export default function PlayingInstruction() {
             </Text>
 
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
-              2 digit Equals to 2
-              Points.
+              2 digit Equals to {oddData.twoDigit} Points.
             </Text>
 
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
-              3 digit Equals to 3
-              Points.
+              3 digit Equals to {oddData.threeDigit} Points.
             </Text>
 
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
-              4 digit Equals to 4
-              Points.
+              4 digit Equals to {oddData.fourDigit} Points.
             </Text>
             <LinearGradient
                         colors={['#999999', '#FFFFFF', '#999999']} 
@@ -143,7 +142,7 @@ export default function PlayingInstruction() {
                 marginVertical: hp(1),
                 flexDirection: 'row',
               }}>
-              {[1, 3, 5, 7, 9].map(number => (
+              {arr.map(number => (
                 <TouchableOpacity
                   key={number}
                   style={[
@@ -166,7 +165,7 @@ export default function PlayingInstruction() {
               Last Digit of the Odd Selected Number
             </Text>
             <Text style={[styles.oddtext,{    fontFamily:'Montserrat-SemiBold'}]}>
-                 5 Extra Points for Each
+                 {superData.points} Extra Points for Each
               of Those Eligible Numbers
             </Text>
             <Text style={[styles.oddtext, {marginBottom: 5,    fontFamily:'Montserrat-SemiBold',}]}>
@@ -199,15 +198,13 @@ export default function PlayingInstruction() {
                       />
             <Text style={styles.oddtext}>Extra Bonus Points </Text>
             <Text style={[styles.oddtext,{  fontFamily:'Montserrat-SemiBold',}]}>
-              Odd Numbers More Than 10 = 10
-                , 30 = 30, 70 = 70, 100 = 100
+              Odd Numbers More Than 10 = {bonusPoint.oddMoreThan10}, 30 = {bonusPoint.oddMoreThan30}, 70 = {bonusPoint.oddMoreThan70}, 100 = {bonusPoint.oddMoreThan100}
             </Text>
             <Text style={[styles.oddtext,{  fontFamily:'Montserrat-SemiBold',}]}>
-              Super Numbers More Than 5 = 10 10 = 30 ,  20 = 50
+              Super Numbers More Than 5 = {bonusPoint.superMoreThan5}, 10 = {bonusPoint.superMoreThan10},  20 = {bonusPoint.superMoreThan20},
             </Text>
             <Text style={[styles.oddtext,{  fontFamily:'Montserrat-SemiBold',}]}>
-              Each Selected Prime Number will get Additional
-           10 Points
+              Each Selected Prime Number will get Additional {bonusPoint.primeNumberPoints} Points
             </Text>
             <LinearGradient
                         colors={['#999999', '#FFFFFF', '#999999']} 
@@ -238,17 +235,13 @@ export default function PlayingInstruction() {
               Negative Scoring for Even Number Selected will be as Below :-
             </Text>
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
-              2 Digit Number = 0.30
+              2 Digit Number = {negativeData.negTwoDigit}
             </Text>
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold',}]}>
-              {' '}
-              3 Digit Number ={' '}
-             0.45
+              3 Digit Number = {negativeData.negThreeDigit}
             </Text>
             <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold',}]}>
-              {' '}
-              4 DIgit Number ={' '}
-             0.60
+              4 DIgit Number = {negativeData.negFourDigit}
             </Text>
             <LinearGradient
                         colors={['#999999', '#FFFFFF', '#999999']} 
@@ -277,6 +270,7 @@ export default function PlayingInstruction() {
         </View>
       </View>
     </LinearGradient>
+    <AlertDialogRed visible={visible} onClose={() => setVisible(false)}  message={"Please Select a Super Number."}/>
   </ScrollView>
   )
 }
