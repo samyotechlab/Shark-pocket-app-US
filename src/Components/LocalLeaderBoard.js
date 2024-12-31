@@ -5,25 +5,39 @@ import { gameList } from '../Service/Game'
 import { useNavigation } from '@react-navigation/native'
 import AnimatedLoader from './AnimatedLoader'
 import AvailableCard from './AvailableCard'
+import Toast from 'react-native-toast-message'
 
 export default function LocalLeaderBoard() {
   const [loader, setLoader] = useState(false)
   const [gameData, setGameData] = useState([])
   const navigation = useNavigation();
+  let msg;
 
   const availableGames = async () => {
     setLoader(true)
     try {
       const response = await gameList();
       if (response) {
-        console.log('res', response);
         setGameData(response.data);
       } else {
-        Toast.error(response.message);
+        msg = response.message
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error!',
+          text2: { msg },
+          visibilityTime: 3000,
+        });
       }
     } catch (error) {
-      console.log('error', error);
-      Toast.error(error);
+      msg = error.message
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error!',
+        text2: { msg },
+        visibilityTime: 3000,
+      });
     } finally {
       setLoader(false)
     }
@@ -34,13 +48,13 @@ export default function LocalLeaderBoard() {
   }, [])
 
 
-  const renderItem = ({ item,index}) => {
+  const renderItem = ({ item, index }) => {
     return (<>
       <View style={{ flex: 1, paddingBottom: wp('4%') }}>
         <TouchableOpacity style={styles.container1} onPress={() => {
           navigation.navigate('LocalGameBoard', { game_id: item._id })
         }} >
-            <AvailableCard gameData={item} status={"3"} index={index}/>
+          <AvailableCard gameData={item} status={"3"} index={index} />
         </TouchableOpacity>
       </View>
     </>)
@@ -56,7 +70,7 @@ export default function LocalLeaderBoard() {
           contentContainerStyle={styles.scrollContainer}
         />) : (<AnimatedLoader />)
       }
-
+  <Toast ref={Toast.setRef} />
     </View>
   )
 }

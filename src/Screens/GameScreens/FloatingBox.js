@@ -26,6 +26,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {finalScore} from '../../Service/Game';
 import blurImage from '../../../assets/images/SVG/ellipse-blur.png';
 import {BoxShadow} from 'react-native-shadow';
+import AlertDialogGreen from '../../Components/AlertDialogGreen';
 
 const {width, height} = Dimensions.get('window');
 
@@ -47,7 +48,7 @@ export default function FloatingBoxGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [floatingBoxes, setFloatingBoxes] = useState([]);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const [isModalVisible2, setIsModalVisible2] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [generatedBoxes, setGeneratedBoxes] = useState(0);
   const [scoreData, setScoreData] = useState(null);
   const route = useRoute();
@@ -261,9 +262,6 @@ export default function FloatingBoxGame() {
     }
   };
 
-  const handleOnYes = () => {
-    navigation.goBack();
-  };
 
   useEffect(() => {
     if (isGameOver) {
@@ -274,6 +272,11 @@ export default function FloatingBoxGame() {
   const closeModal = () => {
     setIsGameOver(false);
   };
+
+  const handleNavigate = ()=>{
+    setIsGameOver(false);
+    navigation.navigate("Home")
+  }
 
   const getShadowOpt = type => {
     const shadowColors = {
@@ -302,16 +305,7 @@ export default function FloatingBoxGame() {
       source={require('../../../assets/images/Screens/background-image.png')}
       style={styles.background}>
       <View style={styles.container}>
-        {/* Header */}
-
-        {/* <ConfirmationModal
-        visible={isModalVisible2}
-        onClose={() => setIsModalVisible2(false)}
-        onYes={handleOnYes}
-        title="Are you sure you want to Quit game?"
-        //  closeTitle="No"
-        //  heading="Confirmation"
-      /> */}
+      <AlertDialogGreen visible={isModalVisible} onClose={() => setIsModalVisible(false)} onOkPress={()=>{handleNavigate()}} message={"Are you sure you want to Quit game?"}/>
 
         {isGameOver ? (
           <GameFinishScreen
@@ -384,9 +378,7 @@ export default function FloatingBoxGame() {
                   gap: 10,
                 }}>
                 <TouchableOpacity
-                  onPress={() => {
-                    setIsModalVisible2(true);
-                  }}>
+                    onPress={toggleMusic}>
                   <Image
                     source={Speaker}
                     style={{
@@ -400,7 +392,7 @@ export default function FloatingBoxGame() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    setIsModalVisible2(true);
+                    setIsModalVisible(true);
                   }}>
                   <Iconicons name={'cross'} size={50} color={'red'} />
                 </TouchableOpacity>

@@ -11,6 +11,8 @@ import ticket from '../../../assets/images/Screens/ticket.png'
 import timer from '../../../assets/images/Screens/timer.png'
 import AlertDialog from '../../Components/AlertDialogRed';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import AlertDialogGreen from '../../Components/AlertDialogGreen';
+import Toast from 'react-native-toast-message';
 
 export default function Tickets() {
     const navigation = useNavigation();
@@ -19,8 +21,10 @@ export default function Tickets() {
     const [loader, setLoader] = useState(false);
     const [ticketData, setTicketData] = useState([])
     const [visible, setVisible] = useState(false);
+    const [visibles, setVisibles] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [purchasedTickets, setPurchasedTickets] = useState({});
+    const [message, setMessage] = useState('')
     const route = useRoute();
     const { game_id } = route.params
 
@@ -48,7 +52,6 @@ export default function Tickets() {
 
         const handlePurchase = async () => {
             try {
-                console.log('Purchasing ticket for:', selectedItem);
                 setVisible(false);
                 const response = await storeTicket(
                     game_id,
@@ -56,10 +59,18 @@ export default function Tickets() {
                     data._id,
                 );
                 if (response.status === 0) {
-                    setIsModalVisible1(true);
+                    setVisibles(true);
                     setMessage(response.message);
                 } else {
+                    console.log(response)
                     setPurchasedTickets(prev => ({ ...prev, [selectedItem._id]: true }));
+                    Toast.show({
+                        type: 'success',
+                        position: 'top',
+                        text1: 'Succesful!',
+                        text2: 'Ticket purchased Succesfully',
+                        visibilityTime: 3000
+                    });
                     setSelectedItem(null);
                 }
             } catch (error) {
@@ -70,6 +81,7 @@ export default function Tickets() {
         const handlePurchaseModal = () => {
             setSelectedItem(item);
             setVisible(true);
+            setMessage("Are You Sure You Want to Purchase the Ticket.")
         };
 
         const handlePlay = () => {
@@ -80,7 +92,8 @@ export default function Tickets() {
         };
         return (
             <>
-                <AlertDialog visible={visible} onClose={() => setVisible(false)} onOkPress={handlePurchase} />
+                <AlertDialogGreen visible={visible} onClose={() => setVisible(false)} onOkPress={handlePurchase} message={message} />
+                <AlertDialog visible={visibles} onClose={() => setVisibles(false)} message={message} />
                 <View style={styles.container1} >
                     <LinearGradient
                         colors={['#F38424', '#F7A552', '#F9D479']}
@@ -99,23 +112,23 @@ export default function Tickets() {
                                     enroll yourself before game start
                                 </Text>
                                 <View style={styles.boxContainer}>
-                                 
+
                                     <LinearGradient
                                         colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
-                                        locations={[0, 0.5, 1]} 
+                                        locations={[0, 0.5, 1]}
                                         style={styles.box}
                                     >
                                         <Image source={coin} style={styles.boxIcon} />
                                         <Text style={styles.boxText}>{item.price}</Text>
                                     </LinearGradient>
-                                  
+
                                     <LinearGradient
                                         colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
-                                        locations={[0, 0.5, 1]} 
+                                        locations={[0, 0.5, 1]}
                                         style={styles.box}
                                     >
                                         <Image source={ticket} style={styles.boxIcon1} />
@@ -126,21 +139,21 @@ export default function Tickets() {
                                         colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                                         start={{ x: 0, y: 0 }}
                                         end={{ x: 1, y: 0 }}
-                                        locations={[0, 0.5, 1]} 
+                                        locations={[0, 0.5, 1]}
                                         style={styles.box}
                                     >
                                         <Image source={timer} style={styles.boxIcon} />
                                         <Text style={styles.boxText}>{item.remaining_entries}</Text>
                                     </LinearGradient>
                                 </View>
-                          
+
                                 <TouchableOpacity style={[styles.playButton, { backgroundColor: isPurchased ? '#EFC328' : '#2DF300' }]} onPress={isPurchased ? handlePlay : handlePurchaseModal}>
-                               
+
                                     <Text style={styles.playButtonText}> {isPurchased ? 'Play Now' : 'Purchase'}</Text>
-                    
+
                                 </TouchableOpacity>
 
-                
+
 
                             </View>
                         </View>
@@ -163,6 +176,7 @@ export default function Tickets() {
                     />
                 </View>) : (<AnimatedLoader />)
             }
+            <Toast ref={Toast.setRef} />
         </>
 
     )
@@ -236,30 +250,30 @@ const styles = StyleSheet.create({
     },
     boxText: {
         fontSize: wp('3.5%'),
-        fontFamily:'LilitaOne-Regular',
+        fontFamily: 'LilitaOne-Regular',
         color: 'white',
-        textShadowColor: 'black', 
-        textShadowOffset: { width: -1, height: 1 }, 
-        textShadowRadius: 1, 
+        textShadowColor: 'black',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 1,
     },
     playButton: {
         borderRadius: wp('1%'),
         paddingVertical: hp('1%'),
         alignItems: 'center',
-        borderWidth:1,
-        borderColor:'black',
-        marginRight:wp('25%'),
-        marginTop:hp('1%')
+        borderWidth: 1,
+        borderColor: 'black',
+        marginRight: wp('25%'),
+        marginTop: hp('1%')
     },
     playButtonText: {
         fontSize: wp('4%'),
-        fontFamily:'LilitaOne-Regular',
+        fontFamily: 'LilitaOne-Regular',
         color: 'white',
-        textShadowColor: 'black', 
-        textShadowOffset: { width: -1, height: 1 }, 
-        textShadowRadius: 1, 
-        textTransform:'uppercase',
-        letterSpacing:2
+        textShadowColor: 'black',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 1,
+        textTransform: 'uppercase',
+        letterSpacing: 2
     },
     buttonContainer: {
         alignItems: 'flex-start',

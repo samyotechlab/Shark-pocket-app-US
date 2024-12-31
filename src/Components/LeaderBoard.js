@@ -28,7 +28,6 @@ export default function LeaderBoard() {
       <View style={{flex: 1.5}}>
         <View style={styles.leaderBoard}>
           <Text style={styles.leaderTxt}>Leader Board</Text>
-          <Iconics name="search-sharp" size={25} color={'white'} />
         </View>
         <View style={{flex: 1}}>
           <View

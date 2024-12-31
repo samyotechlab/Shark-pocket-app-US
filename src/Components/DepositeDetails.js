@@ -12,6 +12,7 @@ import HeaderComponent from './HeaderComponent';
 import LinearGradient from 'react-native-linear-gradient';
 import { useRoute } from '@react-navigation/native';
 import { transactionDepositeData } from '../Service/Transaction';
+import Toast from 'react-native-toast-message';
 
 export default function DepositeDetails() {
   const route = useRoute();
@@ -32,10 +33,24 @@ export default function DepositeDetails() {
         };
         setTransactionData(formattedData);
       } else {
-        Toast.error(response.message || "Unexpected error occurred");
+        const msg = response.message ||"Unexpected error occurred"
+        Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error!',
+                text2: {msg},
+                visibilityTime: 3000,
+              });
       }
     } catch (error) {
-      Toast.error(error.message)
+      const msg = error.message
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error!',
+        text2: {msg},
+        visibilityTime: 3000,
+      });
     } finally {
       setLoader(false)
     }
@@ -125,7 +140,7 @@ export default function DepositeDetails() {
             <Icon name="angle-right" size={30} color="#000000B2" style={{ marginRight: hp(1) }} />
           </TouchableOpacity>
         </View>
-
+        <Toast ref={Toast.setRef} />
       </SafeAreaView>
     </>
   )

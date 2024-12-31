@@ -38,7 +38,7 @@ const AlertDialogGreen = ({ visible, onClose, onOkPress, message,ok}) => {
                 onOkPress();
               }}
             >
-              <Text style={styles.okText}>{ok}</Text>
+              <Text style={styles.okText}>Yes</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -16,11 +16,11 @@ import Frame from '../../assets/images/Screens/Frame.png';
 import Person2 from '../../assets/images/Screens/Person2.jpeg';
 import Person3 from '../../assets/images/Screens/Person3.jpeg';
 import Person4 from '../../assets/images/Screens/Person4.jpeg';
-import { Divider } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
 import { globalLeaderBoard } from '../Service/LeaderBoard';
 import { truncateName } from '../Utilities/utilies';
+import AnimatedLoader from './AnimatedLoader';
 
 export default function GlobalLeaderBoard() {
   const [loader, setLoader] = useState(false)
@@ -29,6 +29,7 @@ export default function GlobalLeaderBoard() {
   const [secondRanking, setSecondRanking] = useState(null);
   const [thirdRanking, setThirdRanking] = useState(null);
 
+
   const globalLeaderData = async () => {
     try {
       setLoader(true)
@@ -36,10 +37,25 @@ export default function GlobalLeaderBoard() {
       if (response) {
         setGlobalData(response.data);
       } else {
-        Toast.error(response.message);
+        const msg = response.message
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error!',
+          text2: {msg},
+          visibilityTime: 3000,
+        });
       }
     } catch (error) {
-      Toast.error(error);
+      const msg = error.message
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error!',
+        text2: {msg},
+        visibilityTime: 3000,
+      });
+      
     } finally {
       setLoader(false)
     }
@@ -274,14 +290,25 @@ export default function GlobalLeaderBoard() {
           borderRadius: 15,
         }}>
         <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
-          <FlatList
-            data={globalData}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-          />
+          {
+            globalData.length == 0 ? (
+              <View style={styles.noDataContainer}>
+              <Text style={styles.noDataText}>No data found</Text>
+            </View>
+            ) : (
+              !loader ? (<FlatList
+                data={globalData}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+              />) : (<AnimatedLoader />)
+            )
+
+          }
+
         </SafeAreaView>
       </View>
+      <Toast ref={Toast.setRef} />
     </View>
   );
 }
@@ -291,5 +318,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Bold',
     fontSize: 16,
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transprent',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });

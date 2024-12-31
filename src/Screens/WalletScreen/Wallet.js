@@ -11,6 +11,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {userDetail} from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 const WalletScreen = () => {
   const navigation = useNavigation();
   const {loginData, isReady} = useLoginDataStorage();
@@ -43,7 +44,6 @@ const WalletScreen = () => {
   }, [isReady, loginData]);
 
   const handleNavigation = (name, user_id) => {
-    // navigation.navigate("WalletDetails")
     navigation.navigate(name, user_id);
   };
   return (
@@ -62,7 +62,10 @@ const WalletScreen = () => {
           <Text style={styles.needHelpText}>Need Help</Text>
         </TouchableOpacity>
       </View>
-      <LinearGradient
+{
+  dataUser.length !=0 ?(
+  !loader ? (<>
+   <LinearGradient
         colors={['#3B191080', '#FFFFFF80', '#FFFFFF80']}
         style={styles.balanceContainer}>
         <View style={styles.balanceRow}>
@@ -127,7 +130,6 @@ const WalletScreen = () => {
           <Text style={styles.label}>Bonus</Text>
         </View>
         <Text style={styles.amount}>₹ {dataUser.bonus_wallet}</Text>
-        {/* <View style={styles.divider} /> */}
         <LinearGradient
           colors={['#999999', '#FFFFFF', '#999999']}
           start={{x: 0, y: 0}}
@@ -171,6 +173,15 @@ const WalletScreen = () => {
         <Text style={styles.transactionText}>My Transactions</Text>
         <Text style={styles.subText}>Deposit and withdrawal history</Text>
       </TouchableOpacity>
+
+  </>):(<AnimatedLoader/>)):(
+     <View style={styles.noDataContainer}>
+                <Text style={styles.noDataText}>No data found</Text>
+              </View>
+  )
+}
+     
+
       <Image source={gst} style={styles.bannerImage} resizeMode="contain" />
     </LinearGradient>
   );
@@ -302,8 +313,17 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: wp('75%'),
-    // borderRadius: 10,
-    // marginTop: 20,
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });
 export default WalletScreen;

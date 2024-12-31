@@ -11,14 +11,15 @@ import { bankStore } from '../../Service/Bank'
 
 export default function BankAccount() {
     const route = useRoute();
-    const {user_id} = route.params
+    const { user_id } = route.params
     const [bank_data, setBankData] = useState({
         name: '',
         account_no: '',
-        confirm_account_no:'',
+        confirm_account_no: '',
         ifsc_code: '',
         phone: '',
     });
+    const [loader, setLoader] = useState(false)
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const handleInputChange = (name, value) => {
@@ -30,67 +31,92 @@ export default function BankAccount() {
 
     const validateForm = () => {
         // console.log('formData', formData);
-        const {name, account_no, ifsc_code, phone} = bank_data;
+        const { name, account_no, ifsc_code, phone } = bank_data;
         console.log();
         const phoneRegex = /^[0-9]{10}$/;
-    
+
         if (name === '') {
-          setIsModalVisible(true);
-          setMessage('Name is Required.');
-          return false;
+            setIsModalVisible(true);
+            setMessage('Name is Required.');
+            return false;
         }
-    
+
         if (account_no === '') {
-          setIsModalVisible(true);
-          setMessage('Account Number is requried.');
-          return false;
+            setIsModalVisible(true);
+            setMessage('Account Number is requried.');
+            return false;
         }
-    
+
         if (!phone.trim() || !phoneRegex.test(phone)) {
-          setIsModalVisible(true);
-          setMessage('Valid 10-digit phone number is required');
-          return false;
+            setIsModalVisible(true);
+            setMessage('Valid 10-digit phone number is required');
+            return false;
         }
         if (ifsc_code === '') {
-          setIsModalVisible(true);
-          setMessage('IFSC code is requried.');
-          return false;
+            setIsModalVisible(true);
+            setMessage('IFSC code is requried.');
+            return false;
         }
-    
-        return true;
-      };
 
-      const handleVerifyBank = async () => {
-        console.log(user_id, 'userId');
-        if (!validateForm()) return;
-    
-        const obj = {
-          user_id: user_id,
-          name: bank_data?.name,
-          bank_account: bank_data?.account_no,
-          ifsc: bank_data?.ifsc_code,
-          phone: bank_data?.phone,
-        };
-        console.log('obj', obj);
-    
-        const response = await bankStore(obj);
-        console.log('response in bank', response);
-        if (response?.status === 1) {
-          Toast.success('Verify Successfully');
-          setBankData({
-            name: '',
-            account_no: '',
-            confirm_account_no: '',
-            ifsc_code: '',
-            phone: '',
-        });
-          setTimeout(() => {
-            navigation.goBack();
-          }, 2000);
-        } else {
-          Toast.error('Wrong Credencials');
+        return true;
+    };
+
+    const handleVerifyBank = async () => {
+        setLoader(true)
+        try {
+            if (!validateForm()) return;
+
+            const obj = {
+                user_id: user_id,
+                name: bank_data?.name,
+                bank_account: bank_data?.account_no,
+                ifsc: bank_data?.ifsc_code,
+                phone: bank_data?.phone,
+            };
+            console.log('obj', obj);
+
+            const response = await bankStore(obj);
+            console.log('response in bank', response);
+            if (response?.status === 1) {
+                Toast.show({
+                    type: 'success',
+                    position: 'top',
+                    text1: 'Succesful',
+                    text2: 'Bank Verify Successfullly',
+                    visibilityTime: 3000
+                });
+                setBankData({
+                    name: '',
+                    account_no: '',
+                    confirm_account_no: '',
+                    ifsc_code: '',
+                    phone: '',
+                });
+                setTimeout(() => {
+                    navigation.goBack();
+                }, 2000);
+            } else {
+                Toast.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Error!',
+                    text2: 'Wrong Credencials',
+                    visibilityTime: 3000,
+                });
+            }
+        } catch (error) {
+            const msg = error.msg
+            Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error!',
+                text2: { msg },
+                visibilityTime: 3000,
+            });
+        } finally {
+            setLoader(false)
         }
-      };
+    };
     return (
         <>
             <BackgroundScreen />
@@ -172,7 +198,7 @@ export default function BankAccount() {
                     </View>
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton title={'Save'} onPress={handleVerifyBank}/>
+                    <CommonButton title={'Save'} onPress={handleVerifyBank} />
                     <Text style={styles.kycText}>
                         Why do we need your Bank Details?
                         <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>

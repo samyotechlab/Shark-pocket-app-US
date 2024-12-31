@@ -59,7 +59,6 @@ export default function AadharOtpVerify() {
           headers,
         )
         .then(res => {
-          console.log('res--->', res.data);
           if (res.data.status === 1) {
             Toast.show({
               type: 'success',

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const SearchField = () => {
+const SearchField = ({onSearch}) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    onSearch(text);
+  };
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -14,13 +20,14 @@ const SearchField = () => {
         style={styles.gradientBackground}
       >
         <View style={styles.searchWrapper}>
-       
           <TextInput
+            value={searchQuery}
+            onChangeText={handleSearch}
+            placeholder="Search"
             style={styles.input}
-            // placeholder="Search..."
-            placeholderTextColor="#888"
+            placeholderTextColor="#999999"
           />
-             <Icon name="search" size={20} color="#FFFFFF" style={styles.icon} />
+             <Icon name="search" size={25} color="#FFFFFF" style={styles.icon} />
         </View>
       </LinearGradient>
     </View>
@@ -29,7 +36,7 @@ const SearchField = () => {
 
 const styles = StyleSheet.create({
     container: {
-        height:hp('5%')
+        height:hp('6%')
       },
       gradientBackground: {
         borderRadius: 30,
@@ -42,12 +49,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
-    marginLeft: 5,
   },
   input: {
     flex: 1,
-    fontSize: 16,
-    color: '#000',
+    fontSize: 18,
+    color: '#FFFFFF' 
   },
 });
 

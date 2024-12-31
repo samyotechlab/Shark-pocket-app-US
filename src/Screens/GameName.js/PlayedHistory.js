@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import trophy from '../../../assets/images/Screens/trophy2.png'
 import LinearGradient from 'react-native-linear-gradient';
-import { widthPercentageToDP as wp ,heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import Toast from 'react-native-toast-message';
 import { gameHistory, historyData } from '../../Service/GameHistory';
@@ -10,72 +10,87 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 
 const PlayedHistory = () => {
-  const [loader,setLoader] = useState(false)
-  const {loginData,isReady} = useLoginDataStorage()
+  const [loader, setLoader] = useState(false)
+  const { loginData, isReady } = useLoginDataStorage()
   const [gameHistoryData, setGameHistory] = useState([]);
-  const data = isReady && loginData && loginData?.data 
+  const data = isReady && loginData && loginData?.data
   const navigation = useNavigation()
   const route = useRoute()
-  const {game_id} = route.params
+  const { game_id } = route.params
+  let msg
 
   const allGameHistory = async () => {
     setLoader(true)
     try {
-      const response = await gameHistory(data._id,game_id);
+      const response = await gameHistory(data._id, game_id);
       if (response) {
         setGameHistory(response?.data);
 
       } else {
-        Toast.error(response?.message);
+        msg = response?.message || 'An unexpected error occurred.';
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error!',
+          text2: msg,
+          visibilityTime: 3000,
+        });
       }
     } catch (error) {
-      console.log('API call error:', error);
+      msg = error?.message || 'An unexpected error occurred.';
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error!',
+        text2: msg,
+        visibilityTime: 3000,
+      });
     }
-    finally{
+    finally {
       setLoader(false)
     }
   };
 
-    useEffect(()=>{
-      if(isReady){
-        allGameHistory();
-      }else{
-        setLoader(true)
-      }
-    },[isReady, loginData])
+  useEffect(() => {
+    if (isReady) {
+      allGameHistory();
+    } else {
+      setLoader(true)
+    }
+  }, [isReady, loginData])
 
   const renderItem = ({ item }) => {
     // console.log("iotem",item)
     return (
       <>
-       <View style={styles.container1} >
-        <TouchableOpacity style={styles.cardOuterContainer} onPress={()=>{
-          navigation.navigate('GameFinishHistory',{gameHistoryData:item})
-        }}>
-          <LinearGradient
-            colors={['#F38424', '#F7A552', '#F9D479']}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 0.8, y: 1 }}
-            style={styles.cardContainer}>
-            {/* Trophy Icon */}
-            <Image
-              source={trophy}
-              style={styles.trophyIcon}
-            />
+        <View style={styles.container1} >
+          <TouchableOpacity style={styles.cardOuterContainer} onPress={() => {
+            navigation.navigate('GameFinishHistory', { gameHistoryData: item })
+          }}>
+            <LinearGradient
+              colors={['#F38424', '#F7A552', '#F9D479']}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 0.8, y: 1 }}
+              style={styles.cardContainer}>
+              {/* Trophy Icon */}
+              <Image
+                source={trophy}
+                style={styles.trophyIcon}
+              />
 
-            {/* Details Section */}
-            <View style={styles.detailsContainer}>
-              <Text style={styles.titleText}>Played On</Text>
-              <View style={styles.dateTimeRow}>
-                <Text style={styles.dateText}>{item.game_played_at}</Text>
-                {/* <Text style={styles.timeText}>02:23 Pm</Text> */}
+              {/* Details Section */}
+              <View style={styles.detailsContainer}>
+                <Text style={styles.titleText}>Played On</Text>
+                <View style={styles.dateTimeRow}>
+                  <Text style={styles.dateText}>{item.game_played_at}</Text>
+                  {/* <Text style={styles.timeText}>02:23 Pm</Text> */}
+                </View>
               </View>
-            </View>
 
-            {/* Score */}
-            <Text style={styles.scoreText}>{item.score}</Text>
-          </LinearGradient>
-        </TouchableOpacity>
+              {/* Score */}
+              <Text style={styles.scoreText}>{item.score}</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </>
     )
@@ -84,14 +99,14 @@ const PlayedHistory = () => {
 
     <View style={styles.container}>
       {
-        !loader ?( <FlatList
+        !loader ? (<FlatList
           data={gameHistoryData}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-        />) : (<AnimatedLoader/>)
+        />) : (<AnimatedLoader />)
       }
-     
+
     </View>
 
   );
@@ -103,8 +118,8 @@ const styles = StyleSheet.create({
     borderRadius: wp('3%'),
     padding: wp('1%'),
   },
-  container:{
-    flex:1,
+  container: {
+    flex: 1,
   },
   container1: {
     flex: 1,

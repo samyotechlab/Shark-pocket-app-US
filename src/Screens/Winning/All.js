@@ -16,24 +16,24 @@ const groupByDateAndType = (data) => {
   }, {});
 };
 
-export default function All({winningData}) {
+export default function All({ winningData }) {
   const navigation = useNavigation();
   // Group walletData by date
   const groupedData = groupByDateAndType(winningData);
 
   const handleNavigation = (item) => {
-    navigation.navigate('DepositeDetails',{item});
+    navigation.navigate('DepositeDetails', { item });
   };
 
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
-  
+
     return (
       <TouchableOpacity
         style={[
           styles.itemContainer,
         ]}
-        onPress={()=>handleNavigation(item)}
+        onPress={() => handleNavigation(item)}
       >
         <View
           style={[
@@ -70,7 +70,7 @@ export default function All({winningData}) {
 
   const renderSection = ({ item }) => (
 
-    
+
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -85,26 +85,28 @@ export default function All({winningData}) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-  
+
     return {
-      date: `${date}`, 
-      transactions: groupedData[key], 
+      date: `${date}`,
+      transactions: groupedData[key],
     };
   });
 
   return (
     <View style={styles.container}>
       {
-        winningData.length == 0 ?( <View style={styles.noDataContainer}>
-                        <Text style={styles.noDataText}>No data found</Text>
-                      </View>):(  <FlatList
+        winningData.length == 0 ? 
+        (<View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No data found</Text>
+        </View>) : (
+          <FlatList
           data={sectionData}
           renderItem={renderSection}
           keyExtractor={(item) => item.date}
           contentContainerStyle={styles.list}
         />)
       }
-  
+
     </View>
   );
 }

@@ -11,6 +11,7 @@ import { useRoute } from '@react-navigation/native'
 
 export default function PanVerfication() {
     const route = useRoute();
+    const [loader,setLoader] = useState(false)
     const { user_id } = route.params
     const [panData, setPanData] = useState({
         name: '',
@@ -53,20 +54,40 @@ export default function PanVerfication() {
           name: panData.name,
           pan: panData.pan_number,
         };
-    
+        setLoader(true)
         try {
           const response = await PanVerificationData(obj);
           if (response) {
-            Toast.success('Verify Successfully');
+            Toast.show({
+                            type: 'success',
+                            position: 'top',
+                            text1: 'Succesful',
+                            text2: 'Pan Verify Successfullly',
+                            visibilityTime: 3000
+                          });
             setTimeout(() => {
               navigation.navigate('ProfileScreen');
             }, 2000);
           } else {
-            Toast.error('Wrong Credentials');
+            Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error!',
+                text2: 'Wrong Credentials',
+                visibilityTime: 3000,
+              });
           }
         } catch (error) {
-          console.error('Error verifying PAN:', error);
-          Toast.error('An error occurred. Please try again.');
+            const msg = error.message
+            Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error!',
+                text2: msg,
+                visibilityTime: 3000,
+              });
+        }finally {
+            setLoader(false)
         }
       };
     return (

@@ -21,6 +21,7 @@ export default function AllPlayedGames() {
 
     const data = isReady && loginData && loginData?.data 
 
+    let msg ;
 
 
     const historyDataList = async () => {
@@ -30,10 +31,24 @@ export default function AllPlayedGames() {
             if (response) {
                 setHistory(response?.data);
             } else {
-                Toast.error(response?.message);
+                msg = response?.message || 'An unexpected error occurred.';
+                Toast.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Error!',
+                    text2: msg,
+                    visibilityTime: 3000,
+                  });
             }
         } catch (error) {
-            console.log('error', error);
+            msg = error?.message || 'An unexpected error occurred.';
+            Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error!',
+                text2: msg,
+                visibilityTime: 3000,
+              });
         }finally{
             setLoader(false);
         }
@@ -75,7 +90,7 @@ export default function AllPlayedGames() {
                     />
                 </View>):(<AnimatedLoader/>)
             }
-           
+         <Toast ref={Toast.setRef} />
         </LinearGradient>
     )
 }
