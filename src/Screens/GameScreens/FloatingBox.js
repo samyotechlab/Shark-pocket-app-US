@@ -24,6 +24,8 @@ import {useGameLogic} from './GameLogic';
 import GameFinishScreen from './GameFinishScreen';
 import LinearGradient from 'react-native-linear-gradient';
 import {finalScore} from '../../Service/Game';
+import blurImage from '../../../assets/images/SVG/ellipse-blur.png';
+import {BoxShadow} from 'react-native-shadow';
 
 const {width, height} = Dimensions.get('window');
 
@@ -47,6 +49,7 @@ export default function FloatingBoxGame() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
   const [generatedBoxes, setGeneratedBoxes] = useState(0);
+  const [scoreData, setScoreData] = useState(null);
   const route = useRoute();
   // console.log('floatinfgggggg',route.params);
   const routeData = route.params;
@@ -110,8 +113,8 @@ export default function FloatingBoxGame() {
         }
         const startY = height;
         const animatedY = new Animated.Value(startY);
-        const opacityAnim = new Animated.Value(0); // Opacity for fade-in/fade-out
-        const scaleAnim = new Animated.Value(1); // Scale for zoom-in/zoom-out
+        const opacityAnim = new Animated.Value(0);
+        const scaleAnim = new Animated.Value(1);
 
         const xPosition = getRandomX();
         const alternateXPosition = getRandomX();
@@ -123,16 +126,17 @@ export default function FloatingBoxGame() {
           x: new Animated.Value(zigzagX),
           y: animatedY,
           shakeAnimation: new Animated.Value(0),
-          opacityAnim: opacityAnim, // Add opacity animation here
-          scaleAnim: scaleAnim, // Add scale animation here
+          opacityAnim: opacityAnim,
+          scaleAnim: scaleAnim,
           feedbackColor: null,
-          feedbackImage: null, // Holds the star or bomb image
+          feedbackImage: null,
+          actionType: null,
           canClick: true,
         };
 
         Animated.timing(newBox.y, {
-          toValue: -100,
-          duration: 3000, // Adjusted for medium scroll speed
+          toValue: -200,
+          duration: 3000,
           useNativeDriver: true,
         }).start(() => {
           setFloatingBoxes(prev => prev.filter(box => box.id !== newBox.id));
@@ -141,21 +145,21 @@ export default function FloatingBoxGame() {
         setGeneratedBoxes(prev => prev + 1);
 
         setFloatingBoxes(prev => [...prev, newBox]);
-      }, 300); // Reduced interval for faster number generation
+      }, 400);
 
       return () => clearInterval(interval);
     }
   }, [isGameOver, floatingBoxes.length, generatedBoxes]);
 
   const handleBoxClick = box => {
-    if (!box.canClick || box.feedbackColor) return;
+    // if (!box.canClick || box.feedbackColor) return;
 
     const points = handleNumberClick(box.number);
 
     setScore(points);
 
     const isOdd = box.number % 2 !== 0;
-    const feedbackColor = isOdd ? '#6AB365' : '#D28989';
+    const feedbackColor = isOdd ? '#569218' : '#921818';
     const feedbackImage = isOdd ? StarImage : BombImage;
     const feedbackBgColor = isOdd
       ? ['#438301', '#84CB3C', '#438301']
@@ -163,11 +167,12 @@ export default function FloatingBoxGame() {
 
     const feedbackBorderColor = isOdd ? '#569218' : '#921818';
     const textColor = 'white';
+    const actionType = isOdd ? 'success' : 'failure';
 
     Animated.parallel([
       Animated.timing(box.opacityAnim, {
-        toValue: 1, // Fade-in to opacity 1
-        duration: 100, // Reduced duration (from 300ms to 150ms)
+        toValue: 1,
+        duration: 100,
         useNativeDriver: true,
       }),
       Animated.timing(box.scaleAnim, {
@@ -177,21 +182,20 @@ export default function FloatingBoxGame() {
       }),
     ]).start();
 
-    // Apply faster zoom-out and fade-out after a delay
     setTimeout(() => {
       Animated.parallel([
         Animated.timing(box.opacityAnim, {
-          toValue: 0, // Fade-out to opacity 0
-          duration: 100, // Reduced duration (from 300ms to 150ms)
+          toValue: 0,
+          duration: 100,
           useNativeDriver: true,
         }),
         Animated.timing(box.scaleAnim, {
-          toValue: 1, // Zoom-out to original size
-          duration: 100, // Reduced duration (from 300ms to 150ms)
+          toValue: 1,
+          duration: 100,
           useNativeDriver: true,
         }),
       ]).start();
-    }, 300); // Delay before fade-out and zoom-out (500ms or less to speed up)
+    }, 300);
 
     // Existing shake animation
     Animated.sequence([
@@ -223,6 +227,7 @@ export default function FloatingBoxGame() {
               feedbackBgColor: feedbackBgColor,
               feedbackBorderColor: feedbackBorderColor,
               canClick: false,
+              actionType: actionType,
             }
           : item,
       ),
@@ -247,6 +252,9 @@ export default function FloatingBoxGame() {
         routeData.ticket_id,
         routeData.user_id,
       );
+      if (response) {
+        setScoreData(response.data);
+      }
       console.log('i want response hereeeeee', response);
     } catch (error) {
       console.log('error--------------->>>>>>>', error);
@@ -267,6 +275,28 @@ export default function FloatingBoxGame() {
     setIsGameOver(false);
   };
 
+  const getShadowOpt = type => {
+    const shadowColors = {
+      default: '#7C7FDF',
+      success: '#569218',
+      warning: '#FFC107',
+      failure: '#921818',
+    };
+
+    const color = shadowColors[type] || shadowColors.default;
+
+    return {
+      width: widthPercentageToDP(23),
+      height: heightPercentageToDP(12),
+      color: color,
+      border: 12,
+      radius: 15,
+      opacity: 0.7,
+      x: 2,
+      y: 2,
+      style: {marginVertical: 5},
+    };
+  };
   return (
     <ImageBackground
       source={require('../../../assets/images/Screens/background-image.png')}
@@ -287,36 +317,37 @@ export default function FloatingBoxGame() {
           <GameFinishScreen
             isVisible={isGameOver}
             onClose={closeModal}
-            gameHistoryData={{
-              bonus_point_score: {bonusPoints: 10, superPoints: 20},
-              double_digit: {
-                assignedScore: 2,
-                score: oddCounts.two * 2,
-                selected: oddCounts.two,
-              },
-              prime_number: {
-                assignedScore: 10,
-                score: primeCount * 10,
-                selected: primeCount,
-              },
-              quadruple_digit: {
-                assignedScore: 4,
-                score: oddCounts.three * 4,
-                selected: oddCounts.four,
-              },
-              score: score,
-              super_number: {
-                assignedScore: 5,
-                score: 5 * superNumberCount,
-                selected: superNumberCount,
-              },
-              triple_digit: {
-                assignedScore: 3,
-                score: oddCounts.three * 3,
-                selected: oddCounts.three,
-              },
-              wrong_selection_score: negativePoint,
-            }}
+            gameHistoryData={scoreData}
+            // gameHistoryData={{
+            //   bonus_point_score: {bonusPoints: 10, superPoints: 20},
+            //   double_digit: {
+            //     assignedScore: 2,
+            //     score: oddCounts.two * 2,
+            //     selected: oddCounts.two,
+            //   },
+            //   prime_number: {
+            //     assignedScore: 10,
+            //     score: primeCount * 10,
+            //     selected: primeCount,
+            //   },
+            //   quadruple_digit: {
+            //     assignedScore: 4,
+            //     score: oddCounts.three * 4,
+            //     selected: oddCounts.four,
+            //   },
+            //   score: score,
+            //   super_number: {
+            //     assignedScore: 5,
+            //     score: 5 * superNumberCount,
+            //     selected: superNumberCount,
+            //   },
+            //   triple_digit: {
+            //     assignedScore: 3,
+            //     score: oddCounts.three * 3,
+            //     selected: oddCounts.three,
+            //   },
+            //   wrong_selection_score: negativePoint,
+            // }}
           />
         ) : (
           <>
@@ -404,60 +435,47 @@ export default function FloatingBoxGame() {
                   <TouchableOpacity
                     onPress={() => handleBoxClick(box)}
                     style={styles.boxButton}>
-                    <LinearGradient
-                      colors={['#0916B9', '#7F71BF', '#0916B9']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 1}}
-                      style={styles.gradientBorder}>
-                      <LinearGradient
-                        colors={['#0916B9', '#7F71BF', '#0916B9']}
-                        start={{x: 1, y: 0}}
-                        end={{x: 1, y: 1}}
-                        style={[
-                          styles.numberBox,
-                          box.feedbackColor && styles.highlighedtBox,
-                        ]}>
-                        {box.feedbackImage ? (
-                          <View
+                    {box.feedbackImage ? (
+                      <BoxShadow setting={getShadowOpt(box.actionType)}>
+                        <LinearGradient
+                          colors={box.feedbackBgColor}
+                          style={[
+                            styles.feedbackBoxwrapper,
+                            {
+                              backgroundColor: box.feedbackColor,
+                              borderWidth: 3,
+                              borderColor: box.feedbackBorderColor,
+                            },
+                          ]}>
+                          <Animated.Image
+                            source={box.feedbackImage}
                             style={[
-                              styles.feedbackBoxwrapper,
+                              styles.feedbackImage,
                               {
-                                backgroundColor:
-                                  box.feedbackColor === 'black'
-                                    ? 'transparent'
-                                    : 'white',
-                                borderWidth:
-                                  box.feedbackColor === 'black' ? 0 : 5,
+                                transform: [{scale: box.scaleAnim}],
+                                opacity: box.opacityAnim,
                               },
-                            ]}>
-                            <Animated.Image
-                              source={box.feedbackImage}
-                              style={[
-                                styles.feedbackImage,
-                                {
-                                  transform: [{scale: box.scaleAnim}],
-                                  opacity: box.opacityAnim,
-                                },
-                              ]}
+                            ]}
+                          />
+
+                          <Text style={styles.boxText2}>{box.number}</Text>
+                        </LinearGradient>
+                      </BoxShadow>
+                    ) : (
+                      <BoxShadow setting={getShadowOpt('default')}>
+                        <LinearGradient
+                          colors={['#7F71BF', '#A4E2F2']}
+                          style={styles.gradientBorder}>
+                          <View style={styles.numberBox}>
+                            <Image
+                              source={blurImage}
+                              style={styles.blurContainer}
                             />
-                            <Text
-                              style={[
-                                styles.boxText2,
-                                {
-                                  color:
-                                    box.feedbackColor === 'black'
-                                      ? 'white'
-                                      : '#ff5722',
-                                },
-                              ]}>
-                              {box.number}
-                            </Text>
+                            <Text style={styles.boxText}>{box.number}</Text>
                           </View>
-                        ) : (
-                          <Text style={styles.boxText}>{box.number}</Text>
-                        )}
-                      </LinearGradient>
-                    </LinearGradient>
+                        </LinearGradient>
+                      </BoxShadow>
+                    )}
                   </TouchableOpacity>
                 </Animated.View>
               ))}
@@ -539,32 +557,40 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
+    backgroundColor: 'black',
   },
   gradientBorder: {
-    width: widthPercentageToDP(21) + 6,
-    height: heightPercentageToDP(11) + 6,
-    borderRadius: 14,
-    padding: 10,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#7C7FDF',
-    shadowOffset: {width: 3, height: 2},
-    shadowOpacity: 1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    width: widthPercentageToDP(22) + 5,
+    height: heightPercentageToDP(12) + 3,
   },
   numberBox: {
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#0916B9',
     width: widthPercentageToDP(21),
     height: heightPercentageToDP(11),
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'relative',
   },
   boxText: {
-    color: 'white',
+    color: '#FFFFFF',
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 30,
+    zIndex: 1,
+  },
+
+  blurContainer: {
+    position: 'absolute',
+    width: 140,
+    height: 140,
+    borderRadius: 25,
+    overflow: 'hidden',
+    alignSelf: 'center',
+    opacity: 0.9,
   },
 
   overlay: {
@@ -601,15 +627,11 @@ const styles = StyleSheet.create({
   },
 
   feedbackBoxwrapper: {
-    // borderWidth: 5,
-    borderColor: '#ff5722',
-    width: '100%',
-    height: '100%',
-    display: 'flex',
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
-    // backgroundColor: 'transparent',
+    width: widthPercentageToDP(22) + 5,
+    height: heightPercentageToDP(12) + 3,
   },
   feedbackImage: {
     width: 50,
@@ -620,19 +642,10 @@ const styles = StyleSheet.create({
   },
 
   boxText2: {
-    color: 'white',
+    color: '#FFFFFF',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 32,
     position: 'relative',
-    zIndex: -1,
-  },
-
-  highlighedtBox: {
-    display: 'flex',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
-
-    position: 'relative',
+    zIndex: 1,
   },
 });

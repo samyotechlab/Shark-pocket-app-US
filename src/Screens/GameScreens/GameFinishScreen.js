@@ -1,69 +1,297 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import Coin from '../../../assets/images/Screens/CoinStack.png'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {useNavigation} from '@react-navigation/native';
+import Coin from '../../../assets/images/Screens/CoinStack.png';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
-export default function GameFinishScreen({ isVisible, onClose, gameHistoryData }) {
-  const navigation = useNavigation()
+export default function GameFinishScreen({
+  isVisible,
+  onClose,
+  gameHistoryData,
+}) {
+  const navigation = useNavigation();
+  // console.log('gameHistoryData', gameHistoryData);
   return (
     <Modal
       visible={isVisible}
       animationType="slide"
       transparent={true}
-      onRequestClose={onClose}
-    >
+      onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.container}>
             <LinearGradient
               colors={['#F38424', '#F7A552', '#F9D479']}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              style={styles.underContainer}
-            >
+              start={{x: 0, y: 0.5}}
+              end={{x: 1, y: 0.5}}
+              style={styles.underContainer}>
               <View style={styles.headerContainer}>
                 <LinearGradient
                   colors={['#F38424', '#F7C929', '#F9D479']}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 0.5 }}
-                  style={{ flex: 1, borderRadius: wp('2%'), margin: wp('1.5%'), width: wp('77%') }}
-                >
+                  start={{x: 0, y: 0.5}}
+                  end={{x: 1, y: 0.5}}
+                  style={{
+                    flex: 1,
+                    borderRadius: wp('2%'),
+                    margin: wp('1.5%'),
+                    width: wp('77%'),
+                  }}>
                   <View style={styles.score}>
                     <Text style={styles.headerText}>YOUR SCORE</Text>
                   </View>
                   <View style={styles.scoreBox}>
                     <LinearGradient
                       colors={['#00E000', '#00B300', '#00B300']}
-                      start={{ x: 0, y: 0.5 }}
-                      end={{ x: 1, y: 0.5 }}
-                      style={styles.scoreBox1}
-                    >
-                      <Image
-                        source={Coin}
-                        style={styles.coinImage}
-                      />
-                      <Text style={styles.scoreText}>{gameHistoryData.score}</Text>
+                      start={{x: 0, y: 0.5}}
+                      end={{x: 1, y: 0.5}}
+                      style={styles.scoreBox1}>
+                      <Image source={Coin} style={styles.coinImage} />
+                      <Text style={styles.scoreText}>
+                        {/* {gameHistoryData.score} */}
+                      </Text>
                     </LinearGradient>
                   </View>
                 </LinearGradient>
               </View>
 
-              <View style={{ flex: 2, margin: wp('3%') }}>
+              <View style={{flex: 2, margin: wp('3%')}}>
                 <ScrollView style={styles.tableContainer}>
-                  {Object.entries(gameHistoryData).map(([key, value], index) => (
-                    <View key={index} style={styles.row}>
-                      <Text style={styles.rowText}>{key}</Text>
-                      <Text style={styles.rowText}>{value.score}</Text>
-                      <Text style={styles.rowText}>{value.selected}</Text>
+                  {/* {Object.entries(gameHistoryData).map(
+                    ([key, value], index) => (
+                      <View key={index} style={styles.row}>
+                        <Text style={styles.rowText}>{key}</Text>
+                        <Text style={styles.rowText}> *{value.selected} </Text>
+                        <Text style={styles.rowText}>{value.score}</Text>
+                      </View>
+                    ),
+                  )} */}
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>bonus_point_score</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>-</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>0</Text>
+                      </View>
                     </View>
-                  ))}
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
+                  <View style={{flex: 1, paddingBottom: 10}}>
+                    <View
+                      style={{
+                        flex: 1,
+                        width: wp('94%'),
+                        flexDirection: 'row',
+                        paddingBlock: 6,
+                      }}>
+                      <View style={{flex: 1.5}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        <Text style={styles.txt}>item</Text>
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['#999999', '#FFFFFF', '#999999']}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={{
+                        height: 1,
+                        marginTop: 10,
+                        marginHorizontal: wp(1),
+                      }}
+                    />
+                  </View>
                 </ScrollView>
-                <View style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
-                  <TouchableOpacity style={styles.homeButton} onPress={() => {
-                    navigation.navigate('HomeScreen')
+                <View
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
+                  <TouchableOpacity
+                    style={styles.homeButton}
+                    onPress={() => {
+                      navigation.navigate('HomeScreen');
+                    }}>
                     <Text style={styles.homeButtonText}>HOME</Text>
                   </TouchableOpacity>
                 </View>
@@ -94,7 +322,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: hp('2%'),
     backgroundColor: '#F2E30B',
-
   },
   underContainer: {
     flex: 1,
@@ -112,10 +339,10 @@ const styles = StyleSheet.create({
     margin: wp('5%'),
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.3,
     shadowRadius: 1,
-    backgroundColor: '#F2E30B'
+    backgroundColor: '#F2E30B',
   },
   headerContainer: {
     flex: 0.5,
@@ -126,7 +353,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 10,
     shadowRadius: 1,
   },
@@ -146,7 +373,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 5,
     shadowColor: 'white',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     alignItems: 'center',
@@ -156,7 +383,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   scoreBox1: {
     height: hp('6%'),
@@ -165,7 +392,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    borderWidth: 2
+    borderWidth: 2,
   },
   scoreText: {
     fontSize: 28,
@@ -207,18 +434,23 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 5,
     shadowColor: 'white',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: wp('3%'),
-    paddingHorizontal: wp('13%')
+    paddingHorizontal: wp('13%'),
   },
   homeButtonText: {
     fontSize: 28,
     fontFamily: 'LilitaOne-Regular',
     color: '#FFF',
     textAlign: 'center',
+  },
+  txt: {
+    color: '#FFFFFF',
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 16,
   },
 });

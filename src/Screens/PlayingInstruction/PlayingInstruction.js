@@ -1,148 +1,161 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
 import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-  } from 'react-native-responsive-screen';
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import ModalScreen from '../../Components/ModalScreen';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CommonHeader from '../../Components/CommonHeader';
 import CommonButton from '../../Components/CommonButton';
-import { gameRule } from '../../Service/Game';
+import {gameRule} from '../../Service/Game';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 
 export default function PlayingInstruction() {
   const route = useRoute();
   const {game_id} = route.params;
-  const {ticket_id} = route.params; 
-    const [visible, setVisible] = useState(false);
-    const [selectedNumber, setSelectedNumber] = useState(null);
-    const [oddData, setOddData] = useState({});
-    const [negativeData, setNegativeData] = useState({});
-    const [superData, setSuperNumber] = useState({});
-    const [bonusPoint, setBonusPoint] = useState({});
+  const {ticket_id} = route.params;
+  const [visible, setVisible] = useState(false);
+  const [selectedNumber, setSelectedNumber] = useState(null);
+  const [oddData, setOddData] = useState({});
+  const [negativeData, setNegativeData] = useState({});
+  const [superData, setSuperNumber] = useState({});
+  const [bonusPoint, setBonusPoint] = useState({});
+  const [numberArray, setNumberArray] = useState([]);
 
-    const {loginData,isReady} = useLoginDataStorage();
-    const navigation = useNavigation()
-    const handleNumberSelect = number => {
-        setSelectedNumber(number);
-      };
-      const data = isReady && loginData && loginData?.data 
+  const {loginData, isReady} = useLoginDataStorage();
+  const navigation = useNavigation();
 
+  const handleNumberSelect = number => {
+    setSelectedNumber(number);
+  };
 
-      const gameRuleList = async () => {
-        try {
-          const response = await gameRule();
-          console.log("hello",response.bonusPoint)
-          setOddData(response.oddSelection);
-          setNegativeData(response.negativePoint)
-          setSuperNumber(response.superNumber)
-          setBonusPoint(response.bonusPoint)
+  const data = isReady && loginData && loginData?.data;
 
-        } catch (error) {
-          console.log('error', error);
+  const gameRuleList = async () => {
+    try {
+      const response = await gameRule();
+      if (response) {
+        setOddData(response.oddSelection);
+        setNegativeData(response.negativePoint);
+        setSuperNumber(response.superNumber);
+        setBonusPoint(response.bonusPoint);
+
+        if (response.superNumber && response.superNumber.supernumber) {
+          const str = response.superNumber.supernumber;
+          const arr = str.split(',').map(Number);
+          setNumberArray(arr);
         }
-      };
-    
-      const handleOnYes = () => {
-        navigation.goBack();
-      };
-    
-      useEffect(() => { 
-         try {
-             gameRuleList();
-          } catch (error) {
-            console.log('error in getList', error);
-          }
-      }, []);
-    
-      const handleStartGame = () => {
-        if (selectedNumber) {
-          console.log('Starting game with super number:', selectedNumber);
-          navigation.navigate('GameScreen', {
-            selectedNumber: selectedNumber,
-            game_id:game_id,
-            ticket_id: ticket_id,
-            user_id: data._id,
-            gameRuleData: gameRuleData,
-          });
-        } else {
-          setVisible(true);
-        }
-      };
+      }
+    } catch (error) {
+      console.log('Error fetching game rules:', error);
+    }
+  };
 
-      const str =superData.supernumber
-      const arr = str.split(',').map(Number);
+  const handleOnYes = () => {
+    navigation.goBack();
+  };
+
+  useEffect(() => {
+    try {
+      gameRuleList();
+    } catch (error) {
+      console.log('Error in getList:', error);
+    }
+  }, [data]);
+
+  const handleStartGame = () => {
+    if (selectedNumber) {
+      console.log('Starting game with super number:', selectedNumber);
+      navigation.navigate('GameScreen', {
+        selectedNumber: selectedNumber,
+        game_id: game_id,
+        ticket_id: ticket_id,
+        user_id: data._id,
+        gameRuleData: {oddData, negativeData, superData, bonusPoint},
+      });
+    } else {
+      setVisible(true);
+    }
+  };
 
   return (
     <ScrollView>
-    <LinearGradient colors={['#361911', '#361911', '#6A1700']}
-            style={styles.linearGradient}>
-              <CommonHeader title={'Playing Instruction'}/>
-      <View style={{flex: 1}}>
+      <LinearGradient
+        colors={['#361911', '#361911', '#6A1700']}
+        style={styles.linearGradient}>
+        <CommonHeader title={'Playing Instruction'} />
+        <View style={{flex: 1}}>
           <View style={styles.container}>
             <Text style={styles.heading}>Odd Number</Text>
-             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 2,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+            <LinearGradient
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 2,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
             <Text style={styles.oddtext}>
               Each Odd Number selected will be scored based on length if the
               number
             </Text>
 
-            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
               2 digit Equals to {oddData.twoDigit} Points.
             </Text>
 
-            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
               3 digit Equals to {oddData.threeDigit} Points.
             </Text>
 
-            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
               4 digit Equals to {oddData.fourDigit} Points.
             </Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
           </View>
           <View style={styles.container}>
             <Text style={styles.heading}>Select one super number</Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
             <View
               style={{
                 flex: 1,
                 marginVertical: hp(1),
                 flexDirection: 'row',
               }}>
-              {arr.map(number => (
+              {numberArray.map(number => (
                 <TouchableOpacity
                   key={number}
                   style={[
@@ -161,210 +174,230 @@ export default function PlayingInstruction() {
               ))}
             </View>
 
-            <Text style={[styles.oddtext, {marginTop: 5,fontFamily:'Montserrat-SemiBold'}]}>
+            <Text
+              style={[
+                styles.oddtext,
+                {marginTop: 5, fontFamily: 'Montserrat-SemiBold'},
+              ]}>
               Last Digit of the Odd Selected Number
             </Text>
-            <Text style={[styles.oddtext,{    fontFamily:'Montserrat-SemiBold'}]}>
-                 {superData.points} Extra Points for Each
-              of Those Eligible Numbers
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+              {superData.points} Extra Points for Each of Those Eligible Numbers
             </Text>
-            <Text style={[styles.oddtext, {marginBottom: 5,    fontFamily:'Montserrat-SemiBold',}]}>
+            <Text
+              style={[
+                styles.oddtext,
+                {marginBottom: 5, fontFamily: 'Montserrat-SemiBold'},
+              ]}>
               Not Applicable for Single Digit
             </Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
           </View>
           <View style={styles.container}>
             <Text style={styles.heading}>Bonus Number</Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
             <Text style={styles.oddtext}>Extra Bonus Points </Text>
-            <Text style={[styles.oddtext,{  fontFamily:'Montserrat-SemiBold',}]}>
-              Odd Numbers More Than 10 = {bonusPoint.oddMoreThan10}, 30 = {bonusPoint.oddMoreThan30}, 70 = {bonusPoint.oddMoreThan70}, 100 = {bonusPoint.oddMoreThan100}
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+              Odd Numbers More Than 10 = {bonusPoint.oddMoreThan10}, 30 ={' '}
+              {bonusPoint.oddMoreThan30}, 70 = {bonusPoint.oddMoreThan70}, 100 ={' '}
+              {bonusPoint.oddMoreThan100}
             </Text>
-            <Text style={[styles.oddtext,{  fontFamily:'Montserrat-SemiBold',}]}>
-              Super Numbers More Than 5 = {bonusPoint.superMoreThan5}, 10 = {bonusPoint.superMoreThan10},  20 = {bonusPoint.superMoreThan20},
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+              Super Numbers More Than 5 = {bonusPoint.superMoreThan5}, 10 ={' '}
+              {bonusPoint.superMoreThan10}, 20 = {bonusPoint.superMoreThan20},
             </Text>
-            <Text style={[styles.oddtext,{  fontFamily:'Montserrat-SemiBold',}]}>
-              Each Selected Prime Number will get Additional {bonusPoint.primeNumberPoints} Points
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+              Each Selected Prime Number will get Additional{' '}
+              {bonusPoint.primeNumberPoints} Points
             </Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
           </View>
           <View style={styles.container}>
             <Text style={styles.heading}>Negative Score</Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
             <Text style={styles.oddtext}>
               Negative Scoring for Even Number Selected will be as Below :-
             </Text>
-            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold'}]}>
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
               2 Digit Number = {negativeData.negTwoDigit}
             </Text>
-            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold',}]}>
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
               3 Digit Number = {negativeData.negThreeDigit}
             </Text>
-            <Text style={[styles.oddtext,{fontFamily:'Montserrat-SemiBold',}]}>
+            <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
               4 DIgit Number = {negativeData.negFourDigit}
             </Text>
             <LinearGradient
-                        colors={['#999999', '#FFFFFF', '#999999']} 
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        style={{
-                          height: 1.5,              
-                          marginTop: 10,          
-                          marginHorizontal: wp(2), 
-                          marginBottom:10
-                        }}
-                      />
+              colors={['#999999', '#FFFFFF', '#999999']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{
+                height: 1.5,
+                marginTop: 10,
+                marginHorizontal: wp(2),
+                marginBottom: 10,
+              }}
+            />
           </View>
-        <View
-          style={{
-            flex: 0.5,
-            justifyContent: 'flex-start',
-          }}>
-            <View  style={{
-              marginHorizontal: hp(3),
-              borderRadius: 10,
-              marginVertical: hp(4),
+          <View
+            style={{
+              flex: 0.5,
+              justifyContent: 'flex-start',
             }}>
-            <CommonButton title={'Start Game'}  onPress={handleStartGame}/>
+            <View
+              style={{
+                marginHorizontal: hp(3),
+                borderRadius: 10,
+                marginVertical: hp(4),
+              }}>
+              <CommonButton title={'Start Game'} onPress={handleStartGame} />
+            </View>
           </View>
         </View>
-      </View>
-    </LinearGradient>
-    <AlertDialogRed visible={visible} onClose={() => setVisible(false)}  message={"Please Select a Super Number."}/>
-  </ScrollView>
-  )
+      </LinearGradient>
+      <AlertDialogRed
+        visible={visible}
+        onClose={() => setVisible(false)}
+        message={'Please Select a Super Number.'}
+      />
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
-  linearGradient:{
-    flex:1
+  linearGradient: {
+    flex: 1,
   },
-    container: {
-        flex: 1,
-        backgroundColor:'#A38C85',
-        margin:15,
-        borderRadius:20,
-        paddingLeft: hp(1),
-        paddingVertical: hp(1),
-        marginBottom:-5
-      },
-      container2: {
-        flex: 1,
-        backgroundColor:'#A38C85',
-        borderRadius: 10,
-        justifyContent: 'center',
-        paddingLeft: hp(1),
-        paddingVertical: hp(1),
-      },
-      oddtext: {marginHorizontal: 10, color: '#FFFFFF',fontFamily:'Montserrat-Regular'},
-      heading: {
-        marginHorizontal: 10,
-        color: '#FFFFFF',
-        fontSize: hp(2.1),
-        fontFamily:'Montserrat-SemiBold',
-        letterSpacing: 1,
-      },
-      box: {
-        flex: 0.8,
-        marginHorizontal: 15,
-        borderWidth: 1,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: hp(1),
-        borderColor:'#000000',
-        backgroundColor:'#A1A1A1'
-      },
-      selectedBox: {
-        backgroundColor: '#FFA402',
-      },
-      boxText: {
-        fontSize: 20,
-        color: '#FFFFFF',
-        fontFamily:'Montserrat-SemiBold'
-      },
-      selectedBoxText: {
-        color: 'white',
-      },
-      modalContainer: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-      },
-      modalText: {
-        fontSize: 16,
-        marginBottom: 10,
-        textAlign: 'center',
-      },
-      closeModalText: {
-        color: '#FF671F',
-        fontSize: 16,
-        fontWeight: 'bold',
-      },
-      headerBackground: {
-        height: Platform.OS === 'ios' ? height * 0.1 : 50,
-        width: '100%',
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      headerContent: {
-        flex: 1,
-        paddingTop: 10,
-        position: 'relative',
-      },
-      headerLeft: {
-        marginLeft: '20%',
-      },
-      headerText: {
-        fontSize: hp('2.5%'),
-        color: 'black',
-        fontWeight: '500',
-      },
-})
+  container: {
+    flex: 1,
+    backgroundColor: '#A38C85',
+    margin: 15,
+    borderRadius: 20,
+    paddingLeft: hp(1),
+    paddingVertical: hp(1),
+    marginBottom: -5,
+  },
+  container2: {
+    flex: 1,
+    backgroundColor: '#A38C85',
+    borderRadius: 10,
+    justifyContent: 'center',
+    paddingLeft: hp(1),
+    paddingVertical: hp(1),
+  },
+  oddtext: {
+    marginHorizontal: 10,
+    color: '#FFFFFF',
+    fontFamily: 'Montserrat-Regular',
+  },
+  heading: {
+    marginHorizontal: 10,
+    color: '#FFFFFF',
+    fontSize: hp(2.1),
+    fontFamily: 'Montserrat-SemiBold',
+    letterSpacing: 1,
+  },
+  box: {
+    flex: 0.8,
+    marginHorizontal: 15,
+    borderWidth: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: hp(1),
+    borderColor: '#000000',
+    backgroundColor: '#A1A1A1',
+  },
+  selectedBox: {
+    backgroundColor: '#FFA402',
+  },
+  boxText: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  selectedBoxText: {
+    color: 'white',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  closeModalText: {
+    color: '#FF671F',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  headerBackground: {
+    height: Platform.OS === 'ios' ? height * 0.1 : 50,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerContent: {
+    flex: 1,
+    paddingTop: 10,
+    position: 'relative',
+  },
+  headerLeft: {
+    marginLeft: '20%',
+  },
+  headerText: {
+    fontSize: hp('2.5%'),
+    color: 'black',
+    fontWeight: '500',
+  },
+});
