@@ -25,7 +25,7 @@ export default function Debit(props) {
   // Group walletData by date
   const groupedData = groupByDateAndType(creditTransactions);
 
-  console.log("dtatrtt",groupedData)
+  console.log("dtatrtt", groupedData)
 
   const handleNavigation = () => {
     navigation.navigate('DepositeDetails');
@@ -59,7 +59,7 @@ export default function Debit(props) {
   );
 
   const renderSection = ({ item }) => (
-    
+
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -74,21 +74,28 @@ export default function Debit(props) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-  
+
     return {
-      date: `${date}`, 
-      transactions: groupedData[key], 
+      date: `${date}`,
+      transactions: groupedData[key],
     };
   });
 
   return (
     <View style={styles.container}>
-    <FlatList
-      data={sectionData}
-      renderItem={renderSection}
-      keyExtractor={(item) => item.date}
-      contentContainerStyle={styles.list}
-    />
+      {
+        walletData.length == 0 ? (
+          <View style={styles.noDataContainer}>
+            <Text style={styles.noDataText}>No data found</Text>
+          </View>
+        ) : (<FlatList
+          data={sectionData}
+          renderItem={renderSection}
+          keyExtractor={(item) => item.date}
+          contentContainerStyle={styles.list}
+        />)
+      }
+
     </View>
   );
 }
@@ -151,5 +158,16 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontFamily: 'Montserrat-Medium',
     color: '#696969',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });

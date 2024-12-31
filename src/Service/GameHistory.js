@@ -22,16 +22,14 @@ export const historyData = async ( user_id) => {
   };
 
 
-  export const gameHistory = async ( game_id,user_id) => {
-    console.log("ticket=========>", user_id)
-    console.log("ticket=========>game_id", game_id)
+  export const gameHistory = async (user_id,game_id) => {
     try {
       const response = await apiInstance.post(Config.Game_History, {
         user_id,
         game_id,
       });
       if (response.status === 200) {
-        console.log('Game history data', response.data);
+        // console.log('Game history data', response.data);
         return response.data;
       } else {
         console.error(

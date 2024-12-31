@@ -72,13 +72,22 @@ export default function Success({ data }) {
 
   return (
     <View style={styles.container}>
-      <SectionList
-        sections={sections}
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-      />
+      {
+        filteredData.length == 0 ?(
+             <View style={styles.noDataContainer}>
+                      <Text style={styles.noDataText}>No data found</Text>
+                    </View>
+        ):(
+          <SectionList
+          sections={sections}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+        />
+        )
+      }
+     
     </View>
   );
 }
@@ -146,5 +155,16 @@ const styles = StyleSheet.create({
     color: '#696969',
     marginBottom: hp('2%'),
     marginRight:hp('1%')
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });

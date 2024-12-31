@@ -3,7 +3,6 @@ import apiInstance from "./AxiosInstance";
 
 export const getGameData = async _id => {
     try {
-      console.log("data id ",_id)
       const response = await apiInstance.post(`${Config.Home_Api}`, {
         user_id: _id,
       });

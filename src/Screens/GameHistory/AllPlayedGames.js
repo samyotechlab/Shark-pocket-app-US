@@ -10,6 +10,7 @@ import Toast from 'react-native-toast-message';
 import Game from '../../../assets/images/Screens/game1.png'
 import { useNavigation } from '@react-navigation/native';
 import { Loader } from '../../Components/Loader';
+import AvailableCard from '../../Components/AvailableCard';
 
 export default function AllPlayedGames() {
 
@@ -26,7 +27,6 @@ export default function AllPlayedGames() {
         try {
             setLoader(true)
             const response = await historyData(data._id);
-            console.log('response', response);
             if (response) {
                 setHistory(response?.data);
             } else {
@@ -47,60 +47,15 @@ export default function AllPlayedGames() {
         }
     }, [isReady, loginData])
 
-
-    const gradientColors = [
-        ['#F38424', '#F7A552', '#F9D479'],
-        ['#E3398C', '#CC8FAD'],
-        ['#75B831', '#BAFF74'],
-        ['#0916B9', '#A1A8FF'],
-    ];
-
-    const borderColors = [
-        '#F2E30B',
-        '#5C233F',
-        '#78C800',
-        '#1A0DAB',
-    ];
     const renderItem = ({ item, index }) => {
         console.log("item",item)
-        const formattedDate = formatDate(item.game_start_date);
-        const colors = gradientColors[index % gradientColors.length];
-        const border = borderColors[index % borderColors.length];
+
         return (<>
 
             <TouchableOpacity style={styles.container1} onPress={() => {
                 navigation.navigate('AllGameName', { game_id: item._id })
             }} >
-                <LinearGradient
-                    colors={colors}
-                    start={{ x: 0, y: 0.5 }}
-                    end={{ x: 0.8, y: 1 }}
-                    style={[styles.card, { borderColor: border }]}
-                >
-                    <View style={styles.content}>
-                        <Image
-                            source={Game}
-                            style={styles.characterImage}
-                        />
-                        <View style={styles.textContainer}>
-                            <Text style={styles.headerText}>
-                                GET ₹{item.game_winning_cost} & PLAY NOW
-                            </Text>
-                            <Text style={styles.description}>
-                                You will get the ₹{item.game_winning_cost} prize money
-                                enroll yourself before game start
-                            </Text>
-                            <Text style={styles.startText}>
-                                Start <Text style={styles.dateText}>{formattedDate}</Text>
-                            </Text>
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity style={styles.button}>
-                                    <Text style={styles.buttonText}>₹ {item.game_winning_cost} CASH WIN</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </LinearGradient>
+                <AvailableCard gameData={item} status={"4"} index={index}/>
             </TouchableOpacity>
         </>)
     }

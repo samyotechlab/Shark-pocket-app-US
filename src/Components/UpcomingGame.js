@@ -3,32 +3,26 @@ import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AvailableCard from './AvailableCard';
+import PinkPrizeCard from './PinkPrizeCard';
+import GoldenCard from './GoldenCard';
+import UpcomingGameCard from './UpcomingGameCard';
 
 
-const AvailbleGameCard = (props) => {
-    const navigation = useNavigation();
-    const myGames = props.gameData
-    const myGameData = myGames.filter(game => game.status === 3);
-   
-    const handleNavigation = () => {
-        navigation.navigate("AvailableGame", { gameData: myGames })
-    }
+const UpcomingGame = (props) => {
+
+    const {gameData} = props;
+
+    const filteredData = gameData.filter((item) => item.status === 1);
 
     const renderItem = (items) => {
-        const { item } = items
-
         return (<>
-            <TouchableOpacity style={styles.container} onPress={() => {
-                handleNavigation()
-            }}>
-                <AvailableCard gameData={item} status={"1"} index={items.index}/>
-            </TouchableOpacity>
+           <UpcomingGameCard items={items} />
         </>)
     }
     return (
         <FlatList
             horizontal
-            data={myGameData}
+            data={filteredData}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             showsHorizontalScrollIndicator={false}
@@ -41,6 +35,6 @@ const styles = StyleSheet.create({
         width: hp('45%')
     },
 });
-export default AvailbleGameCard;
+export default UpcomingGame;
 
 

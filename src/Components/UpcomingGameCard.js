@@ -4,42 +4,46 @@ import Trophy from '../../assets/images/Screens/trophy1.png'
 import PlayNow from '../../assets/images/Screens/playNowBtn.png'
 import LinearGradient from 'react-native-linear-gradient';
 
-const UpcomingGameCard = () => {
+const UpcomingGameCard = ({ items }) => {
+  const { index } = items
+  const {item}  = items
+
   return (
+
     <View style={styles.container}>
       {/* First Card */}
-      <LinearGradient
-           colors={['#438301', '#438301', '#8BBE56']}
-           start={{ x: 0.5, y: 0 }}
-           end={{ x: 0.5, y: 1 }}
-           style={styles.card}
-         >
-        <TouchableOpacity style={styles.button}>
-            <Image source={PlayNow}/>
-        </TouchableOpacity>
-        <View style={styles.trophiesRow}>
-          <Image source={Trophy} style={styles.trophyIcon} />
-          <Text style={styles.winText}>WIN</Text>
-          <Image source={Trophy} style={styles.trophyIcon} />
-        </View>
-        <Text style={styles.amountText}>₹7000</Text>
-      </LinearGradient>
+      {
+        index % 2 == 0 ? (<LinearGradient
+          colors={['#438301', '#438301', '#8BBE56']}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={styles.card}
+        >
+          <TouchableOpacity style={styles.button}>
+            <Image source={PlayNow} />
+          </TouchableOpacity>
+          <View style={styles.trophiesRow}>
+            <Image source={Trophy} style={styles.trophyIcon} />
+            <Text style={styles.winText}>WIN</Text>
+            <Image source={Trophy} style={styles.trophyIcon} />
+          </View>
+          <Text style={styles.amountText}>₹{item.winning_cost}</Text>
+        </LinearGradient>) : (<LinearGradient
+          colors={['#DC5A06', '#FDFDFD', '#DC5A06']}
+          locations={[0, 0.5, 1]}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={styles.cardAlt}
+        >
+          <Text style={styles.winNowText}>
+            <Text style={styles.winTextAlt}>WIN</Text>
+            <Text style={styles.nowTextAlt}> NOW</Text>
+          </Text>
+          <Text style={styles.gainText}>Gain</Text>
+          <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text>
+        </LinearGradient>)
+      }
 
-      {/* Second Card */}
-       <LinearGradient
-           colors={['#DC5A06', '#FDFDFD', '#DC5A06']}
-           locations={[0, 0.5, 1]} 
-           start={{ x: 0.5, y: 0 }}
-           end={{ x: 0.5, y: 1 }}
-           style={styles.cardAlt}
-         >
-        <Text style={styles.winNowText}>
-          <Text style={styles.winTextAlt}>WIN</Text>
-          <Text style={styles.nowTextAlt}> NOW</Text>
-        </Text>
-        <Text style={styles.gainText}>Gain</Text>
-        <Text style={styles.amountTextAlt}>₹5000</Text>
-      </LinearGradient>
     </View>
   );
 };
@@ -47,9 +51,9 @@ const UpcomingGameCard = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection:'row',
+    flexDirection: 'row',
     padding: 10,
-    justifyContent:'space-evenly'
+    justifyContent: 'space-evenly'
   },
   card: {
     width: 170,
@@ -59,8 +63,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: 10,
-    borderColor:'#569218',
-    borderWidth:7
+    borderColor: '#569218',
+    borderWidth: 7
   },
   button: {
     paddingHorizontal: 20,
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
   amountText: {
     fontSize: 22,
     color: '#FFF',
-    fontFamily:'Overlock-Bold',
+    fontFamily: 'Overlock-Bold',
   },
   cardAlt: {
     width: 170,
@@ -98,13 +102,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    borderColor:'#FFF278',
-    borderWidth:7
+    borderColor: '#FFF278',
+    borderWidth: 7
   },
   winNowText: {
     fontSize: 24,
     textAlign: 'center',
-    fontFamily:'PatuaOne-Regular'
+    fontFamily: 'PatuaOne-Regular'
   },
   winTextAlt: {
     color: '#FFD700',

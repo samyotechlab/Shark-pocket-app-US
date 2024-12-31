@@ -4,9 +4,12 @@ import PlayedHistory from '../GameName.js/PlayedHistory'
 import LinearGradient from 'react-native-linear-gradient'
 import CommonHeader from '../../Components/CommonHeader'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen'
+import { useRoute } from '@react-navigation/native'
 
 
 export default function AllGameName() {
+  const route = useRoute()
+
   return (
  <LinearGradient
               colors={['#361911', '#361911', '#6A1700']}

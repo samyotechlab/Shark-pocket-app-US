@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import sharkLogo from '../../../assets/images/Screens/sharkLogo.png'
@@ -9,27 +9,27 @@ import { Divider } from 'react-native-elements'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import WinnerCard from '../../Components/WinnerCard'
 import Lighting from '../../../assets/images/Screens/Lighting.png'
-import PinkPrizeCard from '../../Components/PinkPrizeCard'
-import GoldenCard from '../../Components/GoldenCard'
 import AvailbleGameCard from '../../Components/AvailableGameCard'
-import UpcomingGameCard from '../../Components/UpcomingGameCard'
-import { useRoute } from '@react-navigation/native'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { getGameData } from '../../Service/Home'
-import { Loader } from '../../Components/Loader'
 import { useNavigation } from '@react-navigation/native'
+import AnimatedLoader from '../../Components/AnimatedLoader'
+import MyGame from '../../Components/MyGame'
+import UpcomingGame from '../../Components/UpcomingGame'
 
 export default function HomeScreen({route}) {
   const navigation = useNavigation()
   const {loginData,isReady} = useLoginDataStorage();
   const [loader,setLoader] = useState(false)
   const [gameData,setGameData] =useState([]);
+  const [myGame,setMyGames] =useState([]);
   const data = isReady && loginData && loginData?.data 
 
   const getAllData = async()=>{
     setLoader(true)
     try {
       const response =await  getGameData(data._id)
+      setMyGames(response.myGames)
       setGameData(response.data)
     } catch (error) {
       console.log("error",error)
@@ -88,8 +88,7 @@ export default function HomeScreen({route}) {
             <Text style={styles.myGame}>MY GAME</Text>
           </View>
           <View style={{ flex: 1.5, flexDirection: 'row',marginTop:10 }}>
-            <PinkPrizeCard />
-            <GoldenCard />
+            <MyGame myGame={myGame}/>
           </View>
         </View>
 
@@ -117,10 +116,10 @@ export default function HomeScreen({route}) {
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1.5, flexDirection: 'row'}}>
-            <UpcomingGameCard />
+             <UpcomingGame gameData={gameData}/>
           </View>
         </View>
-          </>):(<Loader/>)
+          </>):(<AnimatedLoader/>)
         }
 
       </ScrollView>

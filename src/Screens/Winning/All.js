@@ -18,9 +18,6 @@ const groupByDateAndType = (data) => {
 
 export default function All({winningData}) {
   const navigation = useNavigation();
-
-
-
   // Group walletData by date
   const groupedData = groupByDateAndType(winningData);
 
@@ -97,12 +94,17 @@ export default function All({winningData}) {
 
   return (
     <View style={styles.container}>
-    <FlatList
-      data={sectionData}
-      renderItem={renderSection}
-      keyExtractor={(item) => item.date}
-      contentContainerStyle={styles.list}
-    />
+      {
+        winningData.length == 0 ?( <View style={styles.noDataContainer}>
+                        <Text style={styles.noDataText}>No data found</Text>
+                      </View>):(  <FlatList
+          data={sectionData}
+          renderItem={renderSection}
+          keyExtractor={(item) => item.date}
+          contentContainerStyle={styles.list}
+        />)
+      }
+  
     </View>
   );
 }
@@ -165,5 +167,16 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontFamily: 'Montserrat-Medium',
     color: '#696969',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });

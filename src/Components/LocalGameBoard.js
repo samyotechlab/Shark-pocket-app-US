@@ -111,22 +111,6 @@ export default function LocalGameBoard() {
               <Text style={styles.txt}>#{item.ranking}</Text>
             </View>
           </View>
-          {/* <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Image
-              source={Person4}
-              style={{height: hp(3), width: wp(6), borderRadius: wp(3)}}
-            />
-            <Text style={[styles.txt, {paddingRight: hp('15%')}]}>
-              {truncateName(item?.user_name, 1)}
-            </Text>
-            <Text style={styles.txt}>{item.score}</Text>
-            <Text style={styles.txt}>{item.ranking}</Text>
-          </View> */}
           <LinearGradient
             colors={['#999999', '#FFFFFF', '#999999']}
             start={{x: 0, y: 0}}

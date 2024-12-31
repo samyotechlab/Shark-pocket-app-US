@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../assets/images/Screens/Button.png'
 
 
-const PinkPrizeCard = () => {
+const PinkPrizeCard = ({item}) => {
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -28,7 +28,7 @@ const PinkPrizeCard = () => {
 
           {/* Card Text */}
           <Text style={styles.heading}>WIN YOUR PRIZE</Text>
-          <Text style={styles.amount}>₹5000</Text>
+          <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
         </LinearGradient>
       </LinearGradient>
     </View>

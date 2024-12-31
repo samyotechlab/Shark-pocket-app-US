@@ -21,13 +21,8 @@ export default function Tickets() {
     const [visible, setVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [purchasedTickets, setPurchasedTickets] = useState({});
-    const route = useRoute()
+    const route = useRoute();
     const { game_id } = route.params
-
-
-    const handleNavigation = () => {
-        navigation.navigate("PlayingInstruction")
-    }
 
     const getAllTicket = async () => {
         setLoader(true)
@@ -60,7 +55,6 @@ export default function Tickets() {
                     selectedItem._id,
                     data._id,
                 );
-                console.log('response --->', response);
                 if (response.status === 0) {
                     setIsModalVisible1(true);
                     setMessage(response.message);
@@ -79,8 +73,6 @@ export default function Tickets() {
         };
 
         const handlePlay = () => {
-            console.log('Playing ticket:', item._id);
-            console.log('Game ID:', item.game_id);
             navigation.navigate('PlayingInstruction', {
                 ticket_id: item._id,
                 game_id: item.game_id,
@@ -175,117 +167,6 @@ export default function Tickets() {
 
     )
 }
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//     },
-//     container1: {
-//         flex: 1,
-//         paddingLeft: 20,
-//         marginBottom: 20
-//     },
-//     card: {
-//         // backgroundColor: '#F8B600',
-//         borderRadius: 6,
-//         // padding: 5,
-//         width: '95%',
-//         height: 160,
-//         shadowColor: '#000',
-//         shadowOffset: { width: 0, height: 3 },
-//         shadowOpacity: 0.3,
-//         shadowRadius: 5,
-//         elevation: 5,
-//         borderWidth: 4,
-//         borderColor: '#F2E30B',
-//     },
-//     content: {
-//         flexDirection: 'row',
-//         alignItems: 'center',
-//         flex: 1,
-//     },
-//     characterImage: {
-//         width: 100,
-//         height: '120%',
-//         resizeMode: 'contain',
-//     },
-//     textContainer: {
-//         flex: 1,
-//         paddingLeft: 10,
-//         justifyContent: 'space-between',
-//         // paddingTop:10
-//     },
-//     description: {
-//         fontSize: 14,
-//         color: '#000000',
-//         fontFamily: 'Audiowide-Regular'
-//     },
-//     boxContainer: {
-//         flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         marginVertical: 10,
-//     },
-//     box: {
-//         borderRadius: 8,
-//         padding: 3,
-//         alignItems: 'center',
-//         width: 80,
-//         flexDirection: 'row',
-//         borderColor: '#C59900',
-//         borderWidth: 1,
-//         justifyContent: 'space-evenly'
-//     },
-//     boxIcon: {
-//         width: 20,
-//         height: 20,
-//         marginBottom: 5,
-//     },
-//     boxIcon1: {
-//         width: 20,
-//         height: 20,
-//         marginBottom: 5,
-//         resizeMode: 'contain'
-//     },
-//     boxText: {
-//         fontSize: 15,
-//         fontWeight: 'bold',
-//         color: 'white',
-//     },
-//     playButton: {
-//         backgroundColor: '#FFD700',
-//         borderRadius: 8,
-//         paddingVertical: 6,
-//         alignItems: 'center',
-//     },
-//     playButtonText: {
-//         fontSize: 20,
-//         fontWeight: 'bold',
-//         color: 'white',
-//     },
-
-//     buttonContainer: {
-//         alignItems: 'flex-start',
-//         marginTop: 10,
-//     },
-//     button: {
-//         backgroundColor: '#3E2723',
-//         borderRadius: 8,
-//         paddingVertical: 10,
-//         paddingHorizontal: 30,
-//         alignItems: 'center',
-//         borderColor: '#F5D236',
-//         borderWidth: 2,
-//     },
-//     buttonText: {
-//         fontSize: 18,
-//         fontFamily: 'Inter_18pt-Bold',
-//         color: '#FFDC4D',
-//         letterSpacing: 1,
-//         textShadowColor: '#F88600',
-//         textShadowOffset: { width: 0, height: 2 },
-//         textShadowRadius: 15,
-//     },
-// })
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Win from '../../assets/images/Screens/Rectangle.png';
 import Winner from '../../assets/images/Screens/Winner.png';
 
-const GoldenCard = () => {
+const GoldenCard = ({item}) => {
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -21,7 +21,7 @@ const GoldenCard = () => {
             <Image source={Winner} style={styles.winnerImage} />
             <Text style={styles.winnerText}>WINNER</Text>
          
-          <Text style={styles.amount}>₹7000</Text>
+          <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
         </View>
       </LinearGradient>
     </View>

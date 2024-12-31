@@ -10,37 +10,16 @@ import Toast from 'react-native-toast-message';
 import { Loader } from '../../Components/Loader';
 
 export default function GameFinishHistory() {
-  const [gameHistoryData, setGameHistory] = useState([]);
+
   const [loader,setLoader] = useState(false)
-  const route = useRoute()
-  const {_id,user_id} = route.params
-  const allGameHistory = async () => {
-    setLoader(true)
-    try {
-      const response = await gameHistory(_id,user_id);
-      if (response) {
-        console.log('history---->', response?.data);
-        const data = response?.data[0]
-        setGameHistory(data);
+  const route = useRoute();
+  const {gameHistoryData} = route.params
 
-      } else {
-        Toast.error(response?.message);
-      }
-    } catch (error) {
-      console.log('API call error:', error);
-    }
-    finally{
-      setLoader(false)
-    }
-  };
+  console.log("gameHistoryData---------->",gameHistoryData)
 
-  useEffect(() => {
-    console.log("user_id:", user_id);
-    allGameHistory();
-  }, []);
-  
+  console.log("gameHistoryData",gameHistoryData?.double_digit)
 
-  
+
   return (
      <>
      <LinearGradient

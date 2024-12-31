@@ -26,18 +26,18 @@ export default function All(props) {
   const groupedData = groupByDateAndType(walletData);
 
   const handleNavigation = (item) => {
-    navigation.navigate('DepositeDetails',{item});
+    navigation.navigate('DepositeDetails', { item });
   };
 
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
-  
+
     return (
       <TouchableOpacity
         style={[
           styles.itemContainer,
         ]}
-        onPress={()=>handleNavigation(item)}
+        onPress={() => handleNavigation(item)}
       >
         <View
           style={[
@@ -72,7 +72,7 @@ export default function All(props) {
     );
   };
 
-  const renderSection = ({ item }) => (   
+  const renderSection = ({ item }) => (
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -87,21 +87,26 @@ export default function All(props) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-  
+
     return {
-      date: `${date}`, 
-      transactions: groupedData[key], 
+      date: `${date}`,
+      transactions: groupedData[key],
     };
   });
 
   return (
     <View style={styles.container}>
-    <FlatList
-      data={sectionData}
-      renderItem={renderSection}
-      keyExtractor={(item) => item.date}
-      contentContainerStyle={styles.list}
-    />
+      {
+        walletData == 0 ? (<View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No data found</Text>
+        </View>) : (<FlatList
+          data={sectionData}
+          renderItem={renderSection}
+          keyExtractor={(item) => item.date}
+          contentContainerStyle={styles.list}
+        />)
+      }
+
     </View>
   );
 }
@@ -164,5 +169,16 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontFamily: 'Montserrat-Medium',
     color: '#696969',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });

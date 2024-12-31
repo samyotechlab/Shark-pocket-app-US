@@ -87,6 +87,7 @@ const AddCashScreen = () => {
         setisLoading(true);
         if (res.status) {
           const response = await checkPaymentStatus(transaction_id);
+          console.log(response)
           setCheckPaymentStatus(response.data.data)
           setTimeout(() => {
             setisLoading(false);

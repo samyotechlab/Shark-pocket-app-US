@@ -46,9 +46,9 @@ export default function GameName() {
         </View>
      <View style={{flex:1}}>
         {selectedTab === 'Tickets' ? (
-          <Tickets/>
+          <Tickets game_id={game_id}/>
         ) : (
-          <PlayedHistory/>
+          <PlayedHistory game_id={game_id}/>
         )}
         </View>
       </View>
