@@ -14,3 +14,21 @@ export const leaderBoard = async game_id => {
       throw error;
     }
   };
+
+  export const globalLeaderBoard = async () => {
+    try {
+      const response = await apiInstance.get(Config.Global_ByDate);
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error(
+          'Failed:',
+          response.status,
+        );
+        throw new Error(`Failed to fetch the data: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error fetching Data', error.message || error);
+      throw error;
+    }
+  };

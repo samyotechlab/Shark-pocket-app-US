@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Iconics from "react-native-vector-icons/Ionicons";
-import CommonHeader from '../../Components/CommonHeader';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service/Transaction';
-import ModalScreen from '../../Components/ModalScreen';
 import PhonePePaymentSDK from 'react-native-phonepe-pg';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 

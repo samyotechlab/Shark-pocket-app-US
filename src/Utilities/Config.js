@@ -11,6 +11,7 @@ export default {
     Game_Rule: 'api/getGameRules/list',
     Game_List: 'api/availableGame/list',
     LeaderBoardByGameId: 'api/game_score/byGameId',
+    Global_ByDate: 'api/game_score/byDate',
     History_Api: 'api/game_score/getPlayedGamesByUserId',
     Game_History: 'api/game_score/by_user_id_and_game_id',
     Contact: 'contactUs',
@@ -33,7 +34,7 @@ export default {
 
 // export default {
 //     Final_Score: 'api/finalScore',
-//     Global_ByDate: 'api/game_score/byDate',
+
 //     EditProfile: 'api/editprofile',
 //     TaxInvoice:'api/taxInvoice',
 //     GenerateTaxInvoice:'download/',

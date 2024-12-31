@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Person from '../../assets/images/Screens/person.jpeg';
 import {
   widthPercentageToDP as wp,
@@ -16,35 +16,62 @@ import Frame from '../../assets/images/Screens/Frame.png';
 import Person2 from '../../assets/images/Screens/Person2.jpeg';
 import Person3 from '../../assets/images/Screens/Person3.jpeg';
 import Person4 from '../../assets/images/Screens/Person4.jpeg';
-import {Divider} from 'react-native-elements';
+import { Divider } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-toast-message';
+import { globalLeaderBoard } from '../Service/LeaderBoard';
+import { truncateName } from '../Utilities/utilies';
 
 export default function GlobalLeaderBoard() {
-  const data = [
-    {
-      name: 'Deepak',
-      score: '1132.2',
-      rank: '#1',
-      image: '../../assets/images/Screens/Person4.jpeg',
-    },
-    {
-      name: 'Deepak',
-      score: '1132.2',
-      rank: '#1',
-      image: '../../assets/images/Screens/Person4.jpeg',
-    },
-    {
-      name: 'Deepak',
-      score: '1132.2',
-      rank: '#1',
-      image: '../../assets/images/Screens/Person4.jpeg',
-    },
-  ];
+  const [loader, setLoader] = useState(false)
+  const [globalData, setGlobalData] = useState([])
+  const [firstRanking, setFirstRanking] = useState(null);
+  const [secondRanking, setSecondRanking] = useState(null);
+  const [thirdRanking, setThirdRanking] = useState(null);
+
+  const globalLeaderData = async () => {
+    try {
+      setLoader(true)
+      const response = await globalLeaderBoard();
+      if (response) {
+        setGlobalData(response.data);
+      } else {
+        Toast.error(response.message);
+      }
+    } catch (error) {
+      Toast.error(error);
+    } finally {
+      setLoader(false)
+    }
+  };
+
+  useEffect(() => {
+    globalLeaderData()
+  }, [])
+
+  useEffect(() => {
+    rakingData();
+  }, [globalData]);
+
+  const rakingData = () => {
+    globalData.map(item => {
+      if (item.ranking === 1) {
+        setFirstRanking(item);
+      } else if (item.ranking === 2) {
+        setSecondRanking(item);
+      } else if (item.ranking === 3) {
+        setThirdRanking(item);
+      }
+    });
+  };
+
+
 
   const renderItem = items => {
+    const { item } = items
     return (
       <>
-        <View style={{flex: 1, paddingBottom: 10}}>
+        <View style={{ flex: 1, paddingBottom: 10 }}>
           <View
             style={{
               flex: 1,
@@ -52,26 +79,26 @@ export default function GlobalLeaderBoard() {
               flexDirection: 'row',
               paddingBlock: 6,
             }}>
-            <View style={{flex: 0.4}}>
+            <View style={{ flex: 0.4 }}>
               <Image
                 source={Person4}
-                style={{height: hp(3), width: wp(6), borderRadius: wp(3)}}
+                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
               />
             </View>
-            <View style={{flex: 1.5}}>
-              <Text style={styles.txt}>sanskruti</Text>
+            <View style={{ flex: 1.5 }}>
+              <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
             </View>
-            <View style={{flex: 1}}>
-              <Text style={styles.txt}>1509.6</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.txt}>{item.score}</Text>
             </View>
-            <View style={{flex: 1}}>
-              <Text style={styles.txt}>#1</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.txt}>#{item.ranking}</Text>
             </View>
           </View>
           <LinearGradient
             colors={['#999999', '#FFFFFF', '#999999']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={{
               height: 1,
               marginTop: 10,
@@ -84,8 +111,8 @@ export default function GlobalLeaderBoard() {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={{flex: 0.5, flexDirection: 'row'}}>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 0.5, flexDirection: 'row' }}>
         <View
           style={{
             flex: 1,
@@ -104,10 +131,10 @@ export default function GlobalLeaderBoard() {
             }}>
             <Image
               source={Person2}
-              style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
+              style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
             />
           </View>
-          <View style={{position: 'absolute'}}>
+          <View style={{ position: 'absolute' }}>
             <View
               style={{
                 height: hp(3),
@@ -118,7 +145,7 @@ export default function GlobalLeaderBoard() {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{color: '#000000CC'}}>2</Text>
+              <Text style={{ color: '#000000CC' }}>2</Text>
             </View>
           </View>
           <Text
@@ -128,7 +155,9 @@ export default function GlobalLeaderBoard() {
               fontSize: 14,
               paddingTop: wp('3%'),
             }}>
-            Bryan Wolf
+            {secondRanking?.user_name
+              ? truncateName(secondRanking?.user_name, 1)
+              : 'user'}
           </Text>
         </View>
         <View
@@ -159,10 +188,10 @@ export default function GlobalLeaderBoard() {
             }}>
             <Image
               source={Person}
-              style={{height: hp(10), width: hp(10), borderRadius: hp(10)}}
+              style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
             />
           </View>
-          <View style={{position: 'absolute'}}>
+          <View style={{ position: 'absolute' }}>
             <View
               style={{
                 height: hp(3),
@@ -173,7 +202,7 @@ export default function GlobalLeaderBoard() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{color: '#000000CC'}}>1</Text>
+              <Text style={{ color: '#000000CC' }}>1</Text>
             </View>
           </View>
           <Text
@@ -183,7 +212,9 @@ export default function GlobalLeaderBoard() {
               fontSize: 14,
               fontFamily: 'PlusJakartaSans-Bold',
             }}>
-            Bryan Wolf
+            {firstRanking?.user_name
+              ? truncateName(firstRanking?.user_name, 1)
+              : 'user'}
           </Text>
         </View>
 
@@ -205,10 +236,10 @@ export default function GlobalLeaderBoard() {
             }}>
             <Image
               source={Person3}
-              style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
+              style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
             />
           </View>
-          <View style={{position: 'absolute'}}>
+          <View style={{ position: 'absolute' }}>
             <View
               style={{
                 height: hp(3),
@@ -219,7 +250,7 @@ export default function GlobalLeaderBoard() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{color: '#000000CC'}}>3</Text>
+              <Text style={{ color: '#000000CC' }}>3</Text>
             </View>
           </View>
           <Text
@@ -229,7 +260,9 @@ export default function GlobalLeaderBoard() {
               paddingTop: wp('3%'),
               fontFamily: 'PlusJakartaSans-Bold',
             }}>
-            Bryan Wolf
+            {thirdRanking?.user_name
+              ? truncateName(thirdRanking?.user_name, 1)
+              : 'user'}
           </Text>
         </View>
       </View>
@@ -240,9 +273,9 @@ export default function GlobalLeaderBoard() {
           margin: wp('6%'),
           borderRadius: 15,
         }}>
-        <SafeAreaView style={{flex: 1, margin: wp('4%')}}>
+        <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
           <FlatList
-            data={data}
+            data={globalData}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
@@ -260,7 +293,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-{
-  /* <Image source={require('../../assets/Frame.png')} /> */
-}
