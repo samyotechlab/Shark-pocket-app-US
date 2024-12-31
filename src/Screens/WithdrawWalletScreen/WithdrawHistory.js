@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Success from '../WithDrawHistory/Success';
-import { Loader } from '../../Components/Loader';
 import Failed from '../WithDrawHistory/Failed';
 import Pending from '../WithDrawHistory/Pending';
 import { withdrawHistory } from '../../Service/WithDraw';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 
 const WithdrawHistory = ({dataUser}) => {
@@ -82,11 +82,11 @@ const WithdrawHistory = ({dataUser}) => {
       </View>
       <View style={{ flex: 17 }}>
         {selectedTab === 'Success' ? (
-          !loader ? (<Success data ={data} />) : (<Loader />)
+          !loader ? (<Success data ={data} />) : (<AnimatedLoader />)
         ) : selectedTab === 'Failed' ? (
-          !loader ? (<Failed data ={data}/>) : (<Loader />)
+          !loader ? (<Failed data ={data}/>) : (<AnimatedLoader />)
         ) : (
-          !loader ? (<Pending data ={data}/>) : (<Loader />)
+          !loader ? (<Pending data ={data}/>) : (<AnimatedLoader />)
         )}
       </View>
     </>

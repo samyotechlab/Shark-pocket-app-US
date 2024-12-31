@@ -9,8 +9,8 @@ import CommonHeader from '../../Components/CommonHeader';
 import Toast from 'react-native-toast-message';
 import Game from '../../../assets/images/Screens/game1.png'
 import { useNavigation } from '@react-navigation/native';
-import { Loader } from '../../Components/Loader';
 import AvailableCard from '../../Components/AvailableCard';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function AllPlayedGames() {
 
@@ -73,7 +73,7 @@ export default function AllPlayedGames() {
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.scrollContainer}
                     />
-                </View>):(<Loader/>)
+                </View>):(<AnimatedLoader/>)
             }
            
         </LinearGradient>

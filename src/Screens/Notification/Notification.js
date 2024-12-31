@@ -15,8 +15,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {truncateText} from '../../Utillities';
 import {notificationList} from '../../Service/Notification';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import {Loader} from '../../Components/Loader';
 import CommonHeader from '../../Components/CommonHeader';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 export default function Notification() {
   const [notification, setNotificationData] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -98,7 +98,7 @@ export default function Notification() {
               contentContainerStyle={styles.scrollContainer}
             />
           ) : (
-            <Loader />
+            <AnimatedLoader />
           )
         ) : (
           <View

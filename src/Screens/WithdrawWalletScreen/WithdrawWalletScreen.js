@@ -9,14 +9,12 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import TDSBreakupDialog from '../../Components/TDSBreakupDialog';
 import CommonHeader from '../../Components/CommonHeader';
-import { Loader } from '../../Components/Loader';
 import Withdraw from './Withdraw';
 import WithdrawHistory from './WithdrawHistory';
 import { useRoute } from '@react-navigation/native';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 const WithdrawWalletScreen = () => {
   const route = useRoute();
@@ -54,9 +52,9 @@ const WithdrawWalletScreen = () => {
 
         </View>
         {selectedTab === 'Withdraw' ? (
-          !loader ? (<Withdraw dataUser={dataUser}/>) : (<Loader />) 
+          !loader ? (<Withdraw dataUser={dataUser}/>) : (<AnimatedLoader />) 
         ) : (
-          !loader ? (<WithdrawHistory  dataUser={dataUser}/>) : (<Loader />)
+          !loader ? (<WithdrawHistory  dataUser={dataUser}/>) : (<AnimatedLoader />)
         )}
     
       </View>

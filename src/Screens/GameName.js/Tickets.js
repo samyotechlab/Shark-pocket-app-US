@@ -10,7 +10,7 @@ import coin from '../../../assets/images/Screens/coin.png'
 import ticket from '../../../assets/images/Screens/ticket.png'
 import timer from '../../../assets/images/Screens/timer.png'
 import AlertDialog from '../../Components/AlertDialogRed';
-import { Loader } from '../../Components/Loader';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function Tickets() {
     const navigation = useNavigation();
@@ -161,7 +161,7 @@ export default function Tickets() {
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.scrollContainer}
                     />
-                </View>) : (<Loader />)
+                </View>) : (<AnimatedLoader />)
             }
         </>
 

@@ -4,10 +4,10 @@ import trophy from '../../../assets/images/Screens/trophy2.png'
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp ,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import { Loader } from '../../Components/Loader';
 import Toast from 'react-native-toast-message';
 import { gameHistory, historyData } from '../../Service/GameHistory';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 const PlayedHistory = () => {
   const [loader,setLoader] = useState(false)
@@ -89,7 +89,7 @@ const PlayedHistory = () => {
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-        />) : (<Loader/>)
+        />) : (<AnimatedLoader/>)
       }
      
     </View>

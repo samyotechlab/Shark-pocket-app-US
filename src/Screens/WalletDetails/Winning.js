@@ -1,11 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Loader } from '../../Components/Loader';
 import All from '../Winning/All';
 import Debit from '../Winning/Debit';
 import Credit from '../Winning/Credit';
 import { WinningList } from '../../Service/Wallet';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function Winning(props) {
 
@@ -83,11 +83,11 @@ export default function Winning(props) {
       </View>
   <View style={{flex:17}}>
       {selectedTab === 'All' ? (
-      !loader ? ( <All winningData={winningData} />):(<Loader/>) 
+      !loader ? ( <All winningData={winningData} />):(<AnimatedLoader/>) 
     ) : selectedTab === 'Debit' ? (
-      !loader ? ( <Debit winningData={winningData}/>):(<Loader/>)  
+      !loader ? ( <Debit winningData={winningData}/>):(<AnimatedLoader/>)  
     ) : (
-      !loader ? ( <Credit winningData={winningData}/>):(<Loader/>)  
+      !loader ? ( <Credit winningData={winningData}/>):(<AnimatedLoader/>)  
     )}
     </View>
     </>

@@ -10,7 +10,7 @@ import axios from 'axios'
 import Toast from 'react-native-toast-message'
 import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
-import { Loader } from '../../Components/Loader'
+import AnimatedLoader from '../../Components/AnimatedLoader'
 
 
 const headers = {
@@ -122,7 +122,7 @@ export default function Login() {
             !loader ? (
               <CommonButton title={'Log in'} onPress={handleLogin} />
             ) : (
-              <Loader />
+              <AnimatedLoader />
             )
           }
         </View>

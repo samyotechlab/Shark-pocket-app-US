@@ -5,9 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CommonHeader from '../../Components/CommonHeader';
 import Coin from '../../../assets/images/Screens/CoinStack.png'
-import { gameHistory } from '../../Service/GameHistory';
-import Toast from 'react-native-toast-message';
-import { Loader } from '../../Components/Loader';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function GameFinishHistory() {
 
@@ -135,7 +133,7 @@ export default function GameFinishHistory() {
           </View>
         </View>
       </>
-    ):(<Loader/>)
+    ):(<AnimatedLoader/>)
   }
 
       </LinearGradient>

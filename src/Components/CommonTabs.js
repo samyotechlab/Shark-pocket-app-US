@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import AnimatedLoader from './AnimatedLoader'
 
 export default function CommonTabs() {
   return (
@@ -26,9 +27,9 @@ export default function CommonTabs() {
          </View>
  
          {selectedTab === 'Withdraw' ? (
-           !loader ? (<Tickets />) : (<Loader />)
+           !loader ? (<Tickets />) : (<AnimatedLoader />)
          ) : (
-           !loader ? (<WithdrawHistory />) : (<Loader />)
+           !loader ? (<WithdrawHistory />) : (<AnimatedLoader />)
          )}
        </View>
   )

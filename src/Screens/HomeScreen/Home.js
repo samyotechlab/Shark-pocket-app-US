@@ -17,7 +17,7 @@ import AnimatedLoader from '../../Components/AnimatedLoader'
 import MyGame from '../../Components/MyGame'
 import UpcomingGame from '../../Components/UpcomingGame'
 
-export default function HomeScreen({route}) {
+export default function HomeScreen() {
   const navigation = useNavigation()
   const {loginData,isReady} = useLoginDataStorage();
   const [loader,setLoader] = useState(false)

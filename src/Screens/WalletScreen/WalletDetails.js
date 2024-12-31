@@ -6,8 +6,8 @@ import Deposite from '../WalletDetails/Deposite';
 import Bonus from '../WalletDetails/Bonus';
 import Winning from '../WalletDetails/Winning';
 import WithDraw from '../WalletDetails/WithDraw';
-import { Loader } from '../../Components/Loader';
 import { useRoute } from '@react-navigation/native';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 
 export default function WalletDetails() {
@@ -56,13 +56,13 @@ export default function WalletDetails() {
       </View>
       <View style={{flex:1}}>
       {selectedTab === 'Deposite' ? (
-        !loader ? ( <Deposite user_id={user_id}/>):(<Loader/>)
+        !loader ? ( <Deposite user_id={user_id}/>):(<AnimatedLoader/>)
       ) : selectedTab === 'Bonus' ? (
-        !loader ? (  <Bonus user_id={user_id}/>):(<Loader/>)  
+        !loader ? (  <Bonus user_id={user_id}/>):(<AnimatedLoader/>)  
       ) :selectedTab === 'Winning' ? (
-        !loader ? ( <Winning user_id={user_id}/>):(<Loader/>)  
+        !loader ? ( <Winning user_id={user_id}/>):(<AnimatedLoader/>)  
       ):(
-        !loader ? ( <WithDraw user_id={user_id}/>):(<Loader/>) 
+        !loader ? ( <WithDraw user_id={user_id}/>):(<AnimatedLoader/>) 
       )}
       </View>
     </View>

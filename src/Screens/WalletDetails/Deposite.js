@@ -1,12 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { Loader } from '../../Components/Loader';
 import Debit from '../Deposite/Debit';
 import Credit from '../Deposite/Credit';
 import All from '../Deposite/All';
 import WalletDetailsCard from '../../Components/WalletDetailsCard';
 import { WalletTransactionList } from '../../Service/Wallet';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function Deposite(props) {
 
@@ -82,11 +82,11 @@ export default function Deposite(props) {
       </View>
   <View style={{flex:17}}>
       {selectedTab === 'All' ? (
-      !loader ? ( <All walletData={walletData}/>):(<Loader/>)
+      !loader ? ( <All walletData={walletData}/>):(<AnimatedLoader/>)
     ) : selectedTab === 'Debit' ? (
-      !loader ? ( <Debit walletData={walletData}/>):(<Loader/>)  
+      !loader ? ( <Debit walletData={walletData}/>):(<AnimatedLoader/>)  
     ) : (
-      !loader ? ( <Credit walletData={walletData}/>):(<Loader/>)  
+      !loader ? ( <Credit walletData={walletData}/>):(<AnimatedLoader/>)  
     )}
     </View>
     </>

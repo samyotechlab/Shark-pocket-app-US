@@ -25,8 +25,8 @@ import SearchField from './SearchField';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {leaderBoard} from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
-import {Loader} from './Loader';
 import {truncateName} from '../Utilities/utilies';
+import AnimatedLoader from './AnimatedLoader';
 
 export default function LocalGameBoard() {
   const route = useRoute();
@@ -314,7 +314,7 @@ export default function LocalGameBoard() {
                 showsVerticalScrollIndicator={false}
               />
             ) : (
-              <Loader />
+              <AnimatedLoader />
             )}
           </SafeAreaView>
         </View>
