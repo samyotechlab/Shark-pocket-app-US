@@ -155,8 +155,8 @@ export default function FloatingBoxGame() {
         }
 
         Animated.timing(newBox.y, {
-          toValue: -300,
-          duration: 2400,
+          toValue: -200,
+          duration: 2700,
           useNativeDriver: true,
         }).start(() => {
           setFloatingBoxes(prev => prev.filter(box => box.id !== newBox.id));
@@ -637,8 +637,8 @@ const styles = StyleSheet.create({
     height: heightPercentageToDP(12) + 3,
   },
   feedbackImage: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     position: 'absolute',
     zIndex: 99999,
     top: 0,
