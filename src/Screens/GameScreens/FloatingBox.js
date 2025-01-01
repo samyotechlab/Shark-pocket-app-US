@@ -155,8 +155,8 @@ export default function FloatingBoxGame() {
         }
 
         Animated.timing(newBox.y, {
-          toValue: -200,
-          duration: 3000,
+          toValue: -300,
+          duration: 2400,
           useNativeDriver: true,
         }).start(() => {
           setFloatingBoxes(prev => prev.filter(box => box.id !== newBox.id));
@@ -165,7 +165,7 @@ export default function FloatingBoxGame() {
         setGeneratedBoxes(prev => prev + 1);
 
         setFloatingBoxes(prev => [...prev, newBox]);
-      }, 400);
+      }, 300);
 
       return () => clearInterval(interval);
     }
