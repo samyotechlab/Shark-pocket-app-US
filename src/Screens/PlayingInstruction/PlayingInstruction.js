@@ -10,6 +10,7 @@ import React, {useEffect, useState} from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  heightPercentageToDP,
 } from 'react-native-responsive-screen';
 import ModalScreen from '../../Components/ModalScreen';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -32,7 +33,7 @@ export default function PlayingInstruction() {
   const [superData, setSuperNumber] = useState({});
   const [bonusPoint, setBonusPoint] = useState({});
   const [numberArray, setNumberArray] = useState([]);
-  const [loader,setLoader] = useState(false)
+  const [loader, setLoader] = useState(false);
 
   const {loginData, isReady} = useLoginDataStorage();
   const navigation = useNavigation();
@@ -45,7 +46,7 @@ export default function PlayingInstruction() {
 
   const gameRuleList = async () => {
     try {
-      setLoader(true)
+      setLoader(true);
       const response = await gameRule();
       if (response) {
         setOddData(response.oddSelection);
@@ -61,8 +62,8 @@ export default function PlayingInstruction() {
       }
     } catch (error) {
       console.log('Error fetching game rules:', error);
-    }finally{
-      setLoader(false)
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -101,218 +102,236 @@ export default function PlayingInstruction() {
         style={styles.linearGradient}>
         <CommonHeader title={'Playing Instruction'} />
 
-       <ScrollView>
-        {
-          !loader ? (   <View style={{flex: 1}}>
-            <View style={styles.container}>
-              <Text style={styles.heading}>Odd Number</Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 2,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-              <Text style={styles.oddtext}>
-                Each Odd Number selected will be scored based on length if the
-                number
-              </Text>
-  
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                2 digit Equals to {oddData.twoDigit} Points.
-              </Text>
-  
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                3 digit Equals to {oddData.threeDigit} Points.
-              </Text>
-  
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                4 digit Equals to {oddData.fourDigit} Points.
-              </Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
+        <ScrollView>
+          {loader ? (
+            <View style={styles.loaderContainer}>
+              <AnimatedLoader />
             </View>
-            <View style={styles.container}>
-              <Text style={styles.heading}>Select one super number</Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-              <View
-                style={{
-                  flex: 1,
-                  marginVertical: hp(1),
-                  flexDirection: 'row',
-                }}>
-                {numberArray.map(number => (
-                  <TouchableOpacity
-                    key={number}
-                    style={[
-                      styles.box,
-                      selectedNumber === number && styles.selectedBox,
-                    ]}
-                    onPress={() => handleNumberSelect(number)}>
-                    <Text
+          ) : (
+            <View style={{flex: 1}}>
+              <View style={styles.container}>
+                <Text style={styles.heading}>Odd Number</Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 2,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+                <Text style={styles.oddtext}>
+                  Each Odd Number selected will be scored based on length if the
+                  number
+                </Text>
+
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  2 digit Equals to {oddData.twoDigit} Points.
+                </Text>
+
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  3 digit Equals to {oddData.threeDigit} Points.
+                </Text>
+
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  4 digit Equals to {oddData.fourDigit} Points.
+                </Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+              </View>
+              <View style={styles.container}>
+                <Text style={styles.heading}>Select one super number</Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    flex: 1,
+                    marginVertical: hp(1),
+                    flexDirection: 'row',
+                  }}>
+                  {numberArray.map(number => (
+                    <TouchableOpacity
+                      key={number}
                       style={[
-                        styles.boxText,
-                        selectedNumber === number && styles.selectedBoxText,
-                      ]}>
-                      {number}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                        styles.box,
+                        selectedNumber === number && styles.selectedBox,
+                      ]}
+                      onPress={() => handleNumberSelect(number)}>
+                      <Text
+                        style={[
+                          styles.boxText,
+                          selectedNumber === number && styles.selectedBoxText,
+                        ]}>
+                        {number}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <Text
+                  style={[
+                    styles.oddtext,
+                    {marginTop: 5, fontFamily: 'Montserrat-SemiBold'},
+                  ]}>
+                  Last Digit of the Odd Selected Number
+                </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  {superData.points} Extra Points for Each of Those Eligible
+                  Numbers
+                </Text>
+                <Text
+                  style={[
+                    styles.oddtext,
+                    {marginBottom: 5, fontFamily: 'Montserrat-SemiBold'},
+                  ]}>
+                  Not Applicable for Single Digit
+                </Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
               </View>
-  
-              <Text
-                style={[
-                  styles.oddtext,
-                  {marginTop: 5, fontFamily: 'Montserrat-SemiBold'},
-                ]}>
-                Last Digit of the Odd Selected Number
-              </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                {superData.points} Extra Points for Each of Those Eligible Numbers
-              </Text>
-              <Text
-                style={[
-                  styles.oddtext,
-                  {marginBottom: 5, fontFamily: 'Montserrat-SemiBold'},
-                ]}>
-                Not Applicable for Single Digit
-              </Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-            </View>
-            <View style={styles.container}>
-              <Text style={styles.heading}>Bonus Number</Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-              <Text style={styles.oddtext}>Extra Bonus Points </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                Odd Numbers More Than 10 = {bonusPoint.oddMoreThan10}, 30 ={' '}
-                {bonusPoint.oddMoreThan30}, 70 = {bonusPoint.oddMoreThan70}, 100 ={' '}
-                {bonusPoint.oddMoreThan100}
-              </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                Super Numbers More Than 5 = {bonusPoint.superMoreThan5}, 10 ={' '}
-                {bonusPoint.superMoreThan10}, 20 = {bonusPoint.superMoreThan20},
-              </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                Each Selected Prime Number will get Additional{' '}
-                {bonusPoint.primeNumberPoints} Points
-              </Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-            </View>
-            <View style={styles.container}>
-              <Text style={styles.heading}>Negative Score</Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-              <Text style={styles.oddtext}>
-                Negative Scoring for Even Number Selected will be as Below :-
-              </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                2 Digit Number = {negativeData.negTwoDigit}
-              </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                3 Digit Number = {negativeData.negThreeDigit}
-              </Text>
-              <Text style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
-                4 DIgit Number = {negativeData.negFourDigit}
-              </Text>
-              <LinearGradient
-                colors={['#999999', '#FFFFFF', '#999999']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 1.5,
-                  marginTop: 10,
-                  marginHorizontal: wp(2),
-                  marginBottom: 10,
-                }}
-              />
-            </View>
-            <View
-              style={{
-                flex: 0.5,
-                justifyContent: 'flex-start',
-              }}>
+              <View style={styles.container}>
+                <Text style={styles.heading}>Bonus Number</Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+                <Text style={styles.oddtext}>Extra Bonus Points </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  Odd Numbers More Than 10 = {bonusPoint.oddMoreThan10}, 30 ={' '}
+                  {bonusPoint.oddMoreThan30}, 70 = {bonusPoint.oddMoreThan70},
+                  100 = {bonusPoint.oddMoreThan100}
+                </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  Super Numbers More Than 5 = {bonusPoint.superMoreThan5}, 10 ={' '}
+                  {bonusPoint.superMoreThan10}, 20 ={' '}
+                  {bonusPoint.superMoreThan20},
+                </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  Each Selected Prime Number will get Additional{' '}
+                  {bonusPoint.primeNumberPoints} Points
+                </Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+              </View>
+              <View style={styles.container}>
+                <Text style={styles.heading}>Negative Score</Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+                <Text style={styles.oddtext}>
+                  Negative Scoring for Even Number Selected will be as Below :-
+                </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  2 Digit Number = {negativeData.negTwoDigit}
+                </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  3 Digit Number = {negativeData.negThreeDigit}
+                </Text>
+                <Text
+                  style={[styles.oddtext, {fontFamily: 'Montserrat-SemiBold'}]}>
+                  4 DIgit Number = {negativeData.negFourDigit}
+                </Text>
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={{
+                    height: 1.5,
+                    marginTop: 10,
+                    marginHorizontal: wp(2),
+                    marginBottom: 10,
+                  }}
+                />
+              </View>
               <View
                 style={{
-                  marginHorizontal: hp(3),
-                  borderRadius: 10,
-                  marginVertical: hp(4),
+                  flex: 0.5,
+                  justifyContent: 'flex-start',
                 }}>
-                <CommonButton title={'Start Game'} onPress={handleStartGame} />
+                <View
+                  style={{
+                    marginHorizontal: hp(3),
+                    borderRadius: 10,
+                    marginVertical: hp(4),
+                  }}>
+                  <CommonButton
+                    title={'Start Game'}
+                    onPress={handleStartGame}
+                  />
+                </View>
               </View>
             </View>
-          </View>):(<AnimatedLoader/>)
-        }
-     
-        </ScrollView> 
+          )}
+        </ScrollView>
       </LinearGradient>
       <AlertDialogRed
         visible={visible}
         onClose={() => setVisible(false)}
         message={'Please Select a Super Number.'}
       />
-      </>
+    </>
     // </ScrollView>
   );
 }
@@ -320,6 +339,12 @@ export default function PlayingInstruction() {
 const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
+  },
+  loaderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    height: heightPercentageToDP(90),
   },
   container: {
     flex: 1,

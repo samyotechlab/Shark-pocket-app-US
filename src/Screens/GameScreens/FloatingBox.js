@@ -27,6 +27,7 @@ import {finalScore} from '../../Service/Game';
 import blurImage from '../../../assets/images/SVG/ellipse-blur.png';
 import {BoxShadow} from 'react-native-shadow';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
@@ -75,11 +76,7 @@ export default function FloatingBoxGame() {
         return;
       }
 
-      const duration = soundRef.current.getDuration();
-
       soundRef.current.setNumberOfLoops(-1);
-
-      soundRef.current.play();
     });
 
     return () => {
@@ -88,14 +85,28 @@ export default function FloatingBoxGame() {
   }, []);
 
   useEffect(() => {
+    if (isGameOver) {
+      soundRef.current?.stop();
+    } else if (isMusicPlaying) {
+      soundRef.current?.play();
+    }
+
+    return () => {
+      soundRef.current?.stop();
+    };
+  }, [isGameOver, isMusicPlaying]);
+
+  useEffect(() => {
     toggleMusic();
   }, []);
 
   const toggleMusic = () => {
+    if (isGameOver) return;
+
     if (isMusicPlaying) {
-      soundRef.current.stop();
+      soundRef.current?.stop();
     } else {
-      soundRef.current.play();
+      soundRef.current?.play();
     }
     setIsMusicPlaying(!isMusicPlaying);
   };
@@ -109,7 +120,7 @@ export default function FloatingBoxGame() {
 
         if (generatedBoxes >= 300) {
           clearInterval(interval);
-          setIsGameOver(true);
+          handleCallApi();
           return () => clearInterval(interval);
         }
         const startY = height;
@@ -135,6 +146,14 @@ export default function FloatingBoxGame() {
           canClick: true,
         };
 
+        if (soundRef.current && !isGameOver) {
+          soundRef.current.play(success => {
+            if (!success) {
+              console.log('Sound playback failed');
+            }
+          });
+        }
+
         Animated.timing(newBox.y, {
           toValue: -200,
           duration: 3000,
@@ -153,7 +172,7 @@ export default function FloatingBoxGame() {
   }, [isGameOver, floatingBoxes.length, generatedBoxes]);
 
   const handleBoxClick = box => {
-    // if (!box.canClick || box.feedbackColor) return;
+    if (!box.canClick || box.feedbackColor) return;
 
     const points = handleNumberClick(box.number);
 
@@ -236,18 +255,12 @@ export default function FloatingBoxGame() {
   };
 
   const handleCallApi = async () => {
-    console.log('hello');
     try {
-      console.log(
-        'numberStringData',
-        numberStringData,
-        superNumber,
-        routeData.game_id,
-        routeData.ticket_id,
-        routeData.user_id,
-      );
+      const defaultNumberStringData =
+        numberStringData.trim() === '' ? '0' : numberStringData;
+
       const response = await finalScore(
-        numberStringData,
+        defaultNumberStringData,
         superNumber,
         routeData.game_id,
         routeData.ticket_id,
@@ -255,28 +268,21 @@ export default function FloatingBoxGame() {
       );
       if (response) {
         setScoreData(response.data);
+        setIsGameOver(true);
       }
-      console.log('i want response hereeeeee', response);
     } catch (error) {
       console.log('error--------------->>>>>>>', error);
     }
   };
 
-
-  useEffect(() => {
-    if (isGameOver) {
-      handleCallApi();
-    }
-  }, [isGameOver]);
-
   const closeModal = () => {
     setIsGameOver(false);
   };
 
-  const handleNavigate = ()=>{
+  const handleNavigate = () => {
     setIsGameOver(false);
-    navigation.navigate("Home")
-  }
+    navigation.navigate('Home');
+  };
 
   const getShadowOpt = type => {
     const shadowColors = {
@@ -305,7 +311,14 @@ export default function FloatingBoxGame() {
       source={require('../../../assets/images/Screens/background-image.png')}
       style={styles.background}>
       <View style={styles.container}>
-      <AlertDialogGreen visible={isModalVisible} onClose={() => setIsModalVisible(false)} onOkPress={()=>{handleNavigate()}} message={"Are you sure you want to Quit game?"}/>
+        <AlertDialogGreen
+          visible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          onOkPress={() => {
+            handleNavigate();
+          }}
+          message={'Are you sure you want to Quit game?'}
+        />
 
         {isGameOver ? (
           <GameFinishScreen
@@ -366,26 +379,24 @@ export default function FloatingBoxGame() {
                 <Image source={Coin} />
                 <Text style={styles.score}>{score}</Text>
               </LinearGradient>
-              <View style={styles.magicNumberContainer}>
-                <Text style={styles.magicNumberText}>{superNumber}</Text>
-              </View>
               <View
                 style={{
-                  fontSize: 20,
-                  position: 'relative',
-                  zIndex: 9999,
                   flexDirection: 'row',
-                  gap: 10,
+                  zIndex: 9999,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: 20,
                 }}>
-                <TouchableOpacity
-                    onPress={toggleMusic}>
+                <View style={styles.magicNumberContainer}>
+                  <Text style={styles.magicNumberText}>{superNumber}</Text>
+                </View>
+
+                <TouchableOpacity onPress={toggleMusic} style={{marginLeft: 5}}>
                   <Image
                     source={Speaker}
                     style={{
                       width: 30,
                       height: 30,
-                      alignSelf: 'center',
-                      marginTop: 10,
                     }}
                     // tintColor={'white'}
                   />
@@ -418,57 +429,57 @@ export default function FloatingBoxGame() {
                         },
                       ],
                       backgroundColor: box.feedbackBgColor,
-                      borderColor: box.feedbackBorderColor,
-                      borderWidth: box.feedbackColor === 'transparent' ? 5 : 1,
+                      // borderColor: box.feedbackBorderColor,
+                      // borderWidth: box.feedbackColor === 'transparent' ? 5 : 1,
                       color: box.textColor,
                       borderRadius: 10,
                     },
                   ]}>
-                  <TouchableOpacity
-                    onPress={() => handleBoxClick(box)}
-                    style={styles.boxButton}>
-                    {box.feedbackImage ? (
-                      <BoxShadow setting={getShadowOpt(box.actionType)}>
-                        <LinearGradient
-                          colors={box.feedbackBgColor}
-                          style={[
-                            styles.feedbackBoxwrapper,
-                            {
-                              backgroundColor: box.feedbackColor,
-                              borderWidth: 3,
-                              borderColor: box.feedbackBorderColor,
-                            },
-                          ]}>
-                          <Animated.Image
-                            source={box.feedbackImage}
+                  <TouchableWithoutFeedback onPress={() => handleBoxClick(box)}>
+                    <View style={styles.boxButton}>
+                      {box.feedbackImage ? (
+                        <BoxShadow setting={getShadowOpt(box.actionType)}>
+                          <LinearGradient
+                            colors={box.feedbackBgColor}
                             style={[
-                              styles.feedbackImage,
+                              styles.feedbackBoxwrapper,
                               {
-                                transform: [{scale: box.scaleAnim}],
-                                opacity: box.opacityAnim,
+                                backgroundColor: box.feedbackColor,
+                                borderWidth: 3,
+                                borderColor: box.feedbackBorderColor,
                               },
-                            ]}
-                          />
-
-                          <Text style={styles.boxText2}>{box.number}</Text>
-                        </LinearGradient>
-                      </BoxShadow>
-                    ) : (
-                      <BoxShadow setting={getShadowOpt('default')}>
-                        <LinearGradient
-                          colors={['#7F71BF', '#A4E2F2']}
-                          style={styles.gradientBorder}>
-                          <View style={styles.numberBox}>
-                            <Image
-                              source={blurImage}
-                              style={styles.blurContainer}
+                            ]}>
+                            <Animated.Image
+                              source={box.feedbackImage}
+                              style={[
+                                styles.feedbackImage,
+                                {
+                                  transform: [{scale: box.scaleAnim}],
+                                  opacity: box.opacityAnim,
+                                },
+                              ]}
                             />
-                            <Text style={styles.boxText}>{box.number}</Text>
-                          </View>
-                        </LinearGradient>
-                      </BoxShadow>
-                    )}
-                  </TouchableOpacity>
+
+                            <Text style={styles.boxText2}>{box.number}</Text>
+                          </LinearGradient>
+                        </BoxShadow>
+                      ) : (
+                        <BoxShadow setting={getShadowOpt('default')}>
+                          <LinearGradient
+                            colors={['#7F71BF', '#A4E2F2']}
+                            style={styles.gradientBorder}>
+                            <View style={styles.numberBox}>
+                              <Image
+                                source={blurImage}
+                                style={styles.blurContainer}
+                              />
+                              <Text style={styles.boxText}>{box.number}</Text>
+                            </View>
+                          </LinearGradient>
+                        </BoxShadow>
+                      )}
+                    </View>
+                  </TouchableWithoutFeedback>
                 </Animated.View>
               ))}
             </View>
@@ -489,15 +500,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   magicNumberContainer: {
-    left: 20,
     backgroundColor: '#D5B723',
-    height: 35,
-    width: 35,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#EFD635',
     borderWidth: 2,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    marginRight: 5,
   },
   magicNumberText: {
     fontSize: 22,

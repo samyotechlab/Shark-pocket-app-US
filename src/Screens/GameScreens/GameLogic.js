@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useRoute} from '@react-navigation/native';
 
-
 export const useGameLogic = () => {
   const route = useRoute();
   const routeData = route.params;

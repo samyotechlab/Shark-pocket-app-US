@@ -22,7 +22,6 @@ export default function GameFinishScreen({
   gameHistoryData,
 }) {
   const navigation = useNavigation();
-  console.log('gameHistoryData', gameHistoryData.bonus_point_score.bonusPoints);
   return (
     <Modal
       visible={isVisible}
@@ -92,7 +91,10 @@ export default function GameFinishScreen({
                         <Text style={styles.txt}>-</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>{(gameHistoryData.bonus_point_score.bonusPoints+gameHistoryData.bonus_point_score.superPoints)}</Text>
+                        <Text style={styles.txt}>
+                          {gameHistoryData.bonus_point_score.bonusPoints +
+                            gameHistoryData.bonus_point_score.superPoints}
+                        </Text>
                       </View>
                     </View>
                     <LinearGradient
