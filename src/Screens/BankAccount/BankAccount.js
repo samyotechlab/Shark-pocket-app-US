@@ -30,7 +30,6 @@ export default function BankAccount() {
     };
 
     const validateForm = () => {
-        // console.log('formData', formData);
         const { name, account_no, ifsc_code, phone } = bank_data;
         console.log();
         const phoneRegex = /^[0-9]{10}$/;
@@ -62,6 +61,7 @@ export default function BankAccount() {
     };
 
     const handleVerifyBank = async () => {
+        console.log('bank_data', bank_data);
         setLoader(true)
         try {
             if (!validateForm()) return;
