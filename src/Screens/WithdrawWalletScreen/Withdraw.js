@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import TDSBreakupDialog from '../../Components/TDSBreakupDialog'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Iconics from 'react-native-vector-icons/FontAwesome';
 import secure from '../../../assets/images/Screens/Safe.png';
@@ -12,11 +11,14 @@ import profile from '../../../assets/images/Screens/profile.png';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 import { withdrawCash } from '../../Service/WithDraw';
 import Toast from 'react-native-toast-message';
+import Tds from '../../../assets/images/Screens/tds.png';
+import Iconic from 'react-native-vector-icons/Ionicons';
 
 export default function Withdraw({ dataUser }) {
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleWithdraw = () => {
     console.log("value", amount)
@@ -30,10 +32,11 @@ export default function Withdraw({ dataUser }) {
   };
   const handleCick = async () => {
     try {
+      setIsLoading(true);
       if (amount) {
         if (amount >= 50) {
           const response = await withdrawCash(dataUser._id, amount);
-           console.log("response",response)
+          console.log("response", response)
           Toast.show({
             type: 'success',
             position: 'top',
@@ -51,7 +54,15 @@ export default function Withdraw({ dataUser }) {
       }
     } catch (error) {
       console.log('error', error);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
   return (
     <>
@@ -87,14 +98,27 @@ export default function Withdraw({ dataUser }) {
           </View>
 
           {/* Tax and Learn More */}
-          <Text style={styles.infoText}>
-            No Govt. Tax on this withdrawal <Text style={styles.learnMore}>Learn More</Text>
-          </Text>
-
-          {/* Withdraw Button */}
-          <TouchableOpacity style={styles.withdrawButton} onPress={handleWithdraw}>
-            <Text style={styles.withdrawButtonText}>WITHDRAW CASH</Text>
+          <View>
+            <Text style={styles.infoText}>
+              No Govt. Tax on this withdrawal {' '}
+              <TouchableOpacity onPress={toggleModal} >
+                <Text style={styles.learnMore}>Learn More</Text>
+              </TouchableOpacity>
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              styles.withdrawButton,
+              { opacity: amount && !isLoading ? 1 : 0.5 },
+            ]}
+            onPress={handleWithdraw}
+            disabled={!amount || isLoading}
+          >
+            <Text style={styles.withdrawButtonText}>
+              {isLoading ? 'PROCESSING...' : 'WITHDRAW CASH'}
+            </Text>
           </TouchableOpacity>
+
         </View>
 
         <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
@@ -108,7 +132,19 @@ export default function Withdraw({ dataUser }) {
               </View>
             </View>
           </View>
-          <TDSBreakupDialog />
+
+          <TouchableOpacity style={styles.buttonContainer}>
+            <View style={styles.iconContainer}>
+              <Image
+                source={Tds}
+                style={styles.icon}
+              />
+            </View>
+            <Text style={styles.buttonText}>Download TDS Certificate</Text>
+            <View style={styles.arrowContainer}>
+              <Iconic name="chevron-forward-outline" size={20} color={'black'} />
+            </View>
+          </TouchableOpacity>
           <View style={styles.featuresRow}>
             <View style={styles.feature}>
               <Image
@@ -135,7 +171,13 @@ export default function Withdraw({ dataUser }) {
         </View>
 
       </View>
-       <Toast ref={Toast.setRef} />
+      {isModalVisible && (
+        <TDSBreakupDialog
+          isVisible={isModalVisible}
+          onClose={toggleModal}
+        />
+      )}
+      <Toast ref={Toast.setRef} />
     </>
   )
 }
@@ -241,6 +283,8 @@ const styles = StyleSheet.create({
     color: '#000000',
     textDecorationLine: 'underline',
     fontFamily: 'Montserrat-Medium',
+    // paddingBottom:10,
+    // marginBottom:10
   },
 
   withdrawButton: {
@@ -342,6 +386,37 @@ const styles = StyleSheet.create({
     height: 24,
   },
 
+  arrowContainer: {
+    marginLeft: 8,
+  },
+  arrow: {
+    fontSize: 18,
+    color: '#333333',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#00000033',
+    borderWidth: 1,
+    borderRadius: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+  },
+  iconContainer: {
+    marginRight: 12,
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
+  buttonText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: "Montserrat-Medium",
+    color: '#696969',
+  },
   arrowContainer: {
     marginLeft: 8,
   },

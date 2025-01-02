@@ -14,57 +14,33 @@ import Iconics from 'react-native-vector-icons/Ionicons';
 
 const { height } = Dimensions.get('window');
 
-const TDSBreakupDialog = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
+const TDSBreakupDialog = ({ isVisible, onClose }) => {
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   return (
     <View style={styles.container}>
-      {/* Button to open the dialog */}
-      <TouchableOpacity style={styles.buttonContainer} onPress={toggleModal}>
-      <View style={styles.iconContainer}>
-      <Image
-          source={Tds} 
-          style={styles.icon}
-        />
-      </View>
-      <Text style={styles.buttonText}>Download TDS Certificate</Text>
-      <View style={styles.arrowContainer}>
-      <Iconics name="chevron-forward-outline" size={20} color={'black'} />
-      </View> 
-    </TouchableOpacity>
-
-      {/* Bottom Sheet Modal */}
       <Modal
-        visible={isModalVisible}
+        visible={isVisible}
         transparent
-        onRequestClose={() => toggleModal()}>
+        onRequestClose={onClose}>
         <View style={styles.overlay}>
-          {/* Backdrop */}
           <TouchableOpacity
             style={styles.backdrop}
-            onPress={() => toggleModal()}
+            onPress={onClose}
           />
-          {/* Dialog Content */}
           <View style={styles.dialogContainer}>
             <View style={styles.dialogHeader}>
               <Text style={styles.dialogTitle}>Govt Tax (TDS) Breakup</Text>
-              <TouchableOpacity onPress={toggleModal}>
+              <TouchableOpacity onPress={onClose}>
                 <Iconics name="close" size={30} color={'black'} />
               </TouchableOpacity>
             </View>
             <Text style={styles.subHeader}>Financial Year 2024-25</Text>
-
-            {/* Main Amount Section */}
             <Text style={styles.amountText}>₹100</Text>
             <Text style={styles.amountSubText}>
               Withdrawal (after Govt. Tax)
             </Text>
 
-            {/* Details Section */}
             <ScrollView contentContainerStyle={styles.detailsContainer}>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>
@@ -110,15 +86,15 @@ const TDSBreakupDialog = () => {
               </View>
             </ScrollView>
 
-            {/* Footer Note */}
+          
             <Text style={styles.footerNote}>
               Note: Sharkpocket follows the new TDS law set for the online
               gaming industry by the income Tax Act of India (Section 194BA).{' '}
               <Text style={styles.readMore}>Read More..</Text>
             </Text>
 
-            {/* Confirm Button */}
-            <TouchableOpacity style={styles.confirmButton}>
+           
+            <TouchableOpacity style={styles.confirmButton} onPress={onClose}>
               <Text style={styles.confirmButtonText}>OKAY, GOT IT!</Text>
             </TouchableOpacity>
           </View>
@@ -135,19 +111,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  button: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
+
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
   },
+
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
   },
   dialogContainer: {
     backgroundColor: '#FFF',
@@ -239,6 +212,12 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
   },
   buttonContainer: {
     flexDirection: 'row',

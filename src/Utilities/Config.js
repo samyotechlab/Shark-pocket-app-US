@@ -30,6 +30,7 @@ export default {
   Wallet_Store: 'api/wallet_request/store',
   Wallet_Request: 'api/wallet_request/list',
   Final_Score: 'api/finalScore',
+  Bonus_Data: 'api/bonusWallet',
 };
 
 // export default {

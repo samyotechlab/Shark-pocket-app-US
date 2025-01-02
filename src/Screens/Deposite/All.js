@@ -63,7 +63,7 @@ export default function All(props) {
           >
             {item.transaction_note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
+          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
         </View>
         <View>
           <Text style={styles.amount}>{item.transaction_amount || '0'}</Text>

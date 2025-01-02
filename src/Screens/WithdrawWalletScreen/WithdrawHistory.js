@@ -21,6 +21,7 @@ const WithdrawHistory = ({dataUser}) => {
     setLoader(true)
     try {
       const response = await withdrawHistory(dataUser._id);
+      console.log('response', response);
       setData(response.data);
     } catch (error) {
       console.log('error', error);

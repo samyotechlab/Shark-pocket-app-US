@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import trophy from '../../../assets/images/Screens/trophy2.png'
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -16,8 +16,17 @@ const PlayedHistory = () => {
   const data = isReady && loginData && loginData?.data
   const navigation = useNavigation()
   const route = useRoute()
+  const [refreshing, setRefreshing] = useState(false);
   const { game_id } = route.params
   let msg
+
+      const refreshData = () => {
+          setRefreshing(true);
+          setTimeout(() => {
+            allGameHistory();
+            setRefreshing(false);
+          }, 2000);
+        };
 
   const allGameHistory = async () => {
     setLoader(true)
@@ -104,6 +113,9 @@ const PlayedHistory = () => {
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
+           refreshControl={
+                                     <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+                                  }
         />) : (<AnimatedLoader />)
       }
 

@@ -85,15 +85,14 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>bonus_point_score</Text>
+                        <Text style={styles.txt}>Double</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>-</Text>
+                        <Text style={styles.txt}>{gameHistoryData.double_digit.assignedScore}*{gameHistoryData.double_digit.selected}</Text>
                       </View>
                       <View style={{flex: 1}}>
                         <Text style={styles.txt}>
-                          {gameHistoryData.bonus_point_score.bonusPoints +
-                            gameHistoryData.bonus_point_score.superPoints}
+                          {gameHistoryData.double_digit.score}
                         </Text>
                       </View>
                     </View>
@@ -117,13 +116,13 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>Triple</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.triple_digit.assignedScore}*{gameHistoryData.triple_digit.selected}</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.triple_digit.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
@@ -146,13 +145,13 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>Quadraple</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.quadruple_digit.assignedScore}*{gameHistoryData.quadruple_digit.selected}</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.quadruple_digit.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
@@ -175,13 +174,13 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>Prime</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.prime_number.assignedScore}*{gameHistoryData.prime_number.selected}</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
@@ -204,13 +203,13 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>Super</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.super_number.assignedScore}*{gameHistoryData.super_number.selected}</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.super_number.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
@@ -233,13 +232,13 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>Bonus</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>-</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.bonus_point_score.bonusPoints + gameHistoryData.bonus_point_score.superPoints}</Text>
                       </View>
                     </View>
                     <LinearGradient
@@ -262,13 +261,13 @@ export default function GameFinishScreen({
                         paddingBlock: 6,
                       }}>
                       <View style={{flex: 1.5}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>Wrong</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>-</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>item</Text>
+                        <Text style={styles.txt}>{gameHistoryData.wrong_selection_score}</Text>
                       </View>
                     </View>
                     <LinearGradient

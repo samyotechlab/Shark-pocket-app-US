@@ -26,6 +26,13 @@ const ViewProfile = () => {
     {label: 'Female', value: 1},
   ]);
   const {userData} = route.params
+  console.log("userData",userData)
+  const [formData, setFormData] = useState({
+    name: userData.name,
+    state: userData.state,
+    gender: userData.gender,
+    mobile: userData.mobile,
+  });
 
   const selectImage = () => {
     launchImageLibrary(
@@ -38,6 +45,10 @@ const ViewProfile = () => {
         }
       }
     );
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -68,19 +79,27 @@ const ViewProfile = () => {
       <View style={styles.inputContainer}>
         <View style={styles.inputWrapper}>
           <Icon name="account-outline" size={25} color="#000000B2" />
-          <TextInput value={userData.name}  style={styles.input} />
+          <TextInput
+            value={formData.name}
+            onChangeText={(text) => handleInputChange('name', text)}
+            style={styles.input}
+          />
         </View>
 
         <View style={styles.inputWrapper}>
           <Icon name="map-marker-outline" size={25} color="#000000B2" />
-          <TextInput value={userData.state}  style={styles.input} />
+          <TextInput
+            value={formData.state}
+            onChangeText={(text) => handleInputChange('state', text)}
+            style={styles.input}
+          />
         </View>
 
         <View style={[styles.inputWrapper,{ zIndex: 1000 }]}>
           <Icon name="gender-male" size={25} color="#000000B2" />
-          <DropDownPicker
+          {/* <DropDownPicker
           open={genderOpen}
-          value={genderValue}
+          value={userData.gender}
           items={gender}
           setOpen={setGenderOpen}
           setValue={callback => {
@@ -124,12 +143,42 @@ const ViewProfile = () => {
             height: 20,
             tintColor: '#333',
           }}
-        />
+        /> */}
+         <DropDownPicker
+            open={genderOpen}
+            value={genderValue}
+            items={gender}
+            setOpen={setGenderOpen}
+            setValue={(value) => {
+              setGenderValue(value);
+              handleInputChange('gender', value);
+            }}
+            setItems={setGender}
+            placeholder="Choose a Gender"
+            style={{
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: '#ccc',
+              borderRadius: 8,
+              marginBottom: 1,
+              width: '90%',
+            }}
+            dropDownContainerStyle={{
+              backgroundColor: '#ffffff',
+              borderColor: '#ddd',
+              borderRadius: 8,
+              width: '90%',
+            }}
+          />
         </View>
 
         <View style={styles.inputWrapper}>
           <Icon name="phone-outline" size={25} color="#000000B2" />
-          <TextInput value={userData.mobile} style={styles.input} />
+          <TextInput
+            value={formData.mobile}
+            onChangeText={(text) => handleInputChange('mobile', text)}
+            style={styles.input}
+          />
           <TouchableOpacity style={{backgroundColor:'#F1F1F1',borderRadius:20,padding:10}}>
             <Text style={styles.changeText}>CHANGE</Text>
           </TouchableOpacity>

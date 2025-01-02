@@ -23,9 +23,9 @@ export default function DepositeDetails() {
   const depositeData = async () => {
     setLoader(true)
     try {
-      const response = await transactionDepositeData(item.transaction_id)
+      const response = await transactionDepositeData(item.transaction_id,item.user_id);
       console.log("response", response)
-      if (response.status === 1 && response.data) {
+      if (response.status === 1 && response) {
         const formattedData = {
           ...response.data,
           actual_amount: parseFloat(response.data.actual_amount).toFixed(2),
@@ -33,12 +33,13 @@ export default function DepositeDetails() {
         };
         setTransactionData(formattedData);
       } else {
+        console.log("response ======= >", response.message)
         const msg = response.message ||"Unexpected error occurred"
         Toast.show({
                 type: 'error',
                 position: 'top',
                 text1: 'Error!',
-                text2: {msg},
+                text2: msg,
                 visibilityTime: 3000,
               });
       }
@@ -63,20 +64,20 @@ export default function DepositeDetails() {
 
 
   const copyToClipboard = () => {
-    Clipboard.setString("DD2024111314031724039756");
+    Clipboard.setString(transactionData.transaction_id);
   };
 
 
   return (
     <>
-      <HeaderComponent />
+      <HeaderComponent transactionData={transactionData}/>
       <SafeAreaView style={styles.main}>
         <View style={styles.section}>
           <Text style={styles.transaction}>Transaction ID</Text>
         </View>
         <View style={[styles.row, styles.spaceBetween]}>
           <Text style={styles.extraSmallFont}>
-            DD2024111314031724039756
+          {transactionData.transaction_id}
           </Text>
           <TouchableOpacity style={[styles.row, styles.copyButton]} onPress={copyToClipboard}>
             <Icon name="clone" size={10} color="#000" />
@@ -94,12 +95,12 @@ export default function DepositeDetails() {
           style={styles.innerDeposit}>
           <View style={styles.depositRow}>
             <Text style={styles.amount}>Deposit Amount (excl. Govt. Tax)</Text>
-            <Text style={styles.amount}>₹60.15</Text>
+            <Text style={styles.amount}>₹{transactionData.actual_amount}</Text>
           </View>
           <View style={styles.depositRow}>
             <Text style={styles.amount}>Govt. Tax (28% GST)</Text>
             <Text style={[styles.amount, { fontFamily: 'Montserrat-Bold' }]}>
-              ₹16.85
+              ₹{transactionData.gst_amount}
             </Text>
           </View>
           <Divider style={styles.divider} />
@@ -108,7 +109,7 @@ export default function DepositeDetails() {
               Total
             </Text>
             <Text style={[styles.increaseFontWeight, styles.changeGreen]}>
-              ₹77
+              ₹{transactionData.transaction_amount}
             </Text>
           </View>
         </LinearGradient>
@@ -120,14 +121,14 @@ export default function DepositeDetails() {
               <Iconicons name="check-circle" size={25} color="#000000CC" />
               <Text style={styles.request}>Request Raised</Text>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>13 Nov 2024, 7:33 PM</Text>
+            <Text style={[styles.amount, { fontSize: 12 }]}>{transactionData.request_raised}</Text>
           </View>
           <View style={styles.depositRow}>
             <View style={styles.circle}>
               <Iconicons name="check-circle" size={25} color="#000000CC" />
               <Text style={styles.request}>Deposit Successful</Text>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>13 Nov 2024, 7:33 PM</Text>
+            <Text style={[styles.amount, { fontSize: 12 }]}>{transactionData.deposite_date}</Text>
           </View>
         </View>
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, RefreshControl} from 'react-native';
 import gst from '../../../assets/images/Screens/Gst.png';
 import wallet from '../../../assets/images/Screens/rupees.png';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,6 +18,15 @@ const WalletScreen = () => {
   const [loader, setLoader] = useState(false);
   const [dataUser, setData] = useState({});
   const data = isReady && loginData && loginData?.data;
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refreshData = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+     getAllTicket();
+      setRefreshing(false);
+    }, 2000);
+  };
 
   const userData = async () => {
     setLoader(true);
@@ -50,6 +59,10 @@ const WalletScreen = () => {
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={styles.linearGradient}>
+         <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+        }>
       <View style={styles.topBar}>
         <Text style={styles.topBarTitle}>Wallet</Text>
         <Iconics
@@ -183,6 +196,7 @@ const WalletScreen = () => {
      
 
       <Image source={gst} style={styles.bannerImage} resizeMode="contain" />
+      </ScrollView>
     </LinearGradient>
   );
 };

@@ -51,12 +51,14 @@ export const TransactionStore = async (user_id, amount) => {
     }
   };
 
-  export const transactionDepositeData = async (transaction_id) => {
+  export const transactionDepositeData = async (transaction_id,user_id) => {
     const url = Config.DepositeTransaction+"/"+transaction_id
+
+    console.log("url",user_id)
   
     try {
       const response = await apiInstance.post(url,{
-        user_id:data.user_id
+        user_id:user_id
       });
       if (response.status === 200) {
         return response.data;
