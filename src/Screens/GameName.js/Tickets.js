@@ -39,6 +39,15 @@ export default function Tickets() {
   const [message, setMessage] = useState('');
   const route = useRoute();
   const {game_id} = route.params;
+    const [refreshing, setRefreshing] = useState(false);
+  
+    const refreshData = () => {
+      setRefreshing(true);
+      setTimeout(() => {
+        getAllData();
+        setRefreshing(false);
+      }, 2000);
+    };
 
   const getAllTicket = async () => {
     setLoader(true);
@@ -173,16 +182,6 @@ export default function Tickets() {
                     </Text>
                   </TouchableOpacity>
                 </View>
-
-                {/* <View style={[styles.buttonContainer]}>
-                  <TouchableOpacity style={styles.modeButton}>
-                    <TouchableOpacity style={styles.pressableArea}>
-                      <Text style={styles.newbuttonText}>
-                        {isPurchased ? 'Play Now' : 'Purchase'}
-                      </Text>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                </View> */}
               </View>
             </View>
           </LinearGradient>
@@ -201,6 +200,9 @@ export default function Tickets() {
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+            }
           />
         </View>
       ) : (

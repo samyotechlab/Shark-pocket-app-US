@@ -23,7 +23,7 @@ const WalletScreen = () => {
   const refreshData = () => {
     setRefreshing(true);
     setTimeout(() => {
-     getAllTicket();
+      userData();
       setRefreshing(false);
     }, 2000);
   };

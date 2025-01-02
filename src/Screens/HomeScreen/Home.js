@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import sharkLogo from '../../../assets/images/Screens/sharkLogo.png';
 import bell from '../../../assets/images/Screens/bell.png';
 import wheel from '../../../assets/images/Screens/wheel.png';
 import rupees from '../../../assets/images/Screens/rupees.png';
-import {Divider} from 'react-native-elements';
+import { Divider } from 'react-native-elements';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -21,19 +21,28 @@ import WinnerCard from '../../Components/WinnerCard';
 import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import {getGameData} from '../../Service/Home';
-import {useNavigation} from '@react-navigation/native';
+import { getGameData } from '../../Service/Home';
+import { useNavigation } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const {loginData, isReady} = useLoginDataStorage();
+  const { loginData, isReady } = useLoginDataStorage();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
   const [myGame, setMyGames] = useState([]);
   const data = isReady && loginData && loginData?.data;
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refreshData = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getAllData();
+      setRefreshing(false);
+    }, 2000);
+  };
 
   const getAllData = async () => {
     setLoader(true);
@@ -60,8 +69,12 @@ export default function HomeScreen() {
       colors={['#361911', '#361911', '#6A1700']}
       style={styles.linearGradient}>
       <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
-        showsVerticalScrollIndicator={false}>
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+        }
+      >
         {!loader ? (
           <>
             <View style={styles.container}>
@@ -85,12 +98,12 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            <Divider color="#FFCE63" width={2} style={{marginVertical: 6}} />
-            <View style={{flex: 1, margin: wp('2%')}}>
+            <Divider color="#FFCE63" width={2} style={{ marginVertical: 6 }} />
+            <View style={{ flex: 1, margin: wp('2%') }}>
               <WinnerCard />
             </View>
 
-            <View style={{flex: 1, margin: wp('2%')}}>
+            <View style={{ flex: 1, margin: wp('2%') }}>
               <View
                 style={{
                   flex: 0.5,
@@ -101,12 +114,12 @@ export default function HomeScreen() {
                 <Image source={Lighting} style={styles.light} />
                 <Text style={styles.myGame}>MY GAME</Text>
               </View>
-              <View style={{flex: 1.5, flexDirection: 'row', marginTop: 10}}>
+              <View style={{ flex: 1.5, flexDirection: 'row', marginTop: 10 }}>
                 <MyGame myGame={myGame} />
               </View>
             </View>
 
-            <View style={{flex: 1.2, marginVertical: hp('2%')}}>
+            <View style={{ flex: 1.2, marginVertical: hp('2%') }}>
               <View
                 style={{
                   flex: 0.5,
@@ -118,17 +131,17 @@ export default function HomeScreen() {
                 <Text style={styles.myGame}>AVAILABLE GAMES </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    navigation.navigate('AvailableGame', {gameData});
+                    navigation.navigate('AvailableGame', { gameData });
                   }}>
                   <Text style={styles.view}>View All</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{flex: 1.5, marginTop: 10, marginLeft: 10}}>
+              <View style={{ flex: 1.5, marginTop: 10, marginLeft: 10 }}>
                 <AvailbleGameCard gameData={gameData} />
               </View>
             </View>
 
-            <View style={{flex: 0.8, margin: wp('2%')}}>
+            <View style={{ flex: 0.8, margin: wp('2%') }}>
               <View
                 style={{
                   flex: 0.5,
@@ -142,7 +155,7 @@ export default function HomeScreen() {
                   <Text style={styles.view}>View All</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{flex: 1.5, flexDirection: 'row'}}>
+              <View style={{ flex: 1.5, flexDirection: 'row' }}>
                 <UpcomingGame gameData={gameData} />
               </View>
             </View>
