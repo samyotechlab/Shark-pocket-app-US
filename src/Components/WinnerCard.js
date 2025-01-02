@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import WinnerBadge from '../../assets/images/Screens/WinnerBadge.png'
 import Trophy from '../../assets/images/Screens/trophy.png'
 import User from '../../assets/images/Screens/user.png'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const WinnerCard = () => {
   return (
     <View style={styles.container}>
@@ -30,6 +31,10 @@ const WinnerCard = () => {
             <Text style={styles.rewardText}>₹10,000</Text>
           </View>
         </View>
+        <View style={styles.linesContainer}>
+          <View style={styles.line} />
+          <View style={[styles.line, styles.secondLine]} />
+        </View>
       </View>
     </View>
   );
@@ -39,21 +44,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#CDFA2E',
+    borderRadius: wp(3), 
+    borderBottomWidth: wp(1.3),
+    borderBottomColor: '#3DA600',
+    margin: wp(1.5), 
   },
   card: {
-    backgroundColor: '#62C72A',
-    borderRadius: 10,
-    borderWidth: 5,
-    borderColor: '#A6E832',
-    width: '95%',
-    height: 180,
+    backgroundColor: '#69C60A',
+    borderRadius: wp(2.5), 
+    width: wp(90),
+    height: hp(22), 
     flexDirection: 'row',
     overflow: 'hidden',
     elevation: 10,
+    margin: wp(1.5),
   },
   profileImage: {
-    width:140, 
-    height: 250,
+    width: wp(35),
+    height: hp(30), 
     resizeMode: 'cover',
   },
   content: {
@@ -64,41 +73,60 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   winnerBadge: {
-    width: 200,
-    height: 100,
+    width: wp(50),
+    height: hp(12),
     resizeMode: 'cover',
   },
   rankScoreContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom:10
+    paddingHorizontal: wp(5),
+    marginBottom: hp(1.2),
   },
   rankText: {
-    fontSize: 16,
-    fontFamily:'Montserrat-SemiBold',
+    fontSize: wp(4),
+    fontFamily: 'Montserrat-SemiBold',
     color: '#48180B',
   },
   scoreText: {
-    fontSize: 16,
+    fontSize: wp(4),
     color: '#48180B',
-    fontFamily:'Montserrat-SemiBold',
+    fontFamily: 'Montserrat-SemiBold',
   },
   rewardContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-  marginBottom:10
+    marginBottom: hp(1.2),
   },
   trophyIcon: {
-    width: 30,
-    height: 30,
-    marginRight: 5,
+    width: wp(8),
+    height: wp(8),
+    marginRight: wp(1.2),
   },
   rewardText: {
-    fontSize: 16,
-    fontFamily:'Montserrat-Bold',
+    fontSize: wp(4),
+    fontFamily: 'Montserrat-Bold',
     color: '#48180B',
+  },
+  linesContainer: {
+    position: 'absolute',
+    right: 15,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap : wp(1.5),
+   },
+  line: {
+    width: wp(3), 
+    height: '100%',
+    backgroundColor: '#FFFFFF33', 
+    marginVertical: hp(0.5),
+    alignSelf: 'center',
+  },
+  secondLine: {
+    marginTop: hp(1),
   },
 });
 export default WinnerCard;

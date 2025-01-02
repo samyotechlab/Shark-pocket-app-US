@@ -291,17 +291,17 @@ export default function GlobalLeaderBoard() {
         }}>
         <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
           {
-            globalData.length == 0 ? (
-              <View style={styles.noDataContainer}>
-              <Text style={styles.noDataText}>No data found</Text>
-            </View>
-            ) : (
+            globalData? (
               !loader ? (<FlatList
                 data={globalData}
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
               />) : (<AnimatedLoader />)
+            ) : (
+              <View style={styles.noDataContainer}>
+              <Text style={styles.noDataText}>No data found</Text>
+            </View>
             )
 
           }

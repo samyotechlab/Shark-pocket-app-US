@@ -97,53 +97,6 @@ const ViewProfile = () => {
 
         <View style={[styles.inputWrapper,{ zIndex: 1000 }]}>
           <Icon name="gender-male" size={25} color="#000000B2" />
-          {/* <DropDownPicker
-          open={genderOpen}
-          value={userData.gender}
-          items={gender}
-          setOpen={setGenderOpen}
-          setValue={callback => {
-            const value = callback(genderValue);
-            setGenderValue(value);
-            handleInputChange('gender', value);
-          }}
-          setItems={setGender}
-          placeholder="Choose a Gender"
-          style={{
-            backgroundColor: 'white',
-            borderWidth: 1,
-            borderColor: '#ccc',
-            borderRadius: 8,
-            marginBottom: 1,
-            width:'90%'
-          }}
-          dropDownContainerStyle={{
-            backgroundColor: '#ffffff',
-            // backgroundColor: 'red',
-            borderColor: '#ddd',
-            borderRadius: 8,
-              width:'90%'
-          }}
-          textStyle={{
-            fontSize: 16,
-            color: '#414141',
-          }}
-          placeholderStyle={{
-            color: '#414141',
-            fontSize: 16,
-          }}
-          selectedItemLabelStyle={{
-            fontWeight: 'bold',
-          }}
-          listItemLabelStyle={{
-            color: '#414141',
-          }}
-          arrowIconStyle={{
-            width: 20,
-            height: 20,
-            tintColor: '#333',
-          }}
-        /> */}
          <DropDownPicker
             open={genderOpen}
             value={genderValue}
@@ -250,7 +203,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     paddingHorizontal: 10,
-    paddingVertical: 12,
+    paddingVertical: 6,
     marginBottom: 15,
     elevation: 3,
   },

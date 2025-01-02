@@ -74,7 +74,6 @@ export default function LocalGameBoard() {
   };
 
   useEffect(() => {
-    console.log('hello');
     leaderBoardData();
   }, []);
 
@@ -104,7 +103,7 @@ export default function LocalGameBoard() {
 
   const renderItem = items => {
     const { item } = items;
-    console.log('items', item);
+
     return (
       <>
         <View style={{ flex: 1, paddingBottom: 10 }}>
@@ -326,18 +325,20 @@ export default function LocalGameBoard() {
             borderRadius: 15,
           }}>
           <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
-            {gameData.length == 0 ? (<View style={styles.noDataContainer}>
-              <Text style={styles.noDataText}>No data found</Text>
-            </View>) : (!loader ? (
-              <FlatList
-                data={filteredData}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                showsVerticalScrollIndicator={false}
-              />
-            ) : (
-              <AnimatedLoader />
-            ))}
+            {gameData? (
+              !loader ? (
+                <FlatList
+                  data={filteredData}
+                  renderItem={renderItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  showsVerticalScrollIndicator={false}
+                />
+              ) : (
+                <AnimatedLoader />
+              )
+              ) : (<View style={styles.noDataContainer}>
+                <Text style={styles.noDataText}>No data found</Text>
+              </View>)}
           </SafeAreaView>
         </View>
       </LinearGradient>

@@ -12,9 +12,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {truncateText} from '../../Utillities';
 import {notificationList} from '../../Service/Notification';
-import useLoginDataStorage from '../../Service/CustomStorageHook';
 import CommonHeader from '../../Components/CommonHeader';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 export default function Notification() {
@@ -38,47 +36,25 @@ export default function Notification() {
   useEffect(() => {
     notificationData();
   }, []);
+
+  
   const renderItem = ({item}) => {
+    console.log('item',item)
     return (
       <>
-        <View
-          style={{
-            flex: 1,
-            borderWidth: 2,
-            borderRadius: 10,
-            borderColor: '#CDCDCD',
-            marginBottom: 10,
-            flexDirection: 'row',
-          }}>
-          <View
-            style={{
-              flex: 0.5,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Ionicons
+        <View style={styles.notificationContainer}>
+      <View style={styles.iconContainer}>
+      <Ionicons
               name="notifications-outline"
-              size={30}
-              color={'#414141'}
+              size={25}
+              color={'#000000'}
             />
-          </View>
-          <View style={{flex: 1.5}}>
-            <Text
-              style={{
-                color: '#414141',
-                fontSize: 17,
-                fontWeight: '600',
-                marginHorizontal: 10,
-                letterSpacing: 0.5,
-              }}>
-              {item.title}
-            </Text>
-            <Text
-              style={{color: '#636363', marginHorizontal: 10, fontSize: 16}}>
-              {item.created_at}
-            </Text>
-          </View>
-        </View>
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.date}>{item.created_at}</Text>
+      </View>
+    </View>
       </>
     );
   };
@@ -87,15 +63,16 @@ export default function Notification() {
       <View style={{backgroundColor: '#361911', paddingBottom: wp('4%')}}>
         <CommonHeader title={'Notification'} />
       </View>
-      <View style={{flex: 1, margin: 15}}>
+      <View style={styles.container}>
         {notification ? (
           !loader ? (
+
             <FlatList
               data={notification}
               renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item) => item.id}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollContainer}
             />
           ) : (
             <AnimatedLoader />
@@ -115,8 +92,49 @@ export default function Notification() {
   );
 }
 const styles = StyleSheet.create({
-  scrollContainer: {
-    marginBottom: 10,
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    padding: wp('4%'),
+  },
+  notificationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: hp('0.5%'), 
+  },
+  iconContainer: {
+    width: wp('10%'), 
+    height: wp('10%'), 
+    borderRadius: wp('5%'), 
+    backgroundColor: '#f1f1f1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: wp('3%'), 
+  },
+  icon: {
+    width: wp('6%'), 
+    height: wp('6%'),
+    tintColor: '#000',
+  },
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: wp('4%'),
+    fontFamily:'Montserrat-Medium',
+    color: '#696969',
+  },
+  date: {
+    fontSize: wp('3%'), 
+    color: '#696969',
+    fontFamily:'Montserrat-Medium',
+  },
+  separator: {
+    height: hp('0.1%'),
+    backgroundColor: '#e0e0e0',
+    marginVertical: hp('1%'),
+    width:wp('80%'),
+    alignSelf:'center'
   },
 });
 

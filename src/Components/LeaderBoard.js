@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     padding: wp('4%'),
     justifyContent: 'space-between',
+    // backgroundColor: 'white',
   },
   leaderTxt: {
     color: 'white',

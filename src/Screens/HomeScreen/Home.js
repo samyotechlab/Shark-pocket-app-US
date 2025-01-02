@@ -1,5 +1,6 @@
 import {
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -77,6 +78,7 @@ export default function HomeScreen() {
       >
         {!loader ? (
           <>
+          <View style={{ backgroundColor:'#552113' }}>
             <View style={styles.container}>
               {/* Logo Section */}
               <View style={styles.logoContainer}>
@@ -84,12 +86,12 @@ export default function HomeScreen() {
               </View>
 
               {/* Rupee Wallet Section */}
-              <View style={styles.walletContainer}>
+              <LinearGradient colors={['#FFFFFF1A','#FFFFFF1A','#5521131A']} style={styles.walletContainer}>
                 <Image source={rupees} style={styles.walletIcon} />
                 <Text style={styles.walletText}>
-                  {data?.total_balance || 0}
+                   ₹ {data?.total_balance || 1000}
                 </Text>
-              </View>
+              </LinearGradient>
 
               {/* Icons Section */}
               <View style={styles.iconsContainer}>
@@ -97,13 +99,13 @@ export default function HomeScreen() {
                 <Image source={wheel} style={styles.icon} />
               </View>
             </View>
-
-            <Divider color="#FFCE63" width={2} style={{ marginVertical: 6 }} />
-            <View style={{ flex: 1, margin: wp('2%') }}>
+            </View>
+            <Divider color="#FFCE63" width={2.5} style={{ marginVertical: wp(0.2) }} />
+            <View style={{ flex: 1, margin: wp('2%'),marginVertical:hp('2%') }}>  
               <WinnerCard />
             </View>
 
-            <View style={{ flex: 1, margin: wp('2%') }}>
+            <View style={{ flex: 1}}>
               <View
                 style={{
                   flex: 0.5,
@@ -119,7 +121,7 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            <View style={{ flex: 1.2, marginVertical: hp('2%') }}>
+            <View style={{ flex: 1.2, marginVertical: hp('2%')}}>
               <View
                 style={{
                   flex: 0.5,
@@ -191,8 +193,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: wp('4%'),
-    backgroundColor: '#361911',
-    marginTop: hp('4%'),
+    marginTop: hp('3%'),
   },
   logoContainer: {
     flex: 0.5,
@@ -200,29 +201,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    height: hp('6%'),
-    width: wp('12%'),
+    height: hp('5%'),
+    width: wp('10%'),
     resizeMode: 'contain',
   },
   walletContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#552113',
-    paddingHorizontal: wp('3%'),
+    padding: wp('1%'),
+    marginLeft: hp('5%'),
     borderRadius: wp('2%'),
+    justifyContent: 'center',
   },
   walletIcon: {
-    height: hp('4%'),
-    width: wp('8%'),
+    height: hp('2.5%'),
+    width: wp('5%'),
     resizeMode: 'contain',
   },
   walletText: {
     color: '#FFFFFF',
     fontSize: wp('5%'),
-    fontFamily: 'Montserrat-Bold',
+    fontFamily: 'LuckiestGuy-Regular',
     marginLeft: wp('2%'),
+    textAlign: 'center',
   },
   iconsContainer: {
     flex: 1,
@@ -232,8 +234,8 @@ const styles = StyleSheet.create({
     gap: wp('5%'),
   },
   icon: {
-    height: hp('5%'),
-    width: wp('10%'),
+    height: hp('4%'),
+    width: wp('8%'),
     resizeMode: 'contain',
   },
   loaderContainer: {

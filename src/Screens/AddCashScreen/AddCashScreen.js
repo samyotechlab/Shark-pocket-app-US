@@ -6,6 +6,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service/Transaction';
 import PhonePePaymentSDK from 'react-native-phonepe-pg';
 import AlertDialogRed from '../../Components/AlertDialogRed';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AddCashScreen = () => {
   const navigation = useNavigation();
@@ -112,17 +113,29 @@ const AddCashScreen = () => {
   return (
   <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
     <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Iconics name="chevron-back" size={wp("6%")} color={"white"} />
+          <Iconics name="chevron-back" size={wp("7%")} color={"white"} />
         </TouchableOpacity>
+        <View style={{flex:1,marginRight:hp('5%')}}>
         <Text style={styles.title}>Add Cash</Text>
+        </View>
         <View style={styles.wallet}>
-          <Text style={styles.walletText}>₹1000</Text>
+
+          <LinearGradient 
+          colors={['#FFFFFF1A','#FFFFFF1A','#5521131A']}
+           style={{padding:wp('1%'),borderRadius:wp('2%'),paddingHorizontal:wp('4%'),flexDirection:'row'}}>
+                     <Image
+            source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
+            style={styles.walletIcon}
+          />
+          <Text style={styles.walletText}>₹ 1000</Text>
+          </LinearGradient>
         </View>
       </View>
 
-      <View style={styles.addCashContainer}>
+  <View style={{flex:1}}>  
+   <View style={styles.addCashContainer}>
                     <View style={styles.inputContainer}>
                       <Text style={styles.label}>Enter Amount</Text>
                       <TextInput
@@ -145,25 +158,41 @@ const AddCashScreen = () => {
                  </TouchableOpacity>
       </View>
 
-      <View style={styles.featuresRow}>
+            <View style={styles.featuresRow}>
         <View style={styles.feature}>
-          <Text style={styles.featureIcon}>✔</Text>
+        <Image
+            source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
+            style={styles.featureIcon}
+          />
           <Text style={styles.featureText}>100% Safe Payments</Text>
         </View>
         <View style={styles.feature}>
-          <Text style={styles.featureIcon}>⚡</Text>
+        <Image
+            source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
+            style={styles.featureIcon}
+               tintColor='#4FBF03'
+          />
           <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
         </View>
         <View style={styles.feature}>
-          <Text style={styles.featureIcon}>👥</Text>
+        <Image
+            source={{ uri: "https://img.icons8.com/color/48/group.png" }}
+            style={styles.featureIcon}
+            tintColor='#4FBF03'
+          />
           <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
         </View>
       </View>
 
+    
       <TouchableOpacity style={styles.referralBanner}>
         <Image source={require("../../../assets/images/Screens/referal.png")} />
       </TouchableOpacity>
-    </View>
+      </View>
+      </View>  
+
+
+
     <AlertDialogRed visible={visible} onClose={() => setVisible(false)}  message={message}/>
     </SafeAreaView>
   );
@@ -178,45 +207,52 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#361911",
-    height: hp("15%"),
-    justifyContent: 'flex-end',
+    flex:1,
     padding: wp("4%"),
-    position: 'relative',
-    paddingBottom: hp("7%"),
+    paddingBottom: hp("12%"),
+    paddingTop:hp('7%'),
+    flexDirection: 'row',
   },
   backButton: {
-    top: hp("4%"),
-    padding: wp("2%"),
+    flex:1,
+    justifyContent:'center',
+    bottom:hp('0.5%'),
   },
   title: {
     fontSize: wp("5%"),
-    fontWeight: 'bold',
+    fontFamily:'Montserrat-SemiBold',
     color: '#fff',
     textAlign: 'center',
   },
   wallet: {
-    position: 'absolute',
-    right: wp("4%"),
-    top: hp("4%"),
-    backgroundColor: '#000',
-    padding: wp("2%"),
-    borderRadius: wp("2%"),
+    flex:1,
+    justifyContent: 'center', 
+    alignItems: 'center',
+  },
+  walletIcon: {
+    width: hp('3%'),
+    height: hp('3%'),
+    marginRight: 8,
+  },
+  featureIcon: {
+    width: wp('8%'),
+    height: hp('4%'),
+    marginBottom: 8,
   },
   walletText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: wp("4%"),
+    fontFamily:'LuckiestGuy-Regular',
+    fontSize: wp("5%"),
   },
   addCashContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderRadius: wp("3%"),
-    padding: wp("4%"),
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: wp("2%"),
     elevation: 4,
-    marginTop: -hp("5%"),
+    marginTop: -hp("10%"),
     marginHorizontal: wp("4%"),
   },
   input: {
@@ -231,10 +267,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: hp("2%"),
+    marginHorizontal:hp('2%')
   },
   amountButton: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#000000B2',
     borderRadius: wp("2%"),
     padding: wp("2%"),
     minWidth: wp("15%"),
@@ -242,8 +279,8 @@ const styles = StyleSheet.create({
   },
   amountText: {
     fontSize: wp("4%"),
-    fontWeight: 'bold',
-    color: '#000',
+    fontFamily:'Inter_18pt-Medium',
+    color: '#000000B2',
   },
   addCashButton: {
     backgroundColor: '#39B54A',
@@ -260,37 +297,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: hp("2%"),
-    marginTop: hp("2%"),
+    marginTop: hp("5%"),
   },
   feature: {
     alignItems: 'center',
   },
-  featureIcon: {
-    fontSize: wp("6%"),
-    marginBottom: hp("1%"),
-  },
+  // featureIcon: {
+  //   fontSize: wp("6%"),
+  //   marginBottom: hp("1%"),
+  // },
   featureText: {
     fontSize: wp("3%"),
     textAlign: 'center',
   },
   referralBanner: {
-    marginVertical: hp("8%"),
+    marginVertical: hp("20%"),
     padding: wp("4%"),
     borderRadius: wp("2%"),
     alignItems: 'center',
   },
   inputContainer: {
     backgroundColor: '#DDF1E6',
+    marginRight:wp('10%'),
     width: wp('85%'),
     borderBottomColor: 'black',
+    marginVertical:wp('8%'),
     border: 1,
     borderRadius: wp('3%'),
     paddingBottom: hp(0.7),
+    marginHorizontal:wp('4%')
   },
   label: {
     position: 'absolute',
     top: -hp('1%'),
-    left: wp('35%'),
+    left: wp('30%'),
     backgroundColor: '#fff',
     paddingHorizontal: wp('2%'),
     fontSize: hp('1.5%'),
@@ -306,9 +346,9 @@ const styles = StyleSheet.create({
   },
   withdrawButton: {
     backgroundColor: '#4FBF03',
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
+    borderRadius: wp('3%'),
+    paddingVertical: hp('1.5%'),
+    marginBottom:hp('4%'),
     alignItems: 'center',
     borderColor: '#FFFFFF',
     borderWidth: 2,
@@ -329,6 +369,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 10,
   },
+
 });
 
 export default AddCashScreen;

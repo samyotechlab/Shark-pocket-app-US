@@ -77,7 +77,7 @@ export default function Withdraw({ dataUser }) {
           >
             <Icons name="account-balance-wallet" size={24} color={'white'} />
             <Text style={styles.text}>Withdraw wallet Balance</Text>
-            <Text style={styles.amount}>{dataUser.total_earning}</Text>
+            <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
           </LinearGradient>
           <View style={{ marginTop: 5 }}>
             <Text style={styles.title}>Withdraw Balance</Text>
@@ -148,23 +148,25 @@ export default function Withdraw({ dataUser }) {
           <View style={styles.featuresRow}>
             <View style={styles.feature}>
               <Image
-                source={secure}
-                style={styles.icon}
-              />
-              <Text style={styles.featureText}>100% Safe Payments</Text>
+                         source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
+                         style={styles.featureIcon}
+                       />
+              <Text style={styles.featureText}> 100% Safe {"\n"} Payments</Text>
             </View>
             <View style={styles.feature}>
               <Image
-                source={light}
-                style={styles.icon}
-              />
+                         source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
+                         style={styles.featureIcon}
+                            tintColor='#4FBF03'
+                       />
               <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
             </View>
             <View style={styles.feature}>
               <Image
-                source={profile}
-                style={styles.icon}
-              />
+                         source={{ uri: "https://img.icons8.com/color/48/group.png" }}
+                         style={styles.featureIcon}
+                         tintColor='#4FBF03'
+                       />
               <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
             </View>
           </View>
@@ -202,6 +204,11 @@ const styles = StyleSheet.create({
     fontSize: hp('1.5%'),
     color: '#555',
     zIndex: 1,
+  },
+  featureIcon: {
+    width: wp('8%'),
+    height: hp('4%'),
+    marginBottom: 8,
   },
   input: {
     borderWidth: 1,
@@ -353,19 +360,17 @@ const styles = StyleSheet.create({
   featuresRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: hp("5%"),
-    marginTop: hp("2%"),
+    marginTop: hp("6%"),
   },
   feature: {
     alignItems: 'center',
   },
-  featureIcon: {
-    fontSize: wp("6%"),
-    marginBottom: hp("1%"),
-  },
   featureText: {
     fontSize: wp("3%"),
     textAlign: 'center',
+    color:'#000000',
+    fontFamily:'Montserrat-Regular',
+    lineHeight:wp('5%')
   },
   buttonContainer: {
     flexDirection: 'row',

@@ -50,7 +50,7 @@ export default function LocalLeaderBoard() {
 
   const renderItem = ({ item, index }) => {
     return (<>
-      <View style={{ flex: 1, paddingBottom: wp('4%') }}>
+      <View style={{ flex: 1}}>
         <TouchableOpacity style={styles.container1} onPress={() => {
           navigation.navigate('LocalGameBoard', { game_id: item._id })
         }} >
@@ -79,9 +79,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: wp('2%'),
-  },
-  scrollContainer: {
-    marginBottom: 20,
   },
   container1: {
     flex: 1,

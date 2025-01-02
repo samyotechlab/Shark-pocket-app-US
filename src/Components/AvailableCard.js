@@ -19,11 +19,14 @@ export default function AvailableCard({gameData, status, index}) {
   ];
 
   const borderColors = ['#F2E30B', '#5C233F', '#78C800', '#1A0DAB'];
+  const borderBottomColors = ['#C05112', '#E3398C', '#75B831', '#4644A7'];
+  const borderBottom =  borderBottomColors[index % borderBottomColors.length];
   const colors = gradientColors[index % gradientColors.length];
   const border = borderColors[index % borderColors.length];
   const formattedDate = formatDate(gameData.start_date);
   return (
-    <View>
+    <View style={{borderBottomWidth: wp(1.3),
+      borderBottomColor: status == 2 || status == 4? borderBottom :'#C05112' ,borderBottomStartRadius:wp(3),borderBottomEndRadius:wp(8)}}>
       <LinearGradient
         colors={
           status == 2 || status == 4
@@ -64,6 +67,10 @@ export default function AvailableCard({gameData, status, index}) {
             </View>
           </View>
         </View>
+                <View style={styles.linesContainer}>
+                  <View style={styles.line} />
+                  <View style={[styles.line, styles.secondLine]} />
+                </View>
       </LinearGradient>
     </View>
   );
@@ -142,4 +149,25 @@ const styles = StyleSheet.create({
     textShadowOffset: {width: 0, height: hp('0.25%')},
     textShadowRadius: wp('3.75%'),
   },
+  linesContainer: {
+    position: 'absolute',
+    right: 15,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap : wp(1.5),
+   },
+  line: {
+    width: wp(3), 
+    height: '100%',
+    backgroundColor: '#FFFFFF33', 
+    marginVertical: hp(0.5),
+    alignSelf: 'center',
+  },
+  secondLine: {
+    marginTop: hp(1),
+  },
 });
+
+
