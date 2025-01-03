@@ -25,13 +25,11 @@ export default function Bonus() {
   const [bonusData, setBonusData] = useState([]);
   const [loader, setLoader] = useState(false);
 
-
   const bonusDetails = async () => {
     setLoader(true)
     try {
       const response = await bonusWallet(data._id)
       setBonusData(response)
-      console.log('Bonus Wallet added', response);
     } catch (error) {
       console.log('error', error);
       throw error;
@@ -49,9 +47,7 @@ export default function Bonus() {
   }, [isReady, loginData])
 
 
-
-  // Group walletData by date
-  const groupedData = groupByDateAndType(bonusData);
+  const groupedData = bonusData.length > 0 ? groupByDateAndType(bonusData) : {};
 
   const handleNavigation = (item) => {
     navigation.navigate('DepositeDetails', { item });
@@ -125,7 +121,7 @@ export default function Bonus() {
   return (
     <View style={styles.container}>
       {
-        bonusData == 0 ? (<View style={styles.noDataContainer}>
+        bonusData? (<View style={styles.noDataContainer}>
           <Text style={styles.noDataText}>No data found</Text>
         </View>) : (<FlatList
           data={sectionData}

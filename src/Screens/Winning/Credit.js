@@ -19,7 +19,9 @@ const groupByDateAndType = (data) => {
 
 export default function Credit({winningData}) {
   const navigation = useNavigation();
-  const creditTransactions = winningData.filter((item) => item.type === 1);
+  const creditTransactions = Array.isArray(winningData)
+  ? winningData.filter((item) => item.type === 1)
+  : [];
 
 
   const groupedData = groupByDateAndType(creditTransactions);

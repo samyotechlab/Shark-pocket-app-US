@@ -45,7 +45,7 @@ export default function Tickets() {
     const refreshData = () => {
       setRefreshing(true);
       setTimeout(() => {
-        getAllData();
+        getAllTicket();
         setRefreshing(false);
       }, 2000);
     };
@@ -193,7 +193,9 @@ export default function Tickets() {
 
   return (
     <>
-      {!loader ? (
+      {
+    ticketData &&
+      !loader ? (
         <View style={styles.container}>
           <FlatList
             data={ticketData}

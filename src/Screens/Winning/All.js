@@ -17,9 +17,10 @@ const groupByDateAndType = (data) => {
 };
 
 export default function All({ winningData }) {
+  console.log('winningData', winningData);
   const navigation = useNavigation();
   // Group walletData by date
-  const groupedData = groupByDateAndType(winningData);
+  const groupedData = winningData ? groupByDateAndType(winningData) : {};
 
   const handleNavigation = (item) => {
     navigation.navigate('DepositeDetails', { item });
@@ -95,7 +96,7 @@ export default function All({ winningData }) {
   return (
     <View style={styles.container}>
       {
-        winningData.length == 0 ? 
+        !winningData? 
         (<View style={styles.noDataContainer}>
           <Text style={styles.noDataText}>No data found</Text>
         </View>) : (

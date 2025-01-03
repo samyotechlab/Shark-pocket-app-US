@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -42,6 +42,7 @@ export default function Login() {
 
   const handleLogin = () => {
     console.log('phoneNumber', phoneNumber);
+
     setLoader(true);
     try {
       if (validateInputs()) {

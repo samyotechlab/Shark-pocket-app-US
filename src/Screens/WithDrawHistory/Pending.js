@@ -7,7 +7,10 @@ import {
 } from 'react-native-responsive-screen';
 
 export default function Pending({ data }) {
-  const filteredData = data.filter((item) => item.status === 0);
+  
+  const filteredData = Array.isArray(data)
+  ? data.filter((item) => item.status === 0)
+  : [];
 
   const groupedData = filteredData.reduce((groups, item) => {
     const [date] = item.created_at.split(' ');

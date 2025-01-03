@@ -88,7 +88,7 @@ const WalletScreen = () => {
                     <Text style={styles.sectionTitle}>BALANCE</Text>
                   </View>
                   <View style={styles.balanceContent}>
-                    <Image source={wallet} style={styles.walletIcon} />
+                    <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
                     <Text style={styles.balanceAmount}>₹ 1000</Text>
                   </View>
                 </View>
@@ -216,7 +216,7 @@ const WalletScreen = () => {
                     <Iconics name="timer-outline" size={22} color={'white'} />
                   </LinearGradient>
                   <View>
-                    <Text style={styles.label}>My Transactions</Text>
+                    <Text style={styles.label1}>My Transactions</Text>
                     <Text style={styles.transactionText}>Deposit and withdrawal history</Text>
                   </View>
                     <View style={{justifyContent: 'center', alignItems: 'center',paddingLeft: wp('6%')}}>
@@ -235,7 +235,9 @@ const WalletScreen = () => {
                <Image source={gst} style={styles.bannerImage} resizeMode="contain" />
               </View>
 
-            </>) : (<AnimatedLoader />)) : (
+            </>) : ( <View style={styles.loaderContainer}>
+              <AnimatedLoader />
+            </View>)) : (
             <View style={styles.noDataContainer}>
               <Text style={styles.noDataText}>No data found</Text>
             </View>
@@ -249,15 +251,15 @@ const WalletScreen = () => {
 const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: wp('5%'),
+    paddingTop: hp('4%'), 
   },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: wp('5%'),
-    marginBottom: 20,
+    marginBottom: wp('5%'),
   },
   topBarTitle: {
     color: 'white',
@@ -266,24 +268,24 @@ const styles = StyleSheet.create({
   },
   needHelpButton: {
     backgroundColor: 'transparent',
-    padding: 2,
+    padding: hp('1%'),
   },
   needHelpText: {
     color: 'white',
     fontFamily: 'Montserrat-Regular',
-    fontSize: 16,
+    fontSize: wp('4%'),
   },
   balanceContainer: {
     backgroundColor: '#6C2A1F',
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 15,
+    padding: wp('4%'),
+    borderRadius: hp('1%'),
+    marginBottom: hp('2%'),
   },
   balanceRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 1,
+    borderWidth: hp('0.1%'),
     borderColor: 'transparent',
   },
   balanceContent: {
@@ -291,25 +293,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   walletIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 8,
+    width: wp('5%'),
+    height: hp('3%'),
+    marginRight: wp('2%'),
   },
   balanceAmount: {
     color: '#fff',
-    fontSize: 22,
+    fontSize: wp('6%'),
     fontFamily: 'LuckiestGuy-Regular',
   },
   sectionTitle: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: wp('5%'),
     fontFamily: 'Montserrat-Bold',
   },
   cardContainer: {
     backgroundColor: '#A38C85',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 15,
+    padding: hp('2%'),
+    borderRadius: hp('1%'),
+    marginBottom: hp('2%'),
   },
   row: {
     flexDirection: 'row',
@@ -318,32 +320,37 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#fff',
-    fontSize: 18,
-    fontFamily: 'Montserrat-Bold',
+    fontSize: wp('4%'),
+    fontFamily: 'Montserrat-Regular',
+  },
+  label1: {
+    color: '#fff',
+    fontSize: wp('4%'),
+    fontFamily: 'Montserrat-SemiBold',
   },
   amount: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'Montserrat-Bold',
+    fontFamily: 'Montserrat-SemiBold',
   },
   addCashButton: {
     paddingHorizontal: wp('5%'),
     paddingVertical: wp('1%'),
-    borderRadius: 5,
-    marginHorizontal: hp('5%'),
+    borderRadius: wp('1%'),
+    marginHorizontal: hp('7%'),
     marginVertical: hp('1%'),
   },
   buttonText: {
     color: '#fff',
     fontFamily: 'Montserrat-Bold',
-    fontSize: 16,
+    fontSize: hp('1.7%'),
     letterSpacing: 1,
   },
   withdrawButton: {
     paddingHorizontal:wp('2%'),
     paddingVertical: wp('1%'),
     borderRadius: 5,
-    marginHorizontal: hp('2%'),
+    marginHorizontal: hp('4%'),
     marginVertical: hp('1.5%'),
     flexDirection: 'row',
   },
@@ -354,12 +361,12 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: '#ddd',
-    marginVertical: 10,
+    marginVertical: wp('3%'),
   },
   transactionContainer: {
     backgroundColor: '#A38C85',
     flexDirection: 'row', 
-    padding: 15,
+    padding: wp('3%'),
     flex:1,
     borderRadius: wp('4%'),
     marginTop: wp('3%'), 
@@ -389,6 +396,12 @@ const styles = StyleSheet.create({
     fontSize: wp('5%'),
     color: 'black',
     fontFamily: 'Montserrat-Regular',
+  },
+  loaderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    marginTop: hp('40%'),
   },
 });
 export default WalletScreen;

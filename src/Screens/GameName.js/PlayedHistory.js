@@ -20,13 +20,13 @@ const PlayedHistory = () => {
   const { game_id } = route.params
   let msg
 
-      const refreshData = () => {
-          setRefreshing(true);
-          setTimeout(() => {
-            allGameHistory();
-            setRefreshing(false);
-          }, 2000);
-        };
+  const refreshData = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      allGameHistory();
+      setRefreshing(false);
+    }, 2000);
+  };
 
   const allGameHistory = async () => {
     setLoader(true)
@@ -108,15 +108,22 @@ const PlayedHistory = () => {
 
     <View style={styles.container}>
       {
-        !loader ? (<FlatList
+        gameHistoryData ? (!loader ? (<FlatList
           data={gameHistoryData}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-           refreshControl={
-                                     <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
-                                  }
-        />) : (<AnimatedLoader />)
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+          }
+        />) : (<AnimatedLoader />)) : (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              No games or tickets are currently available.
+            </Text>
+          </View>
+        )
+
       }
 
     </View>
@@ -182,6 +189,18 @@ const styles = StyleSheet.create({
     color: '#2A1610',
     fontSize: wp('6%'),
     fontFamily: 'Audiowide-Regular',
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    textAlign: 'center',
+    paddingHorizontal: hp('2%'),
   },
 });
 

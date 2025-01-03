@@ -20,10 +20,12 @@ const groupByDateAndType = (data) => {
 export default function Debit(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
-  const creditTransactions = walletData.filter((item) => item.type === 0);
+  const debitTransactions = Array.isArray(walletData)
+  ? walletData.filter((item) => item.type === 0)
+  : [];
 
-  // Group walletData by date
-  const groupedData = groupByDateAndType(creditTransactions);
+
+  const groupedData = groupByDateAndType(debitTransactions);
 
   console.log("dtatrtt", groupedData)
 
@@ -84,7 +86,7 @@ export default function Debit(props) {
   return (
     <View style={styles.container}>
       {
-        walletData.length == 0 ? (
+        debitTransactions.length == 0 ? (
           <View style={styles.noDataContainer}>
             <Text style={styles.noDataText}>No data found</Text>
           </View>

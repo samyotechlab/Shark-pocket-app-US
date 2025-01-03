@@ -12,7 +12,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import sharkLogo from '../../../assets/images/Screens/sharkLogo.png';
 import bell from '../../../assets/images/Screens/bell.png';
 import wheel from '../../../assets/images/Screens/wheel.png';
-import rupees from '../../../assets/images/Screens/rupees.png';
 import { Divider } from 'react-native-elements';
 import {
   widthPercentageToDP as wp,
@@ -87,7 +86,7 @@ export default function HomeScreen() {
 
               {/* Rupee Wallet Section */}
               <LinearGradient colors={['#FFFFFF1A','#FFFFFF1A','#5521131A']} style={styles.walletContainer}>
-                <Image source={rupees} style={styles.walletIcon} />
+                <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
                 <Text style={styles.walletText}>
                    ₹ {data?.total_balance || 1000}
                 </Text>
@@ -215,8 +214,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   walletIcon: {
-    height: hp('2.5%'),
-    width: wp('5%'),
+    height: hp('3%'),
+    width: wp('7%'),
     resizeMode: 'contain',
   },
   walletText: {

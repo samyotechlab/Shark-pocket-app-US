@@ -20,10 +20,12 @@ const groupByDateAndType = (data) => {
 export default function Debit({winningData}) {
   // const { walletData = [] } = props;
   const navigation = useNavigation();
-  const creditTransactions = winningData.filter((item) => item.type === 0);
+  const debitTransactions = Array.isArray(winningData)
+  ? winningData.filter((item) => item.type === 0)
+  : [];
 
   // Group walletData by date
-  const groupedData = groupByDateAndType(creditTransactions);
+  const groupedData = groupByDateAndType(debitTransactions);
 
   console.log("dtatrtt",groupedData)
 
@@ -83,12 +85,19 @@ export default function Debit({winningData}) {
 
   return (
     <View style={styles.container}>
-    <FlatList
-      data={sectionData}
-      renderItem={renderSection}
-      keyExtractor={(item) => item.date}
-      contentContainerStyle={styles.list}
-    />
+
+     {
+           debitTransactions == 0 ? (
+             <View style={styles.noDataContainer}>
+                       <Text style={styles.noDataText}>No data found</Text>
+                     </View>
+           ):(    <FlatList
+             data={sectionData}
+             renderItem={renderSection}
+             keyExtractor={(item) => item.date}
+             contentContainerStyle={styles.list}
+           />)
+         }
     </View>
   );
 }
@@ -151,5 +160,16 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontFamily: 'Montserrat-Medium',
     color: '#696969',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });

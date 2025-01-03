@@ -12,7 +12,6 @@ import {
   heightPercentageToDP as hp,
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
-import ModalScreen from '../../Components/ModalScreen';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CommonHeader from '../../Components/CommonHeader';
@@ -172,24 +171,16 @@ export default function PlayingInstruction() {
                     flexDirection: 'row',
                   }}>
                   {numberArray.map(number => (
-                    <View style={{
-                      borderWidth: 1,
-                      borderRadius: 10,
-                      borderColor: '#000000',
-                      paddingVertical: hp(0.6),
-                      marginHorizontal: 15,
-                      backgroundColor: '#A1A1A1',
-                      // backgroundColor: '#FF671F',
-                   
-                    }}>
                     <TouchableOpacity
-                      key={number}
+                    key={number}
+                     style={[styles.upperBox, selectedNumber === number && styles.selectedBox]}
+                     onPress={() => handleNumberSelect(number)}
+                     >
+                    <View
                       style={[
                         styles.box,
-                        selectedNumber === number && styles.selectedBox,
                       ]}
-                      onPress={() => handleNumberSelect(number)}>
-                      
+                     >
                         <Text
                           style={[
                             styles.boxText,
@@ -198,8 +189,8 @@ export default function PlayingInstruction() {
                           {number}
                         </Text>
                    
-                    </TouchableOpacity>
                     </View>
+                    </TouchableOpacity>
                   ))}
                 </View>
 
@@ -355,7 +346,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    height: heightPercentageToDP(90),
+    marginTop: hp('40%'),
   },
   container: {
     flex: 1,
@@ -391,6 +382,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 15,
     // backgroundColor:'white'
+  },
+  upperBox:{
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#000000',
+    paddingVertical: hp(0.6),
+    marginHorizontal: 15,
+    backgroundColor: '#A1A1A1',
+  
+    // backgroundColor: '#FF671F',
+ 
   },
   selectedBox: {
     backgroundColor: '#FFA402',

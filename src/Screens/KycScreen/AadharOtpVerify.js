@@ -67,8 +67,8 @@ export default function AadharOtpVerify() {
               text2: 'Otp Verify Successfully',
               visibilityTime: 5000
             });
-            storeLoginData(res.data.data)
-            navigation.navigate('HomeScreen', { data: res.data.data });
+            storeLoginData(res.data)
+            navigation.navigate('HomeScreen', { data: res.data});
           } else {
             Toast.show({
               type: 'error',

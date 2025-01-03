@@ -15,8 +15,11 @@ import {
 
 export default function Success({ data }) {
   const navigation = useNavigation();
+   
+  const filteredData = Array.isArray(data)
+  ? data.filter((item) => item.status === 5)
+  : [];
 
-  const filteredData = data.filter((item) => item.status === 5);
 
   const groupedData = filteredData.reduce((groups, item) => {
     const [date] = item.created_at.split(' ');

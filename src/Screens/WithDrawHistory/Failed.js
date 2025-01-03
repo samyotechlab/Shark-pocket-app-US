@@ -8,8 +8,9 @@ import {
 
 export default function Failed({ data }) {
 
-  const filteredData = data.filter((item) => item.status === 2);
-  console.log("filteredData", filteredData)
+  const filteredData = Array.isArray(data)
+  ? data.filter((item) => item.status === 2)
+  : [];
 
   const groupedData = filteredData.reduce((groups, item) => {
     const [date] = item.created_at.split(' ');

@@ -20,10 +20,7 @@ export default function All(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
 
-
-
-  // Group walletData by date
-  const groupedData = groupByDateAndType(walletData);
+  const groupedData = walletData.length > 0 ? groupByDateAndType(walletData) : {};
 
   const handleNavigation = (item) => {
     navigation.navigate('DepositeDetails', { item });

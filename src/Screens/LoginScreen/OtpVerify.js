@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
@@ -10,6 +10,7 @@ import {API_URL} from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
+import Iconics from 'react-native-vector-icons/Ionicons';
 
 
 const headers = {
@@ -19,11 +20,12 @@ const headers = {
 export default function OtpVerify() {
 
   const route = useRoute()
-  const data = route.params.data
+  const {data} = route.params
   const navigation = useNavigation()
   const {storeLoginData} = useLoginDataStorage();
   const [otp, setOtp] = useState(['', '', '', '']);
   const inputs = useRef([]);
+  const [timer, setTimer] = useState(60); 
 
   const handleChange = (text, index) => {
     const newOtp = [...otp];
@@ -40,6 +42,31 @@ export default function OtpVerify() {
       inputs.current[index - 1].focus();
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          Toast.show({
+            type: 'info',
+            position: 'top',
+            text1: 'Session Expired',
+            text2: 'Returning to Login page',
+            visibilityTime: 3000,
+          });
+          setTimeout(() => {
+            navigation.navigate('LoginScreen'); 
+          }, 3000);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000); 
+
+    return () => clearInterval(interval); 
+  }, [navigation]);
+
   const handleOtp = () => {
     try {
         console.log('phoneNumber',`${API_URL}/${Config.OtpVerify}`);
@@ -90,25 +117,35 @@ export default function OtpVerify() {
       console.log('An error occurred:', error);
     }
   };
+
+  const formatTime = seconds => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
   return (
     <>
       <BackgroundScreen />
-      <View style={styles.container}>
-        <View style={[styles.box, { justifyContent: 'center' }]}>
-          <View style={styles.headerContent}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.verification}>
-              <Image source={Backarrow} style={styles.icon} />
-            </TouchableOpacity>
-            <View style={styles.headerLeft}>
-              <Text style={styles.headerText}>Verification</Text>
-            </View>
+      <KeyboardAvoidingView style={styles.container}>
+
+        <View style={{flex:1,margin:wp('6%')}}>
+        <View style={styles.box}>
+          <TouchableOpacity style={{flex:0.5,paddingTop:hp('0.5%')}} onPress={()=>{
+            navigation.goBack()
+          }}>
+          <Iconics name="chevron-back" size={27} color={'white'} />
+          </TouchableOpacity>
+          <View style={{flex:1.5,marginLeft:hp('1%')}}>
+             <Text style={styles.headerText}>Verification</Text>
           </View>
-          <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 4-digit code sent to your
-            phone number {data.mobile} for verification.</Text>
+
         </View>
-        <View style={[styles.box, { justifyContent: 'center' }]}>
+        <View style={{marginTop:hp('3%')}}>
+              <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 4-digit code sent to your
+               phone number {data.mobile} for verification.</Text>
+        </View>
+
+       <View style={{justifyContent:'center',marginTop:hp('4%')}}>
           <View style={styles.inputContainer}>
             {otp.map((digit, index) => (
               <TextInput
@@ -126,34 +163,38 @@ export default function OtpVerify() {
             ))}
           </View>
         </View>
-        <View style={[styles.box, { paddingVertical: hp('4%'), padding: hp('2%') }]}>
+
+     <View style={{marginTop:hp('10%')}}>
           <CommonButton title={'Verify'} onPress={handleOtp}/>
-          <Text style={styles.timer}>00:30</Text>
-          <Text style={styles.resendOtp}>Resend OTP</Text>
+          <Text style={styles.timer}>{formatTime(timer)}</Text>
+          {/* <Text style={styles.timer}>00:30</Text> */}
+
+          {/* <Text style={styles.resendOtp}>Resend OTP</Text> */}
+        </View>
+           
         </View>
          <Toast ref={Toast.setRef}/>
-      </View>
+      </KeyboardAvoidingView>
+      
     
     </>
   )
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 0.5,
-    margin: hp(2),
-    marginTop: hp(8)
-  },
-  box: {
     flex: 1,
+  },
+  
+  box: {
+    marginTop:hp('6%'),
+    flexDirection:'row'
   },
   text: {
     textAlign: 'center',
     color: '#FFFFFF',
-    padding: wp('3%')
-  },
-  verification: {
-    position: 'absolute',
-    top: hp('1.3%')
+    padding: wp('1%'),
+    fontSize:hp('1.8%'),
+    lineHeight:hp('2.8%')
   },
   inputContainer: {
     flexDirection: 'row',
@@ -166,17 +207,18 @@ const styles = StyleSheet.create({
     width: wp('2.5%')
   },
   headerLeft: {
-    marginLeft: hp('12%')
+    marginLeft: hp('12%'),
+    // backgroundColor:'yellow'  
   },
   headerText: {
-    fontSize: hp('2.5%'),
+    fontSize: hp('2.8%'),
     color: '#FFFFFF',
-    fontFamily: 'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
+    letterSpacing:wp(0.1)
   },
   headerContent: {
     flex: 1,
-    paddingTop: 10,
-    position: 'relative',
+    backgroundColor:"red"
   },
   input: {
     width: 50,
@@ -198,9 +240,9 @@ const styles = StyleSheet.create({
   timer: {
     color: '#FCFCFC',
     textAlign: 'right',
-    paddingTop: hp('1.5%'),
+    paddingTop: hp('2%'),
     fontFamily: 'Montserrat-Medium',
-    fontSize: hp('1.5%')
+    fontSize: hp('1.8%')
   },
   footerText:{
     color:'#FFFFFF',

@@ -80,15 +80,20 @@ export default function AllPlayedGames() {
             style={styles.linearGradient}>
             <CommonHeader title={"All Played Games"} />
             {
-                !loader  ?( <View style={styles.container}>
-                    <FlatList
-                        data={history}
-                        renderItem={renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={styles.scrollContainer}
-                    />
-                </View>):(<AnimatedLoader/>)
+             history ? (!loader  ?( <View style={styles.container}>
+                <FlatList
+                    data={history}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.scrollContainer}
+                />
+            </View>):(<AnimatedLoader/>)):(<View style={styles.emptyContainer}>
+                        <Text style={styles.emptyText}>
+                          No games or tickets are currently available.
+                        </Text>
+                      </View>)
+                
             }
          <Toast ref={Toast.setRef} />
         </LinearGradient>
@@ -181,6 +186,18 @@ const styles = StyleSheet.create({
         textShadowColor: '#F88600',
         textShadowOffset: { width: 0, height: hp('0.25%') },
         textShadowRadius: wp('3.75%'),
-    }
+    },
+    emptyContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      emptyText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: '500',
+        textAlign: 'center',
+        paddingHorizontal: hp('2%'),
+      },
 })
 

@@ -20,8 +20,9 @@ const groupByDateAndType = (data) => {
 export default function Credit(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
-  const creditTransactions = walletData.filter((item) => item.type === 1);
-
+  const creditTransactions = Array.isArray(walletData)
+  ? walletData.filter((item) => item.type === 1)
+  : [];
 
   const groupedData = groupByDateAndType(creditTransactions);
 
@@ -84,7 +85,7 @@ export default function Credit(props) {
   return (
       <View style={styles.container}>
           {
-            walletData.length == 0 ? (
+            creditTransactions.length == 0 ? (
               <View style={styles.noDataContainer}>
                 <Text style={styles.noDataText}>No data found</Text>
               </View>
