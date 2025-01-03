@@ -175,19 +175,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   light: {
-    paddingLeft: 10,
+    paddingLeft: hp('1%'),
   },
   myGame: {
     color: '#FFB700',
     fontFamily: 'Montserrat-Bold',
-    fontSize: 20,
-    paddingLeft: 10,
+    fontSize: wp('5%'),
+    paddingLeft: hp('1%'),
   },
   view: {
     color: '#FFB700',
     fontFamily: 'Montserrat-Bold',
     textDecorationLine: 'underline',
-    paddingLeft: hp('5%'),
+    paddingLeft: hp('8%'),
   },
   container: {
     flexDirection: 'row',

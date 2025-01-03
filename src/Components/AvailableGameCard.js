@@ -32,13 +32,24 @@ const AvailbleGameCard = props => {
     );
   };
   return (
-    <FlatList
-      horizontal
-      data={myGameData}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      showsHorizontalScrollIndicator={false}
-    />
+    <>
+    {
+      !myGameData ? (
+         <View style={styles.emptyContainer}>
+                                <Text style={styles.emptyText}>
+                                    No games or tickets are currently available.
+                                </Text>
+                            </View>
+      ):( <FlatList
+        horizontal
+        data={myGameData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
+      />)
+     
+    }
+    </>
   );
 };
 const styles = StyleSheet.create({
@@ -46,5 +57,17 @@ const styles = StyleSheet.create({
     flex: 1,
     width: hp('45%'),
   },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+emptyText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    textAlign: 'center',
+    paddingHorizontal: hp('2%'),
+},
 });
 export default AvailbleGameCard;

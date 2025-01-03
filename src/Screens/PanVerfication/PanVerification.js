@@ -7,9 +7,11 @@ import CommonButton from '../../Components/CommonButton'
 import Toast from 'react-native-toast-message'
 import { PanVerificationData } from '../../Service/PanVerfication'
 import { useRoute } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
 
 export default function PanVerfication() {
+    const navigation = useNavigation();
     const route = useRoute();
     const [loader,setLoader] = useState(false)
     const { user_id } = route.params

@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
         width: hp('45%')
     },
     emptyContainer: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
         textAlign: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: hp('2%'),
     },
 });
 export default MyGame;

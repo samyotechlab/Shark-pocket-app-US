@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     shadowRadius: wp('1.5%'),
     elevation: 5,
     borderWidth: wp('1%'),
-    paddingVertical: 5,
-    marginRight: 15,
+    paddingVertical: hp('0.5%'),
+    marginRight: hp('2%'),
     marginLeft: 0,
   },
   content: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   linesContainer: {
     position: 'absolute',
-    right: 15,
+    right: wp('2%'),
     top: 0,
     bottom: 0,
     justifyContent: 'center',
