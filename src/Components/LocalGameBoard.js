@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import {
@@ -21,15 +21,15 @@ import Person4 from '../../assets/images/Screens/Person4.jpeg';
 import Person from '../../assets/images/Screens/person.jpeg';
 import Frame from '../../assets/images/Screens/Frame.png';
 import SearchField from './SearchField';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { leaderBoard } from '../Service/LeaderBoard';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {leaderBoard} from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
-import { truncateName } from '../Utilities/utilies';
+import {truncateName} from '../Utilities/utilies';
 import AnimatedLoader from './AnimatedLoader';
 
 export default function LocalGameBoard() {
   const route = useRoute();
-  const { game_id } = route.params;
+  const {game_id} = route.params;
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
@@ -51,7 +51,7 @@ export default function LocalGameBoard() {
         setGameData(response.data);
         setFilteredData(response.data);
       } else {
-        const msg =response?.message
+        const msg = response?.message;
         Toast.show({
           type: 'error',
           position: 'top',
@@ -77,22 +77,23 @@ export default function LocalGameBoard() {
     leaderBoardData();
   }, []);
 
-  const handleSearch = (query) => {
+  const handleSearch = query => {
     if (!query) {
       setFilteredData(gameData);
     } else {
-      const filtered = gameData.filter((item) =>
-        (item.user_name && item.user_name.toLowerCase().includes(query.toLowerCase())) ||
-        (item.ranking && item.ranking.toString().includes(query))
+      const filtered = gameData.filter(
+        item =>
+          (item.user_name &&
+            item.user_name.toLowerCase().includes(query.toLowerCase())) ||
+          (item.ranking && item.ranking.toString().includes(query)),
       );
       setFilteredData(filtered);
     }
   };
 
-
   useEffect(() => {
     const rakingData = () => {
-      gameData.forEach((item) => {
+      gameData.forEach(item => {
         if (item.ranking === 1) setFirstRanking(item);
         if (item.ranking === 2) setSecondRanking(item);
         if (item.ranking === 3) setThirdRanking(item);
@@ -102,38 +103,38 @@ export default function LocalGameBoard() {
   }, [gameData]);
 
   const renderItem = items => {
-    const { item } = items;
+    const {item} = items;
 
     return (
       <>
-        <View style={{ flex: 1, paddingBottom: 10 }}>
+        <View style={{flex: 1, paddingBottom: 10}}>
           <View
             style={{
               flex: 1,
-              width: wp('100%'),
+              width: wp('80%'),
               flexDirection: 'row',
               paddingBlock: 6,
             }}>
-            <View style={{ flex: 0.4 }}>
+            <View style={{flex: 0.4}}>
               <Image
                 source={Person4}
-                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
+                style={{height: hp(3), width: wp(6), borderRadius: wp(3)}}
               />
             </View>
-            <View style={{ flex: 1.5 }}>
+            <View style={{flex: 1.5}}>
               <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <Text style={styles.txt}>{item.score}</Text>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.txt}>#{item.ranking}</Text>
+            <View style={{flex: 1}}>
+              <Text style={styles.txt1}>#{item.ranking}</Text>
             </View>
           </View>
           <LinearGradient
             colors={['#999999', '#FFFFFF', '#999999']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
             style={{
               height: 1,
               marginTop: 10,
@@ -149,21 +150,21 @@ export default function LocalGameBoard() {
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
-        <View style={{ flex: 1, marginTop: wp('10%') }}>
+        <View style={{flex: 1, marginTop: wp('10%')}}>
           <View style={styles.leaderBoard}>
             <TouchableOpacity
-              style={{ flex: 0.5, justifyContent: 'center' }}
+              style={{flex: 0.5, justifyContent: 'center'}}
               onPress={() => {
                 handleNavigation();
               }}>
               <Iconics name="chevron-back" size={25} color={'white'} />
             </TouchableOpacity>
-            <View style={{ flex: 3.5, justifyContent: 'center' }}>
+            <View style={{flex: 3.5, justifyContent: 'center'}}>
               <SearchField onSearch={handleSearch} />
             </View>
           </View>
         </View>
-        <View style={{ flex: 1.5, flexDirection: 'row', marginBottom: 20 }}>
+        <View style={{flex: 1.5, flexDirection: 'row', marginBottom: 20}}>
           <View
             style={{
               flex: 1,
@@ -182,10 +183,10 @@ export default function LocalGameBoard() {
               }}>
               <Image
                 source={Person2}
-                style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
+                style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
               />
             </View>
-            <View style={{ position: 'absolute' }}>
+            <View style={{position: 'absolute'}}>
               <View
                 style={{
                   height: hp(3),
@@ -196,7 +197,7 @@ export default function LocalGameBoard() {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{ color: '#000000CC' }}>2</Text>
+                <Text style={{color: '#000000CC'}}>2</Text>
               </View>
             </View>
             <Text
@@ -239,10 +240,10 @@ export default function LocalGameBoard() {
               }}>
               <Image
                 source={Person}
-                style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
+                style={{height: hp(10), width: hp(10), borderRadius: hp(10)}}
               />
             </View>
-            <View style={{ position: 'absolute' }}>
+            <View style={{position: 'absolute'}}>
               <View
                 style={{
                   height: hp(3),
@@ -253,7 +254,7 @@ export default function LocalGameBoard() {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={{ color: '#000000CC' }}>1</Text>
+                <Text style={{color: '#000000CC'}}>1</Text>
               </View>
             </View>
             <Text
@@ -287,10 +288,10 @@ export default function LocalGameBoard() {
               }}>
               <Image
                 source={Person3}
-                style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
+                style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
               />
             </View>
-            <View style={{ position: 'absolute' }}>
+            <View style={{position: 'absolute'}}>
               <View
                 style={{
                   height: hp(3),
@@ -301,7 +302,7 @@ export default function LocalGameBoard() {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={{ color: '#000000CC' }}>3</Text>
+                <Text style={{color: '#000000CC'}}>3</Text>
               </View>
             </View>
             <Text
@@ -324,8 +325,8 @@ export default function LocalGameBoard() {
             margin: wp('6%'),
             borderRadius: 15,
           }}>
-          <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
-            {gameData? (
+          <SafeAreaView style={{flex: 1, margin: wp('4%')}}>
+            {gameData ? (
               !loader ? (
                 <FlatList
                   data={filteredData}
@@ -336,9 +337,11 @@ export default function LocalGameBoard() {
               ) : (
                 <AnimatedLoader />
               )
-              ) : (<View style={styles.noDataContainer}>
+            ) : (
+              <View style={styles.noDataContainer}>
                 <Text style={styles.noDataText}>No data found</Text>
-              </View>)}
+              </View>
+            )}
           </SafeAreaView>
         </View>
       </LinearGradient>
@@ -367,7 +370,14 @@ const styles = StyleSheet.create({
   txt: {
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Bold',
-    fontSize: 16,
+    fontSize: hp('1.8%'),
+  },
+  txt1: {
+    color: '#FFFFFF',
+    fontFamily: 'Montserrat-Bold',
+    fontSize: hp('1.8%'),
+    width: wp('20%'),
+    paddingLeft: wp('10%'),
   },
   noDataContainer: {
     flex: 1,

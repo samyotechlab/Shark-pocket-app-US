@@ -1,153 +1,245 @@
-import { useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal } from 'react-native';
+import {useRoute} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import CommonHeader from '../../Components/CommonHeader';
-import Coin from '../../../assets/images/Screens/CoinStack.png'
+import Coin from '../../../assets/images/Screens/CoinStack.png';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function GameFinishHistory() {
-
-  const [loader,setLoader] = useState(false)
+  const [loader, setLoader] = useState(false);
   const route = useRoute();
-  const {gameHistoryData} = route.params
+  const {gameHistoryData} = route.params;
 
-  console.log("gameHistoryData---------->",gameHistoryData)
+  console.log('gameHistoryData---------->', gameHistoryData);
 
-  console.log("gameHistoryData",gameHistoryData?.double_digit)
-
+  console.log('gameHistoryData', gameHistoryData?.double_digit);
 
   return (
-     <>
-     <LinearGradient
+    <>
+      <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.container}>
-        <CommonHeader title={"Games Name"} />
-  {
-    !loader?(
-      <>
-              <View style={styles.headerContainer}>
-          <LinearGradient
-            colors={['#F38424', '#F7C929', '#F9D479']}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={{ flex: 1, borderRadius: wp('2%'), margin: wp('1.5%'), width: wp('89.5%') }}>
-            <View style={styles.score}>
-              <Text style={styles.headerText}>YOUR SCORE</Text>
-            </View>
-            <View style={styles.scoreBox}>
+        <CommonHeader title={'Games Name'} />
+        {!loader ? (
+          <>
+            <View style={styles.headerContainer}>
               <LinearGradient
-                colors={['#00E000', '#00B300', '#00B300']}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-                style={styles.scoreBox1}>
-                <Image source={Coin} style={styles.coinImage} />
-                <Text style={styles.scoreText}>{gameHistoryData.score}</Text>
+                colors={['#F38424', '#F7C929', '#F9D479']}
+                start={{x: 0, y: 0.5}}
+                end={{x: 1, y: 0.5}}
+                style={{
+                  flex: 1,
+                  borderRadius: wp('2%'),
+                  margin: wp('1.5%'),
+                  width: wp('89.5%'),
+                }}>
+                <View style={styles.score}>
+                  <Text style={styles.headerText}>YOUR SCORE</Text>
+                </View>
+                <View style={styles.scoreBox}>
+                  <LinearGradient
+                    colors={['#00E000', '#00B300', '#00B300']}
+                    start={{x: 0, y: 0.5}}
+                    end={{x: 1, y: 0.5}}
+                    style={styles.scoreBox1}>
+                    <Image source={Coin} style={styles.coinImage} />
+                    <Text style={styles.scoreText}>
+                      {gameHistoryData.score}
+                    </Text>
+                  </LinearGradient>
+                </View>
               </LinearGradient>
             </View>
-          </LinearGradient>
-        </View>
-        <View style={{ flex: 2, margin: wp('3%') }}>
-          <Image></Image>
-          <Text style={{ color: '#FFB700', fontFamily: 'Montserrat-Bold', fontSize: 20, marginBottom: wp('4%') }}>Points Calculation</Text>
-          <LinearGradient
-            colors={['#F38424', '#F7A552', '#F9D479']}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={styles.tableContainer}>
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Double</Text>
-              <Text style={styles.rowText}>{gameHistoryData.double_digit.selected}*{gameHistoryData.double_digit.assignedScore}</Text>
-              <Text style={styles.rowText}>{gameHistoryData.double_digit.score}</Text>
+            <View style={{flex: 2, margin: wp('3%')}}>
+              <Text
+                style={{
+                  color: '#FFB700',
+                  fontFamily: 'Montserrat-Bold',
+                  fontSize: 20,
+                  marginBottom: wp('4%'),
+                }}>
+                Points Calculation
+              </Text>
+              <LinearGradient
+                colors={['#F38424', '#F7A552', '#F9D479']}
+                start={{x: 0, y: 0.5}}
+                end={{x: 1, y: 0.5}}
+                style={styles.tableContainer}>
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Double</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.double_digit.selected}*
+                      {gameHistoryData.double_digit.assignedScore}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.double_digit.score}
+                    </Text>
+                  </View>
+                </View>
+                <LinearGradient
+                  colors={['#EE8423', '#FFFFFF', '#F0B226']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBorder}
+                />
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Triple</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.triple_digit.selected}*
+                      {gameHistoryData.triple_digit.assignedScore}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.triple_digit.score}
+                    </Text>
+                  </View>
+                </View>
+                <LinearGradient
+                  colors={['#EE8423', '#FFFFFF', '#F0B226']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBorder}
+                />
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Quadraple</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.quadruple_digit.selected}*
+                      {gameHistoryData.quadruple_digit.assignedScore}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.quadruple_digit.score}
+                    </Text>
+                  </View>
+                </View>
+                <LinearGradient
+                  colors={['#EE8423', '#FFFFFF', '#F0B226']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBorder}
+                />
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Prime</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.prime_number.selected}*
+                      {gameHistoryData.prime_number.assignedScore}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.prime_number.score}
+                    </Text>
+                  </View>
+                </View>
+                <LinearGradient
+                  colors={['#EE8423', '#FFFFFF', '#F0B226']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBorder}
+                />
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Super</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.super_number.selected}*
+                      {gameHistoryData.super_number.assignedScore}
+                    </Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.super_number.score}
+                    </Text>
+                  </View>
+                </View>
+                <LinearGradient
+                  colors={['#EE8423', '#FFFFFF', '#F0B226']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBorder}
+                />
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Bonus</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>-</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.bonus_point_score.bonusPoints}
+                    </Text>
+                  </View>
+                </View>
+                <LinearGradient
+                  colors={['#EE8423', '#FFFFFF', '#F0B226']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.gradientBorder}
+                />
+                <View style={styles.row}>
+                  <View style={{flex: 2.5}}>
+                    <Text style={styles.rowText}>Wrong</Text>
+                  </View>
+                  <View style={{flex: 1.5}}>
+                    <Text style={styles.rowText}>-</Text>
+                  </View>
+                  <View style={{flex: 1}}>
+                    <Text style={styles.rowText}>
+                      {gameHistoryData.bonus_point_score.superPoints}
+                    </Text>
+                  </View>
+                </View>
+              </LinearGradient>
+              <View
+                style={{
+                  flex: 0.3,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}></View>
             </View>
-            <LinearGradient
-              colors={['#EE8423', '#FFFFFF', '#F0B226']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientBorder}
-            />
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Triple</Text>
-              <Text style={styles.rowText}>{gameHistoryData.triple_digit.selected}*{gameHistoryData.triple_digit.assignedScore}</Text>
-              <Text style={styles.rowText}>{gameHistoryData.triple_digit.score}</Text>
-            </View>
-            <LinearGradient
-              colors={['#EE8423', '#FFFFFF', '#F0B226']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientBorder}
-            />
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Quadraple</Text>
-              <Text style={styles.rowText}>{gameHistoryData.quadruple_digit.selected}*{gameHistoryData.quadruple_digit.assignedScore}</Text>
-              <Text style={styles.rowText}>{gameHistoryData.quadruple_digit.score}</Text>
-            </View>
-            <LinearGradient
-              colors={['#EE8423', '#FFFFFF', '#F0B226']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientBorder}
-            />
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Prime</Text>
-              <Text style={styles.rowText}>{gameHistoryData.prime_number.selected}*{gameHistoryData.prime_number.assignedScore}</Text>
-              <Text style={styles.rowText}>{gameHistoryData.prime_number.score}</Text>
-            </View>
-            <LinearGradient
-              colors={['#EE8423', '#FFFFFF', '#F0B226']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientBorder}
-            />
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Super</Text>
-              <Text style={styles.rowText}>{gameHistoryData.super_number.selected}*{gameHistoryData.super_number.assignedScore}</Text>
-              <Text style={styles.rowText}>{gameHistoryData.super_number.score}</Text>
-            </View>
-            <LinearGradient
-              colors={['#EE8423', '#FFFFFF', '#F0B226']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientBorder}
-            />
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Bonus</Text>
-              <Text style={styles.rowText}>-</Text>
-              <Text style={styles.rowText}>{gameHistoryData.bonus_point_score.bonusPoints}</Text>
-            </View>
-            <LinearGradient
-              colors={['#EE8423', '#FFFFFF', '#F0B226']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.gradientBorder}
-            />
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Wrong</Text>
-              <Text style={styles.rowText}>-</Text>
-              <Text style={styles.rowText}>{gameHistoryData.bonus_point_score.superPoints}</Text>
-            </View>
-  
-          </LinearGradient>
-          <View style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
-          </View>
-        </View>
-      </>
-    ):(<AnimatedLoader/>)
-  }
-
+          </>
+        ) : (
+          <AnimatedLoader />
+        )}
       </LinearGradient>
-     </>
-
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-
-
   },
   underContainer: {
     flex: 1,
@@ -165,10 +257,10 @@ const styles = StyleSheet.create({
     margin: wp('5%'),
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 0.3,
     shadowRadius: 1,
-    backgroundColor: '#F2E30B'
+    backgroundColor: '#F2E30B',
   },
   headerContainer: {
     flex: 0.5,
@@ -179,7 +271,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowOpacity: 10,
     shadowRadius: 1,
   },
@@ -199,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 5,
     shadowColor: 'white',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     alignItems: 'center',
@@ -209,7 +301,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   scoreBox1: {
     height: hp('6%'),
@@ -218,7 +310,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    borderWidth: 2
+    borderWidth: 2,
   },
   scoreText: {
     fontSize: 24,
@@ -237,21 +329,31 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-
+  row1: {
+    flex: 1,
     paddingVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  row: {
+    flex: 1,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   gradientBorder: {
-    height: 1.5, 
+    height: 1.5,
     width: '90%',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   rowText: {
     fontSize: 18,
     fontWeight: '600',
     color: '#FFF',
+    // alignSelf: 'center',
+    textAlign: 'flex-start',
   },
   homeButton: {
     // flex:1.5,
@@ -263,13 +365,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 5,
     shadowColor: 'white',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: wp('3%'),
-    paddingHorizontal: wp('13%')
+    paddingHorizontal: wp('13%'),
   },
   homeButtonText: {
     fontSize: 28,
