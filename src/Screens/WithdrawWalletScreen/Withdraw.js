@@ -5,9 +5,6 @@ import TDSBreakupDialog from '../../Components/TDSBreakupDialog'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Iconics from 'react-native-vector-icons/FontAwesome';
-import secure from '../../../assets/images/Screens/Safe.png';
-import light from '../../../assets/images/Screens/light.png';
-import profile from '../../../assets/images/Screens/profile.png';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 import { withdrawCash } from '../../Service/WithDraw';
 import Toast from 'react-native-toast-message';

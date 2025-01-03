@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   FlatList,
   StyleSheet,
-  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
