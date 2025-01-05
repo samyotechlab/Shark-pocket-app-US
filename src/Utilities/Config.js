@@ -2,6 +2,7 @@
 export default {
   Login: 'api/login',
   OtpVerify: 'api/verifyOtp',
+  ResendOtp:'api//sendOtp',
   Home_Api: 'api/game/list',
   Profile: 'api/get_details',
   AdharOptSend: 'api/AadharVerificationSendOtp',
@@ -18,12 +19,14 @@ export default {
   Refund: 'refundPolicy',
   HelpSupport: 'helpAndSupport',
   TermCondition: 'termsAndCondition',
+  
   Transaction_List: 'api/wallet/transactionList',
   Transaction_store: 'api/transaction/store',
   Bonus_wallet: 'api/bonus_wallet',
   checkPaymentStatus: 'api/checkPaymentStatus',
   DepositeTransaction: 'api/wallet/transactionDepositeDetails',
   Bank_Store: 'api/bank_account/store',
+  Bank_Detail : 'api//bank_account/byId',
   PanVerification: 'api/PanVerification',
   Notification_List: 'notification/list',
   Winning: 'api/winnings/byUserId',
@@ -31,12 +34,11 @@ export default {
   Wallet_Request: 'api/wallet_request/list',
   Final_Score: 'api/finalScore',
   Bonus_Data: 'api/bonusWallet',
+  EditProfile: 'api/editprofile',
+
 };
 
 // export default {
-//     Final_Score: 'api/finalScore',
-
-//     EditProfile: 'api/editprofile',
 //     TaxInvoice:'api/taxInvoice',
 //     GenerateTaxInvoice:'download/',
 //     GeneratePdf : 'taxInvoiceById/'

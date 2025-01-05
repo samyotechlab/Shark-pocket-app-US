@@ -112,7 +112,7 @@ const WalletScreen = () => {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      handleNavigation('AddCash', { user_id: dataUser._id });
+                      handleNavigation('AddCash', { user_id: dataUser._id,balance :dataUser.total_balance });
                     }}>
                     <LinearGradient
                       colors={['#67FF00', '#67FF00', '#3E9900']}

@@ -12,6 +12,7 @@ const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
    const {user_id} = route.params
+   const {balance} = route.params
    const [amount, setAmount] = useState(null);
    const [visible, setVisible] = useState(false);
    const [data, setData] = useState({});
@@ -129,7 +130,7 @@ const AddCashScreen = () => {
             source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
             style={styles.walletIcon}
           />
-          <Text style={styles.walletText}>₹ 1000</Text>
+          <Text style={styles.walletText}>₹ {balance}</Text>
           </LinearGradient>
         </View>
       </View>

@@ -14,3 +14,16 @@ export const bankStore = async verificationData => {
       throw error;
     }
   };
+
+  export const bankAccountDetails = async user_id => {
+    try {
+      const response = await apiInstance.post(`${Config.Bank_Detail}`, {
+        user_id,
+      });
+      console.log('response for bankData', response.data);
+      return response.data;
+    } catch (error) {
+      console.log('error------------', error);
+      throw error;
+    }
+  };
