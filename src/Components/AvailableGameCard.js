@@ -1,19 +1,20 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, FlatList, Text} from 'react-native';
+import {StyleSheet, TouchableOpacity, FlatList, Text, Dimensions} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AvailableCard from './AvailableCard';
-
+const { height ,width} = Dimensions.get('window');
 const AvailbleGameCard = props => {
+
   const navigation = useNavigation();
   const myGames = props.gameData;
   const myGameData = myGames.filter(game => game.status === 3);
 
-  const handleNavigation = () => {
-    navigation.navigate('AvailableGame', {gameData: myGames});
+  const handleNavigation = (item) => {
+    navigation.navigate('GameName', {game_id:item._id});
   };
 
   const renderItem = items => {
@@ -24,7 +25,7 @@ const AvailbleGameCard = props => {
         <TouchableOpacity
           style={styles.container}
           onPress={() => {
-            handleNavigation();
+            handleNavigation(item);
           }}>
           <AvailableCard gameData={item} status={'1'} index={items.index} />
         </TouchableOpacity>
@@ -55,7 +56,6 @@ const AvailbleGameCard = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: hp('45%'),
   },
   emptyContainer: {
     flex: 1,

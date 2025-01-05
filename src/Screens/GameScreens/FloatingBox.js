@@ -47,6 +47,7 @@ export default function FloatingBoxGame() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [status,setStatus] = useState('')
   const [floatingBoxes, setFloatingBoxes] = useState([]);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -269,6 +270,7 @@ export default function FloatingBoxGame() {
       if (response) {
         setScoreData(response.data);
         setIsGameOver(true);
+        setStatus(0)
       }
     } catch (error) {
       console.log('error--------------->>>>>>>', error);
@@ -280,7 +282,8 @@ export default function FloatingBoxGame() {
   };
 
   const handleNavigate = () => {
-    setIsGameOver(false);
+    setIsGameOver(true);
+    setStatus(1)
     navigation.navigate('Home');
   };
 
@@ -321,41 +324,13 @@ export default function FloatingBoxGame() {
         />
 
         {isGameOver ? (
-          <GameFinishScreen
-            isVisible={isGameOver}
-            onClose={closeModal}
-            gameHistoryData={scoreData}
-            // gameHistoryData={{
-            //   bonus_point_score: {bonusPoints: 10, superPoints: 20},
-            //   double_digit: {
-            //     assignedScore: 2,
-            //     score: oddCounts.two * 2,
-            //     selected: oddCounts.two,
-            //   },
-            //   prime_number: {
-            //     assignedScore: 10,
-            //     score: primeCount * 10,
-            //     selected: primeCount,
-            //   },
-            //   quadruple_digit: {
-            //     assignedScore: 4,
-            //     score: oddCounts.three * 4,
-            //     selected: oddCounts.four,
-            //   },
-            //   score: score,
-            //   super_number: {
-            //     assignedScore: 5,
-            //     score: 5 * superNumberCount,
-            //     selected: superNumberCount,
-            //   },
-            //   triple_digit: {
-            //     assignedScore: 3,
-            //     score: oddCounts.three * 3,
-            //     selected: oddCounts.three,
-            //   },
-            //   wrong_selection_score: negativePoint,
-            // }}
-          />
+           status === 0 ? (
+            <GameFinishScreen
+              isVisible={isGameOver}
+              onClose={closeModal}
+              gameHistoryData={scoreData}
+            />
+          ) : null
         ) : (
           <>
             <View style={styles.header}>

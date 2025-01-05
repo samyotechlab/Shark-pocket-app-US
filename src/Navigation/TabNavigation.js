@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../Screens/HomeScreen/Home';
@@ -9,7 +9,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { widthPercentageToDP as wp,heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
 
+
 export default function TabNavigation() {
+  const { height } = Dimensions.get('window');
     const Tabs = createBottomTabNavigator();
     return (
         <Tabs.Navigator
@@ -34,9 +36,9 @@ export default function TabNavigation() {
             tabBarActiveTintColor: '#FFD700', 
             tabBarInactiveTintColor: '#FFFFFF', 
             tabBarStyle: {
-              backgroundColor: '#6A1700',
-              paddingBottom: 5,
-              height: hp('7%'),
+              backgroundColor: '#6A1700',            
+              height: height * 0.1,
+        
             },
             headerShown: false,
             
@@ -113,7 +115,9 @@ const CustomTabButton = props => {
 
 const styles = StyleSheet.create({
     touchable: {
-        flex: 1,
+        // flex: 1,
+        // backgroundColor:'red'
+
       },
       gradient: {
         flex: 1,
@@ -122,17 +126,16 @@ const styles = StyleSheet.create({
       },
       selectedGradient: {
         borderBottomColor: '#FFCE63', 
-        borderBottomWidth: wp(0.8),  
+        borderBottomWidth: wp('1%'), 
+     
         width: wp('20%'),               
         alignSelf: 'center',  
-        top:hp('1%')
       },
       inactiveGradient: {
         backgroundColor:'transparent',
         borderBottomWidth: 0,
         width: wp('20%'),
         alignSelf: 'center',
-        top:hp('1%')
       },
       iconContainer: {
         justifyContent: 'center',

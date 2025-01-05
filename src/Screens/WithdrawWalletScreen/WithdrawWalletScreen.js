@@ -30,7 +30,7 @@ const WithdrawWalletScreen = () => {
   return (
     <SafeAreaView style={dynamicStyles.container}>
       <CommonHeader title={"Withdraw wallet"} />
-      <View style={{ marginTop: 10,flex:1}}>
+      <View style={{ marginTop: hp('0.5%'),flex:1}}>
         <View
           style={{
             flexDirection: 'row',
@@ -69,15 +69,15 @@ const getDynamicStyles = selectedTab =>
       backgroundColor: '#361911',
     },
     Withdraw: {
-      fontSize: 18,
+      fontSize: wp('4.5%'),
       color: selectedTab === 'Withdraw' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'Withdraw' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      borderBottomWidth: 3,
+      borderBottomWidth: hp('0.5%'),
       borderBottomColor: selectedTab === 'Withdraw' ? '#FEB801' : '#565656',
     },
     WithdrawHistory: {
-      fontSize: 18,
-      borderBottomWidth: 3,
+      fontSize: wp('4.5%'),
+      borderBottomWidth: hp('0.5%'),
       borderBottomColor: selectedTab === 'WithdrawHistory' ? '#FEB801' : '#565656',
       color: selectedTab === 'WithdrawHistory' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'WithdrawHistory' ? 'Montserrat-Bold' : 'Montserrat-Regular',

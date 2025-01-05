@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Modal,
@@ -19,16 +19,16 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
-import {CommonActions, useNavigation} from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import profile from '../../../assets/images/Screens/profile.jpeg';
-import {userDetail} from '../../Service/Login';
-import {truncateName} from '../../Utilities/utilies';
+import { userDetail } from '../../Service/Login';
+import { truncateName } from '../../Utilities/utilies';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
 const SharkPocketScreen = () => {
   const navigation = useNavigation();
-  const {isReady, loginData} = useLoginDataStorage();
-  const {clearLoginData} = useLoginDataStorage();
+  const { isReady, loginData } = useLoginDataStorage();
+  const { clearLoginData } = useLoginDataStorage();
   const [visible, setVisible] = useState(false);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
@@ -48,11 +48,13 @@ const SharkPocketScreen = () => {
       title: 'Bank Account',
       icon: 'bank-outline',
       url: 'BankAccount',
+      is_verified: userData.is_account_verified,
     },
     {
       title: 'Pan verification',
       icon: 'security',
       url: 'PanVerification',
+      is_verified: userData.is_pan_verified,
     },
     {
       title: 'Aadhar Verification',
@@ -96,10 +98,10 @@ const SharkPocketScreen = () => {
     },
   ];
   const handleNavigation = (url) => {
-    if(url === "Logout"){
+    if (url === "Logout") {
       setVisible(true)
-    }else{
-      navigation.navigate(url,{user_id:data._id});
+    } else {
+      navigation.navigate(url, { user_id: data._id });
     }
   }
   const handleLogout = async () => {
@@ -108,7 +110,7 @@ const SharkPocketScreen = () => {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{name: 'SplashScreen'}],
+          routes: [{ name: 'SplashScreen' }],
         }),
       );
     } catch (error) {
@@ -134,7 +136,16 @@ const SharkPocketScreen = () => {
       setLoader(true);
     }
   }, [isReady, loginData]);
-  const _renderCard = ({item}) => {
+
+  const VerificationIcon = ({ isVerified }) => (
+    <Icon
+      name={isVerified ? 'check-circle' : 'dots-horizontal-circle'}
+      size={wp('6%')}
+      color={isVerified ? '#21B600' : '#E90000'}
+    />
+  );
+
+  const _renderCard = ({ item }) => {
     return (
       <>
         <TouchableOpacity
@@ -144,9 +155,9 @@ const SharkPocketScreen = () => {
           }}>
           <View>
             <LinearGradient
-              colors={['#3D1911', '#6A1701']}
-              start={{x: 1, y: 0}}
-              end={{x: 0, y: 1}}
+              colors={['#3D1911', '#3D1911', '#6A1701']}
+              start={{ x: 1, y: 0 }}
+              end={{ x: 0, y: 1 }}
               style={styles.cardImageContainer}>
               <Icon
                 name={item.icon}
@@ -158,6 +169,11 @@ const SharkPocketScreen = () => {
           </View>
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardText}>{item.title}</Text>
+            {item.is_verified !== undefined && (
+              <View style={styles.verificationIcon}>
+                <VerificationIcon isVerified={item.is_verified} />
+              </View>
+            )}
           </View>
           <View style={styles.cardArrowContainer}>
             <Icon
@@ -168,7 +184,7 @@ const SharkPocketScreen = () => {
             />
           </View>
         </TouchableOpacity>
-        <AlertDialogGreen visible={visible} onClose={() => setVisible(false)} onOkPress={handleLogout}  message={"Are You Sure You Want to Logout?"} ok={"Yes"}/>
+        <AlertDialogGreen visible={visible} onClose={() => setVisible(false)} onOkPress={handleLogout} message={"Are You Sure You Want to Logout?"} ok={"Yes"} />
       </>
     );
   };
@@ -196,7 +212,7 @@ const SharkPocketScreen = () => {
             <TouchableOpacity
               style={styles.profileActionContainer}
               onPress={() => {
-                navigation.navigate('ViewProfile', {userData});
+                navigation.navigate('ViewProfile', { userData });
               }}>
               <Text style={styles.viewProfileText}>View Profile</Text>
             </TouchableOpacity>
@@ -211,6 +227,15 @@ const SharkPocketScreen = () => {
               renderItem={_renderCard}
               keyExtractor={(_item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={() => (
+                <View  style={{ 
+                  height: hp('0.1%'), 
+                  backgroundColor: 'lightgray', 
+                  width: wp('70%'), 
+                  alignSelf: 'center', 
+                  marginVertical: hp('0.4%'), 
+                }}  />
+              )}
             />
           </View>
         </View>
@@ -328,12 +353,8 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   cardContainer: {
-    height: hp('5.8%'),
-    borderBottomWidth: 0.8,
-    borderBottomColor: 'lightgray',
     marginLeft: wp('4%'),
-    marginTop: hp('1.8%'),
-    width: '90%',
+    marginTop: hp('2%'),
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -355,9 +376,15 @@ const styles = StyleSheet.create({
     paddingLeft: wp('0.6%'),
     resizeMode: 'contain',
     alignSelf: 'center',
+    shadowColor: '#FFFFFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 3,
   },
   cardTextContainer: {
     width: wp('70%'),
+    flexDirection:'row'
   },
   cardText: {
     fontSize: wp('3.5%'),
@@ -388,6 +415,9 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: wp('30%'),
     marginTop: hp('1.5%'),
+  },
+  verificationIcon: {
+    marginLeft: hp('15%'),
   },
 });
 

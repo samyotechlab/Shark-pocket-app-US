@@ -32,6 +32,7 @@ import RefundPolicyScreen from '../../Screens/Screens/RefundPolicyScreen';
 import SupportScreen from '../../Screens/Screens/SupportScreen';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
+import FAQ from '../../Screens/Screens/FAQ';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -241,6 +242,13 @@ export default function AppNavigation() {
         <Stack.Screen
           name="Support"  
           component={SupportScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+                <Stack.Screen
+          name="Faq"  
+          component={FAQ}
           options={{
             headerShown: false,
           }}

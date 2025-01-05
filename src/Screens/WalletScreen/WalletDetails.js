@@ -22,7 +22,7 @@ export default function WalletDetails() {
   return (
     <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
       <CommonHeader title={"Wallet  Details"}/>
-    <View style={{marginTop:10,flex:1}}>
+    <View style={{marginTop:hp('0.5%'),flex:1}}>
       <View
         style={{
           flexDirection: 'row',
@@ -73,29 +73,29 @@ export default function WalletDetails() {
 const getDynamicStyles = selectedTab =>
   StyleSheet.create({
     deposite: {
-      fontSize: 18,
+      fontSize: wp('4.5%'),
       color: selectedTab === 'Deposite' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'Deposite' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      borderBottomWidth: 3,
+      borderBottomWidth: hp('0.5%'),
       borderBottomColor: selectedTab === 'Deposite' ? '#FEB801':'#565656', 
     },
     bonus: {
-      fontSize: 18,
-      borderBottomWidth: 3,
+      fontSize: wp('4.5%'),
+      borderBottomWidth: hp('0.5%'),
       borderBottomColor: selectedTab === 'Bonus' ? '#FEB801':'#565656', 
       color: selectedTab === 'Bonus' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'Bonus' ? 'Montserrat-Bold' : 'Montserrat-Regular',
     },
     winning: {
-      fontSize: 18,
-      borderBottomWidth: 3,
+      fontSize: wp('4.5%'),
+      borderBottomWidth: hp('0.5%'),
       borderBottomColor: selectedTab === 'Winning' ? '#FEB801':'#565656', 
       color: selectedTab === 'Winning' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'Winning' ? 'Montserrat-Bold' : 'Montserrat-Regular',
     },
     withdraw: {
-      fontSize: 18,
-      borderBottomWidth: 3,
+      fontSize: wp('4.5%'),
+      borderBottomWidth: hp('0.5%'),
       borderBottomColor: selectedTab === 'Withdraw' ? '#FEB801':'#565656', 
       color: selectedTab === 'Withdraw' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'Withdraw' ? 'Montserrat-Bold' : 'Montserrat-Regular',

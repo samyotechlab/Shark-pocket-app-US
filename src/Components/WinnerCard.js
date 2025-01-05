@@ -4,7 +4,8 @@ import WinnerBadge from '../../assets/images/Screens/WinnerBadge.png'
 import Trophy from '../../assets/images/Screens/trophy.png'
 import User from '../../assets/images/Screens/user.png'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-const WinnerCard = () => {
+const WinnerCard = (props) => {
+  const data = {props}
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -28,7 +29,7 @@ const WinnerCard = () => {
           source={Trophy}
           style={styles.trophyIcon}
             />
-            <Text style={styles.rewardText}>₹10,000</Text>
+            <Text style={styles.rewardText}>₹{data?.total_earning || 0}</Text>
           </View>
         </View>
         <View style={styles.linesContainer}>
@@ -53,16 +54,17 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#69C60A',
     borderRadius: wp(2.5), 
-    width: wp(90),
-    height: hp(22), 
-    flexDirection: 'row',
+    flex:1,
+    width: wp('90%'),
+    height: hp('20%'), 
+    flexDirection: 'row', 
     overflow: 'hidden',
     elevation: 10,
-    margin: wp(1.5),
+    margin: wp('1.5%'),
   },
   profileImage: {
-    width: wp(35),
-    height: hp(30), 
+    width: wp('30%'),
+    height: hp('25%'), 
     resizeMode: 'cover',
   },
   content: {

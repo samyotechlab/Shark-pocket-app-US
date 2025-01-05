@@ -132,7 +132,11 @@ export default function PanVerfication() {
                     <CommonButton title={'Save'}  onPress={handleVerifyPan}/>
                     <Text style={styles.kycText}>
                         Why do we need PAN Verification?
-                        <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>
+                         <TouchableOpacity style={{marginBottom: hp('1.3%')}} onPress={()=>{
+                                                handleNavigation()
+                                            }}>
+                                                <Text style={[styles.kycText,{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold',}]}> Read FAQ’s</Text>
+                        </TouchableOpacity>
                     </Text>
                 </View>
                 <Toast ref={Toast.setRef} />
@@ -186,7 +190,5 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: hp('1.5'),
         fontFamily: 'Montserrat-Regular',
-        paddingHorizontal: hp('2%'),
-        paddingVertical: hp('2%'),
     }
 })

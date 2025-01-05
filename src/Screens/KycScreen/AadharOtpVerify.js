@@ -10,6 +10,7 @@ import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
+import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 
 
 const headers = {
@@ -18,11 +19,11 @@ const headers = {
 
 export default function AadharOtpVerify() {
   const route = useRoute()
-  console.log('route--->', route.params);
   const {storeLoginData} = useLoginDataStorage();
   const { data } = route.params
   const { user_id } = route.params
-  console.log("data========>", user_id)
+  const {aadhaar_number} = route.params
+  console.log("aadhaar_number",aadhaar_number)
   const navigation = useNavigation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
@@ -41,6 +42,27 @@ export default function AadharOtpVerify() {
       inputs.current[index - 1].focus();
     }
   };
+
+      const handleResendOtp = async () => {
+          try {
+              const response = await AdharVerificationSendOtp(aadhaar_number);
+              console.log("response", response)
+              if (response.status === 1) {
+                  Toast.show({
+                      type: 'success',
+                      position: 'top',
+                      text1: 'Otp ReSend',
+                      text2: 'Otp ReSend Succesffully in your given phone Number',
+                      visibilityTime: 5000
+                  });
+              }
+          } catch (error) {
+              console.log("error", error)
+          } finally {
+             
+          }
+      }
+
   const handleOtp = () => {
     const verificationData = {
       user_id: user_id,
@@ -125,8 +147,18 @@ export default function AadharOtpVerify() {
         </View>
         <View style={[styles.box, { paddingVertical: hp('4%'), padding: hp('2%') }]}>
           <CommonButton title={'Verify'} onPress={handleOtp} />
-          <Text style={styles.timer}>00:30</Text>
-          <Text style={styles.resendOtp}>Resend OTP</Text>
+           <TouchableOpacity
+             onPress={handleResendOtp}
+           >
+             <Text
+               style={[
+                 styles.resendOtp,
+                 { color:  '#FCFCFC' },
+               ]}
+             >
+               Resend OTP
+             </Text>
+           </TouchableOpacity>
         </View>
         <Toast ref={Toast.setRef} />
       </View>

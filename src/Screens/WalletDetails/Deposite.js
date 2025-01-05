@@ -103,7 +103,7 @@ export default function Deposite(props) {
     
     },
     txt:{
-      fontSize: 16,
+      fontSize: hp('2%'),
       color: '#FFFFFF',
       fontFamily:'Montserrat-Regular'
     }

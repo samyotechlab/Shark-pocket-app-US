@@ -12,7 +12,7 @@ export default function CommonHeader({title}) {
           onPress={() => navigation.goBack()}
           style={styles.back}
           >
-          <Iconics name="chevron-back" size={27} color={'white'} />
+          <Iconics name="chevron-back" size={hp('3%')} color={'white'} />
         </TouchableOpacity>
         <View style={styles.headerLeft}>
           <Text style={styles.headerText}>{title}</Text>
@@ -23,7 +23,7 @@ export default function CommonHeader({title}) {
 
 export const styles = StyleSheet.create({
       headerContent: {
-        paddingTop: 20,
+        paddingTop: hp('2%'),
         marginTop:wp('8%'),
         flexDirection:'row'
       },

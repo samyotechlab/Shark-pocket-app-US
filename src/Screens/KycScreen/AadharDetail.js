@@ -46,7 +46,7 @@ export default function AadharDetail() {
                     visibilityTime: 5000
                 });
                 setTimeout(() => {
-                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id })
+                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id ,aadhaar_number})
                 }, 3000);
             }
         } catch (error) {

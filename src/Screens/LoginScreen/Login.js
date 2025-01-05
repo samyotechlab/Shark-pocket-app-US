@@ -23,6 +23,7 @@ export default function Login() {
   const [mobileError, setMobileError] = useState('');
   const [loader, setLoader] = useState(false);
 
+
   const validateInputs = () => {
     let valid = true;
     const mobileRegex = /^[0-9]{10}$/;

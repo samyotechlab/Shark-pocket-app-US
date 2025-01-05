@@ -1,5 +1,5 @@
 import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import TDSBreakupDialog from '../../Components/TDSBreakupDialog'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -10,12 +10,15 @@ import { withdrawCash } from '../../Service/WithDraw';
 import Toast from 'react-native-toast-message';
 import Tds from '../../../assets/images/Screens/tds.png';
 import Iconic from 'react-native-vector-icons/Ionicons';
+import { bankAccountDetails } from '../../Service/Bank';
 
 export default function Withdraw({ dataUser }) {
+  console.log(dataUser)
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false);
+  const [bankDetail,setBankDetail] = useState({})
 
   const handleWithdraw = () => {
     console.log("value", amount)
@@ -27,6 +30,23 @@ export default function Withdraw({ dataUser }) {
       handleCick();
     }
   };
+
+  const bankDetails = async () => {
+    try {
+      setIsLoading(true);
+          const response = await bankAccountDetails(dataUser._id);
+          console.log("response", response)
+          setBankDetail(response.data)
+        } catch (error) {
+          console.log('error', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(()=>{
+    bankDetails();
+  },[])
   const handleCick = async () => {
     try {
       setIsLoading(true);
@@ -76,7 +96,7 @@ export default function Withdraw({ dataUser }) {
             <Text style={styles.text}>Withdraw wallet Balance</Text>
             <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
           </LinearGradient>
-          <View style={{ marginTop: 5 }}>
+          <View style={{ marginTop: hp('1%')}}>
             <Text style={styles.title}>Withdraw Balance</Text>
           </View>
 
@@ -90,6 +110,7 @@ export default function Withdraw({ dataUser }) {
                 onChangeText={setAmount}
                 placeholderTextColor="#aaa"
                 placeholderStyle={{ alignSelf: 'center' }}
+                keyboardType="numeric"
               />
             </View>
           </View>
@@ -118,14 +139,18 @@ export default function Withdraw({ dataUser }) {
 
         </View>
 
-        <View style={{ flex: 1, backgroundColor: 'white', marginTop: 10 }}>
+        <View style={{ flex: 1, backgroundColor: 'white', marginTop: hp('1%') }}>
           <View style={styles.bankDetails}>
             <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
             <View style={styles.bankInfo}>
-              <Iconics name={'bank'} size={30} />
+              <Iconics name={'bank'} size={hp('3.5%')} />
               <View>
-                <Text style={styles.bankName}>ICICI BANK LIMITED</Text>
-                <Text style={styles.bankAccount}>XXXXXXXXXXXX0213</Text>
+                {
+                  dataUser.is_account_verified == 1 ?(<>
+                  <Text style={styles.bankName}>{bankDetail.bank_name}</Text>
+                  <Text style={styles.bankAccount}>{bankDetail.account_no}</Text>
+                  </>):( <Text style={styles.bankAccount}>Bank Details Not Found </Text>)
+                } 
               </View>
             </View>
           </View>
@@ -139,7 +164,7 @@ export default function Withdraw({ dataUser }) {
             </View>
             <Text style={styles.buttonText}>Download TDS Certificate</Text>
             <View style={styles.arrowContainer}>
-              <Iconic name="chevron-forward-outline" size={20} color={'black'} />
+              <Iconic name="chevron-forward-outline" size={hp('2%')} color={'black'} />
             </View>
           </TouchableOpacity>
           <View style={styles.featuresRow}>

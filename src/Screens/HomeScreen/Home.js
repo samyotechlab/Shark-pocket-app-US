@@ -88,7 +88,7 @@ export default function HomeScreen() {
               <LinearGradient colors={['#FFFFFF1A','#FFFFFF1A','#5521131A']} style={styles.walletContainer}>
                 <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
                 <Text style={styles.walletText}>
-                   ₹ {data?.total_balance || 1000}
+                   ₹ {data?.total_balance || 0}
                 </Text>
               </LinearGradient>
 
@@ -101,7 +101,7 @@ export default function HomeScreen() {
             </View>
             <Divider color="#FFCE63" width={2.5} style={{ marginVertical: wp(0.2) }} />
             <View style={{ flex: 1, margin: wp('2%'),marginVertical:hp('2%') }}>  
-              <WinnerCard />
+              <WinnerCard data={data}/>
             </View>
 
             <View style={{ flex: 1}}>
@@ -153,7 +153,7 @@ export default function HomeScreen() {
                 <Image source={Lighting} style={styles.light} />
                 <Text style={styles.myGame}>UPCOMING GAMES</Text>
                 <TouchableOpacity>
-                  <Text style={styles.view}>View All</Text>
+                  {/* <Text style={styles.view}>View All</Text> */}
                 </TouchableOpacity>
               </View>
               <View style={{ flex: 1.5, flexDirection: 'row' }}>

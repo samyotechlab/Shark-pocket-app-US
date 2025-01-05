@@ -134,7 +134,7 @@ const AddCashScreen = () => {
         </View>
       </View>
 
-  <View style={{flex:1}}>  
+  <View style={{flex:1,backgroundColor:'#FFFFFF'}}>  
    <View style={styles.addCashContainer}>
                     <View style={styles.inputContainer}>
                       <Text style={styles.label}>Enter Amount</Text>
@@ -144,6 +144,7 @@ const AddCashScreen = () => {
                         placeholderTextColor="#aaa"
                         placeholderStyle={{ alignSelf: 'center' }}
                         onChangeText={text => setAmount(text)}
+                         keyboardType="numeric"
                       />
                     </View>
         <View style={styles.buttonsRow}>
@@ -155,10 +156,10 @@ const AddCashScreen = () => {
         </View>
         <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
                    <Text style={styles.withdrawButtonText}>ADD CASH</Text>
-                 </TouchableOpacity>
+        </TouchableOpacity>
       </View>
 
-            <View style={styles.featuresRow}>
+    <View style={styles.featuresRow}>
         <View style={styles.feature}>
         <Image
             source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
@@ -183,10 +184,8 @@ const AddCashScreen = () => {
           <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
         </View>
       </View>
-
-    
       <TouchableOpacity style={styles.referralBanner}>
-        <Image source={require("../../../assets/images/Screens/referal.png")} />
+        <Image source={require("../../../assets/images/Screens/referal.png")} style={styles.image} />
       </TouchableOpacity>
       </View>
       </View>  
@@ -245,6 +244,7 @@ const styles = StyleSheet.create({
     fontSize: wp("5%"),
   },
   addCashContainer: {
+    flex:1,
     backgroundColor: '#FFFFFF',
     borderRadius: wp("3%"),
     shadowColor: '#000',
@@ -294,6 +294,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   featuresRow: {
+    flex:1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: hp("2%"),
@@ -302,19 +303,19 @@ const styles = StyleSheet.create({
   feature: {
     alignItems: 'center',
   },
-  // featureIcon: {
-  //   fontSize: wp("6%"),
-  //   marginBottom: hp("1%"),
-  // },
   featureText: {
     fontSize: wp("3%"),
     textAlign: 'center',
   },
   referralBanner: {
-    marginVertical: hp("20%"),
-    padding: wp("4%"),
-    borderRadius: wp("2%"),
-    alignItems: 'center',
+    marginVertical: wp("30%"),
+    margin:hp('2%'),
+    flex:1,
+  },
+  image:{
+     height:hp('20%'),
+     width:wp('90%'),
+     resizeMode:'contain'
   },
   inputContainer: {
     backgroundColor: '#DDF1E6',

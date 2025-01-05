@@ -89,7 +89,7 @@ const WalletScreen = () => {
                   </View>
                   <View style={styles.balanceContent}>
                     <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-                    <Text style={styles.balanceAmount}>₹ 1000</Text>
+                    <Text style={styles.balanceAmount}>{dataUser.total_balance}</Text>
                   </View>
                 </View>
               </LinearGradient>
@@ -230,7 +230,7 @@ const WalletScreen = () => {
 
               </TouchableOpacity>
 
-              <View style={{flex:1,marginVertical:wp('30%')}}>
+              <View style={{flex:1,marginVertical:hp('12%')}}>
                 {/* <Text>alignItems</Text> */}
                <Image source={gst} style={styles.bannerImage} resizeMode="contain" />
               </View>

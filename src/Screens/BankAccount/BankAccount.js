@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonHeader from '../../Components/CommonHeader'
@@ -7,9 +7,11 @@ import CommonButton from '../../Components/CommonButton'
 import Toast from 'react-native-toast-message'
 import { useRoute } from '@react-navigation/native'
 import { bankStore } from '../../Service/Bank'
+import { useNavigation } from '@react-navigation/native'
 
 
 export default function BankAccount() {
+    const navigation = useNavigation()
     const route = useRoute();
     const { user_id } = route.params
     const [bank_data, setBankData] = useState({
@@ -117,6 +119,9 @@ export default function BankAccount() {
             setLoader(false)
         }
     };
+    const handleNavigation = ()=>{
+        navigation.navigate("Faq")
+    }
     return (
         <>
             <BackgroundScreen />
@@ -130,7 +135,7 @@ export default function BankAccount() {
                             style={styles.input}
                             placeholder="Name"
                             placeholderTextColor="#FFFFFFCC"
-                            keyboardType="numeric"
+                           keyboardType="default"
                             value={bank_data.name}
                             maxLength={40}
                             onChangeText={value => handleInputChange('name', value)}
@@ -145,7 +150,7 @@ export default function BankAccount() {
                             style={styles.input}
                             placeholder="Enter Account Number"
                             placeholderTextColor="#FFFFFFCC"
-                            keyboardType="phone-pad"
+                            keyboardType="numeric"
                             value={bank_data.account_no}
                             maxLength={20}
                             onChangeText={value => handleInputChange('account_no', value)}
@@ -160,7 +165,7 @@ export default function BankAccount() {
                             style={styles.input}
                             placeholder="Confirm Account Number"
                             placeholderTextColor="#FFFFFFCC"
-                            keyboardType="phone-pad"
+                            keyboardType="numeric"
                             value={bank_data.confirm_account_no}
                             maxLength={20}
                             onChangeText={value => handleInputChange('confirm_account_no', value)}
@@ -175,7 +180,7 @@ export default function BankAccount() {
                             style={styles.input}
                             placeholder="Enter IFSC Code"
                             placeholderTextColor="#FFFFFFCC"
-                            keyboardType="numeric"
+                            keyboardType="default"
                             value={bank_data.ifsc_code}
                             maxLength={11}
                             onChangeText={value => handleInputChange('ifsc_code', value)}
@@ -190,7 +195,7 @@ export default function BankAccount() {
                             placeholder="Enter Contact No."
                             placeholderTextColor="#FFFFFFCC"
                             value={bank_data.phone}
-                            keyboardType="phone-pad"
+                            keyboardType="numeric"
                             maxLength={10}
                             onChangeText={value => handleInputChange('phone', value)}
                         />
@@ -200,8 +205,12 @@ export default function BankAccount() {
                 <View style={[{ padding: hp('1%') }]}>
                     <CommonButton title={'Save'} onPress={handleVerifyBank} />
                     <Text style={styles.kycText}>
-                        Why do we need your Bank Details?
-                        <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>
+                         Why do we need your Bank Details?
+                    <TouchableOpacity style={{marginBottom: hp('1.3%')}} onPress={()=>{
+                        handleNavigation()
+                    }}>
+                        <Text style={[styles.kycText,{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold',}]}> Read FAQ’s</Text>
+                        </TouchableOpacity>
                     </Text>
                 </View>
                 <Toast ref={Toast.setRef} />
@@ -255,7 +264,9 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: hp('1.5'),
         fontFamily: 'Montserrat-Regular',
-        paddingHorizontal: hp('2%'),
-        paddingVertical: hp('2%'),
+        marginTop: hp('1%'),
+        // marginBottom:hp('2%')
+        // paddingHorizontal: hp('2%'),
+        // paddingVertical: hp('2%'),
     }
 })
