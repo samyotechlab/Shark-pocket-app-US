@@ -68,15 +68,18 @@ export default function GlobalLeaderBoard() {
   }, [globalData]);
 
   const rakingData = () => {
-    globalData.map(item => {
-      if (item.ranking === 1) {
-        setFirstRanking(item);
-      } else if (item.ranking === 2) {
-        setSecondRanking(item);
-      } else if (item.ranking === 3) {
-        setThirdRanking(item);
-      }
-    });
+    if(globalData && globalData.length > 0 ){
+      globalData.map(item => {
+        if (item.ranking === 1) {
+          setFirstRanking(item);
+        } else if (item.ranking === 2) {
+          setSecondRanking(item);
+        } else if (item.ranking === 3) {
+          setThirdRanking(item);
+        }
+      });
+    }
+   
   };
 
   const renderItem = items => {

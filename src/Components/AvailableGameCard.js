@@ -11,8 +11,9 @@ const AvailbleGameCard = props => {
 
   const navigation = useNavigation();
   const myGames = props.gameData;
+ 
   const myGameData = myGames.filter(game => game.status === 3);
-
+  console.log("=====>",myGameData)
   const handleNavigation = (item) => {
     navigation.navigate('GameName', {game_id:item._id});
   };

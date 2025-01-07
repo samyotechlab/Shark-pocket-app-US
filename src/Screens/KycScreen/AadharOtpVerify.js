@@ -27,6 +27,7 @@ export default function AadharOtpVerify() {
   const navigation = useNavigation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (text, index) => {
     const newOtp = [...otp];
@@ -68,8 +69,10 @@ export default function AadharOtpVerify() {
       user_id: user_id,
       otp: otp.join(''),
       status: data.status,
-      ref_id: data.ref_id
+      ref_id: data.ref_id,
+      aadhaar_number:aadhaar_number
     }
+    setIsLoading(true); 
     try {
       console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
       axios
@@ -107,6 +110,8 @@ export default function AadharOtpVerify() {
 
     } catch (error) {
       console.log('An error occurred:', error);
+    }finally{
+      setIsLoading(false);
     }
   };
   return (
@@ -146,7 +151,9 @@ export default function AadharOtpVerify() {
           </View>
         </View>
         <View style={[styles.box, { paddingVertical: hp('4%'), padding: hp('2%') }]}>
-          <CommonButton title={'Verify'} onPress={handleOtp} />
+          <CommonButton title={isLoading ? 'Verifying...' : 'Verify'} 
+            onPress={handleOtp}
+            disabled={isLoading} />
            <TouchableOpacity
              onPress={handleResendOtp}
            >

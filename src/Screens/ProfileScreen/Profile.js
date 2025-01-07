@@ -60,6 +60,7 @@ const SharkPocketScreen = () => {
       title: 'Aadhar Verification',
       icon: 'security',
       url: 'AadharDetail',
+      is_verified: userData.is_aadhar_verified,
     },
     {
       title: 'Contact us',
@@ -152,7 +153,9 @@ const SharkPocketScreen = () => {
           style={styles.cardContainer}
           onPress={() => {
             handleNavigation(item.url);
-          }}>
+ 
+          }}
+          disabled={item.is_verified === 1}>
           <View>
             <LinearGradient
               colors={['#3D1911', '#3D1911', '#6A1701']}

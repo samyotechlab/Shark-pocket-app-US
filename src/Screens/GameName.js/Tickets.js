@@ -131,7 +131,7 @@ export default function Tickets() {
               <Image source={Game} style={styles.characterImage} />
               <View style={styles.textContainer}>
                 <Text style={styles.description}>
-                  You will get the ₹3000 prize money enroll yourself before game
+                  You will get the ₹{item.price}prize money enroll yourself before game
                   start
                 </Text>
                 <View style={styles.boxContainer}>

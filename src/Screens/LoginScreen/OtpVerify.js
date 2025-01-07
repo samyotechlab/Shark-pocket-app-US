@@ -3,15 +3,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
-import Backarrow from '../../../assets/images/Applogo/arrow_back.png'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import axios from 'axios'
-import {API_URL} from '@env';
+import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import Iconics from 'react-native-vector-icons/Ionicons';
-
+import OtpInputs from 'react-native-otp-inputs';
+import RNOtpVerify from 'react-native-otp-verify';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -20,9 +20,10 @@ const headers = {
 export default function OtpVerify() {
 
   const route = useRoute()
-  const {data} = route.params
+  const { data } = route.params
   const navigation = useNavigation()
-  const {storeLoginData} = useLoginDataStorage();
+  const { storeLoginData } = useLoginDataStorage();
+  // const [otp, setOtp] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
   const inputs = useRef([]);
   const [timer, setTimer] = useState(120);
@@ -42,6 +43,35 @@ export default function OtpVerify() {
     }
     return () => clearInterval(interval);
   }, [timer]);
+
+
+
+  // useEffect(() => {
+  //   RNOtpVerify.getOtp()
+  //     .then((p) => {
+  //       console.log("p", p)
+  //       RNOtpVerify.addListener(otpHandler)
+
+  //     })
+  //     .catch(p => console.log(p));
+  //   return () => RNOtpVerify.removeListener();
+  // }, []);
+
+  // const otpHandler = (message) => {
+  //   console.log(message)
+  //   const extractedOtp = /(\d{4})/g.exec(message)[0];
+  //   if (extractedOtp) {
+  //     setOtp(extractedOtp);
+  //   }else{
+  //     Toast.show({
+  //       type: 'success',
+  //       position: 'top',
+  //       text1: 'Welcome!',
+  //       text2: message,
+  //       visibilityTime: 5000
+  //     });
+  //   }
+  // };
 
   const formatTime = seconds => {
     const mins = Math.floor(seconds / 60);
@@ -68,51 +98,51 @@ export default function OtpVerify() {
   const handleOtp = () => {
     clearInterval(timer);
     try {
-        console.log('phoneNumber',`${API_URL}/${Config.OtpVerify}`);
-        axios
-          .post(
-           `${API_URL}/${Config.OtpVerify}`,
-            {
-              user_id: data.user_id,
-              otp: otp.join(''),
-              mobile:data.mobile
-            },
-            headers,
-          )
-          .then(res => {
-            console.log('res--->', res.data);
-            if (res.data.status === 1) {        
-              Toast.show({
-                type: 'success', 
-                position: 'top', 
-                text1: 'Welcome!', 
-                text2: 'Otp Verify Succesffully', 
-                visibilityTime: 5000
-              }); 
-              setOtpVerified(true);
-              setTimeout(() => {
-                if(res.data.data.is_aadhar_verified === 0){
-                  navigation.navigate('DisclaimerScreen', {data:res.data.data});
-                  }else{
-                    storeLoginData(res.data)
-                    navigation.navigate('HomeScreen', {data:res.data.data});
-                  }
-              }, 3000);
-              
-            } else {
-              Toast.show({
-                type: 'error', 
-                position: 'top', 
-                text1: 'Error!', 
-                text2: 'Authentication Failed',
-                visibilityTime: 4000,
-              });
-            }
-          })
-          .catch(err => {
-            console.log('error--->', err); 
-          });
-      
+      console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
+      axios
+        .post(
+          `${API_URL}/${Config.OtpVerify}`,
+          {
+            user_id: data.user_id,
+            otp: otp.join(''),
+            mobile: data.mobile
+          },
+          headers,
+        )
+        .then(res => {
+          console.log('res--->', res.data);
+          if (res.data.status === 1) {
+            Toast.show({
+              type: 'success',
+              position: 'top',
+              text1: 'Welcome!',
+              text2: 'Otp Verify Succesffully',
+              visibilityTime: 5000
+            });
+            setOtpVerified(true);
+            setTimeout(() => {
+              if (res.data.data.is_aadhar_verified === 0) {
+                navigation.navigate('DisclaimerScreen', { data: res.data.data });
+              } else {
+                storeLoginData(res.data)
+                navigation.navigate('HomeScreen', { data: res.data.data });
+              }
+            }, 3000);
+
+          } else {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: 'Error!',
+              text2: 'Authentication Failed',
+              visibilityTime: 4000,
+            });
+          }
+        })
+        .catch(err => {
+          console.log('error--->', err);
+        });
+
     } catch (error) {
       console.log('An error occurred:', error);
     }
@@ -120,42 +150,42 @@ export default function OtpVerify() {
 
   const handleResendOtp = () => {
     try {
-      console.log('phoneNumber',`${API_URL}/${Config.ResendOtp}`);
+      console.log('phoneNumber', `${API_URL}/${Config.ResendOtp}`);
       axios
         .post(
-         `${API_URL}/${Config.ResendOtp}`,
+          `${API_URL}/${Config.ResendOtp}`,
           {
-            mobile:data.mobile
+            mobile: data.mobile
           },
           headers,
         )
         .then(res => {
           console.log('res--->', res.data);
-          if (res.data.status === 1) {        
+          if (res.data.status === 1) {
             Toast.show({
-              type: 'success', 
-              position: 'top', 
-              text1: 'Otp Send', 
-              text2: 'Otp Send Succesffully', 
+              type: 'success',
+              position: 'top',
+              text1: 'Otp Send',
+              text2: 'Otp Send Succesffully',
               visibilityTime: 5000
-            }); 
+            });
           } else {
             Toast.show({
-              type: 'error', 
-              position: 'top', 
-              text1: 'Error!', 
+              type: 'error',
+              position: 'top',
+              text1: 'Error!',
               text2: 'Authentication Failed',
               visibilityTime: 4000,
             });
           }
         })
         .catch(err => {
-          console.log('error--->', err); 
+          console.log('error--->', err);
         });
-    
-  } catch (error) {
-    console.log('An error occurred:', error);
-  }
+
+    } catch (error) {
+      console.log('An error occurred:', error);
+    }
   }
 
 
@@ -164,25 +194,25 @@ export default function OtpVerify() {
       <BackgroundScreen />
       <KeyboardAvoidingView style={styles.container}>
 
-        <View style={{flex:1,margin:wp('6%')}}>
-        <View style={styles.box}>
-          <TouchableOpacity style={{flex:0.5,paddingTop:hp('0.5%')}} onPress={()=>{
-            navigation.goBack()
-          }}>
-          <Iconics name="chevron-back" size={27} color={'white'} />
-          </TouchableOpacity>
-          <View style={{flex:1.5,marginLeft:hp('1%')}}>
-             <Text style={styles.headerText}>Verification</Text>
+        <View style={{ flex: 1, margin: wp('6%') }}>
+          <View style={styles.box}>
+            <TouchableOpacity style={{ flex: 0.5, paddingTop: hp('0.5%') }} onPress={() => {
+              navigation.goBack()
+            }}>
+              <Iconics name="chevron-back" size={27} color={'white'} />
+            </TouchableOpacity>
+            <View style={{ flex: 1.5, marginLeft: hp('1%') }}>
+              <Text style={styles.headerText}>Verification</Text>
+            </View>
           </View>
-        </View>
-        <View style={{marginTop:hp('3%')}}>
-              <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 4-digit code sent to your
-               phone number  for verification.</Text>
-        </View>
+          <View style={{ marginTop: hp('3%') }}>
+            <Text style={[styles.text, { fontFamily: 'Montserrat-Light' }]}>Please enter the 4-digit code sent to your
+              phone number  for verification.</Text>
+          </View>
 
-       <View style={{justifyContent:'center',marginTop:hp('4%')}}>
-          <View style={styles.inputContainer}>
-            {otp.map((digit, index) => (
+          <View style={{ justifyContent: 'center', marginTop: hp('4%') }}>
+            <View style={styles.inputContainer}>
+              {otp.map((digit, index) => (
               <TextInput
                 key={index}
                 style={styles.input}
@@ -196,31 +226,38 @@ export default function OtpVerify() {
                 ref={(ref) => (inputs.current[index] = ref)}
               />
             ))}
+              {/* <OtpInputs
+                handleChange={(code) => setOtp(code)}
+                numberOfInputs={4}
+                inputStyles={styles.input}
+                value={otp}
+                autofillFromClipboard={true}
+              /> */}
+            </View>
           </View>
-        </View>
 
-     <View style={{marginTop:hp('10%')}}>
-          <CommonButton title={'Verify'} onPress={handleOtp}   />
-          <Text style={styles.timer}>{formatTime(timer)}</Text>
-          <TouchableOpacity
-    onPress={handleResendOtp}
-  >
-    <Text
-      style={[
-        styles.resendOtp,
-        { color:  '#FCFCFC' }, // Change color when disabled
-      ]}
-    >
-      Resend OTP
-    </Text>
-  </TouchableOpacity>
+          <View style={{ marginTop: hp('10%') }}>
+            <CommonButton title={'Verify'} onPress={handleOtp} />
+            <Text style={styles.timer}>{formatTime(timer)}</Text>
+            <TouchableOpacity
+              onPress={handleResendOtp}
+            >
+              <Text
+                style={[
+                  styles.resendOtp,
+                  { color: '#FCFCFC' }, // Change color when disabled
+                ]}
+              >
+                Resend OTP
+              </Text>
+            </TouchableOpacity>
+          </View>
+
         </View>
-           
-        </View>
-        <Toast ref={Toast.setRef}/>
+        <Toast ref={Toast.setRef} />
       </KeyboardAvoidingView>
-      
-    
+
+
     </>
   )
 }
@@ -228,17 +265,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  
+
   box: {
-    marginTop:hp('6%'),
-    flexDirection:'row'
+    marginTop: hp('6%'),
+    flexDirection: 'row'
   },
   text: {
     textAlign: 'center',
     color: '#FFFFFF',
     padding: wp('1%'),
-    fontSize:hp('1.8%'),
-    lineHeight:hp('2.8%')
+    fontSize: hp('1.8%'),
+    lineHeight: hp('2.8%')
   },
   inputContainer: {
     flexDirection: 'row',
@@ -258,11 +295,11 @@ const styles = StyleSheet.create({
     fontSize: hp('2.8%'),
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Bold',
-    letterSpacing:wp(0.1)
+    letterSpacing: wp(0.1)
   },
   headerContent: {
     flex: 1,
-    backgroundColor:"red"
+    backgroundColor: "red"
   },
   input: {
     width: 50,
@@ -288,9 +325,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     fontSize: hp('1.8%')
   },
-  footerText:{
-    color:'#FFFFFF',
-    textAlign:'center',
-    paddingTop:hp('10%')
+  footerText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    paddingTop: hp('10%')
   }
 })

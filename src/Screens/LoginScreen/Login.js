@@ -44,8 +44,9 @@ export default function Login() {
   const handleLogin = () => {
     console.log('phoneNumber', phoneNumber);
 
-    setLoader(true);
+
     try {
+      setLoader(true);
       if (validateInputs()) {
         console.log('phoneNumber', `${API_URL}/${Config.Login}`);
         axios
@@ -120,13 +121,9 @@ export default function Login() {
           )}
         </View>
         <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
-          {
-            !loader ? (
-              <CommonButton title={'Log in'} onPress={handleLogin} />
-            ) : (
-              <AnimatedLoader />
-            )
-          }
+          <CommonButton title={loader ? 'Loading...' : 'Login'}
+            onPress={handleLogin}
+            disabled={loader} />
         </View>
         <Toast ref={Toast.setRef} />
       </View>

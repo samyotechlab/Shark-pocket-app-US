@@ -42,6 +42,8 @@ export default function LocalGameBoard() {
     navigation.goBack();
   };
 
+
+
   const leaderBoardData = async () => {
     setLoader(true);
     try {
@@ -91,7 +93,8 @@ export default function LocalGameBoard() {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
+  if (gameData && gameData.length > 0) {
     const rakingData = () => {
       gameData.forEach(item => {
         if (item.ranking === 1) setFirstRanking(item);
@@ -100,7 +103,8 @@ export default function LocalGameBoard() {
       });
     };
     rakingData();
-  }, [gameData]);
+  }
+}, [gameData]);
 
   const renderItem = items => {
     const {item} = items;

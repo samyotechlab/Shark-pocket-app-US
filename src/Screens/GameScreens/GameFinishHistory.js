@@ -5,9 +5,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {

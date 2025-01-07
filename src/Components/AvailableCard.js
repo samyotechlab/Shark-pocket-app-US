@@ -8,7 +8,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {formatDate} from '../Utilities/utilies';
+import {formatDate, truncateText} from '../Utilities/utilies';
 
 export default function AvailableCard({gameData, status, index}) {
   const gradientColors = [
@@ -43,14 +43,10 @@ export default function AvailableCard({gameData, status, index}) {
           <Image source={Game} style={styles.characterImage} />
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>
-              GET{' '}
-              {status == 4 ? gameData.game_winning_cost : gameData.enroll_cost}{' '}
-              & PLAY NOW
+              {gameData.title}
             </Text>
             <Text style={styles.description}>
-              You will get the{' '}
-              {status == 4 ? gameData.game_winning_cost : gameData.enroll_cost}{' '}
-              prize money enroll {'\n'} yourself before game start
+            {gameData.description}
             </Text>
             <Text style={styles.startText}>
               Start <Text style={styles.dateText}>{formattedDate}</Text>
@@ -60,7 +56,7 @@ export default function AvailableCard({gameData, status, index}) {
                 <Text style={styles.buttonText}>
                   {status == 4
                     ? gameData.game_winning_cost
-                    : gameData.enroll_cost}{' '}
+                    : gameData.winning_cost}{' '}
                   CASH WIN
                 </Text>
               </View>
@@ -105,7 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   headerText: {
-    fontSize: wp('4%'),
+    fontSize: wp('6%'),
     fontFamily: 'Audiowide-Regular',
     color: '#2A1610',
   },

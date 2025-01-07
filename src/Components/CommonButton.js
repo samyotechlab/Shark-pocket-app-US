@@ -1,9 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-export default function CommonButton({ title, onPress }) {
+export default function CommonButton({ title, onPress,disabled}) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={styles.button} onPress={onPress} disabled={disabled}>
       <Text style={styles.buttonText}>{title}</Text>
     </TouchableOpacity>
   )

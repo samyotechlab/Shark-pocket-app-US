@@ -13,22 +13,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import profile from '../../../assets/images/Screens/profile.jpeg';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { updateProfile } from '../../Service/Login';
 import Toast from 'react-native-toast-message';
+import { updateProfile } from '../../Service/Login';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 const ViewProfile = () => {
-  const [profileImage, setProfileImage] = useState(null);
-  const [genderOpen, setGenderOpen] = useState(false);
-  const [genderValue, setGenderValue] = useState(null);
   const navigation = useNavigation();
-  const route = useRoute()
-  const [gender, setGender] = useState([
-    { label: 'Male', value: 0 },
-    { label: 'Female', value: 1 },
-  ]);
+  const route = useRoute();
   const { userData } = route.params
+  const [loader, setLoader] = useState(false)
   const [formData, setFormData] = useState({
     name: userData.name,
     state: userData.state,
@@ -37,207 +31,120 @@ const ViewProfile = () => {
     email: userData.email
   });
 
-  const selectImage = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-      },
-      async (response) => {
-        if (response.assets && response.assets.length > 0) {
-          const imageUri = response.assets[0].uri;
-          setProfileImage(imageUri);
-
-
-          const updatedData = new FormData();
-          updatedData.append('user_id', userData._id);
-          updatedData.append('profile_image', {
-            uri: imageUri,
-            type: 'image/jpeg',
-            name: 'profile_image.jpg',
-          });
-
-          try {
-            const res = await updateProfile(updatedData);
-            if (res.status === 1) {
-              Toast.show({
-                type: 'success',
-                position: 'top',
-                text1: 'Profile Update',
-                text2: 'Profile Update Successfully',
-                visibilityTime: 3000
-              });
-            } else {
-              Toast.show({
-                type: 'error',
-                position: 'top',
-                text1: 'Error!',
-                text2: 'failed To update profile image',
-                visibilityTime: 3000,
-              });
-            }
-          } catch (error) {
-            console.error('Error updating profile image:', error);
-            Toast.show({
-              type: 'error',
-              position: 'top',
-              text1: 'Error!',
-              text2: 'Authentication Failed',
-              visibilityTime: 3000,
-            });
-          }
-        }
-      }
-    );
-  };
 
   const handleInputChange = (field, value) => {
+    console.log("value", value)
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleMobileUpdate = async () => {
-    const updatedData = new FormData();
-    updatedData.append('user_id', userData._id);
-    updatedData.append('mobile', formData.mobile);
-
+  const handelUpdate = async () => {
+    console.log("formData",formData.email)
+    setLoader(true);
     try {
-      const res = await updateProfile(updatedData);
-      if (res.status === 1) {
-        Toast.show({
-          type: 'success',
-          position: 'top',
-          text1: 'Profile Update',
-          text2: 'Profile Update Successfully',
-          visibilityTime: 3000
-        });
-      } else {
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Error!',
-          text2: 'Authentication Failed',
-          visibilityTime: 3000,
+      const formData = new FormData();
+      console.log("formData========>",formData)
+      formData.append('user_id', userData._id);
+      formData.append('contact_number', formData.mobile);
+      formData.append('email', formData.email);
+  
+      // Append avatar if available
+      if (formData.avatar) {
+        formData.append('avatar', {
+          uri: formData.avatar.uri,
+          name: formData.avatar.fileName,
+          type: formData.avatar.type,
         });
       }
-    } catch (error) {
-      console.error('Error updating mobile number:', error);
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error!',
-        text2: 'Authentication Failed',
-        visibilityTime: 3000,
-      });
+      console.log(formData)
+      const response = await updateProfile(formData);
+      console.log(response)}
+       catch (error) {
+      console.log("error", error)
+    } finally {
+      setLoader(false)
     }
-  };
-
-  const handleEmailUpdate = async () => {
-    const updatedData = {
-      user_id: userData._id,
-      email: formData.email,
-    };
-    try {
-      const res = await updateProfile(updatedData);
-      if (res.status === 1) {
-        Alert.alert('Success', 'Email updated successfully');
-      } else {
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Error!',
-          text2: 'Failed To Update Email',
-          visibilityTime: 3000,
-        });
-      }
-    } catch (error) {
-      console.error('Error updating email:', error);
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error!',
-        text2: 'Authentication Failed',
-        visibilityTime: 3000,
-      });
-    }
-  };
-
-
+  }
 
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 10 }}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
-          <Iconics name="chevron-back" size={27} color={'black'} />
-        </TouchableOpacity>
-        <Text style={styles.header}>My Profile</Text>
-      </View>
+      {
+        !loader ? (
+          <>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 10 }}>
+              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+                <Iconics name="chevron-back" size={27} color={'black'} />
+              </TouchableOpacity>
+              <Text style={styles.header}>My Profile</Text>
+            </View>
 
-      {/* Profile Image */}
-      <View style={styles.profileContainer}>
-        <View style={styles.imageWrapper}>
-          <Image
-            source={profile}
-            style={styles.profileImage}
-          />
-          <TouchableOpacity style={styles.cameraIcon} onPress={selectImage}>
-            <Icon name="camera-outline" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.profileName}>{userData.name}</Text>
-      </View>
+            <View style={styles.profileContainer}>
+              <View style={styles.imageWrapper}>
+                <Image
+                  source={profile}
+                  style={styles.profileImage}
+                />
+                <TouchableOpacity style={styles.cameraIcon}>
+                  <Icon name="camera-outline" size={20} color="#fff" />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.profileName}>{userData.name}</Text>
+            </View>
 
-      {/* Input Fields */}
-      <View style={styles.inputContainer}>
-        <View style={styles.inputWrapper}>
-          <Icon name="account-outline" size={25} color="#000000B2" />
-          <TextInput
-            value={formData.name}
-            onChangeText={(text) => handleInputChange('name', text)}
-            style={styles.input}
-            editable={false}
-          />
-        </View>
+            <View style={styles.inputContainer}>
+              <View style={styles.inputWrapper}>
+                <Icon name="account-outline" size={25} color="#000000B2" />
+                <TextInput
+                  value={formData.name}
+                  onChangeText={(text) => handleInputChange('name', text)}
+                  style={styles.input}
+                  editable={false}
+                />
+              </View>
 
-        <View style={styles.inputWrapper}>
-          <Icon name="map-marker-outline" size={25} color="#000000B2" />
-          <TextInput
-            value={formData.state}
-            onChangeText={(text) => handleInputChange('state', text)}
-            style={styles.input}
-            editable={false}
-          />
-        </View>
+              <View style={styles.inputWrapper}>
+                <Icon name="map-marker-outline" size={25} color="#000000B2" />
+                <TextInput
+                  value={formData.state}
+                  onChangeText={(text) => handleInputChange('state', text)}
+                  style={styles.input}
+                  editable={false}
+                />
+              </View>
 
-        <View style={[styles.inputWrapper, { zIndex: 1000 }]}>
-          <Icon name="gender-male" size={25} color="#000000B2" />
-          <TextInput
-            value={userData.gender}
-            style={styles.input}
-            editable={false}
-          />
-        </View>
+              <View style={[styles.inputWrapper, { zIndex: 1000 }]}>
+                <Icon name="gender-male" size={25} color="#000000B2" />
+                <TextInput
+                  value={userData.gender == 'F' ? "Female" : "male"}
+                  style={styles.input}
+                  editable={false}
+                />
+              </View>
 
-        <View style={styles.inputWrapper}>
-          <Icon name="phone-outline" size={25} color="#000000B2" />
-          <TextInput
-            value={formData.mobile}
-            onChangeText={(text) => handleInputChange('mobile', text)}
-            style={styles.input}
-          />
-          <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }} onPress={handleMobileUpdate}>
-            <Text style={styles.changeText}>CHANGE</Text>
-          </TouchableOpacity>
-        </View>
+              <View style={styles.inputWrapper}>
+                <Icon name="phone-outline" size={25} color="#000000B2" />
+                <TextInput
+                  value={formData.mobile}
+                  onChangeText={(text) => handleInputChange('mobile', text)}
+                  style={styles.input}
+                />
+                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }} onPress={handelUpdate}  >
+                  <Text style={styles.changeText}>CHANGE</Text>
+                </TouchableOpacity>
+              </View>
 
-        <View style={styles.inputWrapper}>
-          <Icon name="email-outline" size={25} color="#000000B2" />
-          <TextInput value={formData.email} style={styles.input}  onChangeText={(text) => handleInputChange('email', text)}/>
-          <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }} onPress={handleEmailUpdate}>
-            <Text style={styles.changeText}>CHANGE</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+              <View style={styles.inputWrapper}>
+                <Icon name="email-outline" size={25} color="#000000B2" />
+                <TextInput value={formData.email} style={styles.input} onChangeText={(text) => handleInputChange('email', text)} />
+                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }} onPress={handelUpdate} >
+                  <Text style={styles.changeText}>CHANGE</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        ) : (<AnimatedLoader />)
+      }
+
       <Toast ref={Toast.setRef} />
     </View>
   );

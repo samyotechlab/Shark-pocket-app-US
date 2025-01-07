@@ -18,3 +18,11 @@ export function truncateName(text, maxLength) {
   }
   return text;
 }
+
+export function truncateText(text, maxLength) {
+  if (!text) return '';
+  if (text.length > maxLength) {
+    return text.split(' ').slice(0, maxLength).join(' ') + '...';
+  }
+  return text;
+}

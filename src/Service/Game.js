@@ -41,7 +41,9 @@ export const finalScore = async (
   ticket_id,
   user_id,
 ) => {
+
   try {
+    console.log("underteh call api=====>")
     const response = await apiInstance.post(Config.Final_Score, {
       number: numberStringData,
       superNumber,

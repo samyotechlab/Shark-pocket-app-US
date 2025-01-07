@@ -62,13 +62,20 @@ export default function LocalLeaderBoard() {
   return (
     <View style={styles.container}>
       {
-        !loader ? (<FlatList
+      gameData ? 
+        (!loader ? (<FlatList
           data={gameData}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}
-        />) : (<AnimatedLoader />)
+        />) : (<AnimatedLoader />)):(
+          <View style={styles.emptyContainer}>
+                      <Text style={styles.emptyText}>
+                        No games or tickets are currently available.
+                      </Text>
+                    </View>
+        )
       }
   <Toast ref={Toast.setRef} />
     </View>
@@ -84,5 +91,17 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: wp('5%'),
     marginBottom: hp('2%')
-  }
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    textAlign: 'center',
+    paddingHorizontal: hp('2%'),
+  },
 })

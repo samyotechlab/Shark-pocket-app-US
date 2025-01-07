@@ -19,7 +19,6 @@ export default {
   Refund: 'refundPolicy',
   HelpSupport: 'helpAndSupport',
   TermCondition: 'termsAndCondition',
-  
   Transaction_List: 'api/wallet/transactionList',
   Transaction_store: 'api/transaction/store',
   Bonus_wallet: 'api/bonus_wallet',

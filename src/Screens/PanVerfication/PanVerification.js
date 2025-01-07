@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonHeader from '../../Components/CommonHeader'
@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 export default function PanVerfication() {
     const navigation = useNavigation();
     const route = useRoute();
-    const [loader,setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const { user_id } = route.params
     const [panData, setPanData] = useState({
         name: '',
@@ -28,57 +28,57 @@ export default function PanVerfication() {
     };
 
     const validateForm = () => {
-        const {name, pan_number} = panData;
-    
+        const { name, pan_number } = panData;
+
         if (name.trim() === '') {
-          setIsModalVisible(true);
-          setMessage('Name is required.');
-          return false;
+            setIsModalVisible(true);
+            setMessage('Name is required.');
+            return false;
         }
-    
+
         const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
         if (!panRegex.test(pan_number)) {
-          setIsModalVisible(true);
-          setMessage(
-            'Invalid PAN Number. Please enter a valid PAN in the format: ABCDE1234F.',
-          );
-          return false;
+            setIsModalVisible(true);
+            setMessage(
+                'Invalid PAN Number. Please enter a valid PAN in the format: ABCDE1234F.',
+            );
+            return false;
         }
-    
-        return true;
-      };
 
-      const handleVerifyPan = async () => {
+        return true;
+    };
+
+    const handleVerifyPan = async () => {
         if (!validateForm()) return;
-    
+
         const obj = {
-          user_id: user_id,
-          name: panData.name,
-          pan: panData.pan_number,
+            user_id: user_id,
+            name: panData.name,
+            pan: panData.pan_number,
         };
         setLoader(true)
         try {
-          const response = await PanVerificationData(obj);
-          if (response) {
-            Toast.show({
-                            type: 'success',
-                            position: 'top',
-                            text1: 'Succesful',
-                            text2: 'Pan Verify Successfullly',
-                            visibilityTime: 3000
-                          });
-            setTimeout(() => {
-              navigation.navigate('ProfileScreen');
-            }, 2000);
-          } else {
-            Toast.show({
-                type: 'error',
-                position: 'top',
-                text1: 'Error!',
-                text2: 'Wrong Credentials',
-                visibilityTime: 3000,
-              });
-          }
+            const response = await PanVerificationData(obj);
+            if (response) {
+                Toast.show({
+                    type: 'success',
+                    position: 'top',
+                    text1: 'Succesful',
+                    text2: 'Pan Verify Successfullly',
+                    visibilityTime: 3000
+                });
+                setTimeout(() => {
+                    navigation.goBack();
+                }, 2000);
+            } else {
+                Toast.show({
+                    type: 'error',
+                    position: 'top',
+                    text1: 'Error!',
+                    text2: 'Wrong Credentials',
+                    visibilityTime: 3000,
+                });
+            }
         } catch (error) {
             const msg = error.message
             Toast.show({
@@ -87,11 +87,11 @@ export default function PanVerfication() {
                 text1: 'Error!',
                 text2: msg,
                 visibilityTime: 3000,
-              });
-        }finally {
+            });
+        } finally {
             setLoader(false)
         }
-      };
+    };
     return (
         <>
             <BackgroundScreen />
@@ -129,13 +129,13 @@ export default function PanVerfication() {
                     </View>
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton title={'Save'}  onPress={handleVerifyPan}/>
+                    <CommonButton title={'Save'} onPress={handleVerifyPan} />
                     <Text style={styles.kycText}>
                         Why do we need PAN Verification?
-                         <TouchableOpacity style={{marginBottom: hp('1.3%')}} onPress={()=>{
-                                                handleNavigation()
-                                            }}>
-                                                <Text style={[styles.kycText,{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold',}]}> Read FAQ’s</Text>
+                        <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={() => {
+                            handleNavigation()
+                        }}>
+                            <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Read FAQ’s</Text>
                         </TouchableOpacity>
                     </Text>
                 </View>

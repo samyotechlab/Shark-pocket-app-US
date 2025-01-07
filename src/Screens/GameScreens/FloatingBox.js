@@ -31,7 +31,27 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
-const getRandomNumber = () => Math.floor(Math.random() * 300) + 1;
+// const getRandomNumber = () => Math.floor(Math.random() * 300) + 1;
+const getRandomNumber = () => {
+  const ranges = [
+    { min: 1, max: 100 },      // Range 1–100
+    { min: 201, max: 300 },    // Range 201–300
+    { min: 3001, max: 3100 },  // Range 3001–3100
+  ];
+
+  const totalNumbers = ranges.reduce((sum, range) => sum + (range.max - range.min + 1), 0);
+
+  const randomIndex = Math.floor(Math.random() * totalNumbers);
+
+  let cumulative = 0;
+  for (const range of ranges) {
+    const rangeSize = range.max - range.min + 1;
+    if (randomIndex < cumulative + rangeSize) {
+      return range.min + (randomIndex - cumulative); 
+    }
+    cumulative += rangeSize;
+  }
+};
 
 const getRandomX = () => Math.random() * (width - 100);
 
@@ -54,6 +74,7 @@ export default function FloatingBoxGame() {
   const [generatedBoxes, setGeneratedBoxes] = useState(0);
   const [scoreData, setScoreData] = useState(null);
   const route = useRoute();
+  const [isApiCalled, setIsApiCalled] = useState(false);
   // console.log('floatinfgggggg',route.params);
   const routeData = route.params;
 
@@ -120,8 +141,12 @@ export default function FloatingBoxGame() {
         }
 
         if (generatedBoxes >= 300) {
+          
           clearInterval(interval);
-          handleCallApi();
+          if (!isApiCalled) {
+            setIsApiCalled(true);
+            handleCallApi();
+          }
           return () => clearInterval(interval);
         }
         const startY = height;
@@ -132,6 +157,7 @@ export default function FloatingBoxGame() {
         const xPosition = getRandomX();
         const alternateXPosition = getRandomX();
         const zigzagX = Math.random() < 0.5 ? xPosition : alternateXPosition;
+
 
         const newBox = {
           id: Math.random(),
@@ -163,6 +189,8 @@ export default function FloatingBoxGame() {
           setFloatingBoxes(prev => prev.filter(box => box.id !== newBox.id));
         });
 
+
+
         setGeneratedBoxes(prev => prev + 1);
 
         setFloatingBoxes(prev => [...prev, newBox]);
@@ -170,7 +198,7 @@ export default function FloatingBoxGame() {
 
       return () => clearInterval(interval);
     }
-  }, [isGameOver, floatingBoxes.length, generatedBoxes]);
+  }, [isGameOver, floatingBoxes.length, generatedBoxes,isApiCalled]);
 
   const handleBoxClick = box => {
     if (!box.canClick || box.feedbackColor) return;
@@ -257,6 +285,7 @@ export default function FloatingBoxGame() {
 
   const handleCallApi = async () => {
     try {
+    console.log("hellloooooooo======>")
       const defaultNumberStringData =
         numberStringData.trim() === '' ? '0' : numberStringData;
 
@@ -323,7 +352,7 @@ export default function FloatingBoxGame() {
           message={'Are you sure you want to Quit game?'}
         />
 
-        {isGameOver ? (
+        {isGameOver  ? (
            status === 0 ? (
             <GameFinishScreen
               isVisible={isGameOver}
@@ -352,7 +381,7 @@ export default function FloatingBoxGame() {
                   borderRadius: 10,
                 }}>
                 <Image source={Coin} />
-                <Text style={styles.score}>{score}</Text>
+                <Text style={styles.score}>{score.toFixed(2)}</Text>
               </LinearGradient>
               <View
                 style={{
@@ -557,7 +586,7 @@ const styles = StyleSheet.create({
   boxText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 25,
     zIndex: 1,
   },
 

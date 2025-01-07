@@ -12,7 +12,6 @@ import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 export default function AadharDetail() {
     const route = useRoute()
     const { user_id } = route.params
-    console.log(user_id)
     const [aadhaar_number, setAadharNumber] = useState('')
     const [aadharError, setAadharError] = useState('')
     const [aadharCard, setAadharCard] = useState({})
