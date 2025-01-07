@@ -22,7 +22,7 @@ import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { getGameData } from '../../Service/Home';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
@@ -48,6 +48,8 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await getGameData(data._id);
+      console.log("response.data", response)
+      console.log("response.myGames",response.myGames)
       setMyGames(response.myGames);
       setGameData(response.data);
     } catch (error) {
@@ -63,7 +65,6 @@ export default function HomeScreen() {
       setLoader(true);
     }
   }, [isReady, loginData]);
-
   return (
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
@@ -77,33 +78,33 @@ export default function HomeScreen() {
       >
         {!loader ? (
           <>
-          <View style={{ backgroundColor:'#552113' }}>
-            <View style={styles.container}>
-              {/* Logo Section */}
-              <View style={styles.logoContainer}>
-                <Image source={sharkLogo} style={styles.logo} />
-              </View>
+            <View style={{ backgroundColor: '#552113' }}>
+              <View style={styles.container}>
+                {/* Logo Section */}
+                <View style={styles.logoContainer}>
+                  <Image source={sharkLogo} style={styles.logo} />
+                </View>
 
-              {/* Rupee Wallet Section */}
-              <LinearGradient colors={['#FFFFFF1A','#FFFFFF1A','#5521131A']} style={styles.walletContainer}>
-                <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-                <Text style={styles.walletText}>
-                   ₹ {data?.total_balance || 0}
-                </Text>
-              </LinearGradient>
+                {/* Rupee Wallet Section */}
+                <LinearGradient colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']} style={styles.walletContainer}>
+                  <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
+                  <Text style={styles.walletText}>
+                    ₹ {data?.total_balance || 0}
+                  </Text>
+                </LinearGradient>
 
-              {/* Icons Section */}
-              <View style={styles.iconsContainer}>
-                <Image source={bell} style={styles.icon} />
-                <Image source={wheel} style={styles.icon} />
+                {/* Icons Section */}
+                <View style={styles.iconsContainer}>
+                  <Image source={bell} style={styles.icon} />
+                  <Image source={wheel} style={styles.icon} />
+                </View>
               </View>
-            </View>
             </View>
             <Divider color="#FFCE63" width={2.5} style={{ marginVertical: wp(0.2) }} />
-            <View style={{ flex: 1, margin: wp('2%'),marginVertical:hp('2%') }}>  
-              <WinnerCard data={data}/>
+            <View style={{ flex: 1, margin: wp('2%'), marginVertical: hp('2%') }}>
+              <WinnerCard data={data} />
             </View>
-
+            {/* 
             <View style={{ flex: 1}}>
               <View
                 style={{
@@ -118,9 +119,27 @@ export default function HomeScreen() {
               <View style={{ flex: 1.5, flexDirection: 'row', marginTop: 10 }}>
                 <MyGame myGame={myGame} />
               </View>
-            </View>
+            </View> */}
 
-            <View style={{ flex: 1.2, marginVertical: hp('2%')}}>
+            {myGame.length > 0 && (
+              <View style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flex: 0.5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingLeft: 22,
+                  }}>
+                  <Image source={Lighting} style={styles.light} />
+                  <Text style={styles.myGame}>MY GAME</Text>
+                </View>
+                <View style={{ flex: 1.5, flexDirection: 'row', marginTop: 10 }}>
+                  <MyGame myGame={myGame} />
+                </View>
+              </View>
+            )}
+
+            <View style={{ flex: 1.2, marginVertical: hp('2%') }}>
               <View
                 style={{
                   flex: 0.5,
@@ -137,7 +156,7 @@ export default function HomeScreen() {
                   <Text style={styles.view}>View All</Text>
                 </TouchableOpacity>
               </View>
-              <View style={{ flex: 1.5, marginTop: 10, marginLeft: 10 }}>
+              <View style={{ flex: 1.5, marginTop: wp('2%'), marginLeft: hp('1%') }}>
                 <AvailbleGameCard gameData={gameData} />
               </View>
             </View>
@@ -148,7 +167,7 @@ export default function HomeScreen() {
                   flex: 0.5,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingLeft: 22,
+                  paddingLeft: wp('4%'),
                 }}>
                 <Image source={Lighting} style={styles.light} />
                 <Text style={styles.myGame}>UPCOMING GAMES</Text>

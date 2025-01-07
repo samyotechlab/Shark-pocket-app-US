@@ -26,18 +26,16 @@ export default function AvailableCard({gameData, status, index}) {
   const formattedDate = formatDate(gameData.start_date);
   return (
     <View style={{borderBottomWidth: wp(1.3),
-      borderBottomColor: status == 2 || status == 4? borderBottom :'#C05112' ,borderBottomStartRadius:wp(3),borderBottomEndRadius:wp(8)}}>
+      borderBottomColor:  borderBottom ,borderBottomStartRadius:wp(3),borderBottomEndRadius:wp(8)}}>
       <LinearGradient
         colors={
-          status == 2 || status == 4
-            ? colors
-            : ['#F38424', '#F7A552', '#F9D479']
+             colors
         }
         start={{x: 0, y: 0.5}}
         end={{x: 0.8, y: 1}}
         style={[
           styles.card,
-          {borderColor: status == 2 || status == 4 ? border : '#F2E30B'},
+          {borderColor:  border },
         ]}>
         <View style={styles.content}>
           <Image source={Game} style={styles.characterImage} />
@@ -110,6 +108,9 @@ const styles = StyleSheet.create({
     color: '#000000',
     marginVertical: hp('1%'),
     fontFamily: 'Montserrat-Bold',
+    flexWrap: 'wrap', 
+    lineHeight: hp('2%'), 
+    maxWidth: wp('65%'), 
   },
   startText: {
     fontSize: wp('4%'),

@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import TDSBreakupDialog from '../../Components/TDSBreakupDialog'
@@ -13,12 +13,11 @@ import Iconic from 'react-native-vector-icons/Ionicons';
 import { bankAccountDetails } from '../../Service/Bank';
 
 export default function Withdraw({ dataUser }) {
-  console.log(dataUser)
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false);
-  const [bankDetail,setBankDetail] = useState({})
+  const [bankDetail, setBankDetail] = useState({})
 
   const handleWithdraw = () => {
     console.log("value", amount)
@@ -34,19 +33,19 @@ export default function Withdraw({ dataUser }) {
   const bankDetails = async () => {
     try {
       setIsLoading(true);
-          const response = await bankAccountDetails(dataUser._id);
-          console.log("response", response)
-          setBankDetail(response.data)
-        } catch (error) {
-          console.log('error', error);
+      const response = await bankAccountDetails(dataUser._id);
+      console.log("response", response)
+      setBankDetail(response.data)
+    } catch (error) {
+      console.log('error', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     bankDetails();
-  },[])
+  }, [])
   const handleCick = async () => {
     try {
       setIsLoading(true);
@@ -84,7 +83,7 @@ export default function Withdraw({ dataUser }) {
   return (
     <>
       <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} />
-      <View style={{ flex: 1, backgroundColor: '#F3F3F3' }}>
+      <View style={{ flex: 1, backgroundColor: '#F3F3F3', marginTop: hp('2%') }}>
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <LinearGradient
             colors={["#3d1911", "#6a1701"]}
@@ -96,7 +95,7 @@ export default function Withdraw({ dataUser }) {
             <Text style={styles.text}>Withdraw wallet Balance</Text>
             <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
           </LinearGradient>
-          <View style={{ marginTop: hp('1%')}}>
+          <View style={{ marginTop: hp('1%') }}>
             <Text style={styles.title}>Withdraw Balance</Text>
           </View>
 
@@ -119,7 +118,7 @@ export default function Withdraw({ dataUser }) {
           <View>
             <Text style={styles.infoText}>
               No Govt. Tax on this withdrawal {' '}
-              <TouchableOpacity onPress={toggleModal} style={{marginBottom: hp('1.3%')}}>
+              <TouchableOpacity onPress={toggleModal} style={{ marginBottom: hp('1.3%') }}>
                 <Text style={styles.learnMore}>Learn More</Text>
               </TouchableOpacity>
             </Text>
@@ -146,11 +145,11 @@ export default function Withdraw({ dataUser }) {
               <Iconics name={'bank'} size={hp('3.5%')} />
               <View>
                 {
-                  dataUser.is_account_verified == 1 ?(<>
-                  <Text style={styles.bankName}>{bankDetail.bank_name}</Text>
-                  <Text style={styles.bankAccount}>{bankDetail.account_no}</Text>
-                  </>):( <Text style={styles.bankAccount}>Bank Details Not Found </Text>)
-                } 
+                  dataUser.is_account_verified == 1 ? (<>
+                    <Text style={styles.bankName}>{bankDetail.bank_name}</Text>
+                    <Text style={styles.bankAccount}>{bankDetail.account_no}</Text>
+                  </>) : (<Text style={styles.bankAccount}>Bank Details Not Found </Text>)
+                }
               </View>
             </View>
           </View>
@@ -170,25 +169,25 @@ export default function Withdraw({ dataUser }) {
           <View style={styles.featuresRow}>
             <View style={styles.feature}>
               <Image
-                         source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
-                         style={styles.featureIcon}
-                       />
+                source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
+                style={styles.featureIcon}
+              />
               <Text style={styles.featureText}> 100% Safe {"\n"} Payments</Text>
             </View>
             <View style={styles.feature}>
               <Image
-                         source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
-                         style={styles.featureIcon}
-                            tintColor='#4FBF03'
-                       />
+                source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
+                style={styles.featureIcon}
+                tintColor='#4FBF03'
+              />
               <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
             </View>
             <View style={styles.feature}>
               <Image
-                         source={{ uri: "https://img.icons8.com/color/48/group.png" }}
-                         style={styles.featureIcon}
-                         tintColor='#4FBF03'
-                       />
+                source={{ uri: "https://img.icons8.com/color/48/group.png" }}
+                style={styles.featureIcon}
+                tintColor='#4FBF03'
+              />
               <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
             </View>
           </View>
@@ -412,7 +411,7 @@ const styles = StyleSheet.create({
     fontSize: hp('2%'),
     color: '#333333',
   },
-    buttonText: {
+  buttonText: {
     flex: 1,
     fontSize: hp('1.8%'),
     fontFamily: "Montserrat-Medium",

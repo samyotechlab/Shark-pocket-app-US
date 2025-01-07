@@ -101,7 +101,7 @@ export default function LeaderBoard() {
               </TouchableOpacity>
               {selectedTab === 'Global' && (
                 <LinearGradient
-                  colors={['#FEB801', '#361911']}
+                  colors={['#361911','#FEB801']}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}
                   style={{

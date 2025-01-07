@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    // paddingVertical: hp('1.5%'),
+    marginTop:wp('5%')
   },
   dateContainer: {
     width: wp('100%'),

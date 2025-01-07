@@ -18,7 +18,7 @@ import AnimatedLoader from '../../Components/AnimatedLoader';
 
 const WithdrawWalletScreen = () => {
   const route = useRoute();
-  const {dataUser} = route.params
+  const { dataUser } = route.params
 
   const [selectedTab, setSelectedTab] = useState('Withdraw');
 
@@ -30,11 +30,13 @@ const WithdrawWalletScreen = () => {
   return (
     <SafeAreaView style={dynamicStyles.container}>
       <CommonHeader title={"Withdraw wallet"} />
-      <View style={{ marginTop: hp('0.5%'),flex:1}}>
+      <View style={{ marginTop: hp('0.5%'), flex: 1 }}>
         <View
           style={{
             flexDirection: 'row',
-            padding: hp('2%'),
+            paddingTop: hp('1%'),
+            paddingRight: hp('2%'),
+            paddingLeft: hp('2%'),
             gap: wp('10%')
           }}>
           <TouchableOpacity onPress={() => handlePress('Withdraw')}>
@@ -52,11 +54,11 @@ const WithdrawWalletScreen = () => {
 
         </View>
         {selectedTab === 'Withdraw' ? (
-          !loader ? (<Withdraw dataUser={dataUser}/>) : (<AnimatedLoader />) 
+          !loader ? (<Withdraw dataUser={dataUser} />) : (<AnimatedLoader />)
         ) : (
-          !loader ? (<WithdrawHistory  dataUser={dataUser}/>) : (<AnimatedLoader />)
+          !loader ? (<WithdrawHistory dataUser={dataUser} />) : (<AnimatedLoader />)
         )}
-    
+
       </View>
     </SafeAreaView>
   );

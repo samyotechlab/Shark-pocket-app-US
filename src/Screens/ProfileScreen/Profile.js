@@ -140,6 +140,7 @@ const SharkPocketScreen = () => {
 
   const VerificationIcon = ({ isVerified }) => (
     <Icon
+    style={{    marginLeft:hp('11%')}}
       name={isVerified ? 'check-circle' : 'dots-horizontal-circle'}
       size={wp('6%')}
       color={isVerified ? '#21B600' : '#E90000'}
@@ -156,7 +157,7 @@ const SharkPocketScreen = () => {
  
           }}
           disabled={item.is_verified === 1}>
-          <View>
+          <View style={{flex:0.5}}>
             <LinearGradient
               colors={['#3D1911', '#3D1911', '#6A1701']}
               start={{ x: 1, y: 0 }}
@@ -172,12 +173,14 @@ const SharkPocketScreen = () => {
           </View>
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardText}>{item.title}</Text>
-            {item.is_verified !== undefined && (
-              <View style={styles.verificationIcon}>
-                <VerificationIcon isVerified={item.is_verified} />
-              </View>
-            )}
           </View>
+         
+              <View style={styles.verificationIcon}>
+              {item.is_verified !== undefined && (
+                <VerificationIcon isVerified={item.is_verified} />
+              )}
+              </View>
+   
           <View style={styles.cardArrowContainer}>
             <Icon
               name="chevron-right"
@@ -212,14 +215,14 @@ const SharkPocketScreen = () => {
                 <Text style={styles.profileDot}>...</Text>
               </View>
             </View>
-            <TouchableOpacity
+          </View>
+          <TouchableOpacity
               style={styles.profileActionContainer}
               onPress={() => {
                 navigation.navigate('ViewProfile', { userData });
               }}>
               <Text style={styles.viewProfileText}>View Profile</Text>
             </TouchableOpacity>
-          </View>
         </View>
       </View>
       <SafeAreaView style={styles.safeAreaView}>
@@ -255,13 +258,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    marginTop:hp('0.5%')
   },
   flatListContainer: {
-    marginBottom: hp('5%'),
+    marginBottom: hp('1%'),
   },
   profileContainer: {
     padding: wp('4%'),
     backgroundColor: '#361911',
+    
   },
   profileTitle: {
     marginTop: wp('6%'),
@@ -272,7 +277,6 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     flexDirection: 'row',
-    width: '85%',
     justifyContent: 'space-between',
     marginBottom: hp('3%'),
   },
@@ -298,7 +302,6 @@ const styles = StyleSheet.create({
   },
   profileDetailsContainer: {
     flexDirection: 'row',
-    width: '90%',
     justifyContent: 'space-between',
     marginLeft: wp('5%'),
   },
@@ -356,8 +359,10 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   cardContainer: {
+    flex:1,
     marginLeft: wp('4%'),
-    marginTop: hp('2%'),
+    marginTop: hp('0.4%'),
+    marginBottom: hp('0.4%'),
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -370,7 +375,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: wp('1%'),
-    backgroundColor: '#361911',
   },
   cardImage: {
     height: hp('6%'),
@@ -386,8 +390,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardTextContainer: {
-    width: wp('70%'),
-    flexDirection:'row'
+    flex:1,
+
   },
   cardText: {
     fontSize: wp('3.5%'),
@@ -395,12 +399,18 @@ const styles = StyleSheet.create({
     color: '#361911',
   },
   cardArrowContainer: {
-    width: wp('20%'),
+    flex:0.5,
+    justifyContent:'center',
+     alignItems:'flex-end',
+     paddingRight:wp('4%'),
+  },
+  
+  verificationIcon: {
+    flex: 1,
   },
   arrowImage: {
     height: hp('6%'),
     width: wp('6%'),
-    resizeMode: 'contain',
     paddingTop: wp(3),
   },
   button: {
@@ -418,9 +428,6 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: wp('30%'),
     marginTop: hp('1.5%'),
-  },
-  verificationIcon: {
-    marginLeft: hp('15%'),
   },
 });
 

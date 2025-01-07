@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginTop: hp('5%')
+        marginTop: hp('3%')
     },
     scrollContainer: {
         marginBottom: hp('5%'),

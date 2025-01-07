@@ -2,8 +2,6 @@ import Config from "../Utilities/Config";
 import apiInstance from "./AxiosInstance";
 
 export const ticketList = async (game_id, user_id) => {
-  console.log("game_id",game_id)
-  console.log("user_id",user_id)
   try {
     const response = await apiInstance.post(Config.Game_Ticket_List, {
       game_id,
@@ -25,7 +23,6 @@ export const ticketList = async (game_id, user_id) => {
 };
 
 export const storeTicket = async (gameId, ticketId, userId) => {
-  console.log("")
   try {
     const response = await apiInstance.post(`${Config.Store_Ticket}`, {
       game_id: gameId,

@@ -43,7 +43,7 @@ export default function Deposite(props) {
           flexDirection: 'row',
          padding: hp('2%'),
          gap:wp('3%'),
-
+        //  backgroundColor:'red'
         }}>
         <TouchableOpacity
           onPress={() => {

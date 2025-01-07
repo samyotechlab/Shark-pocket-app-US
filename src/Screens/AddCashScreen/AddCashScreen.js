@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Iconics from "react-native-vector-icons/Ionicons";
@@ -11,22 +11,28 @@ import LinearGradient from 'react-native-linear-gradient';
 const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
-   const {user_id} = route.params
-   const {balance} = route.params
-   const [amount, setAmount] = useState(null);
-   const [visible, setVisible] = useState(false);
-   const [data, setData] = useState({});
-   const [message, setMessage] = useState('');
-   const [dialog, setDialog] = useState(false);
-   const [isLoading, setisLoading] = useState(false);
-   const [checksPaymentStatus,setCheckPaymentStatus] =useState({})
-   const [paymentStatus, setPaymentStatus] = useState(null);
-  
+  const { user_id, balance, status, amounts } = route.params
+
+  const [amount, setAmount] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [data, setData] = useState({});
+  const [message, setMessage] = useState('');
+  const [dialog, setDialog] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
+  const [checksPaymentStatus, setCheckPaymentStatus] = useState({})
+  const [paymentStatus, setPaymentStatus] = useState(null);
+
+  useEffect(() => {
+    if (status === 1 && amounts) {
+      setAmount(amounts.toString());
+    }
+  }, [status, amounts]);
+
   const handleAddCash = async () => {
     if (amount) {
       try {
         const response = await TransactionStore(user_id, amount);
-        console.log("response",response)
+        console.log("response", response)
         addBonusWallet(response)
         initPhonePeSDK(response);
         setData(response);
@@ -55,7 +61,7 @@ const AddCashScreen = () => {
       true,
     )
       .then(result => {
-        console.log("result",result)
+        console.log("result", result)
         setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
         handleStartTransaction(
           response.base64,
@@ -95,7 +101,7 @@ const AddCashScreen = () => {
             setisLoading(false);
             if (response?.data?.status == 1 && response.data.data.status == 1) {
               setPaymentStatus(response?.data?.message);
-            }else{
+            } else {
               setPaymentStatus("Transaction Failed")
             }
           }, 3000);
@@ -107,93 +113,94 @@ const AddCashScreen = () => {
   };
 
 
-    const handleAmountPress = value => {
+  const handleAmountPress = value => {
     setAmount(value);
   };
 
   return (
-  <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
-    <View style={styles.container}>
-    <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Iconics name="chevron-back" size={wp("7%")} color={"white"} />
-        </TouchableOpacity>
-        <View style={{flex:1,marginRight:hp('5%')}}>
-        <Text style={styles.title}>Add Cash</Text>
-        </View>
-        <View style={styles.wallet}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#361911' }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Iconics name="chevron-back" size={wp("7%")} color={"white"} />
+          </TouchableOpacity>
+          <View style={{ flex: 1, marginRight: hp('5%') }}>
+            <Text style={styles.title}>Add Cash</Text>
+          </View>
+          <View style={styles.wallet}>
 
-          <LinearGradient 
-          colors={['#FFFFFF1A','#FFFFFF1A','#5521131A']}
-           style={{padding:wp('1%'),borderRadius:wp('2%'),paddingHorizontal:wp('4%'),flexDirection:'row'}}>
-                     <Image
-            source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
-            style={styles.walletIcon}
-          />
-          <Text style={styles.walletText}>₹ {balance}</Text>
-          </LinearGradient>
+            <LinearGradient
+              colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']}
+              style={{ padding: wp('1%'), borderRadius: wp('2%'), paddingHorizontal: wp('4%'), flexDirection: 'row' }}>
+              <Image
+                source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
+                style={styles.walletIcon}
+              />
+              <Text style={styles.walletText}>₹ {status == 2 ? balance : 0}</Text>
+            </LinearGradient>
+          </View>
         </View>
-      </View>
 
-  <View style={{flex:1,backgroundColor:'#FFFFFF'}}>  
-   <View style={styles.addCashContainer}>
-                    <View style={styles.inputContainer}>
-                      <Text style={styles.label}>Enter Amount</Text>
-                      <TextInput
-                        style={styles.input}
-                        value={amount}
-                        placeholderTextColor="#aaa"
-                        placeholderStyle={{ alignSelf: 'center' }}
-                        onChangeText={text => setAmount(text)}
-                         keyboardType="numeric"
-                      />
-                    </View>
-        <View style={styles.buttonsRow}>
-          {["₹100", "₹500", "₹1000", "₹5000"].map((amount) => (
-            <TouchableOpacity key={amount} style={styles.amountButton} onPress={() => handleAmountPress(amount)}>
-              <Text style={styles.amountText}>{amount}</Text>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+          <View style={styles.addCashContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Enter Amount</Text>
+
+              <TextInput
+                style={styles.input}
+                value={amount !== null ? "₹" + amount : ""}
+                placeholderTextColor="#aaa"
+                placeholderStyle={{ alignSelf: 'center' }}
+                onChangeText={text => setAmount(text)}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={styles.buttonsRow}>
+              {["100", "500", "1000", "5000"].map((amount) => (
+                <TouchableOpacity key={amount} style={styles.amountButton} onPress={() => handleAmountPress(amount)}>
+                  <Text style={styles.amountText}>{amount}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
+              <Text style={styles.withdrawButtonText}>ADD CASH</Text>
             </TouchableOpacity>
-          ))}
+          </View>
+
+          <View style={styles.featuresRow}>
+            <View style={styles.feature}>
+              <Image
+                source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
+                style={styles.featureIcon}
+              />
+              <Text style={styles.featureText}>100% Safe Payments</Text>
+            </View>
+            <View style={styles.feature}>
+              <Image
+                source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
+                style={styles.featureIcon}
+                tintColor='#4FBF03'
+              />
+              <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
+            </View>
+            <View style={styles.feature}>
+              <Image
+                source={{ uri: "https://img.icons8.com/color/48/group.png" }}
+                style={styles.featureIcon}
+                tintColor='#4FBF03'
+              />
+              <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.referralBanner}>
+            <Image source={require("../../../assets/images/Screens/referal.png")} style={styles.image} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
-                   <Text style={styles.withdrawButtonText}>ADD CASH</Text>
-        </TouchableOpacity>
       </View>
 
-    <View style={styles.featuresRow}>
-        <View style={styles.feature}>
-        <Image
-            source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
-            style={styles.featureIcon}
-          />
-          <Text style={styles.featureText}>100% Safe Payments</Text>
-        </View>
-        <View style={styles.feature}>
-        <Image
-            source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
-            style={styles.featureIcon}
-               tintColor='#4FBF03'
-          />
-          <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
-        </View>
-        <View style={styles.feature}>
-        <Image
-            source={{ uri: "https://img.icons8.com/color/48/group.png" }}
-            style={styles.featureIcon}
-            tintColor='#4FBF03'
-          />
-          <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
-        </View>
-      </View>
-      <TouchableOpacity style={styles.referralBanner}>
-        <Image source={require("../../../assets/images/Screens/referal.png")} style={styles.image} />
-      </TouchableOpacity>
-      </View>
-      </View>  
 
 
-
-    <AlertDialogRed visible={visible} onClose={() => setVisible(false)}  message={message}/>
+      <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} />
     </SafeAreaView>
   );
 };
@@ -207,26 +214,26 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#361911",
-    flex:1,
+    flex: 1,
     padding: wp("4%"),
     paddingBottom: hp("12%"),
-    paddingTop:hp('7%'),
+    paddingTop: hp('7%'),
     flexDirection: 'row',
   },
   backButton: {
-    flex:1,
-    justifyContent:'center',
-    bottom:hp('0.5%'),
+    flex: 1,
+    justifyContent: 'center',
+    bottom: hp('0.5%'),
   },
   title: {
     fontSize: wp("5%"),
-    fontFamily:'Montserrat-SemiBold',
+    fontFamily: 'Montserrat-SemiBold',
     color: '#fff',
     textAlign: 'center',
   },
   wallet: {
-    flex:1,
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   walletIcon: {
@@ -241,11 +248,11 @@ const styles = StyleSheet.create({
   },
   walletText: {
     color: '#fff',
-    fontFamily:'LuckiestGuy-Regular',
+    fontFamily: 'LuckiestGuy-Regular',
     fontSize: wp("5%"),
   },
   addCashContainer: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#FFFFFF',
     borderRadius: wp("3%"),
     shadowColor: '#000',
@@ -268,7 +275,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: hp("2%"),
-    marginHorizontal:hp('2%')
+    marginHorizontal: hp('2%')
   },
   amountButton: {
     borderWidth: 1,
@@ -280,7 +287,7 @@ const styles = StyleSheet.create({
   },
   amountText: {
     fontSize: wp("4%"),
-    fontFamily:'Inter_18pt-Medium',
+    fontFamily: 'Inter_18pt-Medium',
     color: '#000000B2',
   },
   addCashButton: {
@@ -295,7 +302,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   featuresRow: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: hp("2%"),
@@ -310,24 +317,24 @@ const styles = StyleSheet.create({
   },
   referralBanner: {
     marginVertical: wp("30%"),
-    margin:hp('2%'),
-    flex:1,
+    margin: hp('2%'),
+    flex: 1,
   },
-  image:{
-     height:hp('20%'),
-     width:wp('90%'),
-     resizeMode:'contain'
+  image: {
+    height: hp('20%'),
+    width: wp('90%'),
+    resizeMode: 'contain'
   },
   inputContainer: {
     backgroundColor: '#DDF1E6',
-    marginRight:wp('10%'),
+    marginRight: wp('10%'),
     width: wp('85%'),
     borderBottomColor: 'black',
-    marginVertical:wp('8%'),
+    marginVertical: wp('8%'),
     border: 1,
     borderRadius: wp('3%'),
     paddingBottom: hp(0.7),
-    marginHorizontal:wp('4%')
+    marginHorizontal: wp('4%')
   },
   label: {
     position: 'absolute',
@@ -350,7 +357,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4FBF03',
     borderRadius: wp('3%'),
     paddingVertical: hp('1.5%'),
-    marginBottom:hp('4%'),
+    marginBottom: hp('4%'),
     alignItems: 'center',
     borderColor: '#FFFFFF',
     borderWidth: 2,

@@ -34,6 +34,7 @@ export default {
   Final_Score: 'api/finalScore',
   Bonus_Data: 'api/bonusWallet',
   EditProfile: 'api/editprofile',
+  VerifyLogin:'api/verify-login'
 
 };
 

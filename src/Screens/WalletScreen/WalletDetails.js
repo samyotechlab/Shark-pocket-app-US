@@ -15,18 +15,21 @@ export default function WalletDetails() {
   const {user_id} = route.params
     const [selectedTab, setSelectedTab] = useState('Deposite');
     const [loader, setLoader] = useState(false);
-    const handlePress = tab => {
-        setSelectedTab(tab);
+    const handlePress = tab => {    
+        // setLoader(true)
+        setSelectedTab(tab); 
       };
       const dynamicStyles = getDynamicStyles(selectedTab);
   return (
     <SafeAreaView style={{flex:1,backgroundColor:'#361911'}}>
       <CommonHeader title={"Wallet  Details"}/>
-    <View style={{marginTop:hp('0.5%'),flex:1}}>
+    <View style={{flex:1}}>
       <View
         style={{
           flexDirection: 'row',
-          padding: hp('2%'),
+          paddingTop: hp('1%'), 
+          paddingRight: hp('2%'), 
+          paddingLeft: hp('2%'),
           justifyContent:'space-between',
         }}>
         <TouchableOpacity onPress={() => handlePress('Deposite')}>

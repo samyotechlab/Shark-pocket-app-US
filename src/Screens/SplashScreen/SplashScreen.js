@@ -2,20 +2,40 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Logo from '../../../assets/images/Applogo/sharkPocket.png'
 import { useNavigation } from '@react-navigation/native'
-import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
+import { verifyLogin } from '../../Service/Home'
+import AnimatedLoader from '../../Components/AnimatedLoader'
 
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(false);
+  const [userData,setUserData] = useState({})
   const navigation = useNavigation();
-
   const {loginData,isReady} = useLoginDataStorage();
+  const data = isReady && loginData && loginData?.data;
+  const token = isReady && loginData && loginData?.token;
+  const handelVerifyLogin =async ()=>{
+    setIsLoading(true)
+    try {
+      const response = await verifyLogin(data._id,token);
+      setUserData(response.data)
+    } catch (error) {
+       console.log("error",error)
+    }finally{
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (!isReady) return;
     const timer = setTimeout(() => {
       if (loginData) {
-        navigation.navigate('HomeScreen');
+        handelVerifyLogin()
+        {
+          !isLoading ? ( navigation.navigate('HomeScreen')):(
+            <AnimatedLoader/>
+          )
+        } 
       } else {
         navigation.navigate('LoginScreen');
       }

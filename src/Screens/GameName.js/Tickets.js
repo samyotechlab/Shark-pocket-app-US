@@ -14,8 +14,6 @@ import Game from '../../../assets/images/Screens/game1.png';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
-  heightPercentageToDP,
-  widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {storeTicket, ticketList} from '../../Service/Tickets';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
@@ -38,6 +36,7 @@ export default function Tickets() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [purchasedTickets, setPurchasedTickets] = useState({});
   const [message, setMessage] = useState('');
+  const [balances,setBalance] = useState('')
   const route = useRoute();
   const {game_id} = route.params;
     const [refreshing, setRefreshing] = useState(false);
@@ -77,6 +76,13 @@ export default function Tickets() {
         setVisible(false);
         const response = await storeTicket(game_id, selectedItem._id, data._id);
         if (response.status === 0) {
+          const total_price = 
+          (Number(response.total_balance) || 0) + 
+          (Number(response.total_earning) || 0) + 
+          (Number(response.bonus_wallet) || 0);
+          const ticket_price = item.price
+          const balance = ticket_price - total_price
+          setBalance(balance)
           setVisibles(true);
           setMessage(response.message);
         } else {
@@ -95,6 +101,10 @@ export default function Tickets() {
         console.log('Purchase failed:', error);
       }
     };
+
+    const handleNavigate = ()=>{
+      navigation.navigate("AddCash",{user_id:data._id,amounts :balances,status:1})
+    }
 
     const handlePurchaseModal = () => {
       setSelectedItem(item);
@@ -119,6 +129,7 @@ export default function Tickets() {
         <AlertDialog
           visible={visibles}
           onClose={() => setVisibles(false)}
+          onOkPress={handleNavigate}
           message={message}
         />
         <View style={styles.container1}>
@@ -131,8 +142,8 @@ export default function Tickets() {
               <Image source={Game} style={styles.characterImage} />
               <View style={styles.textContainer}>
                 <Text style={styles.description}>
-                  You will get the ₹{item.price}prize money enroll yourself before game
-                  start
+                Enroll in the "{item.title}" ticket now! Register before the game starts.
+
                 </Text>
                 <View style={styles.boxContainer}>
                   <LinearGradient
@@ -224,7 +235,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     height: 'auto',
-    width: widthPercentageToDP(42),
+    width: wp('40%'),
     marginVertical: 5,
     backgroundColor: 'white',
   },
@@ -319,7 +330,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 1, height: 11},
     // backgroundColor: '#00b63d',
     width: '100%',
-    borderTopRightRadius: widthPercentageToDP(3.3),
+    borderTopRightRadius: wp(3.3),
   },
   playButtonText: {
     letterSpacing: 2,

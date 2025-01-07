@@ -35,7 +35,7 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
               <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={onClose}>
+            <TouchableOpacity style={styles.button} onPress={onOkPress}>
               <Text style={styles.okText}>OK</Text>
             </TouchableOpacity>
           </View>

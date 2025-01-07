@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, RefreshControl } from 'react-native';
 import gst from '../../../assets/images/Screens/Gst.png';
-import wallet from '../../../assets/images/Screens/rupees.png';
 import LinearGradient from 'react-native-linear-gradient';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -112,7 +111,7 @@ const WalletScreen = () => {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      handleNavigation('AddCash', { user_id: dataUser._id,balance :dataUser.total_balance });
+                      handleNavigation('AddCash', { user_id: dataUser._id,balance :dataUser.total_balance,status:2 });
                     }}>
                     <LinearGradient
                       colors={['#67FF00', '#67FF00', '#3E9900']}
