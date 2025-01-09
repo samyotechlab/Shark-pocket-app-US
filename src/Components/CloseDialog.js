@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
+const CloseDialog = ({ visible, onClose, onOkPress, message }) => {
   return (
     <Modal
       transparent={true}
@@ -32,12 +32,12 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
           {/* Buttons */}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={onClose}>
-              <Text style={styles.cancelText}>Cancel</Text>
+              <Text style={styles.cancelText}>Close</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={onOkPress}>
+            {/* <TouchableOpacity style={styles.button} onPress={onOkPress}>
               <Text style={styles.okText}>OK</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>
@@ -48,14 +48,14 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'transparent', 
+    backgroundColor: '#FFFFFF90',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dialog: {
   backgroundColor: '#FFB6B6',
     width: wp('65%'), 
-    borderRadius: wp('2%'),
+    borderRadius: wp('5%'),
     paddingBottom: hp('3%'),
     elevation: 5,
     shadowOffset: { width: 0, height: 0 },
@@ -83,9 +83,9 @@ const styles = StyleSheet.create({
     color: '#FFF',
     textTransform: 'uppercase',
     textShadowColor: '#000',
-    textShadowOffset: { width: 0, height: 1 },
+    textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 2,
-    letterSpacing:1
+    letterSpacing:2
 
   },
   content: {
@@ -112,9 +112,13 @@ const styles = StyleSheet.create({
     borderRadius: wp('2%'),
   },
   cancelText: {
-    fontSize: wp('4%'),
-    fontWeight: 'bold',
-    color: '#444',
+    fontSize: wp('5%'),
+    color: '#FFFFFF',
+    fontFamily:'LilitaOne-Regular',
+    textShadowColor: '#000000', 
+    textShadowOffset: { width: 1.5, height: 1 },  
+    textShadowRadius: 6,  
+    letterSpacing:1
   },
   okText: {
     fontSize: wp('4%'),
@@ -123,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AlertDialogRed;
+export default CloseDialog;

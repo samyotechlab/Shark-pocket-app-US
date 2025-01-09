@@ -33,9 +33,10 @@ export default {
   Wallet_Request: 'api/wallet_request/list',
   Final_Score: 'api/finalScore',
   Bonus_Data: 'api/bonusWallet',
-  EditProfile: 'api/editprofile',
-  VerifyLogin:'api/verify-login'
-
+  EditProfile: 'api/editProfile',
+  VerifyLogin:'api/verify-login',
+  State:'api/state/list',
+  EditImage: 'api/editImage',
 };
 
 // export default {

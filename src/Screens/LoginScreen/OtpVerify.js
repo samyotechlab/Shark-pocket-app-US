@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {  KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -11,7 +11,12 @@ import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import Iconics from 'react-native-vector-icons/Ionicons';
 import OtpInputs from 'react-native-otp-inputs';
-import RNOtpVerify from 'react-native-otp-verify';
+import {
+  getHash,
+  startOtpListener,
+  useOtpVerify,
+  removeListener
+} from 'react-native-otp-verify';
 
 const headers = {
   'Content-Type': 'application/json',
@@ -23,7 +28,7 @@ export default function OtpVerify() {
   const { data } = route.params
   const navigation = useNavigation()
   const { storeLoginData } = useLoginDataStorage();
-  // const [otp, setOtp] = useState('');
+  // const [otps, setOtp] = useState('');
   const [otp, setOtp] = useState(['', '', '', '']);
   const inputs = useRef([]);
   const [timer, setTimer] = useState(120);
@@ -44,34 +49,59 @@ export default function OtpVerify() {
     return () => clearInterval(interval);
   }, [timer]);
 
-
-
   // useEffect(() => {
+
   //   RNOtpVerify.getOtp()
   //     .then((p) => {
-  //       console.log("p", p)
+  //       console.log("p",p)
   //       RNOtpVerify.addListener(otpHandler)
-
   //     })
   //     .catch(p => console.log(p));
   //   return () => RNOtpVerify.removeListener();
   // }, []);
 
   // const otpHandler = (message) => {
-  //   console.log(message)
-  //   const extractedOtp = /(\d{4})/g.exec(message)[0];
-  //   if (extractedOtp) {
-  //     setOtp(extractedOtp);
-  //   }else{
+  //   console.log("message",message)
+  //   try {
+  //     const extractedOtp = /(\d{4})/g.exec(message)[0];
+  //     console.log("extractedOtp",extractedOtp)
+  //     if (extractedOtp) {
+  //       setOtp(extractedOtp);
+  //     } else {
+  //       throw new Error('OTP not found in message');
+  //     }
+  //   } catch (error) {
+  //     console.log("error",error)
   //     Toast.show({
-  //       type: 'success',
+  //       type: 'error',
   //       position: 'top',
-  //       text1: 'Welcome!',
-  //       text2: message,
-  //       visibilityTime: 5000
+  //       text1: 'Error!',
+  //       text2: 'Failed to auto-fill OTP',
+  //       visibilityTime: 5000,
   //     });
   //   }
   // };
+
+  // const { hash, otp, message, timeoutError, stopListener, startListener } = useOtpVerify({numberOfDigits: 4});
+
+
+// useEffect(() => {
+//   getHash().then(hash => {
+//     console.log(hash)
+//   }).catch(console.log);
+
+//   startOtpListener(message => {
+//     console.log("Received Message:", message);
+//     const match = /(\d{4})/g.exec(message); 
+//     if (match) {
+//       const otp = match[1];
+//       console.log("Extracted OTP:", otp);
+//       setOtp(otp); 
+//     }
+//   });
+//   return () => removeListener();
+// }, []);
+  
 
   const formatTime = seconds => {
     const mins = Math.floor(seconds / 60);
@@ -230,7 +260,7 @@ export default function OtpVerify() {
                 handleChange={(code) => setOtp(code)}
                 numberOfInputs={4}
                 inputStyles={styles.input}
-                value={otp}
+                value={otps}
                 autofillFromClipboard={true}
               /> */}
             </View>

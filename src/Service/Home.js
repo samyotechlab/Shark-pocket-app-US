@@ -25,3 +25,13 @@ export const getGameData = async _id => {
     }
   };
 
+  export const state  = async () => {
+    try {
+      const response = await apiInstance.get(`${Config.State}`);
+      return response.data;
+    } catch (error) {
+      console.log('errror', error);
+    }
+  };
+
+

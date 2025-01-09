@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Image,
   RefreshControl,
   ScrollView,
@@ -21,20 +22,25 @@ import WinnerCard from '../../Components/WinnerCard';
 import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import { getGameData } from '../../Service/Home';
+import { getGameData, state } from '../../Service/Home';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
+import CloseDialog from '../../Components/CloseDialog';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
   const { loginData, isReady } = useLoginDataStorage();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
   const [myGame, setMyGames] = useState([]);
   const data = isReady && loginData && loginData?.data;
   const [refreshing, setRefreshing] = useState(false);
+  // const [states, setState] = useState([])
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState('');
 
   const refreshData = () => {
     setRefreshing(true);
@@ -48,8 +54,6 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await getGameData(data._id);
-      console.log("response.data", response)
-      console.log("response.myGames",response.myGames)
       setMyGames(response.myGames);
       setGameData(response.data);
     } catch (error) {
@@ -58,8 +62,35 @@ export default function HomeScreen() {
       setLoader(false);
     }
   };
+
+  const stateList = async () => {
+    try {
+      const response = await state();
+      // setState(response.data)
+      checkCurrentState(response.data)
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
+  async function checkCurrentState(states) {
+    try {
+      const response = await fetch("http://ip-api.com/json");
+      const data = await response.json();
+      const currentState = data.regionName;
+      const isStateInList = states.some((state) => state.name === currentState);
+      if (!isStateInList) {
+        setVisible(true);
+        setMessage(`The current state (${currentState}) is NOT in the state list.`)
+      }
+    } catch (error) {
+      console.error("Error fetching current state:", error);
+    }
+  }
+
   useEffect(() => {
     if (isReady) {
+      stateList();
       getAllData();
     } else {
       setLoader(true);
@@ -104,22 +135,6 @@ export default function HomeScreen() {
             <View style={{ flex: 1, margin: wp('2%'), marginVertical: hp('2%') }}>
               <WinnerCard data={data} />
             </View>
-            {/* 
-            <View style={{ flex: 1}}>
-              <View
-                style={{
-                  flex: 0.5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingLeft: 22,
-                }}>
-                <Image source={Lighting} style={styles.light} />
-                <Text style={styles.myGame}>MY GAME</Text>
-              </View>
-              <View style={{ flex: 1.5, flexDirection: 'row', marginTop: 10 }}>
-                <MyGame myGame={myGame} />
-              </View>
-            </View> */}
 
             {myGame.length > 0 && (
               <View style={{ flex: 1 }}>
@@ -148,7 +163,7 @@ export default function HomeScreen() {
                   paddingLeft: 22,
                 }}>
                 <Image source={Lighting} style={styles.light} />
-                <Text style={styles.myGame}>AVAILABLE GAMES </Text>
+                <Text style={styles.myGame}>AVAILABLE GAMES</Text>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('AvailableGame', { gameData });
@@ -184,6 +199,7 @@ export default function HomeScreen() {
           <AnimatedLoader />
         )}
       </ScrollView>
+      <CloseDialog visible={visible} onClose={() => BackHandler.exitApp()} message={message} />
     </LinearGradient>
   );
 }

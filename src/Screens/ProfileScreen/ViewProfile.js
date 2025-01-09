@@ -8,63 +8,80 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import profile from '../../../assets/images/Screens/profile.jpeg';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Toast from 'react-native-toast-message';
-import { updateProfile } from '../../Service/Login';
+import { updateImage, updateProfile } from '../../Service/Login';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const ViewProfile = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { userData } = route.params
+
   const [loader, setLoader] = useState(false)
   const [formData, setFormData] = useState({
     name: userData.name,
     state: userData.state,
     gender: userData.gender,
     mobile: userData.mobile,
-    email: userData.email
+    email: userData.email,
+    image:userData.avatar
   });
 
+
+  const [profileImage, setProfileImage] = useState(null);
+
+  const openImagePicker = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log("image------>",image)
+        setProfileImage(image?.path);
+        uploadImageToServer();
+      }).catch((error)=>{
+         console.log(error)
+      })
+  };
+
+  const uploadImageToServer = async () => {
+    const formData = new FormData();
+   
+    formData.append('avatar', {
+      uri: profileImage,
+      type: 'image/jpeg',
+      name: '12345.jpg',
+    });
+    formData.append('user_id', userData._id);
+
+    console.log("formData",formData)
+    setLoader(true)
+    try {
+      const response = await updateImage(formData)
+
+      console.log("response",response)
+      if (response.status == 1) {
+        console.log('Image uploaded successfully:', response.data);
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }finally{
+      setLoader(false)
+    }
+  };
 
   const handleInputChange = (field, value) => {
     console.log("value", value)
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
-
-  const handelUpdate = async () => {
-    console.log("formData",formData.email)
-    setLoader(true);
-    try {
-      const formData = new FormData();
-      console.log("formData========>",formData)
-      formData.append('user_id', userData._id);
-      formData.append('contact_number', formData.mobile);
-      formData.append('email', formData.email);
-  
-      // Append avatar if available
-      if (formData.avatar) {
-        formData.append('avatar', {
-          uri: formData.avatar.uri,
-          name: formData.avatar.fileName,
-          type: formData.avatar.type,
-        });
-      }
-      console.log(formData)
-      const response = await updateProfile(formData);
-      console.log(response)}
-       catch (error) {
-      console.log("error", error)
-    } finally {
-      setLoader(false)
-    }
-  }
-
 
   return (
     <View style={styles.container}>
@@ -81,10 +98,12 @@ const ViewProfile = () => {
             <View style={styles.profileContainer}>
               <View style={styles.imageWrapper}>
                 <Image
-                  source={profile}
-                  style={styles.profileImage}
+               source={{
+                uri: formData.image, 
+              }}
+              style={styles.profileImage}
                 />
-                <TouchableOpacity style={styles.cameraIcon}>
+                <TouchableOpacity style={styles.cameraIcon} onPress={openImagePicker}>
                   <Icon name="camera-outline" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
@@ -113,7 +132,7 @@ const ViewProfile = () => {
               </View>
 
               <View style={[styles.inputWrapper, { zIndex: 1000 }]}>
-                <Icon name="gender-male" size={25} color="#000000B2" />
+                <Icon name="gender-male-female" size={25} color="#000000B2" />
                 <TextInput
                   value={userData.gender == 'F' ? "Female" : "male"}
                   style={styles.input}
@@ -128,7 +147,7 @@ const ViewProfile = () => {
                   onChangeText={(text) => handleInputChange('mobile', text)}
                   style={styles.input}
                 />
-                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }} onPress={handelUpdate}  >
+                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }}  >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
               </View>
@@ -136,7 +155,7 @@ const ViewProfile = () => {
               <View style={styles.inputWrapper}>
                 <Icon name="email-outline" size={25} color="#000000B2" />
                 <TextInput value={formData.email} style={styles.input} onChangeText={(text) => handleInputChange('email', text)} />
-                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }} onPress={handelUpdate} >
+                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }}  >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
               </View>
