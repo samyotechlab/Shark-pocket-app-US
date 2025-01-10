@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Person from '../../assets/images/Screens/person.jpeg';
 import {
   widthPercentageToDP as wp,
@@ -18,9 +18,10 @@ import Person3 from '../../assets/images/Screens/Person3.jpeg';
 import Person4 from '../../assets/images/Screens/Person4.jpeg';
 import LinearGradient from 'react-native-linear-gradient';
 import Toast from 'react-native-toast-message';
-import {globalLeaderBoard} from '../Service/LeaderBoard';
-import {truncateName} from '../Utilities/utilies';
+import { globalLeaderBoard } from '../Service/LeaderBoard';
+import { truncateName } from '../Utilities/utilies';
 import AnimatedLoader from './AnimatedLoader';
+import dummyProfile2 from '../../assets/images/Screens/dummmyProfile2.jpeg'
 
 export default function GlobalLeaderBoard() {
   const [loader, setLoader] = useState(false);
@@ -41,7 +42,7 @@ export default function GlobalLeaderBoard() {
           type: 'error',
           position: 'top',
           text1: 'Error!',
-          text2: {msg},
+          text2: { msg },
           visibilityTime: 3000,
         });
       }
@@ -51,7 +52,7 @@ export default function GlobalLeaderBoard() {
         type: 'error',
         position: 'top',
         text1: 'Error!',
-        text2: {msg},
+        text2: { msg },
         visibilityTime: 3000,
       });
     } finally {
@@ -68,7 +69,7 @@ export default function GlobalLeaderBoard() {
   }, [globalData]);
 
   const rakingData = () => {
-    if(globalData && globalData.length > 0 ){
+    if (globalData && globalData.length > 0) {
       globalData.map(item => {
         if (item.ranking === 1) {
           setFirstRanking(item);
@@ -79,14 +80,14 @@ export default function GlobalLeaderBoard() {
         }
       });
     }
-   
+
   };
 
   const renderItem = items => {
-    const {item} = items;
+    const { item } = items;
     return (
       <>
-        <View style={{flex: 1, paddingBottom: 10}}>
+        <View style={{ flex: 1, paddingBottom: 10 }}>
           <View
             style={{
               flex: 1,
@@ -94,16 +95,16 @@ export default function GlobalLeaderBoard() {
               flexDirection: 'row',
               paddingBlock: 6,
             }}>
-            <View style={{flex: 0.4}}>
+            <View style={{ flex: 0.4 }}>
               <Image
                 source={Person4}
-                style={{height: hp(3), width: wp(6), borderRadius: wp(3)}}
+                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
               />
             </View>
-            <View style={{flex: 1.5}}>
+            <View style={{ flex: 1.5 }}>
               <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
             </View>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.txt}>{item.score}</Text>
             </View>
             <View
@@ -116,8 +117,8 @@ export default function GlobalLeaderBoard() {
           </View>
           <LinearGradient
             colors={['#999999', '#FFFFFF', '#999999']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={{
               height: 1,
               marginTop: 10,
@@ -130,8 +131,8 @@ export default function GlobalLeaderBoard() {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={{flex: 0.5, flexDirection: 'row'}}>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 0.5, flexDirection: 'row' }}>
         <View
           style={{
             flex: 1,
@@ -149,11 +150,13 @@ export default function GlobalLeaderBoard() {
               borderColor: '#F1C328',
             }}>
             <Image
-              source={Person2}
-              style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
+              source={thirdRanking?.user_name
+                ? (Person2)
+                : (dummyProfile2)}
+              style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
             />
           </View>
-          <View style={{position: 'absolute'}}>
+          <View style={{ position: 'absolute' }}>
             <View
               style={{
                 height: hp(3),
@@ -164,7 +167,7 @@ export default function GlobalLeaderBoard() {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{color: '#000000CC'}}>2</Text>
+              <Text style={{ color: '#000000CC' }}>2</Text>
             </View>
           </View>
           <Text
@@ -206,11 +209,13 @@ export default function GlobalLeaderBoard() {
               borderColor: '#F1C328',
             }}>
             <Image
-              source={Person}
-              style={{height: hp(10), width: hp(10), borderRadius: hp(10)}}
+               source={firstRanking?.user_name
+                ? (Person)
+                : (dummyProfile2)}
+              style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
             />
           </View>
-          <View style={{position: 'absolute'}}>
+          <View style={{ position: 'absolute' }}>
             <View
               style={{
                 height: hp(3),
@@ -221,7 +226,7 @@ export default function GlobalLeaderBoard() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{color: '#000000CC'}}>1</Text>
+              <Text style={{ color: '#000000CC' }}>1</Text>
             </View>
           </View>
           <Text
@@ -254,11 +259,13 @@ export default function GlobalLeaderBoard() {
               borderColor: '#F1C328',
             }}>
             <Image
-              source={Person3}
-              style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
+             source={thirdRanking?.user_name
+              ? (Person3)
+              : (dummyProfile2)}
+              style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
             />
           </View>
-          <View style={{position: 'absolute'}}>
+          <View style={{ position: 'absolute' }}>
             <View
               style={{
                 height: hp(3),
@@ -269,7 +276,7 @@ export default function GlobalLeaderBoard() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={{color: '#000000CC'}}>3</Text>
+              <Text style={{ color: '#000000CC' }}>3</Text>
             </View>
           </View>
           <Text
@@ -292,7 +299,7 @@ export default function GlobalLeaderBoard() {
           margin: wp('6%'),
           borderRadius: 15,
         }}>
-        <SafeAreaView style={{flex: 1, margin: wp('4%')}}>
+        <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
           {globalData ? (
             !loader ? (
               <FlatList

@@ -98,9 +98,9 @@ const ViewProfile = () => {
             <View style={styles.profileContainer}>
               <View style={styles.imageWrapper}>
                 <Image
-               source={{
-                uri: formData.image, 
-              }}
+               source={formData.image
+                ? { uri: formData.image }
+                : require('../../../assets/images/Screens/profile.jpeg')}
               style={styles.profileImage}
                 />
                 <TouchableOpacity style={styles.cameraIcon} onPress={openImagePicker}>

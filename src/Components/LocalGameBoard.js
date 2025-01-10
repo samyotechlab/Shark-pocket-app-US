@@ -2,13 +2,12 @@ import {
   FlatList,
   Image,
   SafeAreaView,
-  SafeAreaViewBase,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useReducer, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import {
@@ -19,17 +18,18 @@ import Person2 from '../../assets/images/Screens/Person2.jpeg';
 import Person3 from '../../assets/images/Screens/Person3.jpeg';
 import Person4 from '../../assets/images/Screens/Person4.jpeg';
 import Person from '../../assets/images/Screens/person.jpeg';
+import dummyProfile2 from '../../assets/images/Screens/dummmyProfile2.jpeg'
 import Frame from '../../assets/images/Screens/Frame.png';
 import SearchField from './SearchField';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {leaderBoard} from '../Service/LeaderBoard';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { leaderBoard } from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
-import {truncateName} from '../Utilities/utilies';
+import { truncateName } from '../Utilities/utilies';
 import AnimatedLoader from './AnimatedLoader';
 
 export default function LocalGameBoard() {
   const route = useRoute();
-  const {game_id} = route.params;
+  const { game_id } = route.params;
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
@@ -42,13 +42,10 @@ export default function LocalGameBoard() {
     navigation.goBack();
   };
 
-
-
   const leaderBoardData = async () => {
     setLoader(true);
     try {
       const response = await leaderBoard(game_id);
-      console.log('response', response);
       if (response) {
         setGameData(response.data);
         setFilteredData(response.data);
@@ -58,7 +55,7 @@ export default function LocalGameBoard() {
           type: 'error',
           position: 'top',
           text1: 'Error!',
-          text2: {msg},
+          text2: { msg },
           visibilityTime: 3000,
         });
       }
@@ -93,25 +90,25 @@ export default function LocalGameBoard() {
     }
   };
 
-useEffect(() => {
-  if (gameData && gameData.length > 0) {
-    const rakingData = () => {
-      gameData.forEach(item => {
-        if (item.ranking === 1) setFirstRanking(item);
-        if (item.ranking === 2) setSecondRanking(item);
-        if (item.ranking === 3) setThirdRanking(item);
-      });
-    };
-    rakingData();
-  }
-}, [gameData]);
+  useEffect(() => {
+    if (gameData && gameData.length > 0) {
+      const rakingData = () => {
+        gameData.forEach(item => {
+          if (item.ranking === 1) setFirstRanking(item);
+          if (item.ranking === 2) setSecondRanking(item);
+          if (item.ranking === 3) setThirdRanking(item);
+        });
+      };
+      rakingData();
+    }
+  }, [gameData]);
 
   const renderItem = items => {
-    const {item} = items;
+    const { item } = items;
 
     return (
       <>
-        <View style={{flex: 1, paddingBottom: 10}}>
+        <View style={{ flex: 1, paddingBottom: 10 }}>
           <View
             style={{
               flex: 1,
@@ -119,26 +116,26 @@ useEffect(() => {
               flexDirection: 'row',
               paddingBlock: 6,
             }}>
-            <View style={{flex: 0.4}}>
+            <View style={{ flex: 0.4 }}>
               <Image
                 source={Person4}
-                style={{height: hp(3), width: wp(6), borderRadius: wp(3)}}
+                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
               />
             </View>
-            <View style={{flex: 1.5}}>
+            <View style={{ flex: 1.5 }}>
               <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
             </View>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.txt}>{item.score}</Text>
             </View>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text style={styles.txt1}>#{item.ranking}</Text>
             </View>
           </View>
           <LinearGradient
             colors={['#999999', '#FFFFFF', '#999999']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             style={{
               height: 1,
               marginTop: 10,
@@ -154,21 +151,22 @@ useEffect(() => {
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
-        <View style={{flex: 1, marginTop: wp('10%')}}>
+        <View style={{ flex: 1, marginTop: wp('10%') }}>
           <View style={styles.leaderBoard}>
             <TouchableOpacity
-              style={{flex: 0.5, justifyContent: 'center'}}
+              style={{ flex: 0.5, justifyContent: 'center' }}
               onPress={() => {
                 handleNavigation();
               }}>
               <Iconics name="chevron-back" size={25} color={'white'} />
             </TouchableOpacity>
-            <View style={{flex: 3.5, justifyContent: 'center'}}>
-              <SearchField onSearch={handleSearch} />
+            <View style={{ flex: 3.5, justifyContent: 'center' }}>
+              <SearchField onSearch={handleSearch} gameData={gameData}
+                filteredData={filteredData} />
             </View>
           </View>
         </View>
-        <View style={{flex: 1.5, flexDirection: 'row', marginBottom: 20}}>
+        <View style={{ flex: 1.5, flexDirection: 'row', marginBottom: 20 }}>
           <View
             style={{
               flex: 1,
@@ -186,11 +184,14 @@ useEffect(() => {
                 borderColor: '#F1C328',
               }}>
               <Image
-                source={Person2}
-                style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
+                // source={Person2},
+                source={secondRanking?.user_name
+                  ? (Person2)
+                  : (dummyProfile2)}
+                style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
               />
             </View>
-            <View style={{position: 'absolute'}}>
+            <View style={{ position: 'absolute' }}>
               <View
                 style={{
                   height: hp(3),
@@ -201,7 +202,7 @@ useEffect(() => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{color: '#000000CC'}}>2</Text>
+                <Text style={{ color: '#000000CC' }}>2</Text>
               </View>
             </View>
             <Text
@@ -243,11 +244,13 @@ useEffect(() => {
                 borderColor: '#F1C328',
               }}>
               <Image
-                source={Person}
-                style={{height: hp(10), width: hp(10), borderRadius: hp(10)}}
+                source={firstRanking?.user_name
+                  ? (Person)
+                  : (dummyProfile2)}
+                style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
               />
             </View>
-            <View style={{position: 'absolute'}}>
+            <View style={{ position: 'absolute' }}>
               <View
                 style={{
                   height: hp(3),
@@ -258,7 +261,7 @@ useEffect(() => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={{color: '#000000CC'}}>1</Text>
+                <Text style={{ color: '#000000CC' }}>1</Text>
               </View>
             </View>
             <Text
@@ -291,11 +294,13 @@ useEffect(() => {
                 borderColor: '#F1C328',
               }}>
               <Image
-                source={Person3}
-                style={{height: hp(7), width: hp(7), borderRadius: hp(7)}}
+                source={thirdRanking?.user_name
+                  ? (Person3)
+                  : (dummyProfile2)}
+                style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
               />
             </View>
-            <View style={{position: 'absolute'}}>
+            <View style={{ position: 'absolute' }}>
               <View
                 style={{
                   height: hp(3),
@@ -306,7 +311,7 @@ useEffect(() => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <Text style={{color: '#000000CC'}}>3</Text>
+                <Text style={{ color: '#000000CC' }}>3</Text>
               </View>
             </View>
             <Text
@@ -329,7 +334,7 @@ useEffect(() => {
             margin: wp('6%'),
             borderRadius: 15,
           }}>
-          <SafeAreaView style={{flex: 1, margin: wp('4%')}}>
+          <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
             {gameData ? (
               !loader ? (
                 <FlatList
