@@ -26,16 +26,14 @@ export default function SplashScreen() {
     }
   }
 
+
   useEffect(() => {
     if (!isReady) return;
-    const timer = setTimeout(() => {
       if (loginData) {
         handelVerifyLogin();
       } else {
         navigation.navigate('LoginScreen');
       }
-    }, 3000);
-    return () => clearTimeout(timer);
   }, [isReady, loginData]);
 
  

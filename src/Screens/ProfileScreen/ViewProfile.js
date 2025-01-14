@@ -9,14 +9,12 @@ import {
   Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import profile from '../../../assets/images/Screens/profile.jpeg';
 import Iconics from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Toast from 'react-native-toast-message';
 import { updateImage, updateProfile } from '../../Service/Login';
 import AnimatedLoader from '../../Components/AnimatedLoader';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 
 const ViewProfile = () => {
@@ -31,7 +29,7 @@ const ViewProfile = () => {
     gender: userData.gender,
     mobile: userData.mobile,
     email: userData.email,
-    image:userData.avatar
+    avatar:userData.avatar
   });
 
 
@@ -66,10 +64,10 @@ const ViewProfile = () => {
     setLoader(true)
     try {
       const response = await updateImage(formData)
-
       console.log("response",response)
       if (response.status == 1) {
-        console.log('Image uploaded successfully:', response.data);
+        handleInputChange('avatar', response.data.avatar);
+        console.log('Image uploaded successfully:', response.data.avatar);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -98,8 +96,8 @@ const ViewProfile = () => {
             <View style={styles.profileContainer}>
               <View style={styles.imageWrapper}>
                 <Image
-               source={formData.image
-                ? { uri: formData.image }
+               source={formData.avatar
+                ? { uri:formData.avatar }
                 : require('../../../assets/images/Screens/profile.jpeg')}
               style={styles.profileImage}
                 />

@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   Image,
-  Modal,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Share,
   FlatList,
   SafeAreaView,
-  ScrollView,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -21,11 +16,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { CommonActions, useNavigation } from '@react-navigation/native';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import profile from '../../../assets/images/Screens/profile.jpeg';
 import { userDetail } from '../../Service/Login';
 import { truncateName } from '../../Utilities/utilies';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
 const SharkPocketScreen = () => {
+
+
+
   const navigation = useNavigation();
   const { isReady, loginData } = useLoginDataStorage();
   const { clearLoginData } = useLoginDataStorage();
@@ -33,6 +30,7 @@ const SharkPocketScreen = () => {
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
   const data = isReady && loginData && loginData?.data;
+
   const data2 = [
     {
       title: 'Notification',
@@ -140,7 +138,7 @@ const SharkPocketScreen = () => {
 
   const VerificationIcon = ({ isVerified }) => (
     <Icon
-    style={{    marginLeft:hp('11%')}}
+      style={{ marginLeft: hp('11%') }}
       name={isVerified ? 'check-circle' : 'dots-horizontal-circle'}
       size={wp('6%')}
       color={isVerified ? '#21B600' : '#E90000'}
@@ -154,10 +152,10 @@ const SharkPocketScreen = () => {
           style={styles.cardContainer}
           onPress={() => {
             handleNavigation(item.url);
- 
+
           }}
           disabled={item.is_verified === 1}>
-          <View style={{flex:0.5}}>
+          <View style={{ flex: 0.5 }}>
             <LinearGradient
               colors={['#3D1911', '#3D1911', '#6A1701']}
               start={{ x: 1, y: 0 }}
@@ -174,13 +172,13 @@ const SharkPocketScreen = () => {
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardText}>{item.title}</Text>
           </View>
-         
-              <View style={styles.verificationIcon}>
-              {item.is_verified !== undefined && (
-                <VerificationIcon isVerified={item.is_verified} />
-              )}
-              </View>
-   
+
+          <View style={styles.verificationIcon}>
+            {item.is_verified !== undefined && (
+              <VerificationIcon isVerified={item.is_verified} />
+            )}
+          </View>
+
           <View style={styles.cardArrowContainer}>
             <Icon
               name="chevron-right"
@@ -196,13 +194,16 @@ const SharkPocketScreen = () => {
   };
   return (
     <>
-      <View colors={['#3D1911', '#6A1701']} style={styles.profileContainer}>
+      <View colors={['#3D1911', '#6A1701']} style={styles.profileContainer} >
         <View>
           <Text style={styles.profileTitle}>Profile</Text>
         </View>
-        <View style={styles.profileHeader}>
+        <View style={styles.profileHeader} >
           <View style={styles.profileImageContainer}>
-            <Image source={profile} style={styles.profileImage} />
+            <Image source={userData.avatar
+              ? { uri: userData.avatar }
+              : require('../../../assets/images/Screens/profile.jpeg')}
+              style={styles.profileImage} />
           </View>
           <View style={styles.profileDetailsContainer}>
             <View>
@@ -217,12 +218,12 @@ const SharkPocketScreen = () => {
             </View>
           </View>
           <TouchableOpacity
-              style={styles.profileActionContainer}
-              onPress={() => {
-                navigation.navigate('ViewProfile', { userData });
-              }}>
-              <Text style={styles.viewProfileText}>View Profile</Text>
-            </TouchableOpacity>
+            style={styles.profileActionContainer}
+            onPress={() => {
+              navigation.navigate('ViewProfile', { userData });
+            }}>
+            <Text style={styles.viewProfileText}>View Profile</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <SafeAreaView style={styles.safeAreaView}>
@@ -234,13 +235,14 @@ const SharkPocketScreen = () => {
               keyExtractor={(_item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
               ItemSeparatorComponent={() => (
-                <View  style={{ 
-                  height: hp('0.1%'), 
-                  backgroundColor: 'lightgray', 
-                  width: wp('70%'), 
-                  alignSelf: 'center', 
-                  marginVertical: hp('0.4%'), 
-                }}  />
+                <View style={{
+                  height: hp('0.1%'),
+                  backgroundColor: 'lightgray',
+                  width: wp('70%'),
+                  alignSelf: 'center',
+                  marginVertical: hp('0.4%'),
+                }}
+                />
               )}
             />
           </View>
@@ -258,22 +260,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop:hp('0.5%')
+    marginTop: hp('0.5%')
   },
   flatListContainer: {
     marginBottom: hp('1%'),
   },
   profileContainer: {
-    padding: wp('4%'),
+    padding: wp('5%'),
     backgroundColor: '#361911',
-    
+
   },
   profileTitle: {
-    marginTop: wp('6%'),
+    marginTop: wp('8%'),
     fontSize: wp('5%'),
     fontWeight: '500',
     marginBottom: hp('2%'),
     color: 'white',
+    fontFamily:'Montserrat-SemiBold'
   },
   profileHeader: {
     flexDirection: 'row',
@@ -281,10 +284,9 @@ const styles = StyleSheet.create({
     marginBottom: hp('3%'),
   },
   profileImageContainer: {
-    backgroundColor: '#9C4831',
-    width: wp('17%'),
-    height: wp('17%'),
-    borderRadius: wp('8.5%'),
+    width: wp('20%'),
+    height: wp('20%'),
+    borderRadius: wp('10%'),
     borderWidth: 3,
     borderColor: '#FFB700',
     justifyContent: 'center',
@@ -293,7 +295,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: '100%',
     height: '100%',
-    borderRadius: wp('7.5%'),
+    borderRadius: wp('10%'),
     resizeMode: 'cover',
   },
   profileImageText: {
@@ -303,7 +305,6 @@ const styles = StyleSheet.create({
   profileDetailsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: wp('5%'),
   },
   profileName: {
     color: 'white',
@@ -359,7 +360,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   cardContainer: {
-    flex:1,
+    flex: 1,
     marginLeft: wp('4%'),
     marginTop: hp('0.4%'),
     marginBottom: hp('0.4%'),
@@ -390,7 +391,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cardTextContainer: {
-    flex:1,
+    flex: 1,
 
   },
   cardText: {
@@ -399,12 +400,12 @@ const styles = StyleSheet.create({
     color: '#361911',
   },
   cardArrowContainer: {
-    flex:0.5,
-    justifyContent:'center',
-     alignItems:'flex-end',
-     paddingRight:wp('4%'),
+    flex: 0.5,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: wp('4%'),
   },
-  
+
   verificationIcon: {
     flex: 1,
   },

@@ -43,3 +43,4 @@ export const bonusWallet = async user_id => {
     throw error;
   }
 };  
+

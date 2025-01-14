@@ -1,4 +1,5 @@
 import {
+  Alert,
   BackHandler,
   Image,
   RefreshControl,
@@ -23,7 +24,7 @@ import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { getGameData, state } from '../../Service/Home';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
@@ -49,6 +50,27 @@ export default function HomeScreen() {
       setRefreshing(false);
     }, 2000);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllData();
+      const onBackPress = () => {
+        Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {text: 'YES', onPress: () => BackHandler.exitApp()},
+        ]);
+        return true;
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [loginData]),
+  );
 
   const getAllData = async () => {
     setLoader(true);

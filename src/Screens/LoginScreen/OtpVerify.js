@@ -17,13 +17,14 @@ import {
   useOtpVerify,
   removeListener
 } from 'react-native-otp-verify';
+import RNOtpVerify from 'react-native-otp-verify';
+import SmsRetriever from 'react-native-sms-retriever';
 
 const headers = {
   'Content-Type': 'application/json',
 };
 
 export default function OtpVerify() {
-
   const route = useRoute()
   const { data } = route.params
   const navigation = useNavigation()
@@ -33,6 +34,7 @@ export default function OtpVerify() {
   const inputs = useRef([]);
   const [timer, setTimer] = useState(120);
   const [otpVerified, setOtpVerified] = useState(false);
+    const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     let interval = null;
@@ -49,8 +51,7 @@ export default function OtpVerify() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // useEffect(() => {
-
+  //  useEffect(() => {
   //   RNOtpVerify.getOtp()
   //     .then((p) => {
   //       console.log("p",p)
@@ -58,6 +59,28 @@ export default function OtpVerify() {
   //     })
   //     .catch(p => console.log(p));
   //   return () => RNOtpVerify.removeListener();
+  // }, []);
+
+  // const startListeningForOtp = async () => {
+  //   console.log("helloooooo")
+  //   try {
+  //     const message = await SmsRetriever.startSmsRetriever();
+  //     console.log("message",message)
+  //     const otpCode = message.match(/\d{4}/)?.[0]; 
+  //     if (otpCode) {
+  //       const newOtp = otpCode.split('');
+  //       setOtp(newOtp);
+
+  //       // Automatically focus the last input
+  //       inputs.current[newOtp.length - 1]?.focus();
+  //     }
+  //   } catch (error) {
+  //     console.error('Error reading OTP:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   startListeningForOtp();
   // }, []);
 
   // const otpHandler = (message) => {
@@ -127,6 +150,7 @@ export default function OtpVerify() {
 
   const handleOtp = () => {
     clearInterval(timer);
+    setLoader(true);
     try {
       console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
       axios
@@ -152,8 +176,10 @@ export default function OtpVerify() {
             setOtpVerified(true);
             setTimeout(() => {
               if (res.data.data.is_aadhar_verified === 0) {
+                setLoader(false);
                 navigation.navigate('DisclaimerScreen', { data: res.data.data });
               } else {
+                setLoader(false);
                 storeLoginData(res.data)
                 navigation.navigate('HomeScreen', { data: res.data.data });
               }
@@ -171,10 +197,12 @@ export default function OtpVerify() {
         })
         .catch(err => {
           console.log('error--->', err);
+          setLoader(false);
         });
 
     } catch (error) {
       console.log('An error occurred:', error);
+      setLoader(false);
     }
   };
 
@@ -252,6 +280,7 @@ export default function OtpVerify() {
                   nativeEvent.key === 'Backspace' && handleBackspace(digit, index)
                 }
                 keyboardType="number-pad"
+
                 maxLength={1}
                 ref={(ref) => (inputs.current[index] = ref)}
               />
@@ -267,7 +296,11 @@ export default function OtpVerify() {
           </View>
 
           <View style={{ marginTop: hp('10%') }}>
-            <CommonButton title={'Verify'} onPress={handleOtp} />
+            <CommonButton 
+            onPress={handleOtp} 
+            title={loader ? 'Loading...' : 'Verify'}
+            disabled={loader}
+            />
             <Text style={styles.timer}>{formatTime(timer)}</Text>
             <TouchableOpacity
               onPress={handleResendOtp}

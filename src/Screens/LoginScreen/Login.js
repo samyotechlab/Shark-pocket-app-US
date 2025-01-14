@@ -10,7 +10,6 @@ import axios from 'axios'
 import Toast from 'react-native-toast-message'
 import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
-import AnimatedLoader from '../../Components/AnimatedLoader'
 
 
 const headers = {
@@ -42,13 +41,9 @@ export default function Login() {
 
 
   const handleLogin = () => {
-    console.log('phoneNumber', phoneNumber);
-
-
+    setLoader(true);
     try {
-      setLoader(true);
       if (validateInputs()) {
-        console.log('phoneNumber', `${API_URL}/${Config.Login}`);
         axios
           .post(
             `${API_URL}/${Config.Login}`,
@@ -68,6 +63,7 @@ export default function Login() {
                 visibilityTime: 3000
               });
               setTimeout(() => {
+                setLoader(false);
                 navigation.navigate('OtpScreen', { data: res.data.data });
               }, 3000);
             } else {
@@ -82,14 +78,20 @@ export default function Login() {
           })
           .catch(err => {
             console.log('error--->', err);
+            setLoader(false);
           });
+
+      }
+      else{
+        setLoader(false)
       }
     } catch (error) {
       console.log('An error occurred:', error);
-    } finally {
       setLoader(false);
+
     }
   };
+
   return (
     <>
       <BackgroundScreen />
@@ -121,7 +123,8 @@ export default function Login() {
           )}
         </View>
         <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
-          <CommonButton title={loader ? 'Loading...' : 'Login'}
+          <CommonButton 
+            title={loader ? 'Loading...' : 'Login'}
             onPress={handleLogin}
             disabled={loader} />
         </View>

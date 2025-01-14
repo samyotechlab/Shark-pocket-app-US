@@ -9,12 +9,13 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import Tds from '../../assets/images/Screens/tds.png';
 import Iconics from 'react-native-vector-icons/Ionicons';
 
 const { height } = Dimensions.get('window');
 
-const TDSBreakupDialog = ({ isVisible, onClose }) => {
+const TDSBreakupDialog = ({ isVisible, onClose,setTdsData,tdsData }) => {
+
+  console.log("tdsData===========>",tdsData)
 
 
   return (
@@ -36,7 +37,7 @@ const TDSBreakupDialog = ({ isVisible, onClose }) => {
               </TouchableOpacity>
             </View>
             <Text style={styles.subHeader}>Financial Year 2024-25</Text>
-            <Text style={styles.amountText}>₹100</Text>
+            <Text style={styles.amountText}>₹{tdsData.withdraw_request}</Text>
             <Text style={styles.amountSubText}>
               Withdrawal (after Govt. Tax)
             </Text>
@@ -46,43 +47,43 @@ const TDSBreakupDialog = ({ isVisible, onClose }) => {
                 <Text style={styles.rowLabel}>
                   Total Withdrawals (1 April onwards)
                 </Text>
-                <Text style={styles.rowValue}>₹160</Text>
+                <Text style={styles.rowValue}>₹{tdsData.total_withdraw}</Text>
               </View>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>
                   Total Deposits (1 April onwards)
                 </Text>
-                <Text style={styles.rowValue}>-₹3,458</Text>
+                <Text style={styles.rowValue}>-₹{tdsData.total_deposite}</Text>
               </View>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>
                   Opening Balance (as on 1 April)
                 </Text>
-                <Text style={styles.rowValue}>-₹0.5</Text>
+                <Text style={styles.rowValue}>-₹{tdsData.opening_balance}</Text>
               </View>
               <View style={styles.separator} />
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>Taxable Amount</Text>
-                <Text style={styles.rowValue}>₹0</Text>
+                <Text style={styles.rowValue}>₹{tdsData.taxable_amount}</Text>
               </View>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>30% Govt. Tax (TDS)</Text>
-                <Text style={styles.rowValue}>₹0</Text>
+                <Text style={styles.rowValue}>₹{tdsData.tds_tax}</Text>
               </View>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>Tax (TDS) Paid Till Date</Text>
-                <Text style={styles.rowValue}>-₹0</Text>
+                <Text style={styles.rowValue}>-₹{tdsData.tds_deducted}</Text>
               </View>
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>Tax (TDS) On This Withdrawal</Text>
-                <Text style={styles.rowValue}>₹0</Text>
+                <Text style={styles.rowValue}>₹{tdsData.total_tax}</Text>
               </View>
               <View style={styles.separator} />
               <View style={styles.row}>
                 <Text style={styles.rowLabel}>
                   Withdrawal (after Govt. Tax)
                 </Text>
-                <Text style={styles.rowValue}>₹100</Text>
+                <Text style={styles.rowValue}>₹{tdsData.current_withdraw}</Text>
               </View>
             </ScrollView>
 

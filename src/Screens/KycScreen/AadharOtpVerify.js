@@ -19,15 +19,15 @@ const headers = {
 
 export default function AadharOtpVerify() {
   const route = useRoute()
-  const {storeLoginData} = useLoginDataStorage();
+  const { storeLoginData } = useLoginDataStorage();
   const { data } = route.params
   const { user_id } = route.params
-  const {aadhaar_number} = route.params
-  console.log("aadhaar_number",aadhaar_number)
+  const { aadhaar_number } = route.params
+  console.log("aadhaar_number", aadhaar_number)
   const navigation = useNavigation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const handleChange = (text, index) => {
     const newOtp = [...otp];
@@ -44,25 +44,25 @@ export default function AadharOtpVerify() {
     }
   };
 
-      const handleResendOtp = async () => {
-          try {
-              const response = await AdharVerificationSendOtp(aadhaar_number);
-              console.log("response", response)
-              if (response.status === 1) {
-                  Toast.show({
-                      type: 'success',
-                      position: 'top',
-                      text1: 'Otp ReSend',
-                      text2: 'Otp ReSend Succesffully in your given phone Number',
-                      visibilityTime: 5000
-                  });
-              }
-          } catch (error) {
-              console.log("error", error)
-          } finally {
-             
-          }
+  const handleResendOtp = async () => {
+    setLoader(true)
+    try {
+      const response = await AdharVerificationSendOtp(aadhaar_number);
+      console.log("response", response)
+      if (response.status === 1) {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Otp ReSend',
+          text2: 'Otp ReSend Succesffully in your given phone Number',
+          visibilityTime: 5000
+        });
       }
+    } catch (error) {
+      setLoader(false)
+      console.log("error", error)
+    }
+  }
 
   const handleOtp = () => {
     const verificationData = {
@@ -70,9 +70,9 @@ export default function AadharOtpVerify() {
       otp: otp.join(''),
       status: data.status,
       ref_id: data.ref_id,
-      aadhaar_number:aadhaar_number
+      aadhaar_number: aadhaar_number
     }
-    setIsLoading(true); 
+    setLoader(true);
     try {
       console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
       axios
@@ -85,6 +85,7 @@ export default function AadharOtpVerify() {
         )
         .then(res => {
           if (res.data.status === 1) {
+            setLoader(false)
             Toast.show({
               type: 'success',
               position: 'top',
@@ -93,8 +94,9 @@ export default function AadharOtpVerify() {
               visibilityTime: 5000
             });
             storeLoginData(res.data)
-            navigation.navigate('HomeScreen', { data: res.data});
+            navigation.navigate('HomeScreen', { data: res.data });
           } else {
+            setLoader(false)
             Toast.show({
               type: 'error',
               position: 'top',
@@ -106,13 +108,14 @@ export default function AadharOtpVerify() {
         })
         .catch(err => {
           console.log('error--->', err);
+          setLoader(false)
         });
 
     } catch (error) {
+      setLoader(false)
       console.log('An error occurred:', error);
-    }finally{
-      setIsLoading(false);
     }
+
   };
   return (
     <>
@@ -151,21 +154,22 @@ export default function AadharOtpVerify() {
           </View>
         </View>
         <View style={[styles.box, { paddingVertical: hp('4%'), padding: hp('2%') }]}>
-          <CommonButton title={isLoading ? 'Verifying...' : 'Verify'} 
+          <CommonButton 
+          title={loader ? 'Verifying...' : 'Verify'}
             onPress={handleOtp}
-            disabled={isLoading} />
-           <TouchableOpacity
-             onPress={handleResendOtp}
-           >
-             <Text
-               style={[
-                 styles.resendOtp,
-                 { color:  '#FCFCFC' },
-               ]}
-             >
-               Resend OTP
-             </Text>
-           </TouchableOpacity>
+            disabled={loader} />
+          <TouchableOpacity
+            onPress={handleResendOtp}
+          >
+            <Text
+              style={[
+                styles.resendOtp,
+                { color: '#FCFCFC' },
+              ]}
+            >
+              Resend OTP
+            </Text>
+          </TouchableOpacity>
         </View>
         <Toast ref={Toast.setRef} />
       </View>

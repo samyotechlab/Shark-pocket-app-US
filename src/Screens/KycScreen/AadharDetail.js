@@ -16,6 +16,7 @@ export default function AadharDetail() {
     const [aadharError, setAadharError] = useState('')
     const [aadharCard, setAadharCard] = useState({})
     const navigation = useNavigation()
+      const [loader, setLoader] = useState(false);
 
     const validateInputs = () => {
         let valid = true;
@@ -32,10 +33,12 @@ export default function AadharDetail() {
         return valid;
     };
     const handleAadharDetail = async () => {
+        setLoader(true)
         try {
             const response = await AdharVerificationSendOtp(aadhaar_number);
             console.log("response", response)
             if (response.status === 1) {
+                setLoader(false)
                 setAadharCard(response.data)
                 Toast.show({
                     type: 'success',
@@ -50,8 +53,7 @@ export default function AadharDetail() {
             }
         } catch (error) {
             console.log("error", error)
-        } finally {
-
+            setLoader(false)
         }
     }
     return (
@@ -80,7 +82,11 @@ export default function AadharDetail() {
                     )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton title={'Save'} onPress={handleAadharDetail} />
+                    <CommonButton 
+                   title={loader ? 'Loading...' : 'Save'}
+                    onPress={handleAadharDetail}
+                    disabled={loader}
+                     />
                     <Text style={styles.kycText}>
                         Why do we need KYC Verification?
                         <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>

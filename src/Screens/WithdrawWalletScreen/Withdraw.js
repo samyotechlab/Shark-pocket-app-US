@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Iconics from 'react-native-vector-icons/FontAwesome';
 import AlertDialogRed from '../../Components/AlertDialogRed';
-import { withdrawCash } from '../../Service/WithDraw';
+import { showTds, withdrawCash } from '../../Service/WithDraw';
 import Toast from 'react-native-toast-message';
 import Tds from '../../../assets/images/Screens/tds.png';
 import Iconic from 'react-native-vector-icons/Ionicons';
@@ -18,6 +18,7 @@ export default function Withdraw({ dataUser }) {
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false);
   const [bankDetail, setBankDetail] = useState({})
+  const [tdsData,setTdsData] = useState({})
 
   const handleWithdraw = () => {
     console.log("value", amount)
@@ -56,8 +57,8 @@ export default function Withdraw({ dataUser }) {
           Toast.show({
             type: 'success',
             position: 'top',
-            text1: 'Otp Send!',
-            text2: 'Otp Send Succesffully in the given Number',
+            text1: 'Withdraw Request',
+            text2: 'Withdraw Request generate successfully',
             visibilityTime: 3000
           })
         } else {
@@ -77,8 +78,18 @@ export default function Withdraw({ dataUser }) {
 
 
   const [isModalVisible, setModalVisible] = useState(false);
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const toggleModal = async () => {
+    try {
+      const response = await showTds(dataUser._id,amount);
+      console.log("response.data",response.data)
+      if(response.status == 1){
+        setModalVisible(!isModalVisible);
+        setTdsData(response.data)
+      }
+    } catch (error) {
+      console.log("error",error)
+    }
+   
   };
   return (
     <>
@@ -198,6 +209,8 @@ export default function Withdraw({ dataUser }) {
         <TDSBreakupDialog
           isVisible={isModalVisible}
           onClose={toggleModal}
+          setTdsData ={setTdsData}
+          tdsData={tdsData}
         />
       )}
       <Toast ref={Toast.setRef} />
