@@ -26,7 +26,6 @@ export default function Credit({winningData}) {
 
   const groupedData = groupByDateAndType(creditTransactions);
 
-  console.log("dtatrtt",groupedData)
 
   const handleNavigation = () => {
     navigation.navigate('DepositeDetails');

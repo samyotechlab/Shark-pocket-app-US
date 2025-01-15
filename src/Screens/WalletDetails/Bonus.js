@@ -1,210 +1,109 @@
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import { useNavigation } from '@react-navigation/native';
-import { bonusWallet } from '../../Service/Wallet';
-import useLoginDataStorage from '../../Service/CustomStorageHook';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import All from '../Bonus.js/All';
+import Debit from '../Bonus.js/Debit';
+import Credit from '../Bonus.js/Credit';
+import { bonusWallet, WalletTransactionList } from '../../Service/Wallet';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
-const groupByDateAndType = (data) => {
-  return data.reduce((acc, item) => {
-    const date = item.created_at.split(' ')[0];
-    const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
-    if (!acc[typeKey]) acc[typeKey] = [];
-    acc[typeKey].push(item);
-    return acc;
-  }, {});
-};
+export default function Bonus(props) {
 
-export default function Bonus() {
-  const navigation = useNavigation();
-  const { isReady, loginData } = useLoginDataStorage()
-  const data = isReady && loginData && loginData?.data 
-  const [bonusData, setBonusData] = useState([]);
+  const  {user_id} = props
+  const [selectedTab, setSelectedTab] = useState('All');
   const [loader, setLoader] = useState(false);
+  const [bonusData, setBonusData] = useState([]);
 
-  const bonusDetails = async () => {
+  const handlePress = tab => {
+    setSelectedTab(tab);
+  };
+
+  const bonusRequest = async () => {
     setLoader(true)
     try {
-      const response = await bonusWallet(data._id)
-      console.log(response)
-      setBonusData("response.data",response.data)
+      const response = await bonusWallet(user_id);
+      console.log("bonus",response)
+      setBonusData(response?.data);
     } catch (error) {
       console.log('error', error);
-      throw error;
-    } finally {
+    }finally{
       setLoader(false)
     }
-  }
-
-  useEffect(() => {
-    if (isReady) {
-      bonusDetails();
-    } else {
-      setLoader(true)
-    }
-  }, [isReady, loginData])
-
-
-  const groupedData = bonusData.length > 0 ? groupByDateAndType(bonusData) : {};
-
-
-  const handleNavigation = (item) => {
-    navigation.navigate('DepositeDetails', { item });
   };
 
-  const renderTransaction = ({ item }) => {
-    const isDebit = item.type === 0;
-
-    return (
-      <TouchableOpacity
-        style={[
-          styles.itemContainer,
-        ]}
-        onPress={() => handleNavigation(item)}
-      >
-        <View
-          style={[
-            styles.circle,
-            { backgroundColor: isDebit ? '#F100001A' : '#03C5263A' },
-          ]}
-        >
-          <Image
-            source={require('../../../assets/images/Screens/arrow.png')}
-            style={{
-              height: 20,
-              width: 20,
-              tintColor: isDebit ? 'red' : '#03C526',
-            }}
-          />
-        </View>
-        <View style={styles.textContainer}>
-          <Text
-            style={[
-              styles.note,
-              { color: isDebit ? '#F10000' : '#696969' },
-            ]}
-          >
-            {item.note || 'No Note'}
-          </Text>
-          <Text style={styles.time}>{item.created_at} </Text>
-        </View>
-        <View>
-          <Text style={styles.amount}>₹{item.gst_amount || '₹0'}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderSection = ({ item }) => (
-    <View>
-      <View style={styles.dateContainer}>
-        <Text style={styles.date}>{item.date}</Text>
-      </View>
-      <FlatList
-        data={item.transactions}
-        renderItem={renderTransaction}
-        keyExtractor={(transaction) => transaction._id}
-      />
-    </View>
-  );
-
-  const sectionData = Object.keys(groupedData).map((key) => {
-    const [date] = key.split('.');
-
-    return {
-      date: `${date}`,
-      transactions: groupedData[key],
-    };
-  });
+  useEffect(()=>{
+    bonusRequest()
+  },[])
 
   return (
-    <View style={styles.container}>
-      {
-        bonusData? (<View style={styles.noDataContainer}>
-          <Text style={styles.noDataText}>No data found</Text>
-        </View>) : (<FlatList
-          data={sectionData}
-          renderItem={renderSection}
-          keyExtractor={(item) => item.date}
-          contentContainerStyle={styles.list}
-        />)
-      }
-
+    <>
+      <View
+        style={{
+          flex:1,
+          flexDirection: 'row',
+         padding: hp('2%'),
+         gap:wp('3%'),
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            handlePress('All');
+          }}
+          style={[styles.common,{ backgroundColor: selectedTab === 'All' ? '#FEB801' : '#FFFFFF4D'}]}>
+          <Text
+            style={styles.txt}>
+            All
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handlePress('Credit');
+          }}
+          style={[styles.common,{
+            backgroundColor: selectedTab === 'Credit' ? '#FEB801' : '#FFFFFF4D',
+          }]}>
+          <Text
+            style={styles.txt}>
+           Credit
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handlePress('Debit');
+          }}
+          style={[styles.common,{
+            backgroundColor: selectedTab === 'Debit' ? '#FEB801' : '#FFFFFF4D',
+          }]}>
+          <Text
+            style={styles.txt}>
+            Debit
+          </Text>
+        </TouchableOpacity>
+      </View>
+  <View style={{flex:17}}>
+      {selectedTab === 'All' ? (
+      !loader ? ( <All bonusData={bonusData}/>):(<AnimatedLoader/>)
+    ) : selectedTab === 'Debit' ? (
+      !loader ? ( <Debit bonusData={bonusData}/>):(<AnimatedLoader/>)  
+    ) : (
+      !loader ? ( <Credit bonusData={bonusData}/>):(<AnimatedLoader/>)  
+    )}
     </View>
-  );
+    </>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    marginTop:wp('5%')
-  },
-  dateContainer: {
-    width: wp('100%'),
-    backgroundColor: '#E0E0E0',
-    alignItems: 'flex-start',
-    paddingVertical: hp('0.7%'),
-    paddingHorizontal: wp('3%'),
-  },
-  date: {
-    fontSize: wp('3.5%'),
-    color: '#696969',
-    fontFamily: 'Montserrat-Regular',
-  },
-  list: {
-    paddingVertical: hp('1%'),
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: wp('3%'),
-    borderRadius: wp('2%'),
-    marginBottom: hp('1%'),
-    borderBottomColor: '#0000003A',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  circle: {
-    width: wp('10%'),
-    height: wp('10%'),
-    borderRadius: wp('5%'),
-    backgroundColor: '#03C5263A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textContainer: {
-    flex: 1,
-    marginLeft: wp('3%'),
-  },
-  note: {
-    fontSize: wp('4%'),
-    color: '#696969',
-    fontFamily: 'Montserrat-Medium',
-  },
-  time: {
-    fontSize: wp('3%'),
-    fontFamily: 'Montserrat-Regular',
-    color: '#696969',
-    marginTop: hp('0.5%'),
-  },
-  amount: {
-    fontSize: wp('4%'),
-    fontFamily: 'Montserrat-Medium',
-    color: '#696969',
-  },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-  noDataText: {
-    fontSize: wp('5%'),
-    color: 'black',
-    fontFamily: 'Montserrat-Regular',
-  },
-});
+ const styles =  StyleSheet.create({
+     common:{
+      height: hp('4%'),
+      width: wp('20%'),
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: hp('5%'), 
+    
+    },
+    txt:{
+      fontSize: hp('2%'),
+      color: '#FFFFFF',
+      fontFamily:'Montserrat-Regular'
+    }
+  });

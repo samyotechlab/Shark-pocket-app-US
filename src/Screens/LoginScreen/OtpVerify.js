@@ -185,6 +185,7 @@ export default function OtpVerify() {
             }, 3000);
 
           } else {
+            setLoader(false);
             Toast.show({
               type: 'error',
               position: 'top',

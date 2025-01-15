@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Iconics from "react-native-vector-icons/Ionicons";
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service/Transaction';
 import PhonePePaymentSDK from 'react-native-phonepe-pg';
 import AlertDialogRed from '../../Components/AlertDialogRed';
@@ -28,6 +28,9 @@ const AddCashScreen = () => {
   const [usersData, setUserData] = useState();
   const [loader, setLoader] = useState();
   const [isPaymentSuccess, setIsPaymentSuccess] = useState("")
+  const {loginData,isReady} = useLoginDataStorage();
+
+  const data = isReady && loginData && loginData?.data
 
   useEffect(() => {
     if (status === 1 && amounts) {
@@ -35,28 +38,31 @@ const AddCashScreen = () => {
     }
   }, [status, amounts]);
 
-  //   const userData = async () => {
-  //     console.log(user_id)
-  //     setLoader(true);
-  //     try {
-  //       const response = await userDetail(user_id);
-  //       const formattedData = {
-  //         ...response.data,
-  //         total_balance: parseFloat(response.data.total_balance).toFixed(2),
-  //         bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
-  //       };
-  //       setUserData(formattedData);
-  //     } catch (error) {
-  //       console.log('error', error);
-  //     } finally {
-  //       setLoader(false);
-  //     }
-  //   };
+    const userData = async () => {
+      console.log("user_id",data._id)
+      setLoader(true);
+      try {
+        const response = await userDetail(data._id);
+        const formattedData = {
+          ...response.data,
+          total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
+          bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
+        };
+        setUserData(formattedData);
+      } catch (error) {
+        console.log('error', error);
+      } finally {
+        setLoader(false);
+      }
+    };
 
-  // useEffect(() => {
-  //     userData();
-  // }, []);
-
+     useFocusEffect(
+        React.useCallback(() => {
+          if(isReady && loginData){
+          userData();
+          }
+        }, [isReady])
+      );
   const handleAddCash = async () => {
     if (amount) {
       try {
@@ -175,7 +181,7 @@ const AddCashScreen = () => {
                     source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
                     style={styles.walletIcon}
                   />
-                  <Text style={styles.walletText}>₹ {status == 2 ? balance : 0}</Text>
+                  <Text style={styles.walletText}>₹ {status == 2 ? usersData?.total_balance : 0}</Text>
                 </LinearGradient>
               </View>
             </View>

@@ -32,7 +32,7 @@ export default {
   Wallet_Store: 'api/wallet_request/store',
   Wallet_Request: 'api/wallet_request/list',
   Final_Score: 'api/finalScore',
-  Bonus_Data: 'api/bonusWallet',
+  Bonus_Data: 'api/bonusWallet/byUserId',
   EditProfile: 'api/editProfile',
   VerifyLogin:'api/verify-login',
   State:'api/state/list',

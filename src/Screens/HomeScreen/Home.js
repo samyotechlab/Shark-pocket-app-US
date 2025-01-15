@@ -55,6 +55,7 @@ export default function HomeScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
+      userData();
       getAllData();
       const onBackPress = () => {
         Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
@@ -78,7 +79,7 @@ export default function HomeScreen() {
   const getAllData = async (loginData) => {
     setLoader(true);
     try {
-      const response = await getGameData(loginData?loginData?._id:data?._id);
+      const response = await getGameData(loginData?loginData?._id:data?._id)
       setMyGames(response.myGames);
       setGameData(response.data);
     } catch (error) {
@@ -97,10 +98,10 @@ export default function HomeScreen() {
     }
   }
 
-      const userData = async () => {
+      const userData = async (loginData) => {
       setLoader(true);
       try {
-        const response = await userDetail(data?._id);
+        const response = await userDetail(loginData?loginData?._id:data?._id);
         const formattedData = {
           ...response.data,
           total_balance: parseFloat(response.data.total_balance).toFixed(2),
@@ -132,7 +133,7 @@ export default function HomeScreen() {
   useEffect(() => {
     if (isReady&&loginData) {
       stateList();
-      userData();
+      userData(loginData?.data);
       getAllData(loginData?.data);
     } else {
       setLoader(true);
@@ -149,7 +150,7 @@ export default function HomeScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
         }
       >
-        {!loader ? (
+        {!loader && myGame.length >0 ? (
           <>
             <View style={{ backgroundColor: '#552113' }}>
               <View style={styles.container}>

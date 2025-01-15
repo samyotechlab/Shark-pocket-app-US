@@ -67,6 +67,7 @@ export default function Login() {
                 navigation.navigate('OtpScreen', { data: res.data.data });
               }, 3000);
             } else {
+              setLoader(false);
               Toast.show({
                 type: 'error',
                 position: 'top',

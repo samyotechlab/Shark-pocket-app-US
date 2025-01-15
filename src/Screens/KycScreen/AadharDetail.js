@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonButton from '../../Components/CommonButton'

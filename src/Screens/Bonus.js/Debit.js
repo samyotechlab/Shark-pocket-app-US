@@ -6,7 +6,6 @@ import {
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
-// Utility to group transactions by date
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
@@ -17,23 +16,23 @@ const groupByDateAndType = (data) => {
   }, {});
 };
 
-export default function Debit({winningData}) {
-  // const { walletData = [] } = props;
+export default function Debit(props) {
+  const { bonusData = [] } = props;
   const navigation = useNavigation();
-  const debitTransactions = Array.isArray(winningData)
-  ? winningData.filter((item) => item.type === 0)
-  : [];
+  const debitTransactions = Array.isArray(bonusData)
+    ? bonusData.filter((item) => item.type === 0)
+    : [];
 
-  // Group walletData by date
+
   const groupedData = groupByDateAndType(debitTransactions);
-
 
   const handleNavigation = () => {
     navigation.navigate('DepositeDetails');
   };
 
-  const renderTransaction = ({ item }) => (
-    <TouchableOpacity
+  const renderTransaction = ({ item }) => {
+    const transaction_amount = parseFloat(item.gst_amount).toFixed(2)
+    return (<TouchableOpacity
       style={styles.itemContainer}
       onPress={handleNavigation}
     >
@@ -49,18 +48,19 @@ export default function Debit({winningData}) {
       </View>
       <View style={styles.textContainer}>
         <Text style={[styles.note, { color: '#F10000' }]}>
-          {item.transaction_note || 'No Note'}
+          {item.note || 'No Note'}
         </Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
+        <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
       </View>
       <View>
-        <Text style={styles.amount}>₹{item.winning_amount || '₹0'}</Text>
+        <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>
       </View>
-    </TouchableOpacity>
-  );
+    </TouchableOpacity>)
+
+  };
 
   const renderSection = ({ item }) => (
-    
+
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -75,28 +75,28 @@ export default function Debit({winningData}) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-  
+
     return {
-      date: `${date}`, 
-      transactions: groupedData[key], 
+      date: `${date}`,
+      transactions: groupedData[key],
     };
   });
 
   return (
     <View style={styles.container}>
+      {
+        debitTransactions.length == 0 ? (
+          <View style={styles.noDataContainer}>
+            <Text style={styles.noDataText}>No data found</Text>
+          </View>
+        ) : (<FlatList
+          data={sectionData}
+          renderItem={renderSection}
+          keyExtractor={(item) => item.date}
+          contentContainerStyle={styles.list}
+        />)
+      }
 
-     {
-           debitTransactions == 0 ? (
-             <View style={styles.noDataContainer}>
-                       <Text style={styles.noDataText}>No data found</Text>
-                     </View>
-           ):(    <FlatList
-             data={sectionData}
-             renderItem={renderSection}
-             keyExtractor={(item) => item.date}
-             contentContainerStyle={styles.list}
-           />)
-         }
     </View>
   );
 }

@@ -7,7 +7,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { userDetail } from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -45,6 +45,12 @@ const WalletScreen = () => {
       setLoader(false);
     }
   };
+
+   useFocusEffect(
+      React.useCallback(() => {
+        userData();
+      }, [isReady]),
+    );
 
   useEffect(() => {
     if (isReady) {
