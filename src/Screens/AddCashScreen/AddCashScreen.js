@@ -7,26 +7,55 @@ import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service
 import PhonePePaymentSDK from 'react-native-phonepe-pg';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 import LinearGradient from 'react-native-linear-gradient';
+import PaymentStatusCard from '../../Components/PaymentStatusCard';
+import { userDetail } from '../../Service/Login';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
+import AnimatedLoader from '../../Components/AnimatedLoader';
+
 
 const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
   const { user_id, balance, status, amounts } = route.params
-
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [data, setData] = useState({});
+  const [data1, setData] = useState({});
   const [message, setMessage] = useState('');
   const [dialog, setDialog] = useState(false);
   const [isLoading, setisLoading] = useState(false);
-  const [checksPaymentStatus, setCheckPaymentStatus] = useState({})
+  const [checksPaymentStatus, setCheckPaymentStatus] = useState(false)
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const [usersData, setUserData] = useState();
+  const [loader, setLoader] = useState();
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState("")
 
   useEffect(() => {
     if (status === 1 && amounts) {
       setAmount(amounts.toString());
     }
   }, [status, amounts]);
+
+  //   const userData = async () => {
+  //     console.log(user_id)
+  //     setLoader(true);
+  //     try {
+  //       const response = await userDetail(user_id);
+  //       const formattedData = {
+  //         ...response.data,
+  //         total_balance: parseFloat(response.data.total_balance).toFixed(2),
+  //         bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
+  //       };
+  //       setUserData(formattedData);
+  //     } catch (error) {
+  //       console.log('error', error);
+  //     } finally {
+  //       setLoader(false);
+  //     }
+  //   };
+
+  // useEffect(() => {
+  //     userData();
+  // }, []);
 
   const handleAddCash = async () => {
     if (amount) {
@@ -90,117 +119,138 @@ const AddCashScreen = () => {
     )
       .then(async res => {
         console.log('aaaa', res);
+        setCheckPaymentStatus(true)
         setMessage(JSON.stringify(res));
         setDialog(true);
         setisLoading(true);
         if (res.status) {
           const response = await checkPaymentStatus(transaction_id);
-          console.log(response)
-          setCheckPaymentStatus(response.data.data)
-          setTimeout(() => {
-            setisLoading(false);
-            if (response?.data?.status == 1 && response.data.data.status == 1) {
-              setPaymentStatus(response?.data?.message);
-            } else {
-              setPaymentStatus("Transaction Failed")
-            }
-          }, 3000);
+          console.log(response.data)
+            setTimeout(()=>{
+              setCheckPaymentStatus(false)
+            },3000)
+          setisLoading(false);
+          if (response?.data?.status == 1) {
+           console.log("Successsss")
+            setIsPaymentSuccess("success")
+            setPaymentStatus(response?.data?.message);
+          } else {
+            console.log("Failed======")
+            setIsPaymentSuccess("failed")
+            setPaymentStatus("Transaction Failed")
+          }
         }
       })
       .catch(error => {
         setMessage('error:' + error.message);
+        setCheckPaymentStatus(false)
+        setIsPaymentSuccess("")
       });
   };
 
 
-  const handleAmountPress = value => {
-    setAmount(value);
-  };
+  const
+    handleAmountPress = value => {
+      setAmount(value);
+    };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#361911' }}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Iconics name="chevron-back" size={wp("7%")} color={"white"} />
-          </TouchableOpacity>
-          <View style={{ flex: 1, marginRight: hp('5%') }}>
-            <Text style={styles.title}>Add Cash</Text>
-          </View>
-          <View style={styles.wallet}>
+      {
+        !loader ? (<>
+          <View style={styles.container}>
+            <View style={styles.header}>
+              <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                <Iconics name="chevron-back" size={wp("7%")} color={"white"} />
+              </TouchableOpacity>
+              <View style={{ flex: 1, marginRight: hp('5%') }}>
+                <Text style={styles.title}>Add Cash</Text>
+              </View>
+              <View style={styles.wallet}>
 
-            <LinearGradient
-              colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']}
-              style={{ padding: wp('1%'), borderRadius: wp('2%'), paddingHorizontal: wp('4%'), flexDirection: 'row' }}>
-              <Image
-                source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
-                style={styles.walletIcon}
-              />
-              <Text style={styles.walletText}>₹ {status == 2 ? balance : 0}</Text>
-            </LinearGradient>
-          </View>
-        </View>
-
-        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-          <View style={styles.addCashContainer}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Enter Amount</Text>
-
-              <TextInput
-                style={styles.input}
-                value={amount !== null ? "₹" + amount : ""}
-                placeholderTextColor="#aaa"
-                placeholderStyle={{ alignSelf: 'center' }}
-                onChangeText={text => setAmount(text)}
-                keyboardType="numeric"
-              />
+                <LinearGradient
+                  colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']}
+                  style={{ padding: wp('1%'), borderRadius: wp('2%'), paddingHorizontal: wp('4%'), flexDirection: 'row' }}>
+                  <Image
+                    source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
+                    style={styles.walletIcon}
+                  />
+                  <Text style={styles.walletText}>₹ {status == 2 ? balance : 0}</Text>
+                </LinearGradient>
+              </View>
             </View>
-            <View style={styles.buttonsRow}>
-              {["100", "500", "1000", "5000"].map((amount) => (
-                <TouchableOpacity key={amount} style={styles.amountButton} onPress={() => handleAmountPress(amount)}>
-                  <Text style={styles.amountText}>{amount}</Text>
+
+            <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+              <View style={styles.addCashContainer}>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.label}>Enter Amount</Text>
+                  <TextInput
+                    style={styles.input}
+                    value={amount !== null && amount !== "" ? `₹${amount}` : ""}
+                    placeholderTextColor="#aaa"
+                    placeholderStyle={{ alignSelf: 'center' }}
+                    onChangeText={text => {
+                      const numericValue = text.replace(/[^0-9]/g, "");
+                      setAmount(numericValue);
+                    }}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={styles.buttonsRow}>
+                  {["100", "500", "1000", "5000"].map((amount) => (
+                    <TouchableOpacity key={amount} style={styles.amountButton} onPress={() => handleAmountPress(amount)}>
+                      <Text style={styles.amountText}>{amount}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+                <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
+                  <Text style={styles.withdrawButtonText}>ADD CASH</Text>
                 </TouchableOpacity>
-              ))}
+              </View>
+
+              <View style={styles.featuresRow}>
+                <View style={styles.feature}>
+                  <Image
+                    source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
+                    style={styles.featureIcon}
+                  />
+                  <Text style={styles.featureText}>100% Safe Payments</Text>
+                </View>
+                <View style={styles.feature}>
+                  <Image
+                    source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
+                    style={styles.featureIcon}
+                    tintColor='#4FBF03'
+                  />
+                  <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
+                </View>
+                <View style={styles.feature}>
+                  <Image
+                    source={{ uri: "https://img.icons8.com/color/48/group.png" }}
+                    style={styles.featureIcon}
+                    tintColor='#4FBF03'
+                  />
+                  <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
+                </View>
+              </View>
+              <TouchableOpacity style={styles.referralBanner}>
+                <Image source={require("../../../assets/images/Screens/referal.png")} style={styles.image} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
-              <Text style={styles.withdrawButtonText}>ADD CASH</Text>
-            </TouchableOpacity>
           </View>
 
-          <View style={styles.featuresRow}>
-            <View style={styles.feature}>
-              <Image
-                source={{ uri: "https://img.icons8.com/color/48/security-checked.png" }}
-                style={styles.featureIcon}
-              />
-              <Text style={styles.featureText}>100% Safe Payments</Text>
-            </View>
-            <View style={styles.feature}>
-              <Image
-                source={{ uri: "https://img.icons8.com/color/48/flash-on.png" }}
-                style={styles.featureIcon}
-                tintColor='#4FBF03'
-              />
-              <Text style={styles.featureText}>Instant Deposit {"\n"}And Withdrawal</Text>
-            </View>
-            <View style={styles.feature}>
-              <Image
-                source={{ uri: "https://img.icons8.com/color/48/group.png" }}
-                style={styles.featureIcon}
-                tintColor='#4FBF03'
-              />
-              <Text style={styles.featureText}>Trusted by {"\n"}15cr+ Players</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={styles.referralBanner}>
-            <Image source={require("../../../assets/images/Screens/referal.png")} style={styles.image} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-
-
+        </>) : (<AnimatedLoader />)
+      }
       <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} />
+      <>
+      <PaymentStatusCard  checksPaymentStatus={checksPaymentStatus}  
+      status={isPaymentSuccess}
+      setIsPaymentSuccess = {setIsPaymentSuccess}
+      setCheckPaymentStatus = {setCheckPaymentStatus}
+
+      />
+
+      </>
     </SafeAreaView>
   );
 };

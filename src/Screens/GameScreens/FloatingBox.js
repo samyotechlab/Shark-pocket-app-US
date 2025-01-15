@@ -31,12 +31,12 @@ import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
-// const getRandomNumber = () => Math.floor(Math.random() * 300) + 1;
+
 const getRandomNumber = () => {
   const ranges = [
-    { min: 1, max: 100 },      // Range 1–100
-    { min: 201, max: 300 },    // Range 201–300
-    { min: 3001, max: 3100 },  // Range 3001–3100
+    { min: 1, max: 100 },      
+    { min: 201, max: 300 },    
+    { min: 3001, max: 3100 },  
   ];
 
   const totalNumbers = ranges.reduce((sum, range) => sum + (range.max - range.min + 1), 0);

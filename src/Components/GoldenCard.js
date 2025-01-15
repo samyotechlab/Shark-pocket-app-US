@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Win from '../../assets/images/Screens/Rectangle.png';
 import Winner from '../../assets/images/Screens/Winner.png';
 
 const GoldenCard = ({item}) => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <LinearGradient
         colors={['#D5B723', '#FDFDFD', '#D5B723']}
         locations={[0, 0.5, 1]} 
@@ -24,7 +24,7 @@ const GoldenCard = ({item}) => {
           <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
         </View>
       </LinearGradient>
-    </View>
+    </TouchableOpacity>
   );
 };
 

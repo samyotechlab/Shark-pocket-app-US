@@ -1,24 +1,76 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import CommonHeader from "./CommonHeader";
+import HeaderComponent from "./HeaderComponent";
 
-const PaymentStatusCard = () => {
+const PaymentStatusCard = ({checksPaymentStatus,status,setIsPaymentSuccess,setCheckPaymentStatus}) => {
+  // const route = useRoute()
+  // const { status } = route.params
+  console.log(status)
+
+  const navigation = useNavigation()
+  const transactionData = {
+    transaction_amount: 20,
+    deposite_date: "19-1-25"
+  }
+  const image = {
+    success : require("../../assets/images/Screens/wallet.gif"),
+    failed : require("../../assets/images/Screens/fail.gif")
+  }
+  const pendingImage = require("../../assets/images/Screens/pending.gif")
+
+  const message = {
+    success : {
+      heading : "Payment Successful!",
+      title: "MLZHJUD1236DSHG",
+      subTitle:"Your Transaction ID"
+    },
+    failed:{
+      heading : "Payment Failed!",
+      title:"",
+      subTitle:""
+    },
+    pending:{
+      heading:"",
+      title :"Please wait, we're processing your transaction. Don't go back.",
+      subTitle:""
+    }
+  }
+  const color = {
+    success:"#00C659",
+    failed:"#D80000",
+  }
+
+  const handelNavigation = ()=>{
+    setIsPaymentSuccess("")
+    setCheckPaymentStatus(false)
+    navigation.navigate('HomeScreen',{screen:"Wallet"})
+  }
+
+  if(!checksPaymentStatus&&status==""){
+    return<></>
+  }
+
   return (
-    <View style={styles.container}>
+    <>
+      <HeaderComponent transactionData={transactionData} status={status} title={"Payment Details"} />
+      <View style={styles.container}>
       <Image
-        source={require("../../assets/images/Screens/walletImage.png")}
-        style={styles.icon}
-      />
-
-<Text style={styles.statusText}>Payment Successful!</Text>
-
-      <Text style={styles.transactionId}>MLZHJUD1236DSHG</Text>
-      <Text style={styles.subText}>Your Transaction ID</Text>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Tap to view balance</Text>
-      </TouchableOpacity>
-    </View>
+              source={(image[status]?image[status]:pendingImage)}
+              style={styles.icon}
+            />
+          <Text style={[styles.statusText,{color:color[status]}]}>{message[status]?message[status].heading:message.pending.heading}</Text>
+            <Text style={styles.transactionId}>{message[status]?message[status].title:message.pending.title}</Text>
+            <Text style={styles.subText}>{message[status]?message[status].subTitle:message.pending.subTitle}</Text>
+        <TouchableOpacity style={styles.button} onPress={()=>{
+          handelNavigation()
+        }}>
+          <Text style={styles.buttonText}>Tap to view balance</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
@@ -37,14 +89,14 @@ const styles = StyleSheet.create({
   },
   transactionId: {
     fontSize: wp("4%"),
-    fontWeight: "600",
+    fontFamily:'Montserrat-SemiBold',
     color: "#000",
     marginBottom: hp("1%"),
   },
   subText: {
     fontSize: wp("3.5%"),
-    color: "#666", 
     marginBottom: hp("5%"),
+    fontFamily:'Montserrat-Medium',
   },
   button: {
     backgroundColor: "#fff",
@@ -60,9 +112,8 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   statusText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#4CAF50", // Green color
+    fontSize: 28,
+    fontFamily:'Montserrat-Bold',
     marginBottom: 10,
   },
 });

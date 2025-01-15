@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
-    const typeKey = `${date}.credit`; 
+    const typeKey = `${date}.credit`;
     if (!acc[typeKey]) acc[typeKey] = [];
     acc[typeKey].push(item);
     return acc;
@@ -21,46 +21,50 @@ export default function Credit(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
   const creditTransactions = Array.isArray(walletData)
-  ? walletData.filter((item) => item.type === 1)
-  : [];
+    ? walletData.filter((item) => item.type === 1)
+    : [];
 
   const groupedData = groupByDateAndType(creditTransactions);
 
-  console.log("dtatrtt",groupedData)
+  console.log("dtatrtt", groupedData)
 
   const handleNavigation = () => {
     navigation.navigate('DepositeDetails');
   };
 
-  const renderTransaction = ({ item }) => (
-    <TouchableOpacity
-      style={styles.itemContainer}
-      onPress={handleNavigation}
-    >
-      <View style={[styles.circle, { backgroundColor: '#03C5263A' }]}>
-        <Image
-          source={require('../../../assets/images/Screens/arrow.png')}
-          style={{
-            height: 20,
-            width: 20,
-            tintColor: '#03C526',
-          }}
-        />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={[styles.note, { color: '#696969' }]}>
-          {item.transaction_note || 'No Note'}
-        </Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
-      </View>
-      <View>
-        <Text style={styles.amount}>{item.transaction_amount || '0'}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderTransaction = ({ item }) => {
+    const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
+    return (<>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={handleNavigation}
+      >
+        <View style={[styles.circle, { backgroundColor: '#03C5263A' }]}>
+          <Image
+            source={require('../../../assets/images/Screens/arrow.png')}
+            style={{
+              height: 20,
+              width: 20,
+              tintColor: '#03C526',
+            }}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={[styles.note, { color: '#696969' }]}>
+            {item.transaction_note || 'No Note'}
+          </Text>
+          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
+        </View>
+        <View>
+          <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>
+        </View>
+      </TouchableOpacity>
+    </>)
+
+  };
 
   const renderSection = ({ item }) => (
-    
+
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -75,29 +79,29 @@ export default function Credit(props) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-  
+
     return {
-      date: `${date}`, 
-      transactions: groupedData[key], 
+      date: `${date}`,
+      transactions: groupedData[key],
     };
   });
 
   return (
-      <View style={styles.container}>
-          {
-            creditTransactions.length == 0 ? (
-              <View style={styles.noDataContainer}>
-                <Text style={styles.noDataText}>No data found</Text>
-              </View>
-            ) : (<FlatList
-              data={sectionData}
-              renderItem={renderSection}
-              keyExtractor={(item) => item.date}
-              contentContainerStyle={styles.list}
-            />)
-          }
-    
-        </View>
+    <View style={styles.container}>
+      {
+        creditTransactions.length == 0 ? (
+          <View style={styles.noDataContainer}>
+            <Text style={styles.noDataText}>No data found</Text>
+          </View>
+        ) : (<FlatList
+          data={sectionData}
+          renderItem={renderSection}
+          keyExtractor={(item) => item.date}
+          contentContainerStyle={styles.list}
+        />)
+      }
+
+    </View>
   );
 }
 

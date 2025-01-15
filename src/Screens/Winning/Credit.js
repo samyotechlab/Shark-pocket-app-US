@@ -54,7 +54,7 @@ export default function Credit({winningData}) {
         <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
       </View>
       <View>
-        <Text style={styles.amount}>{item.winning_amount || '0'}</Text>
+        <Text style={styles.amount}>₹{item.winning_amount || '₹0'}</Text>
       </View>
     </TouchableOpacity>
   );

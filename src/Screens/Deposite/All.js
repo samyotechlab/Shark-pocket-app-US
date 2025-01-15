@@ -17,6 +17,7 @@ const groupByDateAndType = (data) => {
 };
 
 export default function All(props) {
+
   const { walletData = [] } = props;
   const navigation = useNavigation();
 
@@ -26,8 +27,11 @@ export default function All(props) {
     navigation.navigate('DepositeDetails', { item });
   };
 
+
+
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
+    const transaction_amount =  parseFloat(item.transaction_amount).toFixed(2)
 
     return (
       <TouchableOpacity
@@ -63,7 +67,7 @@ export default function All(props) {
           <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
         </View>
         <View>
-          <Text style={styles.amount}>{item.transaction_amount || '0'}</Text>
+          <Text style={styles.amount}>₹{transaction_amount|| '₹0'}</Text>
         </View>
       </TouchableOpacity>
     );

@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useRoute } from '@react-navigation/native';
 import { transactionDepositeData } from '../Service/Transaction';
 import Toast from 'react-native-toast-message';
+import AnimatedLoader from './AnimatedLoader';
 
 export default function DepositeDetails() {
   const route = useRoute();
@@ -23,7 +24,7 @@ export default function DepositeDetails() {
   const depositeData = async () => {
     setLoader(true)
     try {
-      const response = await transactionDepositeData(item.transaction_id,item.user_id);
+      const response = await transactionDepositeData(item.transaction_id, item.user_id);
       console.log("response", response)
       if (response.status === 1 && response) {
         const formattedData = {
@@ -33,15 +34,14 @@ export default function DepositeDetails() {
         };
         setTransactionData(formattedData);
       } else {
-        console.log("response ======= >", response.message)
-        const msg = response.message ||"Unexpected error occurred"
+        const msg = response.message || "Unexpected error occurred"
         Toast.show({
-                type: 'error',
-                position: 'top',
-                text1: 'Error!',
-                text2: msg,
-                visibilityTime: 3000,
-              });
+          type: 'error',
+          position: 'top',
+          text1: 'Error!',
+          text2: msg,
+          visibilityTime: 3000,
+        });
       }
     } catch (error) {
       const msg = error.message
@@ -49,7 +49,7 @@ export default function DepositeDetails() {
         type: 'error',
         position: 'top',
         text1: 'Error!',
-        text2: {msg},
+        text2: { msg },
         visibilityTime: 3000,
       });
     } finally {
@@ -70,79 +70,93 @@ export default function DepositeDetails() {
 
   return (
     <>
-      <HeaderComponent transactionData={transactionData}/>
-      <SafeAreaView style={styles.main}>
-        <View style={styles.section}>
-          <Text style={styles.transaction}>Transaction ID</Text>
-        </View>
-        <View style={[styles.row, styles.spaceBetween]}>
-          <Text style={styles.extraSmallFont}>
-          {transactionData.transaction_id}
-          </Text>
-          <TouchableOpacity style={[styles.row, styles.copyButton]} onPress={copyToClipboard}>
-            <Icon name="clone" size={10} color="#000" />
-            <Text style={[styles.extraSmallFont, { paddingLeft: 10 }]}>COPY</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Divider style={styles.divider} />
-
-        <Text style={styles.deposite}>
-          Deposit Details
-        </Text>
-        <LinearGradient
-          colors={['#FFFFFF4D', '#00C6590F']}
-          style={styles.innerDeposit}>
-          <View style={styles.depositRow}>
-            <Text style={styles.amount}>Deposit Amount (excl. Govt. Tax)</Text>
-            <Text style={styles.amount}>₹{transactionData.actual_amount}</Text>
-          </View>
-          <View style={styles.depositRow}>
-            <Text style={styles.amount}>Govt. Tax (28% GST)</Text>
-            <Text style={[styles.amount, { fontFamily: 'Montserrat-Bold' }]}>
-              ₹{transactionData.gst_amount}
-            </Text>
-          </View>
-          <Divider style={styles.divider} />
-          <View style={styles.depositRow}>
-            <Text style={styles.changeGreen}>
-              Total
-            </Text>
-            <Text style={[styles.increaseFontWeight, styles.changeGreen]}>
-              ₹{transactionData.transaction_amount}
-            </Text>
-          </View>
-        </LinearGradient>
-
-        {/* Additional Information */}
-        <View style={[styles.innerDeposit, { backgroundColor: 'transparent' }]}>
-          <View style={styles.depositRow}>
-            <View style={styles.circle}>
-              <Iconicons name="check-circle" size={25} color="#000000CC" />
-              <Text style={styles.request}>Request Raised</Text>
+      <HeaderComponent transactionData={transactionData} title={"Deposite Details"} status={"deposite"}/>
+      {
+        Object.keys(transactionData).length > 0 ? (
+          !loader ? (
+          <SafeAreaView style={styles.main}>
+            <View style={styles.section}>
+              <Text style={styles.transaction}>Transaction ID</Text>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>{transactionData.request_raised}</Text>
-          </View>
-          <View style={styles.depositRow}>
-            <View style={styles.circle}>
-              <Iconicons name="check-circle" size={25} color="#000000CC" />
-              <Text style={styles.request}>Deposit Successful</Text>
+            <View style={[styles.row, styles.spaceBetween]}>
+              <Text style={styles.extraSmallFont}>
+                {transactionData.transaction_id}
+              </Text>
+              <TouchableOpacity style={[styles.row, styles.copyButton]} onPress={copyToClipboard}>
+                <Icon name="clone" size={15} color="#747474" />
+                <Text style={[styles.extraSmallFont]}>COPY</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>{transactionData.deposite_date}</Text>
-          </View>
-        </View>
 
-        <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: wp(5) }}>
-          <TouchableOpacity style={styles.optionsRow} >
-            <View style={styles.row}>
-              <Icon name="question-circle-o" size={20} color="#000000B2" />
-              <Text style={styles.amount}>Need Help</Text>
+            <Divider style={styles.divider} />
+
+            <Text style={styles.deposite}>
+              Deposit Details
+            </Text>
+            <LinearGradient
+              colors={['#FFFFFF4D', '#00C6590F']}
+              style={styles.innerDeposit}>
+              <View style={styles.depositRow}>
+                <Text style={styles.amount}>Deposit Amount (excl. Govt. Tax)</Text>
+                <Text style={styles.amount}>₹{transactionData.actual_amount}</Text>
+              </View>
+              <View style={styles.depositRow}>
+                <Text style={styles.amount}>Govt. Tax (28% GST)</Text>
+                <Text style={[styles.amount, { fontFamily: 'Montserrat-Bold' }]}>
+                  ₹{transactionData.gst_amount}
+                </Text>
+              </View>
+              <Divider style={styles.divider} />
+              <View style={styles.depositRow}>
+                <Text style={styles.changeGreen}>
+                  Total
+                </Text>
+                <Text style={[styles.changeGreen]}>
+                  ₹{transactionData.transaction_amount}
+                </Text>
+              </View>
+            </LinearGradient>
+
+            <View style={[styles.innerDeposit, { backgroundColor: 'transparent' }]}>
+              <View style={styles.depositRow}>
+                <View style={styles.circle}>
+                  <Iconicons name="check-circle" size={hp('3%')} color="#000000CC" />
+                  <Text style={styles.request}>Request Raised</Text>
+                </View>
+                <Text style={styles.amount}>{transactionData.request_raised}</Text>
+              </View>
+              <View style={styles.depositRow}>
+                <View style={styles.circle}>
+                  <Iconicons name="check-circle" size={hp('3%')} color="#000000CC" />
+                  <Text style={styles.request}>Deposit Successful</Text>
+                </View>
+                <Text style={styles.amount}>{transactionData.deposite_date}</Text>
+              </View>
             </View>
-            <Icon name="angle-right" size={30} color="#000000B2" style={{ marginRight: hp(1) }} />
-          </TouchableOpacity>
-        </View>
-        <Toast ref={Toast.setRef} />
-      </SafeAreaView>
+
+            <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: wp(5) }}>
+              <TouchableOpacity style={styles.optionsRow} >
+                <View style={styles.row}>
+                  <Icon name="question-circle-o" size={20} color="#000000B2" />
+                  <Text style={styles.amount}>Need Help</Text>
+                </View>
+                <Icon name="angle-right" size={30} color="#000000B2" style={{ marginRight: hp(1) }} />
+              </TouchableOpacity>
+            </View>
+            <Toast ref={Toast.setRef} />
+          </SafeAreaView>) : (
+            <AnimatedLoader />
+          )) : (
+          <>
+          {
+            !loader ? ( <View style={styles.noDataContainer}>
+              <Text style={styles.noDataText}>No data found</Text>
+            </View>):( <AnimatedLoader />)
+          }     
+          </>
+        )
+
+      }
     </>
   )
 }
@@ -158,12 +172,12 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    // alignItems: 'center',
     margin: wp(1),
-    gap: wp(4)
+    gap:hp('1%')
   },
   spaceBetween: {
     justifyContent: 'space-between',
+    paddingTop:hp('2%')
   },
   amountContainer: {
     backgroundColor: '#e6ffee',
@@ -180,7 +194,7 @@ const styles = StyleSheet.create({
   transaction: {
     color: '#696969',
     fontFamily: 'Montserrat-Medium',
-    fontSize: 14
+    fontSize:hp('1.5%')
   },
   depositRow: {
     flexDirection: 'row',
@@ -207,26 +221,27 @@ const styles = StyleSheet.create({
 
   },
   divider: {
-    marginVertical: hp(1.5),
+    marginVertical: hp('1%'),
     backgroundColor: '#ccc',
   },
   changeGreen: {
     color: '#00C659',
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 18
+    fontSize: hp('2%')
   },
   largeFont: {
     fontSize: wp(6),
   },
   extraSmallFont: {
-    fontSize: wp(3.65),
+    fontSize: wp('3.5%'),
     color: '#696969',
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: 'Montserrat-Medium',
+    
   },
   copyButton: {
     padding: wp(1),
     borderWidth: 1,
-    borderRadius: wp(1),
+    borderRadius: wp(2),
     flexDirection: 'row',
     alignItems: 'center',
     borderColor: '#00000033'
@@ -251,16 +266,29 @@ const styles = StyleSheet.create({
   deposite: {
     fontFamily: 'Montserrat-Bold',
     color: '#3E3E3E',
-    fontSize: 18
+    fontSize: hp('2%'),
+    marginVertical:hp('2%')
   },
   amount: {
     fontFamily: 'Montserrat-Medium',
-    color: '#696969'
+    color: '#696969',
+    fontSize:hp('1.5%')
   },
   request: {
     fontFamily: 'Montserrat-Medium',
     color: '#3A3939',
     paddingHorizontal: wp(3),
-    fontSize: 16
+    fontSize: wp('3%')
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 })

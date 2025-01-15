@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '@env';
-
 console.log("helloo",API_URL)
 const apiInstance = axios.create({
   baseURL: `${API_URL}`,

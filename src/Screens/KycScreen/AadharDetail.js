@@ -20,7 +20,7 @@ export default function AadharDetail() {
 
     const validateInputs = () => {
         let valid = true;
-        const aadharRegex = /^\d{4}\s\d{4}\s\d{4}$|^\d{12}$|^\d{16}$|^\d{4}\s\d{4}\s\d{4}\s\d{4}$/;
+        const aadharRegex = /^(?:\d{4}\s\d{4}\s\d{4}|\d{12})$/;
         if (!aadhaar_number.trim()) {
             setAadharError('Aadhar number is required');
             valid = false;
@@ -35,6 +35,7 @@ export default function AadharDetail() {
     const handleAadharDetail = async () => {
         setLoader(true)
         try {
+            if(validateInputs){
             const response = await AdharVerificationSendOtp(aadhaar_number);
             console.log("response", response)
             if (response.status === 1) {
@@ -51,6 +52,7 @@ export default function AadharDetail() {
                     navigation.navigate("AadharOtpVerify", { data: response.data, user_id ,aadhaar_number})
                 }, 3000);
             }
+        }
         } catch (error) {
             console.log("error", error)
             setLoader(false)

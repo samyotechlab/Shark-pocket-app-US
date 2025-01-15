@@ -6,7 +6,6 @@ import {
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
-// Utility to group transactions by date
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
@@ -21,20 +20,19 @@ export default function Debit(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
   const debitTransactions = Array.isArray(walletData)
-  ? walletData.filter((item) => item.type === 0)
-  : [];
+    ? walletData.filter((item) => item.type === 0)
+    : [];
 
 
   const groupedData = groupByDateAndType(debitTransactions);
-
-  console.log("dtatrtt", groupedData)
 
   const handleNavigation = () => {
     navigation.navigate('DepositeDetails');
   };
 
-  const renderTransaction = ({ item }) => (
-    <TouchableOpacity
+  const renderTransaction = ({ item }) => {
+    const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
+    return (<TouchableOpacity
       style={styles.itemContainer}
       onPress={handleNavigation}
     >
@@ -55,10 +53,11 @@ export default function Debit(props) {
         <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
       </View>
       <View>
-        <Text style={styles.amount}>{item.transaction_amount || '0'}</Text>
+        <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>
       </View>
-    </TouchableOpacity>
-  );
+    </TouchableOpacity>)
+
+  };
 
   const renderSection = ({ item }) => (
 

@@ -32,7 +32,6 @@ export const WinningList = async user_id => {
 };
 export const bonusWallet = async user_id => {
    const url = Config.Bonus_Data+"/"+user_id
-   console.log("url",url)
   try {
     const response = await apiInstance.get(url);
     if (response.status === 200) {

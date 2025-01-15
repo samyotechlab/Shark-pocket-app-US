@@ -33,6 +33,7 @@ import SupportScreen from '../../Screens/Screens/SupportScreen';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
 import FAQ from '../../Screens/Screens/FAQ';
+import PaymentStatusCard from '../../Components/PaymentStatusCard';
 export default function AppNavigation() {
     const Stack = createStackNavigator();
   return (
@@ -73,7 +74,6 @@ export default function AppNavigation() {
            <Stack.Screen
           name="HomeScreen"
           component={TabNavigation}
-          // component={PrizeCard}
           options={{
             headerShown: false,
           }}
@@ -267,6 +267,14 @@ export default function AppNavigation() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="PaymentStatusCard"  
+          component={PaymentStatusCard}
+          options={{
+            headerShown: false,
+          }}
+        />
+        
         </Stack.Navigator>
 
    </>

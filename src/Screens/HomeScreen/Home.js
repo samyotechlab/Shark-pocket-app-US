@@ -29,19 +29,21 @@ import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
 import CloseDialog from '../../Components/CloseDialog';
+import { userDetail } from '../../Service/Login';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const route = useRoute();
   const { loginData, isReady } = useLoginDataStorage();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
   const [myGame, setMyGames] = useState([]);
-  const data = isReady && loginData && loginData?.data;
   const [refreshing, setRefreshing] = useState(false);
-  // const [states, setState] = useState([])
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
+  const [usersData,setUserData] = useState({})
+
+  const data = isReady && loginData && loginData?.data;
+
 
   const refreshData = () => {
     setRefreshing(true);
@@ -72,10 +74,11 @@ export default function HomeScreen() {
     }, [loginData]),
   );
 
-  const getAllData = async () => {
+
+  const getAllData = async (loginData) => {
     setLoader(true);
     try {
-      const response = await getGameData(data._id);
+      const response = await getGameData(loginData?loginData?._id:data?._id);
       setMyGames(response.myGames);
       setGameData(response.data);
     } catch (error) {
@@ -88,12 +91,28 @@ export default function HomeScreen() {
   const stateList = async () => {
     try {
       const response = await state();
-      // setState(response.data)
       checkCurrentState(response.data)
     } catch (error) {
       console.log("error", error)
     }
   }
+
+      const userData = async () => {
+      setLoader(true);
+      try {
+        const response = await userDetail(data?._id);
+        const formattedData = {
+          ...response.data,
+          total_balance: parseFloat(response.data.total_balance).toFixed(2),
+          bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
+        };
+        setUserData(formattedData);
+      } catch (error) {
+        console.log('error', error);
+      } finally {
+        setLoader(false);
+      }
+    };
 
   async function checkCurrentState(states) {
     try {
@@ -111,9 +130,10 @@ export default function HomeScreen() {
   }
 
   useEffect(() => {
-    if (isReady) {
+    if (isReady&&loginData) {
       stateList();
-      getAllData();
+      userData();
+      getAllData(loginData?.data);
     } else {
       setLoader(true);
     }
@@ -133,20 +153,20 @@ export default function HomeScreen() {
           <>
             <View style={{ backgroundColor: '#552113' }}>
               <View style={styles.container}>
-                {/* Logo Section */}
+              
                 <View style={styles.logoContainer}>
                   <Image source={sharkLogo} style={styles.logo} />
                 </View>
 
-                {/* Rupee Wallet Section */}
+        
                 <LinearGradient colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']} style={styles.walletContainer}>
                   <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
                   <Text style={styles.walletText}>
-                    ₹ {data?.total_balance || 0}
+                    ₹ {usersData?.total_balance || 0}
                   </Text>
                 </LinearGradient>
 
-                {/* Icons Section */}
+              
                 <View style={styles.iconsContainer}>
                   <Image source={bell} style={styles.icon} />
                   <Image source={wheel} style={styles.icon} />
@@ -176,20 +196,23 @@ export default function HomeScreen() {
               </View>
             )}
 
-            <View style={{ flex: 1.2, marginVertical: hp('2%') }}>
+            <View style={{ flex: 1.2,marginVertical:hp('2%')}}>
               <View
                 style={{
                   flex: 0.5,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingLeft: 22,
                 }}>
+               <View style={{flexDirection:'row',flex:1,justifyContent:'center',alignItems:'center',marginLeft:hp('1.5%')}}>
                 <Image source={Lighting} style={styles.light} />
                 <Text style={styles.myGame}>AVAILABLE GAMES</Text>
+                </View>
                 <TouchableOpacity
+                style={{flex:0.5,alignItems:'flex-end',marginRight:hp('1%')}}
                   onPress={() => {
                     navigation.navigate('AvailableGame', { gameData });
-                  }}>
+                  }}
+                  >
                   <Text style={styles.view}>View All</Text>
                 </TouchableOpacity>
               </View>
@@ -198,7 +221,7 @@ export default function HomeScreen() {
               </View>
             </View>
 
-            <View style={{ flex: 0.8, margin: wp('2%') }}>
+            <View style={{ flex: 0.8 }}>
               <View
                 style={{
                   flex: 0.5,
@@ -208,9 +231,6 @@ export default function HomeScreen() {
                 }}>
                 <Image source={Lighting} style={styles.light} />
                 <Text style={styles.myGame}>UPCOMING GAMES</Text>
-                <TouchableOpacity>
-                  {/* <Text style={styles.view}>View All</Text> */}
-                </TouchableOpacity>
               </View>
               <View style={{ flex: 1.5, flexDirection: 'row' }}>
                 <UpcomingGame gameData={gameData} />
@@ -243,7 +263,7 @@ const styles = StyleSheet.create({
     color: '#FFB700',
     fontFamily: 'Montserrat-Bold',
     textDecorationLine: 'underline',
-    paddingLeft: hp('8%'),
+
   },
   container: {
     flexDirection: 'row',

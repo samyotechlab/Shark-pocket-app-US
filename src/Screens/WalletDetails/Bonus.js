@@ -29,7 +29,8 @@ export default function Bonus() {
     setLoader(true)
     try {
       const response = await bonusWallet(data._id)
-      setBonusData(response)
+      console.log(response)
+      setBonusData("response.data",response.data)
     } catch (error) {
       console.log('error', error);
       throw error;
@@ -48,6 +49,7 @@ export default function Bonus() {
 
 
   const groupedData = bonusData.length > 0 ? groupByDateAndType(bonusData) : {};
+
 
   const handleNavigation = (item) => {
     navigation.navigate('DepositeDetails', { item });
@@ -90,7 +92,7 @@ export default function Bonus() {
           <Text style={styles.time}>{item.created_at} </Text>
         </View>
         <View>
-          <Text style={styles.amount}>{item.gst_amount || '0'}</Text>
+          <Text style={styles.amount}>₹{item.gst_amount || '₹0'}</Text>
         </View>
       </TouchableOpacity>
     );

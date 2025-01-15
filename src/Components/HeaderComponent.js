@@ -1,28 +1,51 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import CommonHeader from "./CommonHeader";
 import Iconics from "react-native-vector-icons/Feather";
 
-const HeaderComponent = ({transactionData}) => {
-  console.log("transactionData", transactionData)
 
+
+const HeaderComponent = ({title,transactionData,status}) => {
+
+  console.log("status",status)
+
+  const icon = {
+    success:"check-circle",
+    failed:"x-circle",
+    deposite:"check-circle"
+  }
+  const color = {
+    success:"#00C659",
+    failed:"#D80000",
+    deposite:"#FFFFFF"
+  }
+  const message = {
+    success:"Successfull",
+    failed:"failed",
+    deposite:"Successful"
+  }
+  const backgroundColor = {
+    success:"#00C659",
+    failed:"#D80000",
+    deposite:"transparent"
+  }
   return (
 <>
     <View style={styles.main}>
-      <CommonHeader title={"Deposite Details"}/>
+      <CommonHeader title={title}/>
       <View style={styles.container}>
+
       <View style={styles.content}>
-        <Text style={styles.amount}>₹{transactionData.transaction_amount}</Text>
-        <Iconics name="check-circle" size={wp("7%")} color="#fff" />
+        <Text style={styles.amount}>₹ {transactionData.transaction_amount}</Text>
+        <Iconics name={icon[status]?icon[status]:"clock"} size={wp("7%")} color={color[status]?color[status]:"#FDCB50"} />
       </View>
 
       <View style={styles.statusRow}>
-      <View style={styles.successBadge}>
-          <Text style={styles.successText}>Successful</Text>
+      <View style={[styles.successBadge,{backgroundColor:backgroundColor[status]?backgroundColor[status]:"#FDCB50"}]}>
+          <Text style={styles.successText}>{message[status]?message[status]:"Checking"}</Text>
         </View>       
-         <Text style={styles.date}>•  {transactionData.deposite_date}</Text>
+         <Text style={styles.date}>•{transactionData.deposite_date}</Text>
       </View>
     </View>
     </View>
@@ -69,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
+
   },
   status: {
     color: "#fff",
@@ -83,8 +107,9 @@ const styles = StyleSheet.create({
   },
   successBadge: {
     paddingVertical: hp("0.5%"),
-    paddingHorizontal: wp("2%"),
+    paddingHorizontal: wp("3%"),
     borderRadius: 20, 
+    backgroundColor:'red'
   },
   successText: {
     color: "#fff",

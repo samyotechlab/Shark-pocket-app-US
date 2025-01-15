@@ -1,12 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../assets/images/Screens/Button.png'
+import { useNavigation } from '@react-navigation/native';
 
 
 const PinkPrizeCard = ({item}) => {
+  const navigation = useNavigation()
+  const handleNavigation = (item) => {
+    navigation.navigate('GameName', { game_id: item._id });
+  };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={()=>{
+      handleNavigation(item)
+    }}>
       <LinearGradient
         colors={['#F387B8', '#601339']}
         style={styles.borderContainer}
@@ -31,7 +38,7 @@ const PinkPrizeCard = ({item}) => {
           <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
         </LinearGradient>
       </LinearGradient>
-    </View>
+    </TouchableOpacity>
   );
 };
 

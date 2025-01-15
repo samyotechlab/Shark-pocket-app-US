@@ -21,7 +21,7 @@ export const getGameData = async _id => {
       });
       return response.data;
     } catch (error) {
-      console.log('errror', error);
+      console.log('errror======>', error);
     }
   };
 

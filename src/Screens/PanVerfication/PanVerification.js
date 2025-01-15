@@ -105,12 +105,11 @@ export default function PanVerfication() {
                             style={styles.input}
                             placeholder="Full Name"
                             placeholderTextColor="#FFFFFFCC"
-                            keyboardType="numeric"
+                            keyboardType="default"
                             value={panData.name}
                             maxLength={40}
                             onChangeText={value => handleInputChange('name', value)}
                         />
-
                     </View>
                 </View>
 

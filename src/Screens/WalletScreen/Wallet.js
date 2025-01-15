@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { userDetail } from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import AnimatedLoader from '../../Components/AnimatedLoader';
 
 const WalletScreen = () => {
   const navigation = useNavigation();
@@ -32,9 +33,9 @@ const WalletScreen = () => {
     setLoader(true);
     try {
       const response = await userDetail(data._id);
-      console.log("response",response)
       const formattedData = {
         ...response.data,
+        total_balance: parseFloat(response.data.total_balance).toFixed(2),
         bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
       };
       setData(formattedData);
@@ -51,7 +52,7 @@ const WalletScreen = () => {
     } else {
       setLoader(true);
     }
-  }, [isReady, loginData]);
+  }, [isReady]);
 
   const handleNavigation = (name, user_id) => {
     navigation.navigate(name, user_id);
@@ -67,182 +68,190 @@ const WalletScreen = () => {
           <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
         }
       >
-        <View style={{ flex: 0.1, flexDirection: 'row', marginTop: wp('5%')}}>
-          <View style={{ flex: 1, justifyContent: 'center'}}>
-            <Text style={styles.topBarTitle}>Wallet</Text>
-          </View>
-          <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'flex-end'}}>
-            <Iconics
-              name="help-circle-outline"
-              size={20}
-              color={'white'}
-            />
-          </View>
-          <View style={{ flex: 0.5, justifyContent: 'center',alignItems: 'center' }}>
-            <TouchableOpacity>
-              <Text style={styles.needHelpText}>Need Help</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <LinearGradient
-          colors={['#3B191080', '#FFFFFF80', '#FFFFFF80']}
-          style={styles.balanceContainer}>
-          <View style={styles.balanceRow}>
-            <View>
-              <Text style={styles.sectionTitle}>BALANCE</Text>
-            </View>
-            <View style={styles.balanceContent}>
-              <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-              <Text style={styles.balanceAmount}>{dataUser.total_balance}</Text>
-            </View>
-          </View>
-        </LinearGradient>
-        <View style={{ flex: 1 }}>
-          <View style={styles.cardContainer}>
-            <View style={[styles.row]}>
-              <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-                <LinearGradient
-                  colors={['#3E180E1A', '#FFFFFF1A']}
-                  style={{
-                    height: wp('8%'),
-                    width: wp('8%'),
-                    borderRadius: wp('4%'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Iconics name="wallet-outline" size={20} color={'white'} />
-                </LinearGradient>
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.label}>Deposit</Text>
-                <Text style={styles.amount}>₹ {dataUser.total_balance}</Text>
-              </View>
-              <TouchableOpacity
-                style={{ flex: 1, marginRight: hp('1%') }}
-                onPress={() => {
-                  handleNavigation('AddCash', { user_id: dataUser._id, balance: dataUser.total_balance, status: 2 });
-                }}>
-                <LinearGradient
-                  colors={['#67FF00', '#67FF00', '#3E9900']}
-
-                  style={styles.addCashButton}>
-
-                  <Text style={[styles.buttonText,{fontSize:hp('1.7%')}]}>ADD CASH</Text>
-
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-            <LinearGradient
-              colors={['#999999', '#FFFFFF', '#999999']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{
-                height: 1,
-                marginHorizontal: wp(2),
-              }}
-            />
-            <View style={[styles.row]}>
-              <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-                <LinearGradient
-                  colors={['#3E180E1A', '#FFFFFF1A']}
-                  style={{
-                    height: wp('8%'),
-                    width: wp('8%'),
-                    borderRadius: wp('4%'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Iconics name="gift-outline" size={20} color={'white'} />
-                </LinearGradient>
-              </View>
-              <View style={{ flex: 2, justifyContent: 'center' }}>
-                <Text style={styles.label}>Bonus</Text>
-                <Text style={styles.amount}>₹ {dataUser.bonus_wallet}</Text>
-              </View>
-
-
-            </View>
-            <LinearGradient
-              colors={['#999999', '#FFFFFF', '#999999']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{
-                height: 1,
-                marginHorizontal: wp(2),
-              }}
-            />
-            <View style={[styles.row]}>
-              <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-                <LinearGradient
-                  colors={['#3E180E1A', '#FFFFFF1A']}
-                  style={{
-                    height: wp('8%'),
-                    width: wp('8%'),
-                    borderRadius: wp('4%'),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Iconics name="trophy-outline" size={20} color={'white'} />
-                </LinearGradient>
-              </View>
-              <View style={{ flex: 1, justifyContent: 'center' }}>
-                <Text style={styles.label}>Winning</Text>
-                <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
-              </View>
-              <TouchableOpacity
-                style={{ flex: 1,marginRight: hp('1%')}}
-                onPress={()=>{
-                  handleNavigation("WithdrawWallet",{dataUser:dataUser})
-                }}>
-                <View
-                      style={[styles.withdrawButton, { backgroundColor: '#FFFFFF33', }]} >
-                      <EvilIcons
-                        name="lock"
-                        size={30}
-                        color={'white'}
-                        style={{marginTop: -wp('2%')}}
-                      />
-                      <Text style={styles.buttonText}>WITHDRAW</Text>
-                    </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <TouchableOpacity
-            style={styles.transactionContainer}
-            onPress={() => {
-              handleNavigation('WalletDetails', { user_id: dataUser._id });
-            }}>
-            <LinearGradient
-              colors={['#3E180E1A', '#FFFFFF1A']}
-              style={{
-                height: wp('8%'),
-                width: wp('8%'),
-                borderRadius: wp('5%'),
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Iconics name="timer-outline" size={22} color={'white'} />
-            </LinearGradient>
-
-            <View>
-                  <Text style={styles.label1}>My Transactions</Text>
-                  <Text style={styles.transactionText}>Deposit and withdrawal history</Text>
+        {
+          dataUser?.length != 0 ? (
+            !loader ? (<>
+              <View style={{ flex: 0.1, flexDirection: 'row', marginTop: wp('5%') }}>
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                  <Text style={styles.topBarTitle}>Wallet</Text>
                 </View>
-                <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'flex-end' }}>
                   <Iconics
-                    name="chevron-forward-outline"
-                    size={25}
+                    name="help-circle-outline"
+                    size={20}
                     color={'white'}
-                    style={{ justifyContent: 'center', alignItems: 'center' }}
                   />
                 </View>
-          </TouchableOpacity>
+                <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+                  <TouchableOpacity>
+                    <Text style={styles.needHelpText}>Need Help</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <LinearGradient
+                colors={['#3B191080', '#FFFFFF80', '#FFFFFF80']}
+                style={styles.balanceContainer}>
+                <View style={styles.balanceRow}>
+                  <View>
+                    <Text style={styles.sectionTitle}>BALANCE</Text>
+                  </View>
+                  <View style={styles.balanceContent}>
+                    <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
+                    <Text style={styles.balanceAmount}>₹{dataUser?.total_balance}</Text>
+                  </View>
+                </View>
+              </LinearGradient>
+              <View style={{ flex: 1 }}>
+                <View style={styles.cardContainer}>
+                  <View style={[styles.row]}>
+                    <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+                      <LinearGradient
+                        colors={['#3E180E1A', '#FFFFFF1A']}
+                        style={{
+                          height: wp('8%'),
+                          width: wp('8%'),
+                          borderRadius: wp('4%'),
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Iconics name="wallet-outline" size={20} color={'white'} />
+                      </LinearGradient>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.label}>Deposit</Text>
+                      <Text style={styles.amount}>₹ {dataUser?.total_balance}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ flex: 1, marginRight: hp('1%') }}
+                      onPress={() => {
+                        handleNavigation('AddCash', { user_id: dataUser?._id, balance: dataUser?.total_balance, status: 2 });
+                      }}>
+                      <LinearGradient
+                        colors={['#67FF00', '#67FF00', '#3E9900']}
 
-        </View>
-        <View style={{ flex: 2,alignItems:'center',justifyContent:'flex-end',marginBottom:hp('2%')}}>
-            <Image source={gst} resizeMode='contain'/>
-        </View>
+                        style={styles.addCashButton}>
+
+                        <Text style={[styles.buttonText, { fontSize: hp('1.7%') }]}>ADD CASH</Text>
+
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </View>
+                  <LinearGradient
+                    colors={['#999999', '#FFFFFF', '#999999']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={{
+                      height: 1,
+                      marginHorizontal: wp(2),
+                    }}
+                  />
+                  <View style={[styles.row]}>
+                    <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+                      <LinearGradient
+                        colors={['#3E180E1A', '#FFFFFF1A']}
+                        style={{
+                          height: wp('8%'),
+                          width: wp('8%'),
+                          borderRadius: wp('4%'),
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Iconics name="gift-outline" size={20} color={'white'} />
+                      </LinearGradient>
+                    </View>
+                    <View style={{ flex: 2, justifyContent: 'center' }}>
+                      <Text style={styles.label}>Bonus</Text>
+                      <Text style={styles.amount}>₹ {dataUser?.bonus_wallet}</Text>
+                    </View>
+
+
+                  </View>
+                  <LinearGradient
+                    colors={['#999999', '#FFFFFF', '#999999']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={{
+                      height: 1,
+                      marginHorizontal: wp(2),
+                    }}
+                  />
+                  <View style={[styles.row]}>
+                    <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
+                      <LinearGradient
+                        colors={['#3E180E1A', '#FFFFFF1A']}
+                        style={{
+                          height: wp('8%'),
+                          width: wp('8%'),
+                          borderRadius: wp('4%'),
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Iconics name="trophy-outline" size={20} color={'white'} />
+                      </LinearGradient>
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                      <Text style={styles.label}>Winning</Text>
+                      <Text style={styles.amount}>₹ {dataUser?.total_earning}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ flex: 1, marginRight: hp('1%') }}
+                      onPress={() => {
+                        handleNavigation("WithdrawWallet", { dataUser: dataUser })
+                      }}>
+                      <View
+                        style={[styles.withdrawButton, { backgroundColor: '#FFFFFF33', }]} >
+                        <EvilIcons
+                          name="lock"
+                          size={30}
+                          color={'white'}
+                          style={{ marginTop: -wp('2%') }}
+                        />
+                        <Text style={styles.buttonText}>WITHDRAW</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.transactionContainer}
+                  onPress={() => {
+                    handleNavigation('WalletDetails', { user_id: dataUser?._id });
+                  }}>
+                  <LinearGradient
+                    colors={['#3E180E1A', '#FFFFFF1A']}
+                    style={{
+                      height: wp('8%'),
+                      width: wp('8%'),
+                      borderRadius: wp('5%'),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Iconics name="timer-outline" size={22} color={'white'} />
+                  </LinearGradient>
+
+                  <View>
+                    <Text style={styles.label1}>My Transactions</Text>
+                    <Text style={styles.transactionText}>Deposit and withdrawal history</Text>
+                  </View>
+                  <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Iconics
+                      name="chevron-forward-outline"
+                      size={25}
+                      color={'white'}
+                      style={{ justifyContent: 'center', alignItems: 'center' }}
+                    />
+                  </View>
+                </TouchableOpacity>
+
+              </View>
+              <View style={{ flex: 2, alignItems: 'center', justifyContent: 'flex-end', marginBottom: hp('2%') }}>
+                <Image source={gst} resizeMode='contain' />
+              </View>
+            </>) : (<View style={styles.loaderContainer}>
+              <AnimatedLoader />
+            </View>)) : (<View style={styles.noDataContainer}>
+              <Text style={styles.noDataText}>No data found</Text>
+            </View>)
+        }
       </ScrollView>
     </LinearGradient>
   );
@@ -332,16 +341,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp('5%'),
     paddingVertical: wp('1%'),
     borderRadius: wp('1%'),
-    flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonText: {
     color: '#fff',
     fontFamily: 'Montserrat-Bold',
     fontSize: hp('1.5%'),
     letterSpacing: 0.5,
-    textAlign:'center'
+    textAlign: 'center'
   },
   withdrawButton: {
     paddingHorizontal: wp('0.5%'),
@@ -367,7 +376,7 @@ const styles = StyleSheet.create({
     marginTop: wp('6%'),
     gap: wp('5%'),
     alignItems: 'center',
-    paddingHorizontal:hp('2%')
+    paddingHorizontal: hp('2%')
 
   },
   transactionText: {

@@ -18,7 +18,7 @@ export default function AmountDetails() {
   };
   return (
 <>
-    <HeaderComponent/>   
+    <HeaderComponent title={"Amount Details"} status={"deposite"}/>   
     <SafeAreaView style={styles.main}>
       <View style={styles.section}>
         <Text style={styles.transaction}>Transaction ID</Text>

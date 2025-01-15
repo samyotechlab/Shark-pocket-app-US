@@ -105,7 +105,7 @@ export default function GlobalLeaderBoard() {
               <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.txt}>{item.score}</Text>
+              <Text style={styles.txt}>₹{item.score}</Text>
             </View>
             <View
               style={{

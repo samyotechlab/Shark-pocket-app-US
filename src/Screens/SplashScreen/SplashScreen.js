@@ -9,31 +9,36 @@ import { verifyLogin } from '../../Service/Home'
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-  const {loginData,isReady} = useLoginDataStorage();
+  const {loginData,isReady,storeLoginData} = useLoginDataStorage();
   const data = isReady && loginData && loginData?.data;
   const token = isReady && loginData && loginData?.token;
+
+
   const handelVerifyLogin =async ()=>{
     setIsLoading(true)
     try {
       const response = await verifyLogin(data._id,token);
+      // storeLoginData(response)
       if(response.status == 1){
         navigation.navigate('HomeScreen',{userData:response.data})
       }
     } catch (error) {
-       console.log("error",error)
+       console.log("error======>",error)
     }finally{
       setIsLoading(false)
     }
   }
 
-
   useEffect(() => {
     if (!isReady) return;
+    const timeout = setTimeout(() => {
       if (loginData) {
-        handelVerifyLogin();
+        handelVerifyLogin()
       } else {
         navigation.navigate('LoginScreen');
       }
+    }, 3000);
+    return () => clearTimeout(timeout);
   }, [isReady, loginData]);
 
  
