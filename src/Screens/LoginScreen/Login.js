@@ -8,8 +8,8 @@ import { useNavigation } from '@react-navigation/native'
 import { login } from '../../Service/Login'
 import axios from 'axios'
 import Toast from 'react-native-toast-message'
-import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
+import { baseApiurl } from '../../Service/AxiosInstance'
 
 
 const headers = {
@@ -46,7 +46,7 @@ export default function Login() {
       if (validateInputs()) {
         axios
           .post(
-            `${API_URL}/${Config.Login}`,
+            `${baseApiurl}/${Config.Login}`,
             {
               phoneNumber,
             },
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   loaderOverlay: {
-    position: 'absolute', // Ensures overlay positioning
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,

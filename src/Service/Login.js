@@ -1,8 +1,7 @@
-import apiInstance from "./AxiosInstance";
+import apiInstance, { baseApiurl } from "./AxiosInstance";
 import Config from "../Utilities/Config";
 import apiMultipartInstance from "./ApiMultiPartInstance";
 import axios from "axios";
-import {API_URL} from '@env';
 
 export const userDetail = async user_id => {
   try {
@@ -19,7 +18,6 @@ export const userDetail = async user_id => {
 };
 
 export const updateProfile = async userData => {
-  console.log("userData",userData)
   try {
     const response = await apiInstance.post(`${Config.EditProfile}`, {
       userData,
@@ -35,25 +33,10 @@ export const updateProfile = async userData => {
 
 export const updateImage = async userData => {
   console.log("userData",userData)
-
-
-  // try {
-  //   const response = await apiMultipartInstance.post(`/${Config.EditImage}`, {
-  //     userData,
-  //   });
-  //   console.log(response.data)
-  //   if (response.status === 200) {
-  //     return response.data;
-  //   }
-  // } catch (error) {
-  //   console.log('error======>', error);
-  //   throw error;
-  // }
-
   try {
-    const response = await axios.post(`${API_URL}/${Config.EditImage}`, userData, {
+    const response = await axios.post(`${baseApiurl}/${Config.EditImage}`, userData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // Explicitly set multipart/form-data
+        'Content-Type': 'multipart/form-data'
       },
     });
 

@@ -1,13 +1,14 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
-import {API_URL} from '@env';
+
 import CommonHeader from '../../Components/CommonHeader';
 import Config from '../../Utilities/Config';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { baseApiurl } from '../../Service/AxiosInstance';
 
 const TCScreen = () => {
   return (
@@ -16,7 +17,7 @@ const TCScreen = () => {
         <CommonHeader title={'Terms And Conditions'} />
       </View>
       <WebView
-        source={{uri: `${API_URL}/${Config.TermCondition}`}}
+        source={{uri: `${baseApiurl}/${Config.TermCondition}`}}
         style={styles.webview}
         startInLoadingState={true}
       />

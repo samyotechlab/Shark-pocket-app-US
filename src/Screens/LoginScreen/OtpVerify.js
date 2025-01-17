@@ -1,11 +1,10 @@
-import {  KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import axios from 'axios'
-import { API_URL } from '@env';
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
@@ -19,6 +18,7 @@ import {
 } from 'react-native-otp-verify';
 import RNOtpVerify from 'react-native-otp-verify';
 import SmsRetriever from 'react-native-sms-retriever';
+import { baseApiurl } from '../../Service/AxiosInstance'
 
 const headers = {
   'Content-Type': 'application/json',
@@ -34,22 +34,24 @@ export default function OtpVerify() {
   const inputs = useRef([]);
   const [timer, setTimer] = useState(120);
   const [otpVerified, setOtpVerified] = useState(false);
-    const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+
 
   useEffect(() => {
     let interval = null;
     if (timer > 0) {
+      setIsResendDisabled(true);
       interval = setInterval(() => {
-        setTimer(prevTimer => prevTimer - 1);
+        setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
     } else {
-      if (!otpVerified) {
-        navigation.goBack();
-      }
+      setIsResendDisabled(false);
       clearInterval(interval);
     }
     return () => clearInterval(interval);
   }, [timer]);
+
 
   //  useEffect(() => {
   //   RNOtpVerify.getOtp()
@@ -108,23 +110,23 @@ export default function OtpVerify() {
   // const { hash, otp, message, timeoutError, stopListener, startListener } = useOtpVerify({numberOfDigits: 4});
 
 
-// useEffect(() => {
-//   getHash().then(hash => {
-//     console.log(hash)
-//   }).catch(console.log);
+  // useEffect(() => {
+  //   getHash().then(hash => {
+  //     console.log(hash)
+  //   }).catch(console.log);
 
-//   startOtpListener(message => {
-//     console.log("Received Message:", message);
-//     const match = /(\d{4})/g.exec(message); 
-//     if (match) {
-//       const otp = match[1];
-//       console.log("Extracted OTP:", otp);
-//       setOtp(otp); 
-//     }
-//   });
-//   return () => removeListener();
-// }, []);
-  
+  //   startOtpListener(message => {
+  //     console.log("Received Message:", message);
+  //     const match = /(\d{4})/g.exec(message); 
+  //     if (match) {
+  //       const otp = match[1];
+  //       console.log("Extracted OTP:", otp);
+  //       setOtp(otp); 
+  //     }
+  //   });
+  //   return () => removeListener();
+  // }, []);
+
 
   const formatTime = seconds => {
     const mins = Math.floor(seconds / 60);
@@ -152,10 +154,10 @@ export default function OtpVerify() {
     clearInterval(timer);
     setLoader(true);
     try {
-      console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
+      console.log('phoneNumber', `${baseApiurl}/${Config.OtpVerify}`);
       axios
         .post(
-          `${API_URL}/${Config.OtpVerify}`,
+          `${baseApiurl}/${Config.OtpVerify}`,
           {
             user_id: data.user_id,
             otp: otp.join(''),
@@ -183,7 +185,6 @@ export default function OtpVerify() {
                 navigation.navigate('HomeScreen', { data: res.data.data });
               }
             }, 3000);
-
           } else {
             setLoader(false);
             Toast.show({
@@ -207,11 +208,14 @@ export default function OtpVerify() {
   };
 
   const handleResendOtp = () => {
+    setTimer(120);
+    setIsResendDisabled(true);
+    setLoader(true);
     try {
-      console.log('phoneNumber', `${API_URL}/${Config.ResendOtp}`);
+      console.log('phoneNumber', `${baseApiurl}/${Config.ResendOtp}`);
       axios
         .post(
-          `${API_URL}/${Config.ResendOtp}`,
+          `${baseApiurl}/${Config.ResendOtp}`,
           {
             mobile: data.mobile
           },
@@ -220,6 +224,7 @@ export default function OtpVerify() {
         .then(res => {
           console.log('res--->', res.data);
           if (res.data.status === 1) {
+              setLoader(false);          
             Toast.show({
               type: 'success',
               position: 'top',
@@ -228,6 +233,7 @@ export default function OtpVerify() {
               visibilityTime: 5000
             });
           } else {
+            setLoader(false);
             Toast.show({
               type: 'error',
               position: 'top',
@@ -238,10 +244,12 @@ export default function OtpVerify() {
           }
         })
         .catch(err => {
+          setLoader(false);
           console.log('error--->', err);
         });
 
     } catch (error) {
+      setLoader(false);
       console.log('An error occurred:', error);
     }
   }
@@ -271,20 +279,20 @@ export default function OtpVerify() {
           <View style={{ justifyContent: 'center', marginTop: hp('4%') }}>
             <View style={styles.inputContainer}>
               {otp.map((digit, index) => (
-              <TextInput
-                key={index}
-                style={styles.input}
-                value={digit}
-                onChangeText={(text) => handleChange(text, index)}
-                onKeyPress={({ nativeEvent }) =>
-                  nativeEvent.key === 'Backspace' && handleBackspace(digit, index)
-                }
-                keyboardType="number-pad"
+                <TextInput
+                  key={index}
+                  style={styles.input}
+                  value={digit}
+                  onChangeText={(text) => handleChange(text, index)}
+                  onKeyPress={({ nativeEvent }) =>
+                    nativeEvent.key === 'Backspace' && handleBackspace(digit, index)
+                  }
+                  keyboardType="number-pad"
 
-                maxLength={1}
-                ref={(ref) => (inputs.current[index] = ref)}
-              />
-            ))}
+                  maxLength={1}
+                  ref={(ref) => (inputs.current[index] = ref)}
+                />
+              ))}
               {/* <OtpInputs
                 handleChange={(code) => setOtp(code)}
                 numberOfInputs={4}
@@ -296,19 +304,20 @@ export default function OtpVerify() {
           </View>
 
           <View style={{ marginTop: hp('10%') }}>
-            <CommonButton 
-            onPress={handleOtp} 
-            title={loader ? 'Loading...' : 'Verify'}
-            disabled={loader}
+            <CommonButton
+              onPress={handleOtp}
+              title={loader ? 'Loading...' : 'Verify'}
+              disabled={loader && !isResendDisabled}
             />
             <Text style={styles.timer}>{formatTime(timer)}</Text>
             <TouchableOpacity
               onPress={handleResendOtp}
+              disabled={isResendDisabled}
             >
               <Text
                 style={[
                   styles.resendOtp,
-                  { color: '#FCFCFC' }, // Change color when disabled
+                  { color: isResendDisabled ? '#CCCCCC' : '#FCFCFC'  },
                 ]}
               >
                 Resend OTP
@@ -392,5 +401,14 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     paddingTop: hp('10%')
-  }
+  },
+  resendOtpButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  resendOtpText: {
+    color: '#000',
+    fontSize: 16,
+  },
 })

@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {API_URL} from '@env';
-console.log("helloo=========>",API_URL)
+import { baseApiurl } from './AxiosInstance';
+
 const apiMultipartInstance = axios.create({
-    baseURL: `${API_URL}`,
+    baseURL: `${baseApiurl}`,
     timeout: 5000,
   });
 

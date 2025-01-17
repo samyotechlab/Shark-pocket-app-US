@@ -1,13 +1,12 @@
 import axios from "axios";
 import Config from "../Utilities/Config";
-import apiInstance from "./AxiosInstance";
-import {API_URL} from '@env';
+import apiInstance, { baseApiurl } from "./AxiosInstance";
 
 export const AdharVerificationSendOtp = async aadhaar_number => {
   console.log('adhar_number', aadhaar_number);
-  console.log( `${API_URL}/${Config.AdharOptSend}`)
+  console.log( `${baseApiurl}/${Config.AdharOptSend}`)
   try {
-    const response = await axios.post(`${API_URL}/${Config.AdharOptSend}`, {
+    const response = await axios.post(`${baseApiurl}/${Config.AdharOptSend}`, {
       aadhaar_number,
     });
     return response.data;

@@ -1,7 +1,6 @@
 import axios from "axios";
 import Config from "../Utilities/Config";
-import apiInstance from "./AxiosInstance";
-import { API_URL } from '@env';
+import apiInstance, { baseApiurl } from "./AxiosInstance";
 
 export const getGameData = async _id => {
     try {
@@ -15,10 +14,12 @@ export const getGameData = async _id => {
   };
 
   export const verifyLogin  = async (userId,token) => {
+    console.log("userId",userId,token)
     try {
-      const response = await axios.post(`${API_URL}/${Config.VerifyLogin}`, {
+      const response = await axios.post(`${baseApiurl}/${Config.VerifyLogin}`, {
         userId,token
       });
+      console.log("response",response)
       return response.data;
     } catch (error) {
       console.log('errror======>', error);

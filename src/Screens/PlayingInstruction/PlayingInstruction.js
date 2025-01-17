@@ -167,8 +167,9 @@ export default function PlayingInstruction() {
                 <View
                   style={{
                     flex: 1,
-                    marginVertical: hp(1),
+                    // marginVertical: hp(1),
                     flexDirection: 'row',
+              
                   }}>
                   {numberArray.map(number => (
                     <TouchableOpacity
@@ -388,7 +389,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#000000',
     paddingVertical: hp(0.6),
-    marginHorizontal: 15,
+    marginHorizontal: hp('1.5%'),
     backgroundColor: '#A1A1A1',
   
     // backgroundColor: '#FF671F',

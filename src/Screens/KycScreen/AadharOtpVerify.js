@@ -1,16 +1,17 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
 import Backarrow from '../../../assets/images/Applogo/arrow_back.png'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import axios from 'axios'
-import { API_URL } from '@env';
+
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
+import { baseApiurl } from '../../Service/AxiosInstance'
 
 
 const headers = {
@@ -28,6 +29,23 @@ export default function AadharOtpVerify() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
   const [loader, setLoader] = useState(false);
+  const [timer, setTimer] = useState(120);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+
+
+  useEffect(() => {
+    let interval = null;
+    if (timer > 0) {
+      setIsResendDisabled(true);
+      interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+    } else {
+      setIsResendDisabled(false);
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
 
   const handleChange = (text, index) => {
     const newOtp = [...otp];
@@ -44,12 +62,21 @@ export default function AadharOtpVerify() {
     }
   };
 
+  const formatTime = seconds => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const handleResendOtp = async () => {
+    setTimer(120);
+    setIsResendDisabled(true);
     setLoader(true)
     try {
       const response = await AdharVerificationSendOtp(aadhaar_number);
       console.log("response", response)
       if (response.status === 1) {
+        setLoader(false)
         Toast.show({
           type: 'success',
           position: 'top',
@@ -74,16 +101,17 @@ export default function AadharOtpVerify() {
     }
     setLoader(true);
     try {
-      console.log('phoneNumber', `${API_URL}/${Config.OtpVerify}`);
+      console.log('phoneNumber', `${baseApiurl}/${Config.OtpVerify}`);
       axios
         .post(
-          `${API_URL}/${Config.AdharVerifyOtp}`,
+          `${baseApiurl}/${Config.AdharVerifyOtp}`,
           {
             verificationData
           },
           headers,
         )
         .then(res => {
+          console.log("res", res)
           if (res.data.status === 1) {
             setLoader(false)
             Toast.show({
@@ -154,17 +182,19 @@ export default function AadharOtpVerify() {
           </View>
         </View>
         <View style={[styles.box, { paddingVertical: hp('4%'), padding: hp('2%') }]}>
-          <CommonButton 
-          title={loader ? 'Verifying...' : 'Verify'}
+          <CommonButton
+            title={loader ? 'Verifying...' : 'Verify'}
             onPress={handleOtp}
             disabled={loader} />
+            <Text style={styles.timer}>{formatTime(timer)}</Text>
           <TouchableOpacity
             onPress={handleResendOtp}
+            disabled={isResendDisabled}
           >
             <Text
               style={[
                 styles.resendOtp,
-                { color: '#FCFCFC' },
+                { color: isResendDisabled ? '#CCCCCC' : '#FCFCFC' },
               ]}
             >
               Resend OTP

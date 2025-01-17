@@ -34,7 +34,6 @@ export default function Debit(props) {
     const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
     return (<TouchableOpacity
       style={styles.itemContainer}
-      onPress={handleNavigation}
     >
       <View style={[styles.circle, { backgroundColor: '#F100001A' }]}>
         <Image
@@ -50,7 +49,7 @@ export default function Debit(props) {
         <Text style={[styles.note, { color: '#F10000' }]}>
           {item.transaction_note || 'No Note'}
         </Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
+        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
       </View>
       <View>
         <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>

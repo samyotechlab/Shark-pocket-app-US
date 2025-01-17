@@ -1,9 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {API_URL} from '@env';
-console.log("helloo",API_URL)
+
+//  export const baseApiurl='http://192.168.29.57:3001'
+  export const baseApiurl='https://api.sharkpocket.in'
+
+  console.log("baseApiurl",baseApiurl)
+
 const apiInstance = axios.create({
-  baseURL: `${API_URL}`,
+  baseURL: `${baseApiurl}`,
   timeout: 5000,
 });
 

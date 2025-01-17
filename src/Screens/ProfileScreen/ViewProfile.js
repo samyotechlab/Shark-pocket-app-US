@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Iconics from 'react-native-vector-icons/Ionicons';
@@ -21,19 +20,18 @@ const ViewProfile = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { userData } = route.params
-
   const [loader, setLoader] = useState(false)
+  const [profileImage, setProfileImage] = useState(userData.avatar || null);
+  const [isEditing, setIsEditing] = useState({ mobile: false, email: false });
   const [formData, setFormData] = useState({
     name: userData.name,
     state: userData.state,
     gender: userData.gender,
     mobile: userData.mobile,
     email: userData.email,
-    avatar:userData.avatar
+    avatar: userData.avatar
   });
 
-
-  const [profileImage, setProfileImage] = useState(null);
 
   const openImagePicker = () => {
     ImagePicker.openPicker({
@@ -42,17 +40,16 @@ const ViewProfile = () => {
       cropping: true,
     })
       .then(image => {
-        console.log("image------>",image)
         setProfileImage(image?.path);
         uploadImageToServer();
-      }).catch((error)=>{
-         console.log(error)
+      }).catch((error) => {
+        console.log(error)
       })
   };
 
   const uploadImageToServer = async () => {
     const formData = new FormData();
-   
+
     formData.append('avatar', {
       uri: profileImage,
       type: 'image/jpeg',
@@ -60,24 +57,42 @@ const ViewProfile = () => {
     });
     formData.append('user_id', userData._id);
 
-    console.log("formData",formData)
+    console.log("formData", formData)
     setLoader(true)
     try {
       const response = await updateImage(formData)
-      console.log("response",response)
       if (response.status == 1) {
         handleInputChange('avatar', response.data.avatar);
         console.log('Image uploaded successfully:', response.data.avatar);
       }
     } catch (error) {
       console.error('Error uploading image:', error);
-    }finally{
+    } finally {
       setLoader(false)
     }
   };
 
+  const saveUpdatedField = async (field, value) => {
+    const updatedData = { user_id: userData._id, [field]: value };
+    setLoader(true);
+  
+    try {
+      const response = await updateProfile(updatedData);
+      if (response.status === 1) {
+        Toast.show({ text1: `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!` });
+        setIsEditing((prev) => ({ ...prev, [field]: false }));
+      } else {
+        Toast.show({ text1: "Update failed.", type: "error" });
+      }
+    } catch (error) {
+      console.error(`Error updating ${field}:`, error);
+    } finally {
+      setLoader(false);
+    }
+  };
+  
+
   const handleInputChange = (field, value) => {
-    console.log("value", value)
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -96,10 +111,10 @@ const ViewProfile = () => {
             <View style={styles.profileContainer}>
               <View style={styles.imageWrapper}>
                 <Image
-               source={formData.avatar
-                ? { uri:formData.avatar }
-                : require('../../../assets/images/Screens/profile.jpeg')}
-              style={styles.profileImage}
+                  source={formData.avatar
+                    ? { uri: formData.avatar }
+                    : require('../../../assets/images/Screens/profile.jpeg')}
+                  style={styles.profileImage}
                 />
                 <TouchableOpacity style={styles.cameraIcon} onPress={openImagePicker}>
                   <Icon name="camera-outline" size={20} color="#fff" />
@@ -145,7 +160,7 @@ const ViewProfile = () => {
                   onChangeText={(text) => handleInputChange('mobile', text)}
                   style={styles.input}
                 />
-                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }}  >
+                <TouchableOpacity style={styles.changeButton}   onPress={() => saveUpdatedField('mobile',formData.mobile)} >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
               </View>
@@ -153,7 +168,7 @@ const ViewProfile = () => {
               <View style={styles.inputWrapper}>
                 <Icon name="email-outline" size={25} color="#000000B2" />
                 <TextInput value={formData.email} style={styles.input} onChangeText={(text) => handleInputChange('email', text)} />
-                <TouchableOpacity style={{ backgroundColor: '#F1F1F1', borderRadius: 20, padding: 10 }}  >
+                <TouchableOpacity style={styles.changeButton} onPress={() => saveUpdatedField('email',formData.email)} >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
               </View>
@@ -236,6 +251,24 @@ const styles = StyleSheet.create({
     color: '#414BFFCC',
     fontFamily: 'Montserrat-Medium',
     fontSize: 12,
+  },
+  changeButton: {
+    backgroundColor: '#F1F1F1',
+    borderRadius: 20,
+    padding: 8
+  },
+  changeText: {
+    color: '#414BFF',
+    fontSize: 12
+  },
+  saveButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 20,
+    padding: 8
+  },
+  saveText: {
+    color: '#fff',
+    fontSize: 12
   },
 });
 

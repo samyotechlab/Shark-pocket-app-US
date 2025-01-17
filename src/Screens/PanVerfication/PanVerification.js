@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message'
 import { PanVerificationData } from '../../Service/PanVerfication'
 import { useRoute } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
+import { validateField } from '../../Utilities/ValidateField'
 
 
 export default function PanVerfication() {
@@ -19,33 +20,37 @@ export default function PanVerfication() {
         name: '',
         pan_number: '',
     });
+    const [nameError, setNameError] = useState('');
+    const [panError, setPanError] = useState('');
 
     const handleInputChange = (name, value) => {
         setPanData(prevFormData => ({
             ...prevFormData,
             [name]: value,
         }));
+        const error = validateField(name, value);
+        switch (name) {
+            case "name":
+                setNameError(error);
+                break;
+            case "pan_number":
+                setPanError(error);
+                break;
+        }
     };
 
     const validateForm = () => {
         const { name, pan_number } = panData;
 
-        if (name.trim() === '') {
-            setIsModalVisible(true);
-            setMessage('Name is required.');
-            return false;
-        }
+        const errors = {
+            name: validateField("name", name),
+            pan_name: validateField("pan_number", pan_number)
 
-        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-        if (!panRegex.test(pan_number)) {
-            setIsModalVisible(true);
-            setMessage(
-                'Invalid PAN Number. Please enter a valid PAN in the format: ABCDE1234F.',
-            );
-            return false;
         }
+        setNameError(errors.name)
+        setPanError(errors.pan_name)
 
-        return true;
+        return !Object.values(errors).some((error) => error);
     };
 
     const handleVerifyPan = async () => {
@@ -109,8 +114,12 @@ export default function PanVerfication() {
                             value={panData.name}
                             maxLength={40}
                             onChangeText={value => handleInputChange('name', value)}
+                            error={Boolean(nameError)}
                         />
                     </View>
+                    {Boolean(nameError) && (
+                        <Text style={styles.errorText}>{nameError}</Text>
+                    )}
                 </View>
 
                 <View style={[{ justifyContent: 'center', marginBottom: wp('7%') }]}>
@@ -119,13 +128,16 @@ export default function PanVerfication() {
                             style={styles.input}
                             placeholder="Enter Pan Number"
                             placeholderTextColor="#FFFFFFCC"
-                            keyboardType="numeric"
+                            keyboardType="default"
                             maxLength={10}
                             value={panData.pan_number}
                             onChangeText={value => handleInputChange('pan_number', value)}
+                            error={Boolean(panError)}
                         />
-
                     </View>
+                    {Boolean(panError) && (
+                        <Text style={styles.errorText}>{panError}</Text>
+                    )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
                     <CommonButton title={'Save'} onPress={handleVerifyPan} />
@@ -176,7 +188,7 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         fontSize: 16,
-        marginTop: hp('2%'),
+        marginTop: hp('1%'),
         marginLeft: wp('2%'),
     },
     kyc: {

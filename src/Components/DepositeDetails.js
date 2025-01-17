@@ -17,10 +17,42 @@ import AnimatedLoader from './AnimatedLoader';
 
 export default function DepositeDetails() {
   const route = useRoute();
-  const { item } = route.params
+  const { item,page} = route.params
+  console.log("item========>",page)
+  console.log("dataaaa========>",item)
   const [transactionData, setTransactionData] = useState({})
   const [loader, setLoader] = useState()
 
+  const transactionId = {
+    bonus:item.transaction_id,
+    winning:item.transaction_id
+  }
+  const depositeAmount = {
+    bonus : parseFloat(item.actual_amount).toFixed(2)
+
+  }
+  const gstAmount = {
+    bonus:parseFloat(item.gst_amount).toFixed(2)
+  }
+  const totalAmount={
+    bonus:(item.actual_amount+item.gst_amount)
+  }
+  const requestRaised ={
+    bonus : item.request_raised
+  }
+  const depositeDate ={ 
+    bonus :item.deposite_date
+  }
+
+  const bonusData ={
+    bonus :{
+      transaction_amount : (item.actual_amount+item.gst_amount),
+      deposite_date : item.deposite_date
+    }
+  }
+
+  // message[status].subTitle
+  
   const depositeData = async () => {
     setLoader(true)
     try {
@@ -58,9 +90,10 @@ export default function DepositeDetails() {
   }
 
   useEffect(() => {
-    console.log("helloo")
-    depositeData();
-  }, [])
+    if(page !== "bonus"){
+      depositeData();
+    }
+  }, [page])
 
 
   const copyToClipboard = () => {
@@ -70,9 +103,8 @@ export default function DepositeDetails() {
 
   return (
     <>
-      <HeaderComponent transactionData={transactionData} title={"Deposite Details"} status={"deposite"}/>
+      <HeaderComponent transactionData={bonusData[page]?bonusData[page]:transactionData} title={"Deposite Details"} status={"deposite"}/>
       {
-        Object.keys(transactionData).length > 0 ? (
           !loader ? (
           <SafeAreaView style={styles.main}>
             <View style={styles.section}>
@@ -80,7 +112,7 @@ export default function DepositeDetails() {
             </View>
             <View style={[styles.row, styles.spaceBetween]}>
               <Text style={styles.extraSmallFont}>
-                {transactionData.transaction_id}
+                {transactionId[page]?transactionId[page]:transactionData.transaction_id}
               </Text>
               <TouchableOpacity style={[styles.row, styles.copyButton]} onPress={copyToClipboard}>
                 <Icon name="clone" size={15} color="#747474" />
@@ -98,12 +130,12 @@ export default function DepositeDetails() {
               style={styles.innerDeposit}>
               <View style={styles.depositRow}>
                 <Text style={styles.amount}>Deposit Amount (excl. Govt. Tax)</Text>
-                <Text style={styles.amount}>₹{transactionData.actual_amount}</Text>
+                <Text style={styles.amount}>₹{depositeAmount[page]?depositeAmount[page]:transactionData.actual_amount}</Text>
               </View>
               <View style={styles.depositRow}>
                 <Text style={styles.amount}>Govt. Tax (28% GST)</Text>
                 <Text style={[styles.amount, { fontFamily: 'Montserrat-Bold' }]}>
-                  ₹{transactionData.gst_amount}
+                  ₹{gstAmount[page]?gstAmount[page]:transactionData.gst_amount}
                 </Text>
               </View>
               <Divider style={styles.divider} />
@@ -112,7 +144,7 @@ export default function DepositeDetails() {
                   Total
                 </Text>
                 <Text style={[styles.changeGreen]}>
-                  ₹{transactionData.transaction_amount}
+                  ₹{gstAmount[page]?totalAmount[page]:transactionData.transaction_amount}
                 </Text>
               </View>
             </LinearGradient>
@@ -123,14 +155,14 @@ export default function DepositeDetails() {
                   <Iconicons name="check-circle" size={hp('3%')} color="#000000CC" />
                   <Text style={styles.request}>Request Raised</Text>
                 </View>
-                <Text style={styles.amount}>{transactionData.request_raised}</Text>
+                <Text style={styles.amount}>{requestRaised[page]?requestRaised[page]:transactionData.request_raised}</Text>
               </View>
               <View style={styles.depositRow}>
                 <View style={styles.circle}>
                   <Iconicons name="check-circle" size={hp('3%')} color="#000000CC" />
                   <Text style={styles.request}>Deposit Successful</Text>
                 </View>
-                <Text style={styles.amount}>{transactionData.deposite_date}</Text>
+                <Text style={styles.amount}>{depositeDate[page]?depositeDate[page]:transactionData.deposite_date}</Text>
               </View>
             </View>
 
@@ -146,16 +178,7 @@ export default function DepositeDetails() {
             <Toast ref={Toast.setRef} />
           </SafeAreaView>) : (
             <AnimatedLoader />
-          )) : (
-          <>
-          {
-            !loader ? ( <View style={styles.noDataContainer}>
-              <Text style={styles.noDataText}>No data found</Text>
-            </View>):( <AnimatedLoader />)
-          }     
-          </>
-        )
-
+          )
       }
     </>
   )

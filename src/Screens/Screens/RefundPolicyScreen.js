@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
-import {API_URL} from '@env';
 import Config from '../../Utilities/Config';
 import CommonHeader from '../../Components/CommonHeader';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { baseApiurl } from '../../Service/AxiosInstance';
 
 const RefundPolicyScreen = () => {
   return (
@@ -16,7 +16,7 @@ const RefundPolicyScreen = () => {
         <CommonHeader title={'Refund Policy'} />
       </View>
       <WebView
-        source={{uri: `${API_URL}/${Config.Refund}`}}
+        source={{uri: `${baseApiurl}/${Config.Refund}`}}
         style={styles.webview}
         startInLoadingState={true}
         javaScriptEnabled={true}

@@ -5,15 +5,13 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import CommonHeader from "./CommonHeader";
 import HeaderComponent from "./HeaderComponent";
 
-const PaymentStatusCard = ({checksPaymentStatus,status,setIsPaymentSuccess,setCheckPaymentStatus}) => {
-  // const route = useRoute()
-  // const { status } = route.params
-  console.log(status)
+const PaymentStatusCard = ({checksPaymentStatus,status,setIsPaymentSuccess,setCheckPaymentStatus,amount,date}) => {
+  console.log(amount)
 
   const navigation = useNavigation()
   const transactionData = {
-    transaction_amount: 20,
-    deposite_date: "19-1-25"
+    transaction_amount: amount,
+    deposite_date: date
   }
   const image = {
     success : require("../../assets/images/Screens/wallet.gif"),

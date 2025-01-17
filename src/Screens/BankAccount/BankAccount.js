@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message'
 import { useRoute } from '@react-navigation/native'
 import { bankStore } from '../../Service/Bank'
 import { useNavigation } from '@react-navigation/native'
+import { validateField } from '../../Utilities/ValidateField'
 
 
 export default function BankAccount() {
@@ -22,44 +23,57 @@ export default function BankAccount() {
         phone: '',
     });
     const [loader, setLoader] = useState(false)
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [nameError, setNameError] = useState('');
+    const [accountError, setAccountError] = useState('');
+    const [confirmAccError, setConfirmAccError] = useState('');
+    const [ifscError, setIfscError] = useState('');
+    const [mobileError, setMobileError] = useState('');
 
     const handleInputChange = (name, value) => {
-        setBankData(prevFormData => ({
+        setBankData((prevFormData) => ({
             ...prevFormData,
             [name]: value,
         }));
+        const error = validateField(name, value);
+        switch (name) {
+            case "name":
+                setNameError(error);
+                break;
+            case "account_no":
+                setAccountError(error);
+                break;
+            case "confirm_account_no":
+                setConfirmAccError(error);
+                break;
+            case "ifsc_code":
+                setIfscError(error);
+                break;
+            case "phone":
+                setMobileError(error);
+                break;
+            default:
+                break;
+        }
     };
 
     const validateForm = () => {
-        const { name, account_no, ifsc_code, phone } = bank_data;
-        console.log();
-        const phoneRegex = /^[0-9]{10}$/;
+        console.log("bank_data========>",bank_data)
+        const { name, account_no, confirm_account_no, ifsc_code, phone } = bank_data;
 
-        if (name === '') {
-            setIsModalVisible(true);
-            setMessage('Name is Required.');
-            return false;
-        }
+        const errors = {
+            name: validateField("name", name),
+            account_no: validateField("account_no", account_no),
+            confirm_account_no: validateField("confirm_account_no", confirm_account_no),
+            ifsc_code: validateField("ifsc_code", ifsc_code),
+            phone: validateField("phone", phone),
+        };
+        setNameError(errors.name);
+        setAccountError(errors.account_no);
+        setConfirmAccError(errors.confirm_account_no);
+        setIfscError(errors.ifsc_code);
+        setMobileError(errors.phone);
 
-        if (account_no === '') {
-            setIsModalVisible(true);
-            setMessage('Account Number is requried.');
-            return false;
-        }
-
-        if (!phone.trim() || !phoneRegex.test(phone)) {
-            setIsModalVisible(true);
-            setMessage('Valid 10-digit phone number is required');
-            return false;
-        }
-        if (ifsc_code === '') {
-            setIsModalVisible(true);
-            setMessage('IFSC code is requried.');
-            return false;
-        }
-
-        return true;
+        return !Object.values(errors).some((error) => error);
     };
 
     const handleVerifyBank = async () => {
@@ -107,19 +121,20 @@ export default function BankAccount() {
                 });
             }
         } catch (error) {
+            console.log("error",error)
             const msg = error.msg
             Toast.show({
                 type: 'error',
                 position: 'top',
                 text1: 'Error!',
-                text2: { msg },
+                text2:  msg ,
                 visibilityTime: 3000,
             });
         } finally {
             setLoader(false)
         }
     };
-    const handleNavigation = ()=>{
+    const handleNavigation = () => {
         navigation.navigate("Faq")
     }
     return (
@@ -135,13 +150,16 @@ export default function BankAccount() {
                             style={styles.input}
                             placeholder="Name"
                             placeholderTextColor="#FFFFFFCC"
-                           keyboardType="default"
+                            keyboardType="default"
                             value={bank_data.name}
-                            maxLength={40}
+                            maxLength={25}
                             onChangeText={value => handleInputChange('name', value)}
+                            error={Boolean(nameError)}
                         />
-
                     </View>
+                    {Boolean(nameError) && (
+                        <Text style={styles.errorText}>{nameError}</Text>
+                    )}
                 </View>
 
                 <View style={[{ justifyContent: 'center', marginBottom: wp('7%') }]}>
@@ -154,9 +172,13 @@ export default function BankAccount() {
                             value={bank_data.account_no}
                             maxLength={20}
                             onChangeText={value => handleInputChange('account_no', value)}
+                            error={Boolean(accountError)}
                         />
 
                     </View>
+                    {Boolean(accountError) && (
+                        <Text style={styles.errorText}>{accountError}</Text>
+                    )}
                 </View>
 
                 <View style={[{ justifyContent: 'center', marginBottom: wp('7%') }]}>
@@ -169,9 +191,13 @@ export default function BankAccount() {
                             value={bank_data.confirm_account_no}
                             maxLength={20}
                             onChangeText={value => handleInputChange('confirm_account_no', value)}
+                            error={Boolean(confirmAccError)}
                         />
 
                     </View>
+                    {Boolean(confirmAccError) && (
+                        <Text style={styles.errorText}>{confirmAccError}</Text>
+                    )}
                 </View>
 
                 <View style={[{ justifyContent: 'center' }]}>
@@ -184,9 +210,14 @@ export default function BankAccount() {
                             value={bank_data.ifsc_code}
                             maxLength={11}
                             onChangeText={value => handleInputChange('ifsc_code', value)}
+                            error={Boolean(ifscError)}
                         />
 
                     </View>
+                    {Boolean(ifscError) && (
+                        <Text style={styles.errorText}>{ifscError}</Text>
+                    )}
+
                 </View>
                 <View style={[{ justifyContent: 'center', marginVertical: hp('3%') }]}>
                     <View style={styles.inputContainer}>
@@ -198,18 +229,23 @@ export default function BankAccount() {
                             keyboardType="numeric"
                             maxLength={10}
                             onChangeText={value => handleInputChange('phone', value)}
+                            error={Boolean(mobileError)}
                         />
 
+
                     </View>
+                    {Boolean(mobileError) && (
+                        <Text style={styles.errorText}>{mobileError}</Text>
+                    )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
                     <CommonButton title={'Save'} onPress={handleVerifyBank} />
                     <Text style={styles.kycText}>
-                         Why do we need your Bank Details?
-                    <TouchableOpacity style={{marginBottom: hp('1.3%')}} onPress={()=>{
-                        handleNavigation()
-                    }}>
-                        <Text style={[styles.kycText,{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold',}]}> Read FAQ’s</Text>
+                        Why do we need your Bank Details?
+                        <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={() => {
+                            handleNavigation()
+                        }}>
+                            <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Read FAQ’s</Text>
                         </TouchableOpacity>
                     </Text>
                 </View>
@@ -251,7 +287,7 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         fontSize: 16,
-        marginTop: hp('2%'),
+        marginTop: hp('1%'),
         marginLeft: wp('2%'),
     },
     kyc: {
@@ -265,8 +301,5 @@ const styles = StyleSheet.create({
         fontSize: hp('1.5'),
         fontFamily: 'Montserrat-Regular',
         marginTop: hp('1%'),
-        // marginBottom:hp('2%')
-        // paddingHorizontal: hp('2%'),
-        // paddingVertical: hp('2%'),
     }
 })

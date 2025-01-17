@@ -27,13 +27,13 @@ export default function All(props) {
   const groupedData = bonusData.length > 0 ? groupByDateAndType(bonusData) : {};
 
   const handleNavigation = (item) => {
-    navigation.navigate('DepositeDetails', { item });
+    navigation.navigate('DepositeDetails', { item :item,page:"bonus"});
   };
 
 
 
   const renderTransaction = ({ item }) => {
-    console.log("-===================>",item)
+  
     const isDebit = item.type === 0;
     const transaction_amount =  parseFloat(item.gst_amount).toFixed(2)
 
@@ -42,6 +42,7 @@ export default function All(props) {
         style={[
           styles.itemContainer,
         ]}
+        disabled={isDebit}
         onPress={() => handleNavigation(item)}
       >
         <View
@@ -68,7 +69,7 @@ export default function All(props) {
           >
             {item.note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
+          <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount|| '₹0'}</Text>

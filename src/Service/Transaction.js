@@ -52,10 +52,10 @@ export const TransactionStore = async (user_id, amount) => {
   };
 
   export const transactionDepositeData = async (transaction_id,user_id) => {
+    console.log("=============>")
     const url = Config.DepositeTransaction+"/"+transaction_id
-
-    console.log("url",user_id)
-  
+    console.log("url",url)
+ 
     try {
       const response = await apiInstance.post(url,{
         user_id:user_id

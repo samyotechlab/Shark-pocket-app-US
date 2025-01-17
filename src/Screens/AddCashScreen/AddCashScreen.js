@@ -32,6 +32,9 @@ const AddCashScreen = () => {
 
   const data = isReady && loginData && loginData?.data
 
+  const currentDate = new Date(); 
+  const formattedDate = currentDate.toLocaleString(); 
+
   useEffect(() => {
     if (status === 1 && amounts) {
       setAmount(amounts.toString());
@@ -63,6 +66,7 @@ const AddCashScreen = () => {
           }
         }, [isReady])
       );
+      
   const handleAddCash = async () => {
     if (amount) {
       try {
@@ -253,6 +257,8 @@ const AddCashScreen = () => {
       status={isPaymentSuccess}
       setIsPaymentSuccess = {setIsPaymentSuccess}
       setCheckPaymentStatus = {setCheckPaymentStatus}
+      amount ={amount}
+      date ={formattedDate} 
 
       />
 

@@ -103,6 +103,7 @@ export default function Tickets() {
     };
 
     const handleNavigate = ()=>{
+      setVisibles(false);
       navigation.navigate("AddCash",{user_id:data._id,amounts :balances,status:1})
     }
 

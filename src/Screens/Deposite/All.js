@@ -1,10 +1,11 @@
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
+import { transactionDepositeData } from '../../Service/Transaction';
 
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
@@ -20,24 +21,24 @@ export default function All(props) {
 
   const { walletData = [] } = props;
   const navigation = useNavigation();
+  const [transactionData, setTransactionData] = useState({})
 
   const groupedData = walletData.length > 0 ? groupByDateAndType(walletData) : {};
 
   const handleNavigation = (item) => {
-    navigation.navigate('DepositeDetails', { item });
+    navigation.navigate('DepositeDetails', { item: item });
   };
-
-
-
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
-    const transaction_amount =  parseFloat(item.transaction_amount).toFixed(2)
+    console.log(isDebit)
+    const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
 
     return (
       <TouchableOpacity
         style={[
           styles.itemContainer,
         ]}
+        disabled={isDebit}
         onPress={() => handleNavigation(item)}
       >
         <View
@@ -64,10 +65,10 @@ export default function All(props) {
           >
             {item.transaction_note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
+          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm </Text>
         </View>
         <View>
-          <Text style={styles.amount}>₹{transaction_amount|| '₹0'}</Text>
+          <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>
         </View>
       </TouchableOpacity>
     );

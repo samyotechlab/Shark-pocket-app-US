@@ -14,15 +14,12 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import LinearGradient from 'react-native-linear-gradient';
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, useFocusEffect, useNavigation } from '@react-navigation/native';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { userDetail } from '../../Service/Login';
 import { truncateName } from '../../Utilities/utilies';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
 const SharkPocketScreen = () => {
-
-
-
   const navigation = useNavigation();
   const { isReady, loginData } = useLoginDataStorage();
   const { clearLoginData } = useLoginDataStorage();
@@ -135,6 +132,14 @@ const SharkPocketScreen = () => {
       setLoader(true);
     }
   }, [isReady, loginData]);
+
+     useFocusEffect(
+        React.useCallback(() => {
+          if(isReady && loginData){
+            viewProfile();
+          }
+        }, [isReady])
+      );
 
   const VerificationIcon = ({ isVerified }) => (
     <Icon

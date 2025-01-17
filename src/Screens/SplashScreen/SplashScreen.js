@@ -5,48 +5,58 @@ import { useNavigation } from '@react-navigation/native'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { verifyLogin } from '../../Service/Home'
+import AnimatedLoader from '../../Components/AnimatedLoader'
 
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const {loginData,isReady,storeLoginData} = useLoginDataStorage();
-  const data = isReady && loginData && loginData?.data;
-  const token = isReady && loginData && loginData?.token;
+ 
 
 
-  const handelVerifyLogin =async ()=>{
+  const handelVerifyLogin =async (id,token)=>{
+    console.log("handelVerifyLogin",id,token)
     setIsLoading(true)
     try {
-      const response = await verifyLogin(data._id,token);
-      // storeLoginData(response)
+      const response = await verifyLogin(id,token);
+      console.log(response)
       if(response.status == 1){
         navigation.navigate('HomeScreen',{userData:response.data})
+      }else{
+        navigation.navigate('LoginScreen')
       }
     } catch (error) {
        console.log("error======>",error)
+       navigation.navigate('LoginScreen')
     }finally{
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (!isReady) return;
-    const timeout = setTimeout(() => {
-      if (loginData) {
-        handelVerifyLogin()
-      } else {
-        navigation.navigate('LoginScreen');
+    console.log("jelooooooo")
+    const data = isReady && loginData && loginData?.data;
+    const token = isReady && loginData && loginData?.token;
+    console.log("data--->",data,"token--->",token)
+    const timeout = setTimeout (()=>{
+      if(loginData && isReady){
+        handelVerifyLogin(data?._id,token);
+      }else{
+        navigation.navigate('LoginScreen')
       }
-    }, 3000);
+    },3000)
     return () => clearTimeout(timeout);
-  }, [isReady, loginData]);
+  }, [isReady,loginData]);
+
 
  
   return (
     <>
        <View style={styles.container}>
            <Image source={Logo} style={{height:wp('100%'),width:wp('100%'),resizeMode:'contain'}}/>
+        
        </View>
+       {/* <AnimatedLoader/> */}
       
     </>
   );

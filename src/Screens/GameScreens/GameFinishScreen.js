@@ -291,7 +291,7 @@ export default function GameFinishScreen({
                   <TouchableOpacity
                     style={styles.homeButton}
                     onPress={() => {
-                      navigation.navigate('HomeScreen');
+                      navigation.navigate('HomeScreen',{screen:"Home"})
                     }}>
                     <Text style={styles.homeButtonText}>HOME</Text>
                   </TouchableOpacity>

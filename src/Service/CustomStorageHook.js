@@ -22,9 +22,10 @@ const useLoginDataStorage = () => {
     } catch (error) {
       console.error('Error getting login data from AsyncStorage:', error);
     }finally {
-      setIsReady(true); // Mark as ready after fetching
+      setIsReady(true); 
     }
   };
+
   const clearLoginData = async () => {
     try {
       await AsyncStorage.removeItem('@loginData');

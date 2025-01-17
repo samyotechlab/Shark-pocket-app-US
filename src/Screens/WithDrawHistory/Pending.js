@@ -44,7 +44,7 @@ export default function Pending({ data }) {
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.note}>Pending</Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
+        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
       </View>
       <View>
         <Text style={styles.amount}>₹{item.amount}</Text>

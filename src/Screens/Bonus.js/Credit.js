@@ -27,8 +27,8 @@ export default function Credit(props) {
   const groupedData = groupByDateAndType(creditTransactions);
 
 
-  const handleNavigation = () => {
-    navigation.navigate('DepositeDetails');
+  const handleNavigation = (item) => {
+    navigation.navigate('DepositeDetails', { item :item,page:"bonus"});
   };
 
   const renderTransaction = ({ item }) => {
@@ -36,7 +36,7 @@ export default function Credit(props) {
     return (<>
       <TouchableOpacity
         style={styles.itemContainer}
-        onPress={handleNavigation}
+        onPress={() => handleNavigation(item)}
       >
         <View style={[styles.circle, { backgroundColor: '#03C5263A' }]}>
           <Image
@@ -52,7 +52,7 @@ export default function Credit(props) {
           <Text style={[styles.note, { color: '#696969' }]}>
             {item.note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
+          <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>

@@ -16,7 +16,7 @@ export default function AadharDetail() {
     const [aadharError, setAadharError] = useState('')
     const [aadharCard, setAadharCard] = useState({})
     const navigation = useNavigation()
-      const [loader, setLoader] = useState(false);
+    const [loader, setLoader] = useState(false);
 
     const validateInputs = () => {
         let valid = true;
@@ -25,7 +25,7 @@ export default function AadharDetail() {
             setAadharError('Aadhar number is required');
             valid = false;
         } else if (!aadharRegex.test(aadhaar_number)) {
-            setAadharError('aadhar number must be 16 digits');
+            setAadharError('aadhar number must be 12 digits');
             valid = false;
         } else {
             setAadharError('');
@@ -35,24 +35,35 @@ export default function AadharDetail() {
     const handleAadharDetail = async () => {
         setLoader(true)
         try {
-            if(validateInputs){
-            const response = await AdharVerificationSendOtp(aadhaar_number);
-            console.log("response", response)
-            if (response.status === 1) {
+            if (validateInputs()) {
+                const response = await AdharVerificationSendOtp(aadhaar_number);
+                console.log("response", response)
+                if (response.status === 1) {   
+                    Toast.show({
+                        type: 'success',
+                        position: 'top',
+                        text1: 'Otp Send Successfully',
+                        text2: 'Otp Send Succesffully in your given phone Number',
+                        visibilityTime: 5000
+                    });
+                        navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number })
+                  
+                    setLoader(false)
+                    setAadharCard(response.data)
+                } else {   
+                    console.log("testiiinggg")
+                    Toast.show({
+                        type: 'error',
+                        position: 'top',
+                        text1: 'Error!',
+                        text2: response?.data?.message,
+                        visibilityTime: 4000,
+                    });
+                    setLoader(false)
+                }
+            } else {
                 setLoader(false)
-                setAadharCard(response.data)
-                Toast.show({
-                    type: 'success',
-                    position: 'top',
-                    text1: 'Otp Send Successfully',
-                    text2: 'Otp Send Succesffully in your given phone Number',
-                    visibilityTime: 5000
-                });
-                setTimeout(() => {
-                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id ,aadhaar_number})
-                }, 3000);
             }
-        }
         } catch (error) {
             console.log("error", error)
             setLoader(false)
@@ -72,7 +83,7 @@ export default function AadharDetail() {
                             placeholder="Enter Aadhar Number"
                             placeholderTextColor="#FFFFFFCC"
                             keyboardType="numeric"
-                            maxLength={25}
+                            maxLength={12}
                             value={aadhaar_number}
                             onChangeText={(text) => setAadharNumber(text)}
                             error={Boolean(aadharError)}
@@ -84,18 +95,18 @@ export default function AadharDetail() {
                     )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton 
-                   title={loader ? 'Loading...' : 'Save'}
-                    onPress={handleAadharDetail}
-                    disabled={loader}
-                     />
+                    <CommonButton
+                        title={loader ? 'Loading...' : 'Save'}
+                        onPress={handleAadharDetail}
+                        disabled={loader}
+                    />
                     <Text style={styles.kycText}>
                         Why do we need KYC Verification?
                         <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>
                     </Text>
                 </View>
-                <Toast ref={Toast.setRef} />
             </View>
+            <Toast ref={Toast.setRef} />
         </>
     )
 }

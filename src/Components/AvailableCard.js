@@ -11,6 +11,8 @@ import {
 import {formatDate, truncateText} from '../Utilities/utilies';
 
 export default function AvailableCard({gameData, status, index}) {
+  console.log("gameData========>",gameData)
+  console.log("status",status)
   const gradientColors = [
     ['#F38424', '#F7A552', '#F9D479'],
     ['#E3398C', '#CC8FAD'],
@@ -41,10 +43,15 @@ export default function AvailableCard({gameData, status, index}) {
           <Image source={Game} style={styles.characterImage} />
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>
-              {gameData.title}
+              {
+                status === "4"?gameData.game_title:gameData.title
+              }
+            
             </Text>
             <Text style={styles.description}>
-            {gameData.description}
+              {
+                status === "4"?gameData.game_description:gameData.description
+              }
             </Text>
             <Text style={styles.startText}>
               Start <Text style={styles.dateText}>{formattedDate}</Text>
@@ -52,7 +59,7 @@ export default function AvailableCard({gameData, status, index}) {
             <View style={styles.buttonContainer}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>
-                  {status == 4
+                  {status === "4"
                     ? gameData.game_winning_cost
                     : gameData.winning_cost}{' '}
                   CASH WIN

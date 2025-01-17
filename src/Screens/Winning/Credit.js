@@ -50,7 +50,7 @@ export default function Credit({winningData}) {
         <Text style={[styles.note, { color: '#696969' }]}>
           {item.transaction_note || 'No Note'}
         </Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'}</Text>
+        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
       </View>
       <View>
         <Text style={styles.amount}>₹{item.winning_amount || '₹0'}</Text>

@@ -50,7 +50,7 @@ export default function Debit(props) {
         <Text style={[styles.note, { color: '#F10000' }]}>
           {item.note || 'No Note'}
         </Text>
-        <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} </Text>
+        <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
       </View>
       <View>
         <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>
