@@ -32,13 +32,10 @@ export const updateProfile = async userData => {
 };
 
 export const updateImage = async userData => {
-  console.log("userData",userData)
+
   try {
-    const response = await axios.post(`${baseApiurl}/${Config.EditImage}`, userData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-    });
+    console.log("userData",userData)
+    const response = await apiMultipartInstance.post(`${Config.EditImage}`, userData);
 
     if (response.status === 200) {
       console.log('Image uploaded successfully:', response.data);

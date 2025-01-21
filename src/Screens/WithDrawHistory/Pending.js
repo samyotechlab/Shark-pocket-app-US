@@ -26,17 +26,9 @@ export default function Pending({ data }) {
     data: groupedData[date],
   }));
 
-  const navigation = useNavigation()
 
-  const handleNavigation = () => {
-    navigation.navigate('DepositeDetails')
-  }
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemContainer} onPress={
-      () => {
-        handleNavigation()
-      }
-    }>
+    <TouchableOpacity style={styles.itemContainer}>
       <View style={styles.circle} >
         <Image source={require("../../../assets/images/Screens/arrow.png")}
           style={{ height: 20, width: 20, tintColor: '#FF8400' }}

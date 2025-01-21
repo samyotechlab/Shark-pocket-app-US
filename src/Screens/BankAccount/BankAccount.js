@@ -34,7 +34,7 @@ export default function BankAccount() {
             ...prevFormData,
             [name]: value,
         }));
-        const error = validateField(name, value);
+        const error = validateField(name, value,bank_data.account_no);
         switch (name) {
             case "name":
                 setNameError(error);
@@ -57,13 +57,11 @@ export default function BankAccount() {
     };
 
     const validateForm = () => {
-        console.log("bank_data========>",bank_data)
         const { name, account_no, confirm_account_no, ifsc_code, phone } = bank_data;
-
         const errors = {
             name: validateField("name", name),
             account_no: validateField("account_no", account_no),
-            confirm_account_no: validateField("confirm_account_no", confirm_account_no),
+            confirm_account_no: validateField("confirm_account_no", confirm_account_no,account_no),
             ifsc_code: validateField("ifsc_code", ifsc_code),
             phone: validateField("phone", phone),
         };
@@ -77,7 +75,6 @@ export default function BankAccount() {
     };
 
     const handleVerifyBank = async () => {
-        console.log('bank_data', bank_data);
         setLoader(true)
         try {
             if (!validateForm()) return;
@@ -211,6 +208,7 @@ export default function BankAccount() {
                             maxLength={11}
                             onChangeText={value => handleInputChange('ifsc_code', value)}
                             error={Boolean(ifscError)}
+                            autoCapitalize="characters"
                         />
 
                     </View>

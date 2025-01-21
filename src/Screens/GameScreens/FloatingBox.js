@@ -14,6 +14,7 @@ import Iconicons from 'react-native-vector-icons/Entypo';
 import StarImage from '../../../assets/images/GameImage/star.png';
 import BombImage from '../../../assets/images/GameImage/smash-icon.png';
 import Speaker from '../../../assets/images/Screens/speaker.png';
+import SpeakerOff from '../../../assets/images/Screens/loudspeaker_off.png'
 import Sound from 'react-native-sound';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
@@ -75,7 +76,6 @@ export default function FloatingBoxGame() {
   const [scoreData, setScoreData] = useState(null);
   const route = useRoute();
   const [isApiCalled, setIsApiCalled] = useState(false);
-  // console.log('floatinfgggggg',route.params);
   const routeData = route.params;
 
   const soundRef = useRef(null);
@@ -313,7 +313,7 @@ export default function FloatingBoxGame() {
   const handleNavigate = () => {
     setIsGameOver(true);
     setStatus(1)
-    navigation.navigate('Home');
+    navigation.navigate('HomeScreen',{screen:"Home"})
   };
 
   const getShadowOpt = type => {
@@ -397,12 +397,11 @@ export default function FloatingBoxGame() {
 
                 <TouchableOpacity onPress={toggleMusic} style={{marginLeft: 5}}>
                   <Image
-                    source={Speaker}
+                    source={isMusicPlaying ? Speaker :SpeakerOff }
                     style={{
                       width: 30,
                       height: 30,
                     }}
-                    // tintColor={'white'}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity

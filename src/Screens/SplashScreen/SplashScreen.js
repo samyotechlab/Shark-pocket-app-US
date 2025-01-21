@@ -5,21 +5,16 @@ import { useNavigation } from '@react-navigation/native'
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { verifyLogin } from '../../Service/Home'
-import AnimatedLoader from '../../Components/AnimatedLoader'
 
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const {loginData,isReady,storeLoginData} = useLoginDataStorage();
  
-
-
   const handelVerifyLogin =async (id,token)=>{
-    console.log("handelVerifyLogin",id,token)
     setIsLoading(true)
     try {
       const response = await verifyLogin(id,token);
-      console.log(response)
       if(response.status == 1){
         navigation.navigate('HomeScreen',{userData:response.data})
       }else{
@@ -34,10 +29,8 @@ export default function SplashScreen() {
   }
 
   useEffect(() => {
-    console.log("jelooooooo")
     const data = isReady && loginData && loginData?.data;
     const token = isReady && loginData && loginData?.token;
-    console.log("data--->",data,"token--->",token)
     const timeout = setTimeout (()=>{
       if(loginData && isReady){
         handelVerifyLogin(data?._id,token);

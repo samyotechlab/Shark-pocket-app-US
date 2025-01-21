@@ -17,23 +17,8 @@ export default function AvailableGame() {
   
   const myGames = gameData.filter(game => game.status === 3);
 
-  const gradientColors = [
-    ['#F38424', '#F7A552', '#F9D479'],
-    ['#E3398C', '#CC8FAD'],           
-    ['#75B831', '#BAFF74'],  
-    ['#0916B9', '#A1A8FF'],         
-];
-
-const borderColors = [
-  '#F2E30B', 
-  '#5C233F', 
-  '#78C800', 
-  '#1A0DAB',
-];
 
     const renderItem = ({item,index})=>{
-      const colors = gradientColors[index % gradientColors.length];
-      const border = borderColors[index % borderColors.length]; 
         return(<>
          
                <TouchableOpacity style={styles.container1} onPress={()=>{

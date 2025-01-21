@@ -3,40 +3,51 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../assets/images/Screens/Button.png'
 import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
-const PinkPrizeCard = ({item}) => {
+const PinkPrizeCard = ({ item}) => {
+  const game_color = item.gameColor
+
+  const Colors = {
+    yellow: ['#F38424', '#F7A552', '#F9D479'],
+    pink: ['#E3398C', '#CC8FAD'],
+    green: ['#75B831', '#BAFF74'],
+    blue: ['#0916B9', '#A1A8FF']
+
+  }
+  const borderColor = {
+    yellow: '#F2E30B',
+    pink: "#5C233F",
+    green: "#78C800",
+    blue: "#4644A7"
+  }
+
+
   const navigation = useNavigation()
   const handleNavigation = (item) => {
     navigation.navigate('GameName', { game_id: item._id });
   };
   return (
-    <TouchableOpacity style={styles.container} onPress={()=>{
+    <TouchableOpacity style={styles.container} onPress={() => {
       handleNavigation(item)
     }}>
       <LinearGradient
-        colors={['#F387B8', '#601339']}
-        style={styles.borderContainer}
+        colors={Colors[game_color]}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 0.8, y: 1 }}
+        style={[styles.card, { borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" }]}
       >
-    
         <LinearGradient
-          colors={['#E3398C', '#E77DB2', '#FFFFFF', '#E77DB2', '#E3398C']}
-          locations={[0, 0.25, 0.5, 0.75, 1]} 
-          start={{ x: 0, y: 0.5 }} 
-          end={{ x: 1, y: 0.5 }}  
-          style={styles.card}
+          colors={['#601339', '#3A1D31']}
+          style={styles.button}
         >
-          <LinearGradient
-            colors={['#601339', '#3A1D31']}
-            style={styles.button}
-          >
-          <Image source={Button}/>
-          </LinearGradient>
-
-          {/* Card Text */}
-          <Text style={styles.heading}>WIN YOUR PRIZE</Text>
-          <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
+          <Image source={Button} />
         </LinearGradient>
+
+
+        <Text style={styles.heading}>{item.game_title}</Text>
+        <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -44,41 +55,33 @@ const PinkPrizeCard = ({item}) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft:10
-  },
-  borderContainer: {
-    borderRadius: 25,
-    padding: 6,
+    paddingLeft: hp('2%'),
   },
   card: {
-    width: 170,
-    height: 120,
-    borderRadius: 20,
+    width: wp('40%'),
+    height: hp('15%'),
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 8,
-  },
-  buttonText: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 18,
+    elevation: hp('5%'),
+    borderRadius: hp('2.5%'),
+    borderWidth: hp('0.5%'),
   },
   heading: {
-    color: '#5F1137',
-    fontSize: 18,
-    fontFamily:'PatuaOne-Regular',
-    marginTop: 10,
+    color: '#2A1610',
+    fontSize: hp('3%'),
+    fontFamily: 'PatuaOne-Regular',
+    marginTop: hp('1%'),
     textTransform: 'uppercase',
     textShadowColor: '#000000',
     textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 5,
-    letterSpacing:1
+    textShadowRadius: 2,
+    letterSpacing: 1
   },
   amount: {
-    color: '#60123A',
-    fontSize: 24,
-    fontFamily:'Overlock-Bold',
-    marginTop: 5,
+    color: '#2A1610',
+    fontSize: hp('2.8%'),
+    fontFamily: 'Overlock-Bold',
+    marginTop: hp('0.5'),
   },
 });
 

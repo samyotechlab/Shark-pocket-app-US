@@ -41,26 +41,27 @@ const ViewProfile = () => {
     })
       .then(image => {
         setProfileImage(image?.path);
-        uploadImageToServer();
+        uploadImageToServer(image?.path);
       }).catch((error) => {
         console.log(error)
       })
   };
 
-  const uploadImageToServer = async () => {
-    const formData = new FormData();
-
-    formData.append('avatar', {
-      uri: profileImage,
+  const uploadImageToServer = async (image) => {
+    console.log("============>")
+    const data = new FormData();
+    
+    data.append('avatar', {
+      uri: image,
       type: 'image/jpeg',
       name: '12345.jpg',
     });
-    formData.append('user_id', userData._id);
+    data.append('user_id', userData._id);
 
-    console.log("formData", formData)
+    console.log("formData", data)
     setLoader(true)
     try {
-      const response = await updateImage(formData)
+      const response = await updateImage(data)
       if (response.status == 1) {
         handleInputChange('avatar', response.data.avatar);
         console.log('Image uploaded successfully:', response.data.avatar);

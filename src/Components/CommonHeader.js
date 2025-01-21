@@ -12,7 +12,7 @@ export default function CommonHeader({title}) {
           onPress={() => navigation.goBack()}
           style={styles.back}
           >
-          <Iconics name="chevron-back" size={hp('3%')} color={'white'} />
+          <Iconics name="chevron-back" size={hp('3%')} color={'white'} style={{paddingTop:wp('0.5%')}}/>
         </TouchableOpacity>
         <View style={styles.headerLeft}>
           <Text style={styles.headerText}>{title}</Text>
@@ -37,6 +37,6 @@ export const styles = StyleSheet.create({
         fontFamily:'Montserrat-SemiBold'
       },
       back:{
-        paddingLeft:wp('6%')
+        paddingLeft:wp('6%'),
       }
 })

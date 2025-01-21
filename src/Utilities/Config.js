@@ -28,6 +28,7 @@ export default {
   Bank_Detail : 'api//bank_account/byId',
   PanVerification: 'api/PanVerification',
   Notification_List: 'notification/list',
+  Notification_ById:'/notification/getNotificationById',
   Winning: 'api/winnings/byUserId',
   Wallet_Store: 'api/wallet_request/store',
   Wallet_Request: 'api/wallet_request/list',

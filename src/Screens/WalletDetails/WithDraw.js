@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
 
   },
   txt: {
-    fontSize: hp('1.9%'),
+    fontSize: hp('1.6%'),
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Regular'
   }

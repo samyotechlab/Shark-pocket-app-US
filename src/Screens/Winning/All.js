@@ -34,6 +34,7 @@ export default function All({ winningData }) {
         style={[
           styles.itemContainer,
         ]}
+        disabled={!isDebit}
         onPress={() => handleNavigation(item)}
       >
         <View

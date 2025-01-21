@@ -104,7 +104,7 @@ export default function Winning(props) {
     
     },
     txt:{
-      fontSize: 16,
+      fontSize: hp('1.8%'),
       color: '#FFFFFF',
       fontFamily:'Montserrat-Regular'
     }

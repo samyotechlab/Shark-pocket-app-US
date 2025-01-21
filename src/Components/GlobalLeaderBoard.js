@@ -34,6 +34,7 @@ export default function GlobalLeaderBoard() {
     try {
       setLoader(true);
       const response = await globalLeaderBoard();
+      console.log("response======>",response)
       if (response) {
         setGlobalData(response.data);
       } else {
@@ -150,9 +151,9 @@ export default function GlobalLeaderBoard() {
               borderColor: '#F1C328',
             }}>
             <Image
-              source={thirdRanking?.user_name
-                ? (Person2)
-                : (dummyProfile2)}
+              source={
+                secondRanking?.userAvatar?{ uri:secondRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
+              }
               style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
             />
           </View>
@@ -209,9 +210,9 @@ export default function GlobalLeaderBoard() {
               borderColor: '#F1C328',
             }}>
             <Image
-               source={firstRanking?.user_name
-                ? (Person)
-                : (dummyProfile2)}
+              source={
+                firstRanking?.userAvatar?{ uri:firstRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
+              }
               style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
             />
           </View>
@@ -259,9 +260,9 @@ export default function GlobalLeaderBoard() {
               borderColor: '#F1C328',
             }}>
             <Image
-             source={thirdRanking?.user_name
-              ? (Person3)
-              : (dummyProfile2)}
+               source={
+                thirdRanking?.userAvatar?{ uri:thirdRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
+              }
               style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
             />
           </View>

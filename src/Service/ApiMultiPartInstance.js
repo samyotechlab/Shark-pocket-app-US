@@ -12,7 +12,6 @@ apiMultipartInstance.interceptors.request.use(
     const token = await AsyncStorage.getItem('@loginData');
    
       config.headers.token = JSON.parse(token).token;
-      console.log("token",config.headers.token)
 
     return config;
   },

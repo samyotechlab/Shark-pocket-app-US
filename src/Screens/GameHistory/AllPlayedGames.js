@@ -28,6 +28,7 @@ export default function AllPlayedGames() {
         try {
             setLoader(true)
             const response = await historyData(data._id);
+            
             if (response) {
                 setHistory(response?.data);
             } else {

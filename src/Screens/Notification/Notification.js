@@ -14,14 +14,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {notificationList} from '../../Service/Notification';
 import CommonHeader from '../../Components/CommonHeader';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import { useRoute } from '@react-navigation/native';
 export default function Notification() {
+  const route = useRoute()
+  const {user_id} = route
   const [notification, setNotificationData] = useState([]);
   const [loader, setLoader] = useState(false);
 
   const notificationData = async () => {
     setLoader(true)
     try {
-      const response = await notificationList();
+      const response = await notificationList(user_id);
       console.log('response', response);
       if (response) {
         setNotificationData(response.data);
@@ -51,6 +54,7 @@ export default function Notification() {
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title}>{item.description}</Text>
         <Text style={styles.date}>{item.created_at}</Text>
       </View>
     </View>

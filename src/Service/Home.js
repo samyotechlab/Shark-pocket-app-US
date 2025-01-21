@@ -14,12 +14,10 @@ export const getGameData = async _id => {
   };
 
   export const verifyLogin  = async (userId,token) => {
-    console.log("userId",userId,token)
     try {
       const response = await axios.post(`${baseApiurl}/${Config.VerifyLogin}`, {
         userId,token
       });
-      console.log("response",response)
       return response.data;
     } catch (error) {
       console.log('errror======>', error);

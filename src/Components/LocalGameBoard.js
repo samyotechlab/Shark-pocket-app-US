@@ -46,6 +46,7 @@ export default function LocalGameBoard() {
     setLoader(true);
     try {
       const response = await leaderBoard(game_id);
+      console.log("response============>", response)
       if (response) {
         setGameData(response.data);
         setFilteredData(response.data);
@@ -184,10 +185,10 @@ export default function LocalGameBoard() {
                 borderColor: '#F1C328',
               }}>
               <Image
-                // source={Person2},
-                source={secondRanking?.user_name
-                  ? (Person2)
-                  : (dummyProfile2)}
+                source={
+                  secondRanking?.userAvatar ? { uri:secondRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
+        
+                }
                 style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
               />
             </View>
@@ -244,9 +245,9 @@ export default function LocalGameBoard() {
                 borderColor: '#F1C328',
               }}>
               <Image
-                source={firstRanking?.user_name
-                  ? (Person)
-                  : (dummyProfile2)}
+                source={
+                  firstRanking?.userAvatar?{ uri:firstRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
+                }
                 style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
               />
             </View>
@@ -294,9 +295,9 @@ export default function LocalGameBoard() {
                 borderColor: '#F1C328',
               }}>
               <Image
-                source={thirdRanking?.user_name
-                  ? (Person3)
-                  : (dummyProfile2)}
+                  source={
+                    thirdRanking?.userAvatar?{ uri:thirdRanking?.userAvatar}: require('../../assets/images/Screens/dummmyProfile2.jpeg')
+                  }
                 style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
               />
             </View>

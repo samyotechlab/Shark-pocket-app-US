@@ -10,13 +10,11 @@ import {
   Image,
 } from 'react-native';
 import Iconics from 'react-native-vector-icons/Ionicons';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const { height } = Dimensions.get('window');
 
-const TDSBreakupDialog = ({ isVisible, onClose,setTdsData,tdsData }) => {
 
-  console.log("tdsData===========>",tdsData)
-
+const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData }) => {
 
   return (
     <View style={styles.container}>
@@ -30,74 +28,84 @@ const TDSBreakupDialog = ({ isVisible, onClose,setTdsData,tdsData }) => {
             onPress={onClose}
           />
           <View style={styles.dialogContainer}>
-            <View style={styles.dialogHeader}>
-              <Text style={styles.dialogTitle}>Govt Tax (TDS) Breakup</Text>
-              <TouchableOpacity onPress={onClose}>
-                <Iconics name="close" size={30} color={'black'} />
+            <ScrollView contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}>
+              <View style={styles.dialogHeader}>
+                <Text style={styles.dialogTitle}>Govt Tax (TDS) Breakup</Text>
+                <TouchableOpacity onPress={onClose}>
+                  <Iconics name="close" size={hp('2.5%')} color={'#000000'} />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.subHeader}>Financial Year {tdsData.financialYear}</Text>
+              <Text style={styles.amountText}>₹{tdsData.withdraw_request}</Text>
+              <Text style={styles.amountSubText}>
+                Withdrawal (after Govt. Tax)
+              </Text>
+
+              <View style={styles.detailsContainer}>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>
+                    Total Withdrawals (1 April onwards){'\n'}
+                    <Text style={{
+                      fontSize: hp('1.2%'),
+                      color: '#000000E5',
+                      fontFamily: 'Montserrat-Regular',
+                      lineHeight:hp('3%')
+                    }}>Including current withdrawal amount</Text>
+                  </Text>
+                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.total_withdraw).toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>
+                    Total Deposits (1 April onwards)
+                  </Text>
+                  <Text style={styles.rowValue}>-₹{parseFloat(tdsData.total_deposite).toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>
+                    Opening Balance (as on 1 April)
+                  </Text>
+                  <Text style={styles.rowValue}>-₹{parseFloat(tdsData.opening_balance).toFixed(2)}</Text>
+                </View>
+                <View style={styles.separator} />
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>Taxable Amount</Text>
+                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.taxable_amount).toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>30% Govt. Tax (TDS)</Text>
+                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.tds_tax).toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>Tax (TDS) Paid Till Date</Text>
+                  <Text style={styles.rowValue}>-₹{parseFloat(tdsData.tds_deducted).toFixed(2)}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.rowLabel}>Tax (TDS) On This Withdrawal</Text>
+                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.total_tax).toFixed(2)}</Text>
+                </View>
+                <View style={styles.separator} />
+                <View style={styles.row}>
+                  <Text style={[styles.rowLabel,{fontFamily: 'Montserrat-SemiBold',fontSize:hp('1.6%')}]}>
+                    Withdrawal (after Govt. Tax)
+                  </Text>
+                  <Text style={[styles.rowValue,{fontFamily: 'Montserrat-SemiBold',fontSize:hp('1.6%')}]}>₹{parseFloat(tdsData.current_withdraw).toFixed(2)}</Text>
+                </View>
+              </View>
+
+
+              <Text style={styles.footerNote}>
+                Note:<Text style={styles.underNote}> Sharkpocket follows the new TDS law set for the online
+                gaming industry by the income Tax Act of India (Section 194BA).{' '}
+                </Text>
+                <Text style={styles.readMore}>Read More..</Text>
+              </Text>
+
+
+              <TouchableOpacity style={styles.confirmButton} onPress={onClose}>
+                <Text style={styles.confirmButtonText}>OKAY, GOT IT!</Text>
               </TouchableOpacity>
-            </View>
-            <Text style={styles.subHeader}>Financial Year 2024-25</Text>
-            <Text style={styles.amountText}>₹{tdsData.withdraw_request}</Text>
-            <Text style={styles.amountSubText}>
-              Withdrawal (after Govt. Tax)
-            </Text>
-
-            <ScrollView contentContainerStyle={styles.detailsContainer}>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>
-                  Total Withdrawals (1 April onwards)
-                </Text>
-                <Text style={styles.rowValue}>₹{tdsData.total_withdraw}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>
-                  Total Deposits (1 April onwards)
-                </Text>
-                <Text style={styles.rowValue}>-₹{tdsData.total_deposite}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>
-                  Opening Balance (as on 1 April)
-                </Text>
-                <Text style={styles.rowValue}>-₹{tdsData.opening_balance}</Text>
-              </View>
-              <View style={styles.separator} />
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Taxable Amount</Text>
-                <Text style={styles.rowValue}>₹{tdsData.taxable_amount}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>30% Govt. Tax (TDS)</Text>
-                <Text style={styles.rowValue}>₹{tdsData.tds_tax}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Tax (TDS) Paid Till Date</Text>
-                <Text style={styles.rowValue}>-₹{tdsData.tds_deducted}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>Tax (TDS) On This Withdrawal</Text>
-                <Text style={styles.rowValue}>₹{tdsData.total_tax}</Text>
-              </View>
-              <View style={styles.separator} />
-              <View style={styles.row}>
-                <Text style={styles.rowLabel}>
-                  Withdrawal (after Govt. Tax)
-                </Text>
-                <Text style={styles.rowValue}>₹{tdsData.current_withdraw}</Text>
-              </View>
             </ScrollView>
-
-          
-            <Text style={styles.footerNote}>
-              Note: Sharkpocket follows the new TDS law set for the online
-              gaming industry by the income Tax Act of India (Section 194BA).{' '}
-              <Text style={styles.readMore}>Read More..</Text>
-            </Text>
-
-           
-            <TouchableOpacity style={styles.confirmButton} onPress={onClose}>
-              <Text style={styles.confirmButtonText}>OKAY, GOT IT!</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -117,20 +125,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
+  scrollContent: {
+    paddingBottom: hp('2%'),
+  },
 
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
   },
   dialogContainer: {
     backgroundColor: '#FFF',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
-    maxHeight: height * 0.9,
+    borderTopLeftRadius: hp('2%'),
+    borderTopRightRadius: hp('2%'),
+    paddingHorizontal: hp('2.5%'),
+    paddingTop: hp('2%'),
+    paddingBottom: hp('1%'),
+    maxHeight: hp('100%'),
   },
   dialogHeader: {
     flexDirection: 'row',
@@ -138,118 +148,90 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dialogTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: hp('1.8%'),
+    fontFamily: 'Montserrat-SemiBold',
     color: '#333',
-  },
-  closeButton: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#999',
+    marginLeft: hp('9%')
   },
   subHeader: {
-    fontSize: 14,
-    color: '#777',
-    marginTop: 4,
-    marginBottom: 16,
+    fontSize: hp('1.4%'),
+    color: '#000000E5',
+    fontFamily: 'Montserrat-Regular',
+    marginTop: hp('1%'),
+    marginBottom: hp('2%'),
+    textAlign: 'center',
   },
   amountText: {
-    fontSize: 36,
-    fontWeight: 'bold',
+    fontSize: hp('4%'),
+    fontFamily: 'Montserrat-SemiBold',
     color: '#000',
     textAlign: 'center',
   },
   amountSubText: {
-    fontSize: 14,
-    color: '#777',
+    fontSize: hp('1.4%'),
+    color: '#000000E5',
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: hp('2%'),
+    fontFamily: 'Montserrat-Medium',
   },
   detailsContainer: {
-    marginBottom: 16,
-    borderWidth:0.3,
-    borderRadius:15,
-    borderColor:"gray"
+    marginBottom: hp('2%'),
+    borderWidth: hp('0.1%'),
+    borderRadius: hp('1.5%'),
+    borderColor: "#0000001A"
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 4,
-    padding:7,
-   
+    marginVertical: hp('0.3%'),
+    padding: hp('0.8%'),
+
   },
   rowLabel: {
-    fontSize: 14,
-    color: '#333',
+    fontSize: hp('1.5%'),
+    color: '#000000E5',
+    fontFamily: 'Montserrat-Medium',
   },
   rowValue: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: 'bold',
+    fontSize: hp('1.5%'),
+    color: '#000000E5',
+    fontFamily: 'Montserrat-Medium',
   },
   separator: {
-    height: 1,
+    height: hp('0.1%'),
     backgroundColor: '#EAEAEA',
-    marginVertical: 12,
-   
+    marginVertical: hp('1%'),
+
   },
   footerNote: {
-    fontSize: 12,
-    color: '#777',
-    marginBottom: 20,
-    lineHeight: 16,
+    fontSize: hp('1.4%'),
+    color: '#000000E5',
+    marginBottom: hp('2%'),
+    lineHeight: hp('2%'),
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  underNote: {
+    fontSize: hp('1.4%'),
+    color: '#00000099',
+    marginBottom: hp('2%'),
+    lineHeight: hp('2%'),
+    fontFamily: 'Montserrat-Medium',
   },
   readMore: {
-    color: '#4CAF50',
-    fontWeight: 'bold',
+    color: '#000000E5',
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: hp('1.4%'),
   },
   confirmButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 12,
-    borderRadius: 8,
+    backgroundColor: '#4FBF03',
+    paddingVertical: hp('1.5%'),
+    borderRadius: hp('1%'),
     alignItems: 'center',
   },
   confirmButtonText: {
-    color: '#FFF',
-    fontSize: 16,
+    color: '#FFFFFF',
+    fontSize: hp('2%'),
     fontWeight: 'bold',
-  },
-  button: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderColor: '#00000033',
-    borderWidth: 1,
-    borderRadius: 15,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    marginHorizontal: 16,
-  },
-  iconContainer: {
-    marginRight: 12,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-  },
-  buttonText: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily:"Montserrat-Medium",
-    color: '#696969',
-  },
-  arrowContainer: {
-    marginLeft: 8,
-  },
-  arrow: {
-    fontSize: 18,
-    color: '#333333',
   },
 });
 

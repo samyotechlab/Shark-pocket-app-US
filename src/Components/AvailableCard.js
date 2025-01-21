@@ -6,38 +6,44 @@ import Game from '../../assets/images/Screens/game1.png';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
-  widthPercentageToDP,
 } from 'react-native-responsive-screen';
 import {formatDate, truncateText} from '../Utilities/utilies';
 
 export default function AvailableCard({gameData, status, index}) {
-  console.log("gameData========>",gameData)
-  console.log("status",status)
-  const gradientColors = [
-    ['#F38424', '#F7A552', '#F9D479'],
-    ['#E3398C', '#CC8FAD'],
-    ['#75B831', '#BAFF74'],
-    ['#0916B9', '#A1A8FF'],
-  ];
-
-  const borderColors = ['#F2E30B', '#5C233F', '#78C800', '#1A0DAB'];
-  const borderBottomColors = ['#C05112', '#E3398C', '#75B831', '#4644A7'];
-  const borderBottom =  borderBottomColors[index % borderBottomColors.length];
-  const colors = gradientColors[index % gradientColors.length];
-  const border = borderColors[index % borderColors.length];
+  const game_color = gameData.gameColor
+  const Colors = {
+    yellow :    ['#F38424', '#F7A552', '#F9D479'],
+    pink :   ['#E3398C', '#CC8FAD'],
+    green :  ['#75B831', '#BAFF74'],
+    blue:   ['#0916B9', '#A1A8FF']
+   
+  }
+  const borderColor = {
+    yellow : '#F2E30B',
+    pink: "#5C233F",
+    green :  "#78C800",
+    blue :"#1A0DAB"
+  }
+  const borderBottom = {
+    yellow : '#C05112',
+    pink: "#E3398C",
+    green :  "#75B831",
+    blue :"#4644A7"
+  }
+  
   const formattedDate = formatDate(gameData.start_date);
   return (
     <View style={{borderBottomWidth: wp(1.3),
-      borderBottomColor:  borderBottom ,borderBottomStartRadius:wp(3),borderBottomEndRadius:wp(8)}}>
+      borderBottomColor:  borderBottom[game_color]? borderBottom[game_color]: "#C05112" ,borderBottomStartRadius:wp(3),borderBottomEndRadius:wp(8)}}>
       <LinearGradient
         colors={
-             colors
+          Colors[game_color]?Colors[game_color]:['#F38424', '#F7A552', '#F9D479']
         }
         start={{x: 0, y: 0.5}}
         end={{x: 0.8, y: 1}}
         style={[
           styles.card,
-          {borderColor:  border },
+          {borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" },
         ]}>
         <View style={styles.content}>
           <Image source={Game} style={styles.characterImage} />
@@ -59,7 +65,7 @@ export default function AvailableCard({gameData, status, index}) {
             <View style={styles.buttonContainer}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>
-                  {status === "4"
+                ₹{status === "4"
                     ? gameData.game_winning_cost
                     : gameData.winning_cost}{' '}
                   CASH WIN

@@ -1,6 +1,5 @@
 import { FlatList, Image, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -26,17 +25,8 @@ export default function Failed({ data }) {
     data: groupedData[date],
   }));
 
-  const navigation = useNavigation()
-
-  const handleNavigation = () => {
-    navigation.navigate('DepositeDetails')
-  }
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemContainer} onPress={
-      () => {
-        handleNavigation()
-      }
-    }>
+    <TouchableOpacity style={styles.itemContainer} >
       <View style={styles.circle} >
         <Image source={require("../../../assets/images/Screens/arrow.png")}
           style={{ height: 20, width: 20, tintColor: 'red', }}

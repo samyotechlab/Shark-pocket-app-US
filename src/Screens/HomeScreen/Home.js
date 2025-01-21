@@ -75,7 +75,6 @@ export default function HomeScreen() {
     }, [loginData]),
   );
 
-
   const getAllData = async (loginData) => {
     setLoader(true);
     try {
@@ -88,6 +87,15 @@ export default function HomeScreen() {
       setLoader(false);
     }
   };
+
+  const AvailableGame = Array.isArray(gameData)
+    ? gameData.filter((item) => item.status === 3)
+    : [];
+
+
+  const UpcomingGames = Array.isArray(gameData)
+    ? gameData.filter((item) => item.status === 1)
+    : [];
 
   const stateList = async () => {
     try {
@@ -104,12 +112,12 @@ export default function HomeScreen() {
       const response = await userDetail(loginData ? loginData?._id : data?._id);
       const formattedData = {
         ...response.data,
-        total_balance: parseFloat(response.data.total_balance).toFixed(2),
-        bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
+        total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
+        bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
       };
       setUserData(formattedData);
     } catch (error) {
-      console.log('error', error);
+      console.log('error=====>', error);
     } finally {
       setLoader(false);
     }
@@ -180,64 +188,82 @@ export default function HomeScreen() {
               <WinnerCard data={data} />
             </View>
 
-            {myGame.length > 0 && (
-              <View style={{ flex: 1 }}>
-                <View
-                  style={{
-                    flex: 0.5,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingLeft: 22,
-                  }}>
-                  <Image source={Lighting} style={styles.light} />
-                  <Text style={styles.myGame}>MY GAME</Text>
-                </View>
-                <View style={{ flex: 1.5, flexDirection: 'row', marginTop: 10 }}>
+            <>
+              {Array.isArray(myGame) && myGame.length > 0 ? (
+                <View style={{ flex: 1 }}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingLeft: 22,
+                    }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>MY GAME</Text>
+                  </View>
+                  <View style={{ flex: 1.5, flexDirection: 'row', marginTop: 10 }}>
                   <MyGame myGame={myGame} />
                 </View>
-              </View>
-            )}
-
-            <View style={{ flex: 1.2, marginVertical: hp('2%') }}>
-              <View
-                style={{
-                  flex: 0.5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: hp('1.5%') }}>
-                  <Image source={Lighting} style={styles.light} />
-                  <Text style={styles.myGame}>AVAILABLE GAMES</Text>
                 </View>
-                <TouchableOpacity
-                  style={{ flex: 0.5, alignItems: 'flex-end', marginRight: hp('1%') }}
-                  onPress={() => {
-                    navigation.navigate('AvailableGame', { gameData });
-                  }}
-                >
-                  <Text style={styles.view}>View All</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{ flex: 1.5, marginTop: wp('2%'), marginLeft: hp('1%') }}>
-                <AvailbleGameCard gameData={gameData} />
-              </View>
-            </View>
+              ) : (
+                <View style={{flex:1}}> 
+                   
+                </View>
+              )}
+            </>
 
-            <View style={{ flex: 0.8 }}>
-              <View
-                style={{
-                  flex: 0.5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  paddingLeft: wp('4%'),
-                }}>
-                <Image source={Lighting} style={styles.light} />
-                <Text style={styles.myGame}>UPCOMING GAMES</Text>
-              </View>
-              <View style={{ flex: 1.5, flexDirection: 'row' }}>
-                <UpcomingGame gameData={gameData} />
-              </View>
-            </View>
+            {
+              Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
+                <View style={{ flex: 1.2, marginVertical: hp('2%') }}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: hp('1.5%') }}>
+                      <Image source={Lighting} style={styles.light} />
+                      <Text style={styles.myGame}>AVAILABLE GAMES</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ flex: 0.5, alignItems: 'flex-end', marginRight: hp('1%') }}
+                      onPress={() => {
+                        navigation.navigate('AvailableGame', { gameData });
+                      }}
+                    >
+                      <Text style={styles.view}>View All</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1.5, marginTop: wp('2%'), marginLeft: hp('1%') }}>
+                    <AvailbleGameCard gameData={gameData} />
+                  </View>
+                </View>
+              ):(
+                <AnimatedLoader />
+              )
+            }
+            {
+              Array.isArray(UpcomingGames) && UpcomingGames.length > 0 ? (
+                <View style={{ flex: 0.8 }}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingLeft: wp('4%'),
+                    }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>UPCOMING GAMES</Text>
+                  </View>
+                  <View style={{ flex: 1.5, flexDirection: 'row' }}>
+                    <UpcomingGame gameData={gameData} />
+                  </View>
+                </View>
+              ):( <View style={{flex:1}}> 
+
+              </View>)
+            }
+
           </>
         ) : (
           <AnimatedLoader />

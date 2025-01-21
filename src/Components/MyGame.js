@@ -12,6 +12,7 @@ const MyGame = (props) => {
     const renderItem = (items) => {
         const { item, index } = items
         return (<>
+               {/* <PinkPrizeCard item={item} index={index}/> */}
             {
                 index % 2 == 0 ? (<PinkPrizeCard item={item} />) : (<GoldenCard item={item} />)
             }

@@ -13,6 +13,7 @@ import Iconic from 'react-native-vector-icons/Ionicons';
 import { bankAccountDetails } from '../../Service/Bank';
 
 export default function Withdraw({ dataUser }) {
+  
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
@@ -26,7 +27,6 @@ export default function Withdraw({ dataUser }) {
       setVisible(true);
       setMessage(`Your wallet balance is ₹${dataUser.total_earning}. Please enter a valid amount.`)
     } else {
-      console.log('Withdrawal successful:', amount);
       handleCick();
     }
   };
@@ -35,7 +35,6 @@ export default function Withdraw({ dataUser }) {
     try {
       setIsLoading(true);
       const response = await bankAccountDetails(dataUser._id);
-      console.log("response", response)
       setBankDetail(response.data)
     } catch (error) {
       console.log('error', error);
@@ -51,9 +50,8 @@ export default function Withdraw({ dataUser }) {
     try {
       setIsLoading(true);
       if (amount) {
-        if (amount >= 50) {
+        if (amount >= bankDetail.minAmount) {
           const response = await withdrawCash(dataUser._id, amount);
-          console.log("response", response)
           Toast.show({
             type: 'success',
             position: 'top',
@@ -85,6 +83,9 @@ export default function Withdraw({ dataUser }) {
       if(response.status == 1){
         setModalVisible(!isModalVisible);
         setTdsData(response.data)
+      }else{
+        setVisible(true)
+        setMessage('withdraw request is required.')
       }
     } catch (error) {
       console.log("error",error)
@@ -126,10 +127,10 @@ export default function Withdraw({ dataUser }) {
           </View>
 
           {/* Tax and Learn More */}
-          <View>
+          <View style={{flex:0.5,justifyContent:'center'}}>
             <Text style={styles.infoText}>
-              No Govt. Tax on this withdrawal {' '}
-              <TouchableOpacity onPress={toggleModal} style={{ marginBottom: hp('1.3%') }}>
+                 No Govt. Tax on this withdrawal {' '}
+              <TouchableOpacity onPress={toggleModal} style={{marginBottom:hp('1.3%')}}>
                 <Text style={styles.learnMore}>Learn More</Text>
               </TouchableOpacity>
             </Text>
@@ -313,17 +314,16 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: hp('1.5%'),
     color: '#000000',
-    marginBottom: hp('2%'),
     textAlign: 'center',
-    marginTop: hp('1%'),
     fontFamily: 'Montserrat-Regular',
+    backgroundColor:'white',
+    paddingLeft:wp('5%')
   },
   learnMore: {
     fontSize: hp('1.5%'),
     color: '#000000',
     textDecorationLine: 'underline',
     fontFamily: 'Montserrat-Medium',
-
   },
   withdrawButton: {
     backgroundColor: '#4FBF03',

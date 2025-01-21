@@ -23,36 +23,56 @@ export default function DepositeDetails() {
   const [transactionData, setTransactionData] = useState({})
   const [loader, setLoader] = useState()
 
+  const Header = {
+    bonus : "Bonus Details",
+    winning : "Winning Details"
+  }
+  const title = {
+    bonus : "Deposit Amount (excl. Govt. Tax)",
+    winning:"Withdraw Amount (excl. Govt. Tax)"
+  }
+
+  const date_title = {
+     bonus : "Deposit Successfull",
+    winning:"Withdraw Successfull"
+  }
+
   const transactionId = {
     bonus:item.transaction_id,
     winning:item.transaction_id
   }
   const depositeAmount = {
-    bonus : parseFloat(item.actual_amount).toFixed(2)
+    bonus : parseFloat(item.actual_amount).toFixed(2),
+    winning:parseFloat(item.user_amount).toFixed(2)
 
   }
+
   const gstAmount = {
-    bonus:parseFloat(item.gst_amount).toFixed(2)
+    bonus:parseFloat(item.gst_amount).toFixed(2),
+    winning:parseFloat(item.tds).toFixed(2)
   }
   const totalAmount={
-    bonus:(item.actual_amount+item.gst_amount)
+    bonus:(item.actual_amount+item.gst_amount),
+    winning:item.winning_amount
   }
   const requestRaised ={
-    bonus : item.request_raised
+    bonus : item.request_raised,
+    winning:item.created_at,
   }
   const depositeDate ={ 
-    bonus :item.deposite_date
+    bonus :item.deposite_date,
+    winning:item.created_at,
   }
-
   const bonusData ={
     bonus :{
       transaction_amount : (item.actual_amount+item.gst_amount),
       deposite_date : item.deposite_date
+    },
+    winning :{
+      transaction_amount : item.winning_amount,
+      deposite_date : item.created_at
     }
-  }
-
-  // message[status].subTitle
-  
+  }  
   const depositeData = async () => {
     setLoader(true)
     try {
@@ -123,13 +143,13 @@ export default function DepositeDetails() {
             <Divider style={styles.divider} />
 
             <Text style={styles.deposite}>
-              Deposit Details
+           { Header[page]?Header[page]:"Deposite Details"}
             </Text>
             <LinearGradient
               colors={['#FFFFFF4D', '#00C6590F']}
               style={styles.innerDeposit}>
               <View style={styles.depositRow}>
-                <Text style={styles.amount}>Deposit Amount (excl. Govt. Tax)</Text>
+                <Text style={styles.amount}>{title[page]?title[page]:"Deposit Amount (excl. Govt. Tax)"}</Text>
                 <Text style={styles.amount}>₹{depositeAmount[page]?depositeAmount[page]:transactionData.actual_amount}</Text>
               </View>
               <View style={styles.depositRow}>
@@ -160,7 +180,7 @@ export default function DepositeDetails() {
               <View style={styles.depositRow}>
                 <View style={styles.circle}>
                   <Iconicons name="check-circle" size={hp('3%')} color="#000000CC" />
-                  <Text style={styles.request}>Deposit Successful</Text>
+                  <Text style={styles.request}>{date_title[page]?date_title[page]:"Deposit Successful"}</Text>
                 </View>
                 <Text style={styles.amount}>{depositeDate[page]?depositeDate[page]:transactionData.deposite_date}</Text>
               </View>

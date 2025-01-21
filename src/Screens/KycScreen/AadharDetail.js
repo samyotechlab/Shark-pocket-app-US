@@ -37,7 +37,6 @@ export default function AadharDetail() {
         try {
             if (validateInputs()) {
                 const response = await AdharVerificationSendOtp(aadhaar_number);
-                console.log("response", response)
                 if (response.status === 1) {   
                     Toast.show({
                         type: 'success',

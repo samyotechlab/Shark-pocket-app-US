@@ -1,4 +1,5 @@
-export function validateField  (name, value) {
+export function validateField  (name, value,account_no) {
+    console.log(account_no)
     const phoneRegex = /^[0-9]{10}$/;
     const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
     const accountRegex = /^\d{9,18}$/;
@@ -14,7 +15,7 @@ export function validateField  (name, value) {
             break;
         case "confirm_account_no":
             if (!value.trim()) return "Confirm account number is required.";
-            if (value !== bank_data.account_no)
+            if (value !== account_no)
                 return "Account Number and Confirm Account Number must match.";
             break;
         case "ifsc_code":
