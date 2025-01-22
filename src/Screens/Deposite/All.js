@@ -5,7 +5,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import { transactionDepositeData } from '../../Service/Transaction';
 
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {

@@ -48,7 +48,6 @@ const ViewProfile = () => {
   };
 
   const uploadImageToServer = async (image) => {
-    console.log("============>")
     const data = new FormData();
     
     data.append('avatar', {

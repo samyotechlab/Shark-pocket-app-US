@@ -7,7 +7,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 const groupByDateAndType = (data) => {
-  console.log("-===================>",data)
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
     const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;

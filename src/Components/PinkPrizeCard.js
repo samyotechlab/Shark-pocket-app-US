@@ -38,16 +38,11 @@ const PinkPrizeCard = ({ item}) => {
         end={{ x: 0.8, y: 1 }}
         style={[styles.card, { borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" }]}
       >
-        <LinearGradient
-          colors={['#601339', '#3A1D31']}
-          style={styles.button}
-        >
+        <View style={styles.innerCard}>
           <Image source={Button} />
-        </LinearGradient>
-
-
         <Text style={styles.heading}>{item.game_title}</Text>
         <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
+        </View>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -55,9 +50,11 @@ const PinkPrizeCard = ({ item}) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     paddingLeft: hp('2%'),
   },
   card: {
+    flex:1,
     width: wp('40%'),
     height: hp('15%'),
     justifyContent: 'center',
@@ -76,6 +73,11 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 2,
     letterSpacing: 1
+  },
+  innerCard:{
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   amount: {
     color: '#2A1610',

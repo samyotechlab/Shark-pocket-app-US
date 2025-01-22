@@ -1,5 +1,6 @@
 import { Dimensions } from 'react-native';
 export const { width, height } = Dimensions.get('window');
+import CryptoJS from 'react-native-crypto-js';
 
 export function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -26,3 +27,29 @@ export function truncateText(text, maxLength) {
   }
   return text;
 }
+
+export const generateKey = (mobileNumber, username, aadharNumber, userId) => {
+  const aadhar_number = String(aadharNumber)
+  const mobileStart = mobileNumber.slice(0, 4);
+  const mobileEnd = mobileNumber.slice(-4);
+  const usernamePart = username.slice(0, 3);
+  const aadharPart =aadhar_number.slice(0, 6);
+  const userIdPart = userId.slice(0, 10);
+  const fixedPart = "sharkpock";
+
+  const key = `${mobileStart}${mobileEnd}${usernamePart}${aadharPart}${userIdPart}${fixedPart}`;
+  console.log("key0000000",key)
+  if (key.length !== 36) {
+    console.log("key.length",key.length)
+    throw new Error("Generated key is not 36 characters long.");
+  }
+  return key;
+};
+
+export const encryptData =  (key, data) => {
+  console.log("data=====>",data,key)
+  const dataString = JSON.stringify(data);
+  const encrypted =  CryptoJS.AES.encrypt(dataString, key).toString();
+  console.log("encrypted",encrypted)
+  return encrypted;
+};

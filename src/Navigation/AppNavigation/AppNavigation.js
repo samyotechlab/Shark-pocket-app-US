@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { createStackNavigator,TransitionPresets} from '@react-navigation/stack'
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import SplashScreen from '../../Screens/SplashScreen/SplashScreen';
 import Login from '../../Screens/LoginScreen/Login';
 import OtpVerify from '../../Screens/LoginScreen/OtpVerify';
@@ -34,51 +34,52 @@ import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
 import FAQ from '../../Screens/Screens/FAQ';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
+import HowToPlayScreen from '../../Screens/Screens/HowToPlayScreen';
 export default function AppNavigation() {
-    const Stack = createStackNavigator();
+  const Stack = createStackNavigator();
   return (
-   <>
-     <Stack.Navigator
+    <>
+      <Stack.Navigator
         screenOptions={{
           headerShown: false,
           ...TransitionPresets.SlideFromRightIOS,
         }}>
-           <Stack.Screen
+        <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="LoginScreen"
           component={Login}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="OtpScreen"
           component={OtpVerify}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="DisclaimerScreen"
           component={Disclaimer}
           options={{
             headerShown: false,
           }}
         />
-           <Stack.Screen
+        <Stack.Screen
           name="HomeScreen"
           component={TabNavigation}
           options={{
             headerShown: false,
           }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="LocalGameBoard"
           component={LocalGameBoard}
           options={{
@@ -92,185 +93,192 @@ export default function AppNavigation() {
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="AvailableGame"
           component={AvailableGame}
           options={{
             headerShown: false,
           }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="GameName"
           component={GameName}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="PlayingInstruction"
           component={PlayingInstruction}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="GameScreen"
           component={FloatingBoxGame}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="PaymentDetails"
           component={PaymentDetails}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="AddCash"
           component={AddCashScreen}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="WithdrawWallet"
           component={WithdrawWalletScreen}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="DepositeDetails"
           component={DepositeDetails}
           options={{
             headerShown: false,
           }}
         />
-          <Stack.Screen
-          name="ViewProfile"  
+        <Stack.Screen
+          name="ViewProfile"
           component={ViewProfile}
           options={{
             headerShown: false,
           }}
         />
-          <Stack.Screen
-          name="AadharDetail"  
+        <Stack.Screen
+          name="AadharDetail"
           component={AadharDetail}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
-          name="AadharOtpVerify"  
+        <Stack.Screen
+          name="AadharOtpVerify"
           component={AadharOtpVerify}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
-          name="GameFinish"  
+        <Stack.Screen
+          name="GameFinish"
           component={GameFinishScreen}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="GameFinishHistory"  
+          name="GameFinishHistory"
           component={GameFinishHistory}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
-          name="AmountDetails"  
+        <Stack.Screen
+          name="AmountDetails"
           component={AmountDetails}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
-          name="Notification"  
+        <Stack.Screen
+          name="Notification"
           component={Notification}
           options={{
             headerShown: false,
           }}
         />
-         <Stack.Screen
-          name="BankAccount"  
+        <Stack.Screen
+          name="BankAccount"
           component={BankAccount}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="PanVerification"  
+          name="PanVerification"
           component={PanVerfication}
           options={{
             headerShown: false,
           }}
         />
-          <Stack.Screen
-          name="ContactUs"  
+        <Stack.Screen
+          name="ContactUs"
           component={ContactScreen}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="T&CScreen"  
+          name="T&CScreen"
           component={TCScreen}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="Refund"  
+          name="Refund"
           component={RefundPolicyScreen}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="Support"  
+          name="HowtoPlay"
+          component={HowToPlayScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Support"
           component={SupportScreen}
           options={{
             headerShown: false,
           }}
         />
-                <Stack.Screen
-          name="Faq"  
+        <Stack.Screen
+          name="Faq"
           component={FAQ}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="GameHistory"  
+          name="GameHistory"
           component={AllPlayedGames}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="AllGameName"  
+          name="AllGameName"
           component={AllGameName}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="PaymentStatusCard"  
+          name="PaymentStatusCard"
           component={PaymentStatusCard}
           options={{
             headerShown: false,
           }}
         />
-        
-        </Stack.Navigator>
 
-   </>
+      </Stack.Navigator>
+
+    </>
   )
 }
 

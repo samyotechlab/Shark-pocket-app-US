@@ -46,18 +46,17 @@ export const TransactionStore = async (user_id, amount) => {
       });
       return response;
     } catch (error) {
-      console.log('error=========>', error);
+      console.log('error', error);
       throw error;
     }
   };
 
-  export const transactionDepositeData = async (transaction_id,user_id) => {
-    console.log("=============>")
+  export const transactionDepositeData = async (transaction_id,encryptedData,user_id) => {
     const url = Config.DepositeTransaction+"/"+transaction_id
-    console.log("url",url)
  
     try {
       const response = await apiInstance.post(url,{
+        encryptedData:encryptedData,
         user_id:user_id
       });
       if (response.status === 200) {

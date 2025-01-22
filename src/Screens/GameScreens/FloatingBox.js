@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -16,28 +16,30 @@ import BombImage from '../../../assets/images/GameImage/smash-icon.png';
 import Speaker from '../../../assets/images/Screens/speaker.png';
 import SpeakerOff from '../../../assets/images/Screens/loudspeaker_off.png'
 import Sound from 'react-native-sound';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {useGameLogic} from './GameLogic';
+import { useGameLogic } from './GameLogic';
 import GameFinishScreen from './GameFinishScreen';
 import LinearGradient from 'react-native-linear-gradient';
-import {finalScore} from '../../Service/Game';
+import { finalScore } from '../../Service/Game';
 import blurImage from '../../../assets/images/SVG/ellipse-blur.png';
-import {BoxShadow} from 'react-native-shadow';
+import { BoxShadow } from 'react-native-shadow';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
+import { encryptData, generateKey } from '../../Utilities/utilies';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 
 const getRandomNumber = () => {
   const ranges = [
-    { min: 1, max: 100 },      
-    { min: 201, max: 300 },    
-    { min: 3001, max: 3100 },  
+    { min: 1, max: 100 },
+    { min: 201, max: 300 },
+    { min: 3001, max: 3100 },
   ];
 
   const totalNumbers = ranges.reduce((sum, range) => sum + (range.max - range.min + 1), 0);
@@ -48,7 +50,7 @@ const getRandomNumber = () => {
   for (const range of ranges) {
     const rangeSize = range.max - range.min + 1;
     if (randomIndex < cumulative + rangeSize) {
-      return range.min + (randomIndex - cumulative); 
+      return range.min + (randomIndex - cumulative);
     }
     cumulative += rangeSize;
   }
@@ -68,7 +70,7 @@ export default function FloatingBoxGame() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [status,setStatus] = useState('')
+  const [status, setStatus] = useState('')
   const [floatingBoxes, setFloatingBoxes] = useState([]);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -81,6 +83,13 @@ export default function FloatingBoxGame() {
   const soundRef = useRef(null);
   const navigation = useNavigation();
   const superNumber = route.params.selectedNumber || 5;
+  const [userData, setUserData] = useState({
+    name: "",
+    mobile: "",
+    userId: "",
+    aadhaar: ""
+  })
+  const {loginData , isReady}  = useLoginDataStorage();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -88,6 +97,18 @@ export default function FloatingBoxGame() {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (loginData && isReady) {
+      setUserData({
+        name: loginData?.data?.name,
+        mobile: loginData?.data?.mobile,
+        userId: loginData?.data?._id,
+        aadhaar: loginData?.data?.aadhaar
+      })
+    }
+
+  }, [loginData, isReady])
 
   useEffect(() => {
     Sound.setCategory('Playback');
@@ -132,6 +153,9 @@ export default function FloatingBoxGame() {
     }
     setIsMusicPlaying(!isMusicPlaying);
   };
+  const isNotEmpty = (obj) => {
+    return Object.values(obj).some(value => value !== "");
+};
 
   useEffect(() => {
     if (!isGameOver) {
@@ -141,9 +165,9 @@ export default function FloatingBoxGame() {
         }
 
         if (generatedBoxes >= 300) {
-          
+
           clearInterval(interval);
-          if (!isApiCalled) {
+          if (!isApiCalled && isNotEmpty(userData)) {
             setIsApiCalled(true);
             handleCallApi();
           }
@@ -198,7 +222,7 @@ export default function FloatingBoxGame() {
 
       return () => clearInterval(interval);
     }
-  }, [isGameOver, floatingBoxes.length, generatedBoxes,isApiCalled]);
+  }, [isGameOver, floatingBoxes.length, generatedBoxes, isApiCalled,userData]);
 
   const handleBoxClick = box => {
     if (!box.canClick || box.feedbackColor) return;
@@ -269,32 +293,46 @@ export default function FloatingBoxGame() {
       prev.map(item =>
         item.id === box.id
           ? {
-              ...item,
-              feedbackColor: feedbackColor,
-              feedbackImage: feedbackImage,
-              textColor: textColor,
-              feedbackBgColor: feedbackBgColor,
-              feedbackBorderColor: feedbackBorderColor,
-              canClick: false,
-              actionType: actionType,
-            }
+            ...item,
+            feedbackColor: feedbackColor,
+            feedbackImage: feedbackImage,
+            textColor: textColor,
+            feedbackBgColor: feedbackBgColor,
+            feedbackBorderColor: feedbackBorderColor,
+            canClick: false,
+            actionType: actionType,
+          }
           : item,
       ),
     );
   };
 
   const handleCallApi = async () => {
-    try {
-    console.log("hellloooooooo======>")
-      const defaultNumberStringData =
-        numberStringData.trim() === '' ? '0' : numberStringData;
+    console.log("numberStringData====>",userData)
+    const defaultNumberStringData =
+    numberStringData.trim() === '' ? '0' : numberStringData;
 
+    const data ={
+      defaultNumberStringData,
+      superNumber,
+      game_id : routeData.game_id,
+      ticket_id : routeData.ticket_id,
+      user_id : routeData.user_id
+    }
+    console.log(data)
+        const mobileNumber = userData?.mobile;
+        const username = userData?.name;
+        const aadharNumber = userData?.aadhaar;
+        const userId = userData?.userId;
+        const key = generateKey(mobileNumber, username, aadharNumber, userId);
+        const encryptedData = encryptData(key,data);
+
+        console.log("encryptedData",encryptedData)
+
+    try {
       const response = await finalScore(
-        defaultNumberStringData,
-        superNumber,
-        routeData.game_id,
-        routeData.ticket_id,
-        routeData.user_id,
+        encryptedData,
+        routeData.user_id
       );
       if (response) {
         setScoreData(response.data);
@@ -313,7 +351,7 @@ export default function FloatingBoxGame() {
   const handleNavigate = () => {
     setIsGameOver(true);
     setStatus(1)
-    navigation.navigate('HomeScreen',{screen:"Home"})
+    navigation.navigate('HomeScreen', { screen: "Home" })
   };
 
   const getShadowOpt = type => {
@@ -335,7 +373,7 @@ export default function FloatingBoxGame() {
       opacity: 0.7,
       x: 2,
       y: 2,
-      style: {marginVertical: 5},
+      style: { marginVertical: 5 },
     };
   };
   return (
@@ -352,8 +390,8 @@ export default function FloatingBoxGame() {
           message={'Are you sure you want to Quit game?'}
         />
 
-        {isGameOver  ? (
-           status === 0 ? (
+        {isGameOver ? (
+          status === 0 ? (
             <GameFinishScreen
               isVisible={isGameOver}
               onClose={closeModal}
@@ -372,8 +410,8 @@ export default function FloatingBoxGame() {
               </View>
               <LinearGradient
                 colors={['#00E000', '#00B300', '#00B300']}
-                start={{x: 0, y: 0.5}}
-                end={{x: 1, y: 0.5}}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
                 style={{
                   flexDirection: 'row',
                   paddingVertical: widthPercentageToDP('1.5%'),
@@ -395,9 +433,9 @@ export default function FloatingBoxGame() {
                   <Text style={styles.magicNumberText}>{superNumber}</Text>
                 </View>
 
-                <TouchableOpacity onPress={toggleMusic} style={{marginLeft: 5}}>
+                <TouchableOpacity onPress={toggleMusic} style={{ marginLeft: 5 }}>
                   <Image
-                    source={isMusicPlaying ? Speaker :SpeakerOff }
+                    source={isMusicPlaying ? Speaker : SpeakerOff}
                     style={{
                       width: 30,
                       height: 30,
@@ -422,8 +460,8 @@ export default function FloatingBoxGame() {
                     styles.floatingBox,
                     {
                       transform: [
-                        {translateX: box.x},
-                        {translateY: box.y},
+                        { translateX: box.x },
+                        { translateY: box.y },
                         {
                           rotate: box.shakeAnimation.interpolate({
                             inputRange: [-1, 1],
@@ -457,7 +495,7 @@ export default function FloatingBoxGame() {
                               style={[
                                 styles.feedbackImage,
                                 {
-                                  transform: [{scale: box.scaleAnim}],
+                                  transform: [{ scale: box.scaleAnim }],
                                   opacity: box.opacityAnim,
                                 },
                               ]}

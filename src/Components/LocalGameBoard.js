@@ -46,7 +46,6 @@ export default function LocalGameBoard() {
     setLoader(true);
     try {
       const response = await leaderBoard(game_id);
-      console.log("response============>", response)
       if (response) {
         setGameData(response.data);
         setFilteredData(response.data);

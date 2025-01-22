@@ -1,4 +1,5 @@
 import Config from '../Utilities/Config';
+import { encryptData } from '../Utilities/utilies';
 import apiInstance from './AxiosInstance';
 
 export const gameRule = async () => {
@@ -35,21 +36,15 @@ export const gameList = async () => {
 };
 
 export const finalScore = async (
-  numberStringData,
-  superNumber,
-  game_id,
-  ticket_id,
-  user_id,
+  encryptedData,
+  user_id
 ) => {
-
+  console.log("encryptedData======>",encryptedData)
   try {
     console.log("underteh call api=====>")
     const response = await apiInstance.post(Config.Final_Score, {
-      number: numberStringData,
-      superNumber,
-      game_id,
-      ticket_id,
-      user_id,
+      encryptedData:encryptedData,
+      user_id:user_id
     });
     if (response.status === 200) {
       return response.data;

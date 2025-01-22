@@ -7,8 +7,6 @@ import Iconics from "react-native-vector-icons/Feather";
 
 
 const HeaderComponent = ({title,transactionData,status}) => {
-console.log("transactionData",transactionData)
-
   const icon = {
     success:"check-circle",
     failed:"x-circle",

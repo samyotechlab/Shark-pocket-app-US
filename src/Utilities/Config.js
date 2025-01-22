@@ -17,6 +17,7 @@ export default {
   Game_History: 'api/game_score/by_user_id_and_game_id',
   Contact: 'contactUs',
   Refund: 'refundPolicy',
+  HowToPlay : "howToPlay",
   HelpSupport: 'helpAndSupport',
   TermCondition: 'termsAndCondition',
   Transaction_List: 'api/wallet/transactionList',
@@ -40,9 +41,3 @@ export default {
   EditImage: 'api/editImage',
   ShowTds:'api/wallet_request/showtTdsCalculation'
 };
-
-// export default {
-//     TaxInvoice:'api/taxInvoice',
-//     GenerateTaxInvoice:'download/',
-//     GeneratePdf : 'taxInvoiceById/'
-//   };

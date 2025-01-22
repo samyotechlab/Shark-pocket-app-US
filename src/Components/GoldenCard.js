@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Win from '../../assets/images/Screens/Rectangle.png';
+import Win from '../../assets/images/Screens/Buttons.png';
 import Winner from '../../assets/images/Screens/Winner.png';
 import { widthPercentageToDP as wp , heightPercentageToDP as hp  } from 'react-native-responsive-screen';
 
@@ -28,11 +28,9 @@ const GoldenCard = ({item}) => {
         end={{ x: 0.8, y: 1 }}
         style={[styles.card,{ borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" }]}
       >
-        <View style={styles.innerCard}>
-      
-          <Image source={Win}/>
-          <Text style={styles.playWin}>PLAY TO WIN</Text>
-            <Image source={Winner} style={styles.winnerImage} />
+        <View style={styles.innerCard}>  
+          <Image source={Win} style={{width:wp('35%'),height:hp('3.5%')}}/>
+            <Image source={Winner} style={styles.winnerImage}/>
             <Text style={styles.winnerText}>{item.game_title}</Text>
           <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
         </View>
@@ -47,29 +45,32 @@ const styles = StyleSheet.create({
     paddingLeft: hp('2%'),
   },
   card: {
+    flex:1,
     width: wp('40%'),
     height: hp('15%'),
-    borderRadius: hp('2.5%'),
-    borderWidth: hp('0.5%'),
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: wp('3%'),
+    borderRadius: hp('2.5%'),
+    borderWidth: hp('0.5%'),
+    elevation: wp('5%'),
   },
   innerCard: {
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   winnerImage: {
-    marginBottom: hp('0.8%'),
+        justifyContent:'center',
+    alignItems:'center'
   },
   winnerText: {
     position: 'absolute',
     color: '#FFFFFF',
-    fontSize: hp('1.6%'),
-    fontWeight: 'light',
-    textAlign:'center',
-    left:hp('6.5%'),
-    top:hp('4.5%')
+    fontSize: hp('2%'),
+    left:hp('5.7%'),
+    bottom:hp('5.3%'),
+    fontFamily:'Rajdhani-Medium'
+
   },
   amount: {
     color: '#463614',

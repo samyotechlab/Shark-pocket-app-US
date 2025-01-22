@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-//  export const baseApiurl='http://192.168.29.57:3001'
-  export const baseApiurl='https://api.sharkpocket.in'
+export const baseApiurl = 'http://192.168.29.57:3001'
+// export const baseApiurl='https://api.sharkpocket.in'
 
-  console.log("baseApiurl",baseApiurl)
+console.log("baseApiurl", baseApiurl)
 
 const apiInstance = axios.create({
   baseURL: `${baseApiurl}`,
@@ -18,7 +18,7 @@ apiInstance.interceptors.request.use(
     return config;
   },
   error => {
-    console.log("error",error)
+    console.log("error", error)
     return Promise.reject(error);
   },
 );
