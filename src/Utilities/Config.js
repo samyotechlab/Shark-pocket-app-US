@@ -39,5 +39,6 @@ export default {
   VerifyLogin:'api/verify-login',
   State:'api/state/list',
   EditImage: 'api/editImage',
-  ShowTds:'api/wallet_request/showtTdsCalculation'
+  ShowTds:'api/wallet_request/showtTdsCalculation',
+  Upload_Document:'api/documents/store'
 };

@@ -308,7 +308,6 @@ export default function FloatingBoxGame() {
   };
 
   const handleCallApi = async () => {
-    console.log("numberStringData====>",userData)
     const defaultNumberStringData =
     numberStringData.trim() === '' ? '0' : numberStringData;
 

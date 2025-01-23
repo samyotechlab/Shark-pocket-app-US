@@ -40,7 +40,7 @@ const WalletScreen = () => {
       };
       setData(formattedData);
     } catch (error) {
-      console.log('error', error);
+      console.log('error0000000', error);
     } finally {
       setLoader(false);
     }

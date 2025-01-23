@@ -38,7 +38,6 @@ export const generateKey = (mobileNumber, username, aadharNumber, userId) => {
   const fixedPart = "sharkpock";
 
   const key = `${mobileStart}${mobileEnd}${usernamePart}${aadharPart}${userIdPart}${fixedPart}`;
-  console.log("key0000000",key)
   if (key.length !== 36) {
     console.log("key.length",key.length)
     throw new Error("Generated key is not 36 characters long.");
@@ -47,9 +46,7 @@ export const generateKey = (mobileNumber, username, aadharNumber, userId) => {
 };
 
 export const encryptData =  (key, data) => {
-  console.log("data=====>",data,key)
   const dataString = JSON.stringify(data);
   const encrypted =  CryptoJS.AES.encrypt(dataString, key).toString();
-  console.log("encrypted",encrypted)
   return encrypted;
 };

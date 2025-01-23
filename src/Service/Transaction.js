@@ -1,11 +1,11 @@
 import Config from "../Utilities/Config";
 import apiInstance from "./AxiosInstance";
 
-export const TransactionStore = async (user_id, amount) => {
+export const TransactionStore = async (user_id, encryptedData) => {
     try {
       const response = await apiInstance.post(`${Config.Transaction_store}`, {
         user_id: user_id,
-        transaction_amount: amount,
+        encryptedData: encryptedData,
       });
       console.log("hello",response.data)
       return response.data;

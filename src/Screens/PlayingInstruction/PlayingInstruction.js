@@ -334,6 +334,7 @@ export default function PlayingInstruction() {
         visible={visible}
         onClose={() => setVisible(false)}
         message={'Please Select a Super Number.'}
+        onOkPress={() => setVisible(false)}
       />
     </>
   );

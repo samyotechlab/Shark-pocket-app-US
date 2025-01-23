@@ -180,7 +180,7 @@ export default function GameFinishScreen({
                         <Text style={styles.txt}>{gameHistoryData.prime_number.assignedScore}*{gameHistoryData.prime_number.selected}</Text>
                       </View>
                       <View style={{flex: 1}}>
-                        <Text style={styles.txt}>{gameHistoryData.score}</Text>
+                        <Text style={styles.txt}>{gameHistoryData.prime_number.score}</Text>
                       </View>
                     </View>
                     <LinearGradient

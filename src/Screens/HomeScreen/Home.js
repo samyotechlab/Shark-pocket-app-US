@@ -82,7 +82,7 @@ export default function HomeScreen() {
       setMyGames(response.myGames);
       setGameData(response.data);
     } catch (error) {
-      console.log('error', error);
+      console.log('error000000000', error);
     } finally {
       setLoader(false);
     }

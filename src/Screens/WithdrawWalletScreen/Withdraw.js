@@ -94,7 +94,7 @@ export default function Withdraw({ dataUser }) {
   };
   return (
     <>
-      <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} />
+      <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} onOkPress={() => setVisible(false)} />
       <View style={{ flex: 1, backgroundColor: '#F3F3F3', marginTop: hp('2%') }}>
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <LinearGradient

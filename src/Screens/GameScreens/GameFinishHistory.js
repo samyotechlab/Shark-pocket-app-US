@@ -213,7 +213,7 @@ export default function GameFinishHistory() {
                   </View>
                   <View style={{flex: 1}}>
                     <Text style={styles.rowText}>
-                      {gameHistoryData.bonus_point_score.superPoints}
+                      {gameHistoryData.wrong_selection_score}
                     </Text>
                   </View>
                 </View>

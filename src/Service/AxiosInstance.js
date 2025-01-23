@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export const baseApiurl = 'http://192.168.29.57:3001'
 // export const baseApiurl='https://api.sharkpocket.in'
+// export const baseApiurl='http://64.227.139.35:3000'
 
 console.log("baseApiurl", baseApiurl)
 

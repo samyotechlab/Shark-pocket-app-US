@@ -5,7 +5,7 @@ import CommonHeader from '../../Components/CommonHeader'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
 import Toast from 'react-native-toast-message'
-import { PanVerificationData } from '../../Service/PanVerfication'
+import { PanDocumentUpload, PanVerificationData } from '../../Service/PanVerfication'
 import { useRoute } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
 import { validateField } from '../../Utilities/ValidateField'
@@ -29,8 +29,8 @@ export default function PanVerfication() {
     const [nameError, setNameError] = useState('');
     const [panError, setPanError] = useState('');
     const [userData, setUserData] = useState({});
-    const [responseData, setResponse] = useState(0)
-      const [uploadedImage, setUploadedImage] = useState( null);
+    const [responseData, setResponse] = useState(1)
+    const [uploadedImage, setUploadedImage] = useState(null);
     const data = isReady && loginData && loginData?.data;
 
     const viewProfile = async () => {
@@ -83,8 +83,25 @@ export default function PanVerfication() {
             })
     };
 
-    const handleUploadDocument = ()=>{
-        console.log("hellooooo")
+    const handleUploadDocument = async () => {
+        const data = new FormData();
+        data.append('pancard', {
+            uri: uploadedImage,
+            type: 'image/jpeg',
+            name: '12345.jpg',
+        });
+        data.append('user_id', userData._id);
+        setLoader(true)
+        try {
+            const response = await PanDocumentUpload(data)
+            if (response.status == 1) {
+                console.log('Image uploaded successfully:', response.data);
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        } finally {
+            setLoader(false)
+        }
     }
 
     const validateForm = () => {
@@ -101,7 +118,6 @@ export default function PanVerfication() {
 
     const handleVerifyPan = async () => {
         if (!validateForm()) return;
-
         const obj = {
             user_id: user_id,
             name: panData.name,
@@ -202,7 +218,7 @@ export default function PanVerfication() {
                 </View>
                 {
                     responseData == 0 && (
-                        <View style={[{ padding: hp('2%')}]}>
+                        <View style={[{ padding: hp('2%') }]}>
                             <TouchableOpacity
                                 style={{
                                     height: hp('20%'),
@@ -235,12 +251,12 @@ export default function PanVerfication() {
                                     </View>
                                 )}
                             </TouchableOpacity>
-                        {
-                            uploadedImage && (<View style={{padding:wp('5%')}}>
-                            <CommonButton title={'Upload Documnet'} onPress={handleUploadDocument} />
-                            </View>)
-                        }
-                            
+                            {
+                                uploadedImage && (<View style={{ padding: wp('5%') }}>
+                                    <CommonButton title={'Upload Documnet'} onPress={handleUploadDocument} />
+                                </View>)
+                            }
+
                         </View>
                     )
                 }

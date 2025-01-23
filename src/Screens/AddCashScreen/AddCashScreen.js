@@ -11,6 +11,7 @@ import PaymentStatusCard from '../../Components/PaymentStatusCard';
 import { userDetail } from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import { encryptData, generateKey } from '../../Utilities/utilies';
 
 
 const AddCashScreen = () => {
@@ -28,12 +29,12 @@ const AddCashScreen = () => {
   const [usersData, setUserData] = useState();
   const [loader, setLoader] = useState();
   const [isPaymentSuccess, setIsPaymentSuccess] = useState("")
-  const {loginData,isReady} = useLoginDataStorage();
+  const { loginData, isReady } = useLoginDataStorage();
 
   const data = isReady && loginData && loginData?.data
 
-  const currentDate = new Date(); 
-  const formattedDate = currentDate.toLocaleString(); 
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleString();
 
   useEffect(() => {
     if (status === 1 && amounts) {
@@ -41,36 +42,41 @@ const AddCashScreen = () => {
     }
   }, [status, amounts]);
 
-    const userData = async () => {
-      console.log("user_id",data._id)
-      setLoader(true);
-      try {
-        const response = await userDetail(data._id);
-        const formattedData = {
-          ...response.data,
-          total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
-          bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
-        };
-        setUserData(formattedData);
-      } catch (error) {
-        console.log('error', error);
-      } finally {
-        setLoader(false);
-      }
-    };
+  const userData = async () => {
+    setLoader(true);
+    try {
+      const response = await userDetail(data._id);
+      const formattedData = {
+        ...response.data,
+        total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
+        bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
+      };
+      setUserData(formattedData);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
-     useFocusEffect(
-        React.useCallback(() => {
-          if(isReady && loginData){
-          userData();
-          }
-        }, [isReady])
-      );
-      
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isReady && loginData) {
+        userData();
+      }
+    }, [isReady])
+  );
+
   const handleAddCash = async () => {
     if (amount) {
+      const mobileNumber = usersData?.mobile;
+      const username = usersData?.name;
+      const aadharNumber = usersData?.aadhaar;
+      const userId = usersData?._id
+      const key = generateKey(mobileNumber, username, aadharNumber, userId);
+      const encryptedData = encryptData(key, amount);
       try {
-        const response = await TransactionStore(user_id, amount);
+        const response = await TransactionStore(usersData?._id, encryptedData);
         console.log("response", response)
         addBonusWallet(response)
         initPhonePeSDK(response);
@@ -136,12 +142,12 @@ const AddCashScreen = () => {
         if (res.status) {
           const response = await checkPaymentStatus(transaction_id);
           console.log(response.data)
-            setTimeout(()=>{
-              setCheckPaymentStatus(false)
-            },3000)
+          setTimeout(() => {
+            setCheckPaymentStatus(false)
+          }, 3000)
           setisLoading(false);
           if (response?.data?.status == 1) {
-           console.log("Successsss")
+            console.log("Successsss")
             setIsPaymentSuccess("success")
             setPaymentStatus(response?.data?.message);
           } else {
@@ -157,8 +163,6 @@ const AddCashScreen = () => {
         setIsPaymentSuccess("")
       });
   };
-
-
   const
     handleAmountPress = value => {
       setAmount(value);
@@ -251,16 +255,16 @@ const AddCashScreen = () => {
 
         </>) : (<AnimatedLoader />)
       }
-      <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} />
+      <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} onOkPress={() => setVisible(false)} />
       <>
-      <PaymentStatusCard  checksPaymentStatus={checksPaymentStatus}  
-      status={isPaymentSuccess}
-      setIsPaymentSuccess = {setIsPaymentSuccess}
-      setCheckPaymentStatus = {setCheckPaymentStatus}
-      amount ={amount}
-      date ={formattedDate} 
+        <PaymentStatusCard checksPaymentStatus={checksPaymentStatus}
+          status={isPaymentSuccess}
+          setIsPaymentSuccess={setIsPaymentSuccess}
+          setCheckPaymentStatus={setCheckPaymentStatus}
+          amount={amount}
+          date={formattedDate}
 
-      />
+        />
 
       </>
     </SafeAreaView>
