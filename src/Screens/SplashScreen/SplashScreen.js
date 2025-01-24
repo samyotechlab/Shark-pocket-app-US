@@ -15,7 +15,7 @@ export default function SplashScreen() {
     setIsLoading(true)
     try {
       const response = await verifyLogin(id,token);
-      // console.log("response",response)
+      console.log("response",response)
       if(response.status == 1){
         navigation.navigate('HomeScreen',{userData:response.data})
       }else{

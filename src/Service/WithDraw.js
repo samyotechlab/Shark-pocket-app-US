@@ -1,11 +1,11 @@
 import Config from "../Utilities/Config";
 import apiInstance from "./AxiosInstance";
 
-export const withdrawCash = async (user_id, amount) => {
+export const withdrawCash = async (user_id, encryptedData) => {
   try {
     const response = await apiInstance.post(Config.Wallet_Store, {
       user_id,
-      amount,
+      encryptedData,
     });
     return response.data;
   } catch (error) {

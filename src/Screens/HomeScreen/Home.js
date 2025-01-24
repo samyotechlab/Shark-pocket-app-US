@@ -42,8 +42,6 @@ export default function HomeScreen() {
   const [message, setMessage] = useState('');
   const [usersData, setUserData] = useState({})
 
-
-
   const data = isReady && loginData && loginData?.data;
   const refreshData = () => {
     setRefreshing(true);

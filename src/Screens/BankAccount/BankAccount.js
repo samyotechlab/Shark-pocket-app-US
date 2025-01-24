@@ -124,7 +124,7 @@ export default function BankAccount() {
                 type: 'error',
                 position: 'top',
                 text1: 'Error!',
-                text2:  msg ,
+                text2:  'Bank Verification Failed',
                 visibilityTime: 3000,
             });
         } finally {

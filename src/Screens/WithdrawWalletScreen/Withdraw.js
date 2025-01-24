@@ -11,15 +11,15 @@ import Toast from 'react-native-toast-message';
 import Tds from '../../../assets/images/Screens/tds.png';
 import Iconic from 'react-native-vector-icons/Ionicons';
 import { bankAccountDetails } from '../../Service/Bank';
+import { encryptData, generateKey } from '../../Utilities/utilies';
 
 export default function Withdraw({ dataUser }) {
-  
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false);
   const [bankDetail, setBankDetail] = useState({})
-  const [tdsData,setTdsData] = useState({})
+  const [tdsData, setTdsData] = useState({})
 
   const handleWithdraw = () => {
     console.log("value", amount)
@@ -50,8 +50,20 @@ export default function Withdraw({ dataUser }) {
     try {
       setIsLoading(true);
       if (amount) {
+        const mobileNumber = dataUser?.mobile;
+        const username = dataUser?.name;
+        const aadharNumber = dataUser?.aadhaar;
+        const userId = dataUser?._id
+        const key = generateKey(mobileNumber, username, aadharNumber, userId);
+        const data = {
+          amount:amount,
+          user_id:dataUser?._id
+        }
+        const encryptedData = encryptData(key, data);
+        console.log("encryptedData", encryptedData)
         if (amount >= bankDetail.minAmount) {
-          const response = await withdrawCash(dataUser._id, amount);
+          const response = await withdrawCash(dataUser._id, encryptedData);
+          console.log("response", response)
           Toast.show({
             type: 'success',
             position: 'top',
@@ -78,19 +90,19 @@ export default function Withdraw({ dataUser }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const toggleModal = async () => {
     try {
-      const response = await showTds(dataUser._id,amount);
-      console.log("response.data",response.data)
-      if(response.status == 1){
+      const response = await showTds(dataUser._id, amount);
+      console.log("response.data", response.data)
+      if (response.status == 1) {
         setModalVisible(!isModalVisible);
         setTdsData(response.data)
-      }else{
+      } else {
         setVisible(true)
         setMessage('withdraw request is required.')
       }
     } catch (error) {
-      console.log("error",error)
+      console.log("error", error)
     }
-   
+
   };
   return (
     <>
@@ -127,10 +139,10 @@ export default function Withdraw({ dataUser }) {
           </View>
 
           {/* Tax and Learn More */}
-          <View style={{flex:0.5,justifyContent:'center'}}>
+          <View style={{ flex: 0.5, justifyContent: 'center' }}>
             <Text style={styles.infoText}>
-                 No Govt. Tax on this withdrawal {' '}
-              <TouchableOpacity onPress={toggleModal} style={{marginBottom:hp('1.3%')}}>
+              No Govt. Tax on this withdrawal {' '}
+              <TouchableOpacity onPress={toggleModal} style={{ marginBottom: hp('1.3%') }}>
                 <Text style={styles.learnMore}>Learn More</Text>
               </TouchableOpacity>
             </Text>
@@ -210,7 +222,7 @@ export default function Withdraw({ dataUser }) {
         <TDSBreakupDialog
           isVisible={isModalVisible}
           onClose={toggleModal}
-          setTdsData ={setTdsData}
+          setTdsData={setTdsData}
           tdsData={tdsData}
         />
       )}
@@ -316,8 +328,8 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
     fontFamily: 'Montserrat-Regular',
-    backgroundColor:'white',
-    paddingLeft:wp('5%')
+    backgroundColor: 'white',
+    paddingLeft: wp('5%')
   },
   learnMore: {
     fontSize: hp('1.5%'),

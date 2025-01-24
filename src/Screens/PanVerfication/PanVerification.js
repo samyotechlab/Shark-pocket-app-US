@@ -109,7 +109,6 @@ export default function PanVerfication() {
 
         const errors = {
             pan_name: validateField("pan_number", pan_number)
-
         }
         setPanError(errors.pan_name)
 
@@ -120,12 +119,13 @@ export default function PanVerfication() {
         if (!validateForm()) return;
         const obj = {
             user_id: user_id,
-            name: panData.name,
+            name: userData.name,
             pan: panData.pan_number,
         };
         setLoader(true)
         try {
             const response = await PanVerificationData(obj);
+            console.log("response",response)
             setResponse(response.status)
             if (response.status === 1) {
                 Toast.show({
