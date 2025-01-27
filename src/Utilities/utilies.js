@@ -50,3 +50,9 @@ export const encryptData =  (key, data) => {
   const encrypted =  CryptoJS.AES.encrypt(dataString, key).toString();
   return encrypted;
 };
+
+export const decryptData = (key,data)=>{
+  const bytes = CryptoJS.AES.decrypt(data, key);
+  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+  return decryptedData;
+}

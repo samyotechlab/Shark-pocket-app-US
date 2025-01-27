@@ -22,7 +22,7 @@ export default function GameName() {
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={dynamicStyles.linearGradient}>
-      <CommonHeader title={"Games Name"} />
+      <CommonHeader title={"Games Name"} screen_name={'Tickets'}/>
       <View style={{ marginTop: 10,flex:1}}>
         <View
           style={{

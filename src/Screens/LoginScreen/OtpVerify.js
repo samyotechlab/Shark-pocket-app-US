@@ -52,82 +52,6 @@ export default function OtpVerify() {
     return () => clearInterval(interval);
   }, [timer]);
 
-
-  //  useEffect(() => {
-  //   RNOtpVerify.getOtp()
-  //     .then((p) => {
-  //       console.log("p",p)
-  //       RNOtpVerify.addListener(otpHandler)
-  //     })
-  //     .catch(p => console.log(p));
-  //   return () => RNOtpVerify.removeListener();
-  // }, []);
-
-  // const startListeningForOtp = async () => {
-  //   console.log("helloooooo")
-  //   try {
-  //     const message = await SmsRetriever.startSmsRetriever();
-  //     console.log("message",message)
-  //     const otpCode = message.match(/\d{4}/)?.[0]; 
-  //     if (otpCode) {
-  //       const newOtp = otpCode.split('');
-  //       setOtp(newOtp);
-
-  //       // Automatically focus the last input
-  //       inputs.current[newOtp.length - 1]?.focus();
-  //     }
-  //   } catch (error) {
-  //     console.error('Error reading OTP:', error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   startListeningForOtp();
-  // }, []);
-
-  // const otpHandler = (message) => {
-  //   console.log("message",message)
-  //   try {
-  //     const extractedOtp = /(\d{4})/g.exec(message)[0];
-  //     console.log("extractedOtp",extractedOtp)
-  //     if (extractedOtp) {
-  //       setOtp(extractedOtp);
-  //     } else {
-  //       throw new Error('OTP not found in message');
-  //     }
-  //   } catch (error) {
-  //     console.log("error",error)
-  //     Toast.show({
-  //       type: 'error',
-  //       position: 'top',
-  //       text1: 'Error!',
-  //       text2: 'Failed to auto-fill OTP',
-  //       visibilityTime: 5000,
-  //     });
-  //   }
-  // };
-
-  // const { hash, otp, message, timeoutError, stopListener, startListener } = useOtpVerify({numberOfDigits: 4});
-
-
-  // useEffect(() => {
-  //   getHash().then(hash => {
-  //     console.log(hash)
-  //   }).catch(console.log);
-
-  //   startOtpListener(message => {
-  //     console.log("Received Message:", message);
-  //     const match = /(\d{4})/g.exec(message); 
-  //     if (match) {
-  //       const otp = match[1];
-  //       console.log("Extracted OTP:", otp);
-  //       setOtp(otp); 
-  //     }
-  //   });
-  //   return () => removeListener();
-  // }, []);
-
-
   const formatTime = seconds => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -176,14 +100,9 @@ export default function OtpVerify() {
             });
             setOtpVerified(true);
             setTimeout(() => {
-              if (res.data.data.is_aadhar_verified === 0) {
-                setLoader(false);
-                navigation.navigate('DisclaimerScreen', { data: res.data.data });
-              } else {
                 setLoader(false);
                 storeLoginData(res.data)
-                navigation.navigate('HomeScreen', { data: res.data.data });
-              }
+                navigation.navigate('HomeScreen');
             }, 3000);
           } else {
             setLoader(false);

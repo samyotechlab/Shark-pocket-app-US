@@ -14,11 +14,11 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
       <View style={styles.overlay}>
         <View style={styles.dialog}>
           {/* Alert Title */}
-          <LinearGradient colors={['#FA3E41','#FF8385','#FA3E41']} 
-           start={{x: 0, y: 0.5}}
-           end={{x: 1, y: 0.5}}
-           
-          style={styles.header}>
+          <LinearGradient colors={['#FA3E41', '#FF8385', '#FA3E41']}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 1, y: 0.5 }}
+
+            style={styles.header}>
             <Text style={styles.headerText}>ALERT</Text>
           </LinearGradient>
 
@@ -35,8 +35,15 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
               <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={onOkPress}>
-              <Text style={styles.okText}>OK</Text>
+            <TouchableOpacity onPress={onOkPress}>
+              <LinearGradient
+                colors={['#67FF00', '#67FF00', '#3E9900']}
+                style={styles.addCashButton}>
+
+                <Text style={[styles.buttonText, { fontSize: hp('1.7%') }]}>ADD CASH</Text>
+
+              </LinearGradient>
+              {/* <Text style={styles.okText}>Add Cash</Text> */}
             </TouchableOpacity>
           </View>
         </View>
@@ -48,21 +55,21 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'transparent', 
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dialog: {
-  backgroundColor: '#FFB6B6',
-    width: wp('65%'), 
+    backgroundColor: '#FFB6B6',
+    width: wp('65%'),
     borderRadius: wp('2%'),
     paddingBottom: hp('3%'),
     elevation: 5,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.1,
     shadowRadius: 1,
-    borderColor:'white',
-    borderWidth:wp('1.5%')
+    borderColor: 'white',
+    borderWidth: wp('1.5%')
   },
   header: {
     paddingVertical: hp('1.5%'),
@@ -79,13 +86,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: wp('6%'),
-    fontFamily:'LilitaOne-Regular',
+    fontFamily: 'LilitaOne-Regular',
     color: '#FFF',
     textTransform: 'uppercase',
     textShadowColor: '#000',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
-    letterSpacing:1
+    letterSpacing: 1
 
   },
   content: {
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: wp('0.5%'),
     borderRadius: wp('2%'),
+
   },
   cancelText: {
     fontSize: wp('4%'),
@@ -120,6 +128,24 @@ const styles = StyleSheet.create({
     fontSize: wp('4%'),
     fontWeight: 'bold',
     color: '#444',
+  },
+  addCashButton: {
+    flex: 1,
+    paddingHorizontal: wp('3%'),
+    paddingVertical: wp('1.5%'),
+    borderRadius: wp('1%'),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: wp('2%'),
+  },
+
+  buttonText: {
+    color: '#fff',
+    fontFamily: 'Montserrat-Bold',
+    fontSize: hp('1.5%'),
+    letterSpacing: 0.5,
+    textAlign: 'center'
   },
 });
 

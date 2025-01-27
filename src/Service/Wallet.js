@@ -31,7 +31,6 @@ export const WinningList = async user_id => {
   }
 };
 export const bonusWallet = async user_id => {
-  console.log("user_id========>",user_id)
   try {
     const response = await apiInstance.post(Config.Bonus_Data,{
       user_id

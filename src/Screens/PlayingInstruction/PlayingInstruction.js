@@ -23,8 +23,8 @@ import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function PlayingInstruction() {
   const route = useRoute();
-  const { game_id } = route.params;
-  const { ticket_id } = route.params;
+  console.log('Route:', route.params);
+  const { game_id ,ticket_id,screen_name} = route.params;
   const [visible, setVisible] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [oddData, setOddData] = useState({});
@@ -98,7 +98,7 @@ export default function PlayingInstruction() {
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
-        <CommonHeader title={'Playing Instruction'} />
+        <CommonHeader title={'Playing Instruction'} screen_name={screen_name} />
 
         <ScrollView>
           {loader ? (

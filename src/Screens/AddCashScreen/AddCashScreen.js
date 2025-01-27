@@ -12,12 +12,14 @@ import { userDetail } from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import { encryptData, generateKey } from '../../Utilities/utilies';
+import { storeTicket } from '../../Service/Tickets';
+import Toast from 'react-native-toast-message';
 
 
 const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
-  const { user_id, balance, status, amounts } = route.params
+  const { user_id, balance, status, amounts,ticket_id,game_id} = route.params
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
   const [data1, setData] = useState({});
@@ -30,6 +32,9 @@ const AddCashScreen = () => {
   const [loader, setLoader] = useState();
   const [isPaymentSuccess, setIsPaymentSuccess] = useState("")
   const { loginData, isReady } = useLoginDataStorage();
+  const [buttonText, setButtonText] = useState("")
+   const [purchasedTickets, setPurchasedTickets] = useState({});
+   const [toast, setToast] = useState(false);
 
   const data = isReady && loginData && loginData?.data
 
@@ -98,6 +103,24 @@ const AddCashScreen = () => {
     }
   }
 
+  const handlePurchase = async () => {
+    console.log("game_id", game_id)
+    console.log("selectedItem", ticket_id)
+    console.log("data", data._id)
+    try {
+      setVisible(false);
+      const response = await storeTicket(game_id, ticket_id, data._id);
+      console.log("response==========>", response) 
+      if (response.status === 1) {
+        setToast(true)
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      console.log('Purchase failed:', error);
+    }
+  };
+
   const initPhonePeSDK = response => {
     PhonePePaymentSDK.init(
       response.environment_type,
@@ -147,11 +170,14 @@ const AddCashScreen = () => {
           }, 3000)
           setisLoading(false);
           if (response?.data?.status == 1) {
-            console.log("Successsss")
             setIsPaymentSuccess("success")
+            if(status === 1){ 
+              console.log("statu=======?s",status)
+              handlePurchase();
+              setButtonText("Start Game")
+            }
             setPaymentStatus(response?.data?.message);
           } else {
-            console.log("Failed======")
             setIsPaymentSuccess("failed")
             setPaymentStatus("Transaction Failed")
           }
@@ -181,7 +207,6 @@ const AddCashScreen = () => {
                 <Text style={styles.title}>Add Cash</Text>
               </View>
               <View style={styles.wallet}>
-
                 <LinearGradient
                   colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']}
                   style={{ padding: wp('1%'), borderRadius: wp('2%'), paddingHorizontal: wp('4%'), flexDirection: 'row' }}>
@@ -189,7 +214,7 @@ const AddCashScreen = () => {
                     source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }}
                     style={styles.walletIcon}
                   />
-                  <Text style={styles.walletText}>₹ {status == 2 ? usersData?.total_balance : 0}</Text>
+                  <Text style={styles.walletText}>₹ {usersData?.total_balance}</Text>
                 </LinearGradient>
               </View>
             </View>
@@ -263,7 +288,11 @@ const AddCashScreen = () => {
           setCheckPaymentStatus={setCheckPaymentStatus}
           amount={amount}
           date={formattedDate}
-
+          buttonText = {buttonText}
+          toast = {toast}
+          ticket_id = {ticket_id}
+          game_id = {game_id}
+          user_id = {user_id}
         />
 
       </>

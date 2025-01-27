@@ -21,10 +21,7 @@ const headers = {
 export default function AadharOtpVerify() {
   const route = useRoute()
   const { storeLoginData } = useLoginDataStorage();
-  const { data } = route.params
-  const { user_id } = route.params
-  const { aadhaar_number } = route.params
-  console.log("aadhaar_number", aadhaar_number)
+  const { data,user_id ,aadhaar_number ,game_id } = route.params
   const navigation = useNavigation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
@@ -99,9 +96,9 @@ export default function AadharOtpVerify() {
       ref_id: data.ref_id,
       aadhaar_number: aadhaar_number
     }
+    console.log("verificationData", verificationData)
     setLoader(true);
     try {
-      console.log('phoneNumber', `${baseApiurl}/${Config.OtpVerify}`);
       axios
         .post(
           `${baseApiurl}/${Config.AdharVerifyOtp}`,
@@ -111,7 +108,6 @@ export default function AadharOtpVerify() {
           headers,
         )
         .then(res => {
-          console.log("res", res)
           if (res.data.status === 1) {
             setLoader(false)
             Toast.show({
@@ -122,7 +118,7 @@ export default function AadharOtpVerify() {
               visibilityTime: 5000
             });
             storeLoginData(res.data)
-            navigation.navigate('HomeScreen', { data: res.data });
+            navigation.navigate('GameName',{game_id:game_id});
           } else {
             setLoader(false)
             Toast.show({

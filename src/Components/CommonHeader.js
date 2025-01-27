@@ -4,12 +4,21 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp} from 'react-nat
 import Iconics from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function CommonHeader({title}) {
+export default function CommonHeader({title,screen_name,game_id}) {
   const navigation = useNavigation()
+  const handleNavigation = () => {
+    if (screen_name === 'GameName') {
+      navigation.navigate('GameName', { game_id: game_id });
+    } else if (screen_name === 'Tickets') {
+      navigation.navigate('HomeScreen', { screen: 'Home' });
+    } else {
+      navigation.goBack();
+    }
+  };
   return (
       <View style={styles.headerContent}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {handleNavigation()}}
           style={styles.back}
           >
           <Iconics name="chevron-back" size={hp('3%')} color={'white'} style={{paddingTop:wp('0.5%')}}/>

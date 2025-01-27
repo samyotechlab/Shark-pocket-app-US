@@ -1,5 +1,4 @@
 import Config from '../Utilities/Config';
-import { encryptData } from '../Utilities/utilies';
 import apiInstance from './AxiosInstance';
 
 export const gameRule = async () => {

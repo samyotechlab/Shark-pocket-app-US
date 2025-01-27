@@ -6,6 +6,7 @@ const useLoginDataStorage = () => {
   const [isReady, setIsReady] = useState(false); 
 
   const storeLoginData = async data => {
+    console.log("0000000000000000",data)
     try {
       const jsonData = JSON.stringify(data);
        await AsyncStorage.setItem('@loginData', jsonData);

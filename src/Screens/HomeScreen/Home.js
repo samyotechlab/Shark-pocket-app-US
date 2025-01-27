@@ -24,7 +24,7 @@ import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { getGameData, state } from '../../Service/Home';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation} from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
@@ -41,7 +41,6 @@ export default function HomeScreen() {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [usersData, setUserData] = useState({})
-
   const data = isReady && loginData && loginData?.data;
   const refreshData = () => {
     setRefreshing(true);
@@ -77,10 +76,10 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await getGameData(loginData ? loginData?._id : data?._id)
-      setMyGames(response.myGames);
+      setMyGames(response?.myGames);
       setGameData(response.data);
     } catch (error) {
-      console.log('error000000000', error);
+      console.log('error', error);
     } finally {
       setLoader(false);
     }
@@ -137,7 +136,6 @@ export default function HomeScreen() {
   }
 
   useEffect(() => {
-
     if (isReady && loginData) {
       stateList();
       userData(loginData?.data);
@@ -176,8 +174,12 @@ export default function HomeScreen() {
 
 
                 <View style={styles.iconsContainer}>
+                  <TouchableOpacity onPress={()=>{navigation.navigate('Notification')}}>
                   <Image source={bell} style={styles.icon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={()=>{navigation.navigate('Notification')}}>
                   <Image source={wheel} style={styles.icon} />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

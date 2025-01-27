@@ -11,7 +11,7 @@ import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 
 export default function AadharDetail() {
     const route = useRoute()
-    const { user_id } = route.params
+    const { user_id,game_id} = route.params
     const [aadhaar_number, setAadharNumber] = useState('')
     const [aadharError, setAadharError] = useState('')
     const [aadharCard, setAadharCard] = useState({})
@@ -45,7 +45,7 @@ export default function AadharDetail() {
                         text2: 'Otp Send Succesffully in your given phone Number',
                         visibilityTime: 5000
                     });
-                        navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number })
+                        navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number,game_id})
                   
                     setLoader(false)
                     setAadharCard(response.data)

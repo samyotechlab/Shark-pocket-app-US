@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   FlatList,
   Image,
   RefreshControl,
@@ -7,15 +8,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Game from '../../../assets/images/Screens/game1.png';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {storeTicket, ticketList} from '../../Service/Tickets';
+import { storeTicket, ticketList } from '../../Service/Tickets';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import coin from '../../../assets/images/Screens/coin.png';
 import ticket from '../../../assets/images/Screens/ticket.png';
@@ -24,30 +25,47 @@ import AlertDialog from '../../Components/AlertDialogRed';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
 import Toast from 'react-native-toast-message';
+import { userDetail } from '../../Service/Login';
+import CloseDialog from '../../Components/CloseDialog';
+import { stateList } from '../../Utilities/CurrentState';
 
 export default function Tickets() {
   const navigation = useNavigation();
-  const {loginData, isReady} = useLoginDataStorage();
+  const { loginData, isReady } = useLoginDataStorage();
   const data = isReady && loginData && loginData?.data;
   const [loader, setLoader] = useState(false);
   const [ticketData, setTicketData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibles, setVisibles] = useState(false);
+  const [closeVisible, setCloseVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [purchasedTickets, setPurchasedTickets] = useState({});
+  const [okPress, setOkPress] = useState('')
   const [message, setMessage] = useState('');
-  const [balances,setBalance] = useState('')
+  const [balances, setBalance] = useState('')
+  const [usersData, setUserData] = useState({})
   const route = useRoute();
-  const {game_id} = route.params;
-    const [refreshing, setRefreshing] = useState(false);
-  
-    const refreshData = () => {
-      setRefreshing(true);
-      setTimeout(() => {
-        getAllTicket();
-        setRefreshing(false);
-      }, 2000);
-    };
+  const { game_id } = route.params;
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshData = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getAllTicket();
+      setRefreshing(false);
+    }, 2000);
+  };
+
+  const userData = async (loginData) => {
+    setLoader(true);
+    try {
+      const response = await userDetail(loginData ? loginData?._id : data?._id);
+      setUserData(response.data);
+    } catch (error) {
+      console.log('error=====>', error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   const getAllTicket = async () => {
     setLoader(true);
@@ -61,25 +79,29 @@ export default function Tickets() {
     }
   };
   useEffect(() => {
-    if (isReady) {
+    if (isReady && loginData) {
+      userData(loginData?.data);
       getAllTicket();
     } else {
       setLoader(true);
     }
   }, [isReady, loginData]);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     const isPurchased = purchasedTickets[item._id] || item.is_bought === 1;
 
     const handlePurchase = async () => {
+      console.log("game_id", game_id)
+      console.log("selectedItem", selectedItem._id)
+      console.log("data", data._id)
       try {
         setVisible(false);
         const response = await storeTicket(game_id, selectedItem._id, data._id);
         if (response.status === 0) {
-          const total_price = 
-          (Number(response.total_balance) || 0) + 
-          (Number(response.total_earning) || 0) + 
-          (Number(response.bonus_wallet) || 0);
+          const total_price =
+            (Number(response.total_balance) || 0) +
+            (Number(response.total_earning) || 0) +
+            (Number(response.bonus_wallet) || 0);
           const ticket_price = item.price
           const balance = ticket_price - total_price
           setBalance(balance)
@@ -87,7 +109,7 @@ export default function Tickets() {
           setMessage(response.message);
         } else {
           console.log(response);
-          setPurchasedTickets(prev => ({...prev, [selectedItem._id]: true}));
+          setPurchasedTickets(prev => ({ ...prev, [selectedItem._id]: true }));
           Toast.show({
             type: 'success',
             position: 'top',
@@ -102,16 +124,43 @@ export default function Tickets() {
       }
     };
 
-    const handleNavigate = ()=>{
+    const handleNavigate = () => {
       setVisibles(false);
-      navigation.navigate("AddCash",{user_id:data._id,amounts :balances,status:1})
+      navigation.navigate("AddCash", { user_id: data._id, amounts: balances, status: 1,ticket_id:selectedItem._id,game_id:game_id });
     }
 
-    const handlePurchaseModal = () => {
-      setSelectedItem(item);
-      setVisible(true);
-      setMessage('Are You Sure You Want to Purchase the Ticket.');
+    const handleStateCheck = () => {
+      console.log("handleStateCheck")
+      setVisible(false);
+    }
+
+    const handlePurchaseModal = async () => {
+      if (usersData?.is_aadhar_verified === 0) {
+        setVisible(true);
+        setMessage('Aadhar not Verified , Firstly Aadhar Verification...');
+        setOkPress('handleAadhar')
+      } else if (usersData?.is_valid_state === 0) {
+        console.log("State is Not Valid", usersData?.is_valid_state)
+        setCloseVisible(true);
+        setMessage('State is Not Valid');
+      }
+      else if (!stateList()) {
+        console.log("State is Not Valid")
+        setCloseVisible(true);
+        setMessage('State is Not Valid');
+      }
+      else {
+        setSelectedItem(item);
+        setVisible(true);
+        setMessage('Are You Sure You Want to Purchase the Ticket.');
+        setOkPress('handleStateCheck')
+      }
     };
+
+    const handleAadhar = () => {
+      console.log("DisclaimerScreen")
+      navigation.navigate('DisclaimerScreen', { user_id: data._id, game_id: game_id })
+    }
 
     const handlePlay = () => {
       navigation.navigate('PlayingInstruction', {
@@ -121,10 +170,11 @@ export default function Tickets() {
     };
     return (
       <>
+
         <AlertDialogGreen
           visible={visible}
           onClose={() => setVisible(false)}
-          onOkPress={handlePurchase}
+          onOkPress={okPress === 'handleAadhar' ? handleAadhar : handlePurchase}
           message={message}
         />
         <AlertDialog
@@ -133,24 +183,25 @@ export default function Tickets() {
           onOkPress={handleNavigate}
           message={message}
         />
+        <CloseDialog visible={closeVisible} onClose={() => BackHandler.exitApp()} message={message} />
         <View style={styles.container1}>
           <LinearGradient
             colors={['#F38424', '#F7A552', '#F9D479']}
-            start={{x: 0, y: 0.5}}
-            end={{x: 0.8, y: 1}}
+            start={{ x: 0, y: 0.5 }}
+            end={{ x: 0.8, y: 1 }}
             style={styles.card}>
             <View style={styles.content}>
               <Image source={Game} style={styles.characterImage} />
               <View style={styles.textContainer}>
                 <Text style={styles.description}>
-                Enroll in the "{item.title}" ticket now! Register before the game starts.
+                  Enroll in the "{item.title}" ticket now! Register before the game starts.
 
                 </Text>
                 <View style={styles.boxContainer}>
                   <LinearGradient
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     locations={[0, 0.5, 1]}
                     style={styles.box}>
                     <Image source={coin} style={styles.boxIcon} />
@@ -159,8 +210,8 @@ export default function Tickets() {
 
                   <LinearGradient
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     locations={[0, 0.5, 1]}
                     style={styles.box}>
                     <Image source={ticket} style={styles.boxIcon1} />
@@ -169,8 +220,8 @@ export default function Tickets() {
 
                   <LinearGradient
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     locations={[0, 0.5, 1]}
                     style={styles.box}>
                     <Image source={timer} style={styles.boxIcon} />
@@ -206,23 +257,23 @@ export default function Tickets() {
   return (
     <>
       {
-    ticketData &&
-      !loader ? (
-        <View style={styles.container}>
-          <FlatList
-            data={ticketData}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContainer}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
-            }
-          />
-        </View>
-      ) : (
-        <AnimatedLoader />
-      )}
+        ticketData &&
+          !loader ? (
+          <View style={styles.container}>
+            <FlatList
+              data={ticketData}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollContainer}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+              }
+            />
+          </View>
+        ) : (
+          <AnimatedLoader />
+        )}
       <Toast ref={Toast.setRef} />
     </>
   );
@@ -249,7 +300,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: wp('3%'),
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: hp('0.4%')},
+    shadowOffset: { width: 0, height: hp('0.4%') },
     shadowOpacity: 0.3,
     shadowRadius: wp('1.2%'),
     elevation: 5,
@@ -310,7 +361,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LilitaOne-Regular',
     color: 'white',
     textShadowColor: 'black',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 1,
   },
   playButton: {
@@ -328,7 +379,7 @@ const styles = StyleSheet.create({
     shadowColor: 'rgba(0, 0, 0, 0.4)',
     shadowOpacity: 0.8,
     shadowRadius: 15,
-    shadowOffset: {width: 1, height: 11},
+    shadowOffset: { width: 1, height: 11 },
     // backgroundColor: '#00b63d',
     width: '100%',
     borderTopRightRadius: wp(3.3),
@@ -339,7 +390,7 @@ const styles = StyleSheet.create({
     fontFamily: 'LilitaOne-Regular',
     color: '#FFFFFF',
     textShadowColor: '#000',
-    textShadowOffset: {width: 2, height: 2},
+    textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 1,
     textTransform: 'uppercase',
   },
@@ -359,7 +410,7 @@ const styles = StyleSheet.create({
     color: '#FFDC4D',
     letterSpacing: wp('0.7%'),
     textShadowColor: '#F88600',
-    textShadowOffset: {width: 0, height: hp('0.3%')},
+    textShadowOffset: { width: 0, height: hp('0.3%') },
     textShadowRadius: wp('2%'),
   },
 });

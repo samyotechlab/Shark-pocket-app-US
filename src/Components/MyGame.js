@@ -1,50 +1,81 @@
-import React from 'react';
-import { StyleSheet, FlatList, View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PinkPrizeCard from './PinkPrizeCard';
 import GoldenCard from './GoldenCard';
 
+const { width } = Dimensions.get('window');
 
 const MyGame = (props) => {
+    const { myGame } = props;
+    const [carouselData, setCarouselData] = useState([]);
+    useEffect(() => {
+        setCarouselData(myGame);
+    }, [myGame]);
 
-    const { myGame } = props
+    const renderItem = ({ item, index }) => (
+        <View style={styles.cardContainer}>
+            {index % 2 === 0 ? (
+                <PinkPrizeCard item={item} />
+            ) : (
+                <GoldenCard item={item} />
+            )}
+        </View>
+    );
 
-    const renderItem = (items) => {
-        const { item, index } = items
-        return (<>
-               {/* <PinkPrizeCard item={item} index={index}/> */}
-            {
-                index % 2 == 0 ? (<PinkPrizeCard item={item} />) : (<GoldenCard item={item} />)
-            }
-        </>)
-    }
     return (
-        <>
-            {
-                myGame.length == 0 ? (<>
-                    <View style={styles.emptyContainer}>
-                        <Text style={styles.emptyText}>
-                            No games or tickets are currently available.
-                        </Text>
-                    </View>
-                </>) : (<>
-                    <FlatList
-                        horizontal
-                        data={myGame}
-                        renderItem={renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </>)
-            }
-        </>
-
+        <View style={styles.container}>
+            {carouselData.length <= 2 ? (
+                <View style={styles.twoCardsContainer}>
+                    {carouselData.map((item, index) => (
+                        <View key={index} style={styles.cardContainer}>
+                            {index % 2 === 0 ? (
+                                <PinkPrizeCard item={item} />
+                            ) : (
+                                <GoldenCard item={item} />
+                            )}
+                        </View>
+                    ))}
+                </View>
+            ) : carouselData.length > 2 ? (
+                <Carousel
+                    data={carouselData}
+                    renderItem={renderItem}
+                    sliderWidth={width}
+                    itemWidth={width * 0.45} // Two cards per screen
+                    // onSnapToItem={(index) => console.log('Current Index:', index)}
+                    loop={true} // Loop carousel when more than 2 cards
+                    autoplay={true} // Autoplay if more than 2 cards
+                    autoplayInterval={2000}
+                    inactiveSlideScale={0.95}
+                    inactiveSlideOpacity={0.7}
+                    enableMomentum={false}
+                    lockScrollWhileSnapping={true}
+                />
+            ) : (
+                <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>
+                        No games or tickets are currently available.
+                    </Text>
+                </View>
+            )}
+        </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: hp('45%')
+    },
+    twoCardsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginHorizontal: wp('2%'),
+    },
+    cardContainer: {
+        width: width * 0.43, // Adjusted width to fit two cards
+        marginHorizontal: wp('1%'),
     },
     emptyContainer: {
         flex: 1,
@@ -59,6 +90,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: hp('2%'),
     },
 });
+
 export default MyGame;
-
-
