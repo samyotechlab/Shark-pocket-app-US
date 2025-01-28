@@ -226,7 +226,7 @@ const SharkPocketScreen = () => {
           <TouchableOpacity
             style={styles.profileActionContainer}
             onPress={() => {
-              navigation.navigate('ViewProfile', { userData });
+              navigation.navigate('ViewProfile', { usersData :userData });
             }}>
             <Text style={styles.viewProfileText}>View Profile</Text>
           </TouchableOpacity>

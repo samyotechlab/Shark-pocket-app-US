@@ -12,6 +12,7 @@ import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 import { baseApiurl } from '../../Service/AxiosInstance'
+import CommonHeader from '../../Components/CommonHeader'
 
 
 const headers = {
@@ -147,12 +148,10 @@ export default function AadharOtpVerify() {
       <View style={styles.container}>
         <View style={[styles.box, { justifyContent: 'center' }]}>
           <View style={styles.headerContent}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.verification}>
-              <Image source={Backarrow} style={styles.icon} />
+            <TouchableOpacity style={{flex:0.5,justifyContent:'center'}} onPress={() => navigation.goBack()}>
+               <Image source={Backarrow} style={styles.icon} />
             </TouchableOpacity>
-            <View style={styles.headerLeft}>
+            <View style={{flex:1.5,justifyContent:'center'}}>
               <Text style={styles.headerText}>Verification</Text>
             </View>
           </View>
@@ -219,7 +218,9 @@ const styles = StyleSheet.create({
   },
   verification: {
     position: 'absolute',
-    top: hp('1.3%')
+    top: hp('1.3%'),
+    backgroundColor: '#FFC107',
+    flex:1
   },
   inputContainer: {
     flexDirection: 'row',
@@ -229,11 +230,14 @@ const styles = StyleSheet.create({
 
   },
   icon: {
-    height: hp('2.5%'),
-    width: wp('2.5%')
+    height: hp('5%'),
+    width: wp('5%'),
+    resizeMode: 'contain',
+    paddingVertical: wp('2%')
   },
   headerLeft: {
-    marginLeft: hp('12%')
+    marginLeft: hp('12%'),
+    flex: 1,
   },
   headerText: {
     fontSize: hp('2.5%'),
@@ -242,8 +246,9 @@ const styles = StyleSheet.create({
   },
   headerContent: {
     flex: 1,
-    paddingTop: 10,
-    position: 'relative',
+    // paddingTop: 10,
+    // position: 'relative',
+    flexDirection: 'row',
   },
   input: {
     width: 50,

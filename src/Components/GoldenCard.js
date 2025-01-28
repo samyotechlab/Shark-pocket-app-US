@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     paddingLeft: hp('2%'),
   },
   card: {
-    flex:1,
+    // flex:1,
     width: wp('40%'),
     height: hp('15%'),
     justifyContent: 'center',

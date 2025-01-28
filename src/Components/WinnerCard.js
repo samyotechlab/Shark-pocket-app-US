@@ -1,70 +1,67 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import WinnerBadge from '../../assets/images/Screens/WinnerBadge.png'
-import Trophy from '../../assets/images/Screens/trophy.png'
-import User from '../../assets/images/Screens/user.png'
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Carousel from 'react-native-reanimated-carousel';
+const { width } = Dimensions.get('window');
 const WinnerCard = (props) => {
-  const data = {props}
-  return (
-    <View style={styles.container}>
-      <View style={styles.card}>
+  const { data } = props
+  const renderItem = ({ item }) => {
+    const clickable = item?.isClickable === true;
+    return (
+      <TouchableOpacity style={styles.container} disabled={!clickable}>
         <Image
-          source={User}
+          source={{ uri: item?.banner }}
           style={styles.profileImage}
         />
-        <View style={styles.content}>
-          <View style={styles.winnerBadgeContainer}>
-            <Image
-                       source={WinnerBadge}
-              style={styles.winnerBadge}
-            />
-          </View>
-          <View style={styles.rankScoreContainer}>
-            <Text style={styles.rankText}>1st Winner</Text>
-            <Text style={styles.scoreText}>Score : 700</Text>
-          </View>
-          <View style={styles.rewardContainer}>
-            <Image
-          source={Trophy}
-          style={styles.trophyIcon}
-            />
-            <Text style={styles.rewardText}>₹{data?.total_earning || 0}</Text>
-          </View>
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <>
+      {!data.length ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>
+            No games or tickets are currently available.
+          </Text>
         </View>
-        <View style={styles.linesContainer}>
-          <View style={styles.line} />
-          <View style={[styles.line, styles.secondLine]} />
-        </View>
-      </View>
-    </View>
+      ) : (
+        <Carousel
+          loop
+          width={width * 0.95}
+          height={100}
+          autoPlay={true}
+          data={data}
+          mode="stack-horizontal-left"
+          modeConfig={{
+            stackInterval: 20,
+            scaleInterval: 0.08,
+            opacityInterval: 0.2,
+          }}
+          scrollAnimationDuration={1000}
+          renderItem={renderItem}
+        />
+      )}
+    </>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#CDFA2E',
-    borderRadius: wp(3), 
-    borderBottomWidth: wp(1.3),
-    borderBottomColor: '#3DA600',
-    margin: wp(1.5), 
+    flex: 0.5,
   },
   card: {
     backgroundColor: '#69C60A',
-    borderRadius: wp(2.5), 
-    flex:1,
+    borderRadius: wp(2.5),
+    flex: 1,
     width: wp('90%'),
-    height: hp('20%'), 
-    flexDirection: 'row', 
+    height: hp('20%'),
+    flexDirection: 'row',
     overflow: 'hidden',
     elevation: 10,
     margin: wp('1.5%'),
   },
   profileImage: {
-    width: wp('30%'),
-    height: hp('25%'), 
+    height: hp('10%'),
     resizeMode: 'cover',
   },
   content: {
@@ -118,12 +115,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     flexDirection: 'row',
-    gap : wp(1.5),
-   },
+    gap: wp(1.5),
+  },
   line: {
-    width: wp(3), 
+    width: wp(3),
     height: '100%',
-    backgroundColor: '#FFFFFF33', 
+    backgroundColor: '#FFFFFF33',
     marginVertical: hp(0.5),
     alignSelf: 'center',
   },

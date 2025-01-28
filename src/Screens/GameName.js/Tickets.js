@@ -103,12 +103,13 @@ export default function Tickets() {
             (Number(response.total_earning) || 0) +
             (Number(response.bonus_wallet) || 0);
           const ticket_price = item.price
+          console.log("total_price,ticket_price", ticket_price , total_price)
           const balance = ticket_price - total_price
+          console.log("balance", balance)
           setBalance(balance)
           setVisibles(true);
           setMessage(response.message);
         } else {
-          console.log(response);
           setPurchasedTickets(prev => ({ ...prev, [selectedItem._id]: true }));
           Toast.show({
             type: 'success',
@@ -158,7 +159,7 @@ export default function Tickets() {
     };
 
     const handleAadhar = () => {
-      console.log("DisclaimerScreen")
+      setVisible(false)
       navigation.navigate('DisclaimerScreen', { user_id: data._id, game_id: game_id })
     }
 

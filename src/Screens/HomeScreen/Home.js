@@ -41,6 +41,7 @@ export default function HomeScreen() {
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [usersData, setUserData] = useState({})
+  const [bannerData, setBannerData] = useState([]);
   const data = isReady && loginData && loginData?.data;
   const refreshData = () => {
     setRefreshing(true);
@@ -76,8 +77,10 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await getGameData(loginData ? loginData?._id : data?._id)
+      console.log('response======>', response.banner);
       setMyGames(response?.myGames);
       setGameData(response.data);
+      setBannerData(response.banner);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -94,24 +97,17 @@ export default function HomeScreen() {
     ? gameData.filter((item) => item.status === 1)
     : [];
 
-  const stateList = async () => {
-    try {
-      const response = await state();
-      checkCurrentState(response.data)
-    } catch (error) {
-      console.log("error", error)
-    }
-  }
-
   const userData = async (loginData) => {
     setLoader(true);
     try {
       const response = await userDetail(loginData ? loginData?._id : data?._id);
       const formattedData = {
         ...response.data,
-        total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
-        bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
+        total_balance: parseFloat(response?.data?.total_balance || 0).toFixed(2),
+        bonus_wallet: parseFloat(response?.data?.bonus_wallet || 0).toFixed(2),
+        total_earning: parseFloat(response?.data?.total_earning || 0).toFixed(2),
       };
+      console.log("=======>"  , formattedData)
       setUserData(formattedData);
     } catch (error) {
       console.log('error=====>', error);
@@ -120,31 +116,21 @@ export default function HomeScreen() {
     }
   };
 
-  async function checkCurrentState(states) {
-    try {
-      const response = await fetch("http://ip-api.com/json");
-      const data = await response.json();
-      const currentState = data.regionName;
-      const isStateInList = states.some((state) => state.name === currentState);
-      if (!isStateInList) {
-        setVisible(true);
-        setMessage(`The current state (${currentState}) is NOT in the state list.`)
-      }
-    } catch (error) {
-      console.error("Error fetching current state:", error);
-    }
-  }
 
   useEffect(() => {
     if (isReady && loginData) {
-      stateList();
       userData(loginData?.data);
       getAllData(loginData?.data);
     } else {
       setLoader(true);
     }
   }, [isReady, loginData]);
+  const totalAmount =
+    parseFloat(usersData?.total_balance || 0) +
+    parseFloat(usersData?.bonus_wallet || 0) +
+    parseFloat(usersData?.total_earning || 0);
   return (
+    
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={styles.linearGradient}>
@@ -160,15 +146,15 @@ export default function HomeScreen() {
             <View style={{ backgroundColor: '#552113' }}>
               <View style={styles.container}>
 
-                <View style={styles.logoContainer}>
+                <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate('ViewProfile',{ usersData :usersData })}>
                   <Image source={sharkLogo} style={styles.logo} />
-                </View>
+                </TouchableOpacity>
 
 
                 <LinearGradient colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']} style={styles.walletContainer}>
                   <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
                   <Text style={styles.walletText}>
-                    ₹ {usersData?.total_balance || 0}
+                    ₹ {totalAmount || 0 }
                   </Text>
                 </LinearGradient>
 
@@ -177,15 +163,15 @@ export default function HomeScreen() {
                   <TouchableOpacity onPress={()=>{navigation.navigate('Notification')}}>
                   <Image source={bell} style={styles.icon} />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>{navigation.navigate('Notification')}}>
+                  <TouchableOpacity onPress={()=>{navigation.navigate('HowtoPlay')}}>
                   <Image source={wheel} style={styles.icon} />
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
             <Divider color="#FFCE63" width={2.5} style={{ marginVertical: wp(0.2) }} />
-            <View style={{ flex: 1, margin: wp('2%'), marginVertical: hp('2%') }}>
-              <WinnerCard data={data} />
+            <View style={{ flex:1, margin: wp('2%'), marginVertical: hp('2%')}}>
+              <WinnerCard data={bannerData} />
             </View>
 
             <>
@@ -291,7 +277,6 @@ const styles = StyleSheet.create({
     color: '#FFB700',
     fontFamily: 'Montserrat-Bold',
     textDecorationLine: 'underline',
-
   },
   container: {
     flexDirection: 'row',

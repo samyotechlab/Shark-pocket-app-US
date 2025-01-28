@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -20,12 +21,16 @@ import { gameRule } from '../../Service/Game';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import { state } from '../../Service/Home';
+import CloseDialog from '../../Components/CloseDialog';
 
 export default function PlayingInstruction() {
   const route = useRoute();
   console.log('Route:', route.params);
   const { game_id ,ticket_id,screen_name} = route.params;
   const [visible, setVisible] = useState(false);
+  const [visibles, setVisibles] = useState(false);
+  const [message, setMessage] = useState(''); 
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [oddData, setOddData] = useState({});
   const [negativeData, setNegativeData] = useState({});
@@ -73,10 +78,36 @@ export default function PlayingInstruction() {
   useEffect(() => {
     try {
       gameRuleList();
+      stateList();
     } catch (error) {
       console.log('Error in getList:', error);
     }
   }, [data]);
+
+    const stateList = async () => {
+    try {
+      const response = await state();
+      // console.log("response", response)
+      checkCurrentState(response.data)
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
+  async function checkCurrentState(states) {
+    try {
+      const response = await fetch("http://ip-api.com/json");
+      const data = await response.json();
+      const currentState = data.regionName;
+      const isStateInList = states.some((state) => state.name === currentState);
+      if (!isStateInList) {
+        setVisibles(true);
+        setMessage(`The current state (${currentState}) is NOT in the state list.`)
+      }
+    } catch (error) {
+      console.error("Error fetching current state:", error);
+    }
+  }
 
   const handleStartGame = () => {
     if (selectedNumber) {
@@ -93,13 +124,14 @@ export default function PlayingInstruction() {
     }
   };
 
+
+
   return (
     <>
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
-        <CommonHeader title={'Playing Instruction'} screen_name={screen_name} />
-
+        <CommonHeader title={'Playing Instruction'} screen_name={screen_name} game_id={game_id}/>
         <ScrollView>
           {loader ? (
             <View style={styles.loaderContainer}>
@@ -336,6 +368,7 @@ export default function PlayingInstruction() {
         message={'Please Select a Super Number.'}
         onOkPress={() => setVisible(false)}
       />
+      <CloseDialog visible={visibles} onClose={() => BackHandler.exitApp()} message={message} />
     </>
   );
 }

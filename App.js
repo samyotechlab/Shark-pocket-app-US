@@ -10,12 +10,14 @@ import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import AppNavigation from './src/Navigation/AppNavigation/AppNavigation';
 import { enableScreens } from 'react-native-screens';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 function App(){
   enableScreens();
   return (
   <>
+  <GestureHandlerRootView>
       <NavigationContainer>
         <SafeAreaView style={styles.container}>
           <StatusBar
@@ -26,6 +28,7 @@ function App(){
           <AppNavigation />
         </SafeAreaView>
       </NavigationContainer>
+      </GestureHandlerRootView>
     </>
   );
 }

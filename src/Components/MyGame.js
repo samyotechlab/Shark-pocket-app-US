@@ -43,10 +43,9 @@ const MyGame = (props) => {
                     data={carouselData}
                     renderItem={renderItem}
                     sliderWidth={width}
-                    itemWidth={width * 0.45} // Two cards per screen
-                    // onSnapToItem={(index) => console.log('Current Index:', index)}
-                    loop={true} // Loop carousel when more than 2 cards
-                    autoplay={true} // Autoplay if more than 2 cards
+                    itemWidth={width * 0.45}
+                    loop={true} 
+                    autoplay={true} 
                     autoplayInterval={2000}
                     inactiveSlideScale={0.95}
                     inactiveSlideOpacity={0.7}
@@ -74,8 +73,9 @@ const styles = StyleSheet.create({
         marginHorizontal: wp('2%'),
     },
     cardContainer: {
-        width: width * 0.43, // Adjusted width to fit two cards
+        width: width * 0.43,
         marginHorizontal: wp('1%'),
+    
     },
     emptyContainer: {
         flex: 1,

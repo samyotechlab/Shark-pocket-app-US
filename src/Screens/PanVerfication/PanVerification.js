@@ -143,7 +143,7 @@ export default function PanVerfication() {
                     type: 'error',
                     position: 'top',
                     text1: 'Error!',
-                    text2: response.message,
+                    text2: 'Invalid Pan Number',
                     visibilityTime: 3000,
                 });
             }

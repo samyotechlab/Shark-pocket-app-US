@@ -36,7 +36,6 @@ export default function SplashScreen() {
         navigation.navigate('LoginScreen')
       }
     } catch (error) {
-      console.log("error======>", error)
       navigation.navigate('LoginScreen')
     } finally {
       setIsLoading(false)

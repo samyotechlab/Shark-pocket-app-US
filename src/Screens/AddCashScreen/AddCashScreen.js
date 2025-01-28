@@ -20,6 +20,7 @@ const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
   const { user_id, balance, status, amounts,ticket_id,game_id} = route.params
+  console.log("user_id", amounts)
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
   const [data1, setData] = useState({});
@@ -114,7 +115,7 @@ const AddCashScreen = () => {
       if (response.status === 1) {
         setToast(true)
       } else {
-        console.log(response);
+        console.log("response", response);
       }
     } catch (error) {
       console.log('Purchase failed:', error);

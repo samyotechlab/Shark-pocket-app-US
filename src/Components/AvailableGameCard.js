@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Text, Dimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Carousel from 'react-native-snap-carousel';
+import Carousel from 'react-native-reanimated-carousel'; 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -28,7 +28,7 @@ const AvailbleGameCard = (props) => {
         handleNavigation(item);
       }}
     >
-      <AvailableCard gameData={item} status={'1'} index={index} />
+      <AvailableCard gameData={item} status={'1'} index={index}/>
     </TouchableOpacity>
   );
 
@@ -45,18 +45,15 @@ const AvailbleGameCard = (props) => {
           <Carousel
             data={myGameData}
             renderItem={renderItem}
-            sliderWidth={width}
-            itemWidth={width * 1}
-            inactiveSlideScale={0.95}
-            inactiveSlideOpacity={0.7}
+            width={width}
+            height={250}
+            // onProgressChange={(index) => setCurrentIndex(index)}
             loop={true}
-            autoplay={true}
-            autoplayInterval={2000}
-            onSnapToItem={(index) => setCurrentIndex(index)}
-            enableMomentum={false}
-            lockScrollWhileSnapping={true}
-            inactiveSlideShift={0}
-            containerCustomStyle={styles.carouselContainer}
+            autoPlay={true}
+            autoPlayInterval={2000}
+            mode='stack-horizontal-right'
+            pagingEnabled={true}
+            style={styles.carouselContainer}
           />
         </View>
       )}

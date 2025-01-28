@@ -35,8 +35,9 @@ const WalletScreen = () => {
       const response = await userDetail(data._id);
       const formattedData = {
         ...response.data,
-        total_balance: parseFloat(response.data.total_balance).toFixed(2),
-        bonus_wallet: parseFloat(response.data.bonus_wallet).toFixed(2),
+        total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
+        bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
+        total_earning: parseFloat(response?.data?.total_earning || 0).toFixed(2),
       };
       setData(formattedData);
     } catch (error) {
@@ -45,6 +46,10 @@ const WalletScreen = () => {
       setLoader(false);
     }
   };
+  const totalAmount =
+    parseFloat(dataUser?.total_balance || 0) +
+    parseFloat(dataUser?.bonus_wallet || 0) +
+    parseFloat(dataUser?.total_earning || 0);
 
    useFocusEffect(
       React.useCallback(() => {
@@ -103,7 +108,7 @@ const WalletScreen = () => {
                   </View>
                   <View style={styles.balanceContent}>
                     <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-                    <Text style={styles.balanceAmount}>₹{dataUser?.total_balance}</Text>
+                    <Text style={styles.balanceAmount}>₹{totalAmount || 0}</Text>
                   </View>
                 </View>
               </LinearGradient>

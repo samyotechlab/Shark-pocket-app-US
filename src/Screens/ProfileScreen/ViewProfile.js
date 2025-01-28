@@ -19,17 +19,17 @@ import ImagePicker from 'react-native-image-crop-picker';
 const ViewProfile = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { userData } = route.params
+  const { usersData } = route.params
   const [loader, setLoader] = useState(false)
-  const [profileImage, setProfileImage] = useState(userData.avatar || null);
+  const [profileImage, setProfileImage] = useState(usersData.avatar || null);
   const [isEditing, setIsEditing] = useState({ mobile: false, email: false });
   const [formData, setFormData] = useState({
-    name: userData.name,
-    state: userData.state,
-    gender: userData.gender,
-    mobile: userData.mobile,
-    email: userData.email,
-    avatar: userData.avatar
+    name: usersData.name,
+    state: usersData.state,
+    gender: usersData.gender,
+    mobile: usersData.mobile,
+    email: usersData.email,
+    avatar: usersData.avatar
   });
 
 
@@ -55,7 +55,7 @@ const ViewProfile = () => {
       type: 'image/jpeg',
       name: '12345.jpg',
     });
-    data.append('user_id', userData._id);
+    data.append('user_id', usersData._id);
 
     console.log("formData", data)
     setLoader(true)
@@ -73,7 +73,7 @@ const ViewProfile = () => {
   };
 
   const saveUpdatedField = async (field, value) => {
-    const updatedData = { user_id: userData._id, [field]: value };
+    const updatedData = { user_id: usersData._id, [field]: value };
     setLoader(true);
   
     try {
@@ -120,7 +120,7 @@ const ViewProfile = () => {
                   <Icon name="camera-outline" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.profileName}>{userData.name}</Text>
+              <Text style={styles.profileName}>{usersData.name}</Text>
             </View>
 
             <View style={styles.inputContainer}>
@@ -147,7 +147,7 @@ const ViewProfile = () => {
               <View style={[styles.inputWrapper, { zIndex: 1000 }]}>
                 <Icon name="gender-male-female" size={25} color="#000000B2" />
                 <TextInput
-                  value={userData.gender == 'F' ? "Female" : "male"}
+                  value={usersData.gender == 'F' ? "Female" : "male"}
                   style={styles.input}
                   editable={false}
                 />
