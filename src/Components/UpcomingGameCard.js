@@ -3,45 +3,82 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Trophy from '../../assets/images/Screens/trophy1.png'
 import PlayNow from '../../assets/images/Screens/playNowBtn.png'
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
-const UpcomingGameCard = ({ items }) => {
-  const { index } = items
-  const {item}  = items
+const UpcomingGameCard = ({ items ,status}) => {
+  const navigation = useNavigation()
+  const { index,item } = items
+  const game_color = item.gameColor 
+  const Colors = {
+    yellow: ['#F38424', '#F7A552', '#F9D479'],
+    pink: ['#E3398C', '#CC8FAD'],
+    green: ['#75B831', '#BAFF74'],
+    blue: ['#0916B9', '#A1A8FF']
 
+  }
+  const borderColor = {
+    yellow: '#F2E30B',
+    pink: "#5C233F",
+    green: "#78C800",
+    blue: "#1A0DAB"
+  }
+  const handleNavigation = (game_id) => {
+    if(status === "1"){
+      console.log("game_id",game_id)
+      navigation.navigate('AllGameName', { game_id: game_id })
+    }
+  }
   return (
 
     <View style={styles.container}>
       {/* First Card */}
       {
-        index % 2 == 0 ? (<LinearGradient
-          colors={['#438301', '#438301', '#8BBE56']}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={styles.card}
+        index % 2 == 0 ? (
+        <TouchableOpacity onPress={() => {handleNavigation(item._id)}}> 
+        <LinearGradient
+          colors={
+            status === "1" ? Colors[game_color] ? Colors[game_color] : ['#F38424', '#F7A552', '#F9D479']: ['#438301', '#438301', '#8BBE56']
+          }
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 0.8, y: 1 }}
+          style={
+            status === "1" ?  [styles.card,
+              { 
+                borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" 
+              }] : [styles.card]
+           }
         >
-          <TouchableOpacity style={styles.button}>
+          <View style={styles.button}>
             <Image source={PlayNow} />
-          </TouchableOpacity>
+          </View>
           <View style={styles.trophiesRow}>
             <Image source={Trophy} style={styles.trophyIcon} />
-            <Text style={styles.winText}>WIN</Text>
+            <Text style={styles.winText}>{status === "1" ? item.title:"WIN"}</Text>
             <Image source={Trophy} style={styles.trophyIcon} />
           </View>
           <Text style={styles.amountText}>₹{item.winning_cost}</Text>
-        </LinearGradient>) : (<LinearGradient
-          colors={['#DC5A06', '#FDFDFD', '#DC5A06']}
+        </LinearGradient>
+        </TouchableOpacity> 
+        ) : (
+        <TouchableOpacity onPress={() => {handleNavigation(item._id)}}>
+        <LinearGradient
+         colors={
+          Colors[game_color] ? Colors[game_color] : ['#F38424', '#F7A552', '#F9D479']
+        }
           locations={[0, 0.5, 1]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={styles.cardAlt}
+          style={[styles.cardAlt, {borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" }]}
         >
           <Text style={styles.winNowText}>
             <Text style={styles.winTextAlt}>WIN</Text>
             <Text style={styles.nowTextAlt}> NOW</Text>
           </Text>
-          <Text style={styles.gainText}>Gain</Text>
+          <Text style={styles.gainText}>{status === "1" ? item.title:"Gain"}</Text>
           <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text>
-        </LinearGradient>)
+        </LinearGradient>
+        </TouchableOpacity>
+        )
       }
 
     </View>
@@ -58,13 +95,13 @@ const styles = StyleSheet.create({
   card: {
     width: 170,
     height: 120,
-    backgroundColor: '#4CAF50',
+    // backgroundColor: '#4CAF50',
     borderRadius: 20,
     justifyContent: 'space-evenly',
     alignItems: 'center',
     padding: 10,
     borderColor: '#569218',
-    borderWidth: 7
+    borderWidth: 4
   },
   button: {
     paddingHorizontal: 20,
@@ -97,13 +134,13 @@ const styles = StyleSheet.create({
   cardAlt: {
     width: 170,
     height: 120,
-    backgroundColor: '#F08030',
+    // backgroundColor: '#F08030',
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
     borderColor: '#FFF278',
-    borderWidth: 7
+    borderWidth: 4
   },
   winNowText: {
     fontSize: 24,

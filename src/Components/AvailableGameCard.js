@@ -46,7 +46,7 @@ const AvailbleGameCard = (props) => {
             data={myGameData}
             renderItem={renderItem}
             width={width}
-            height={250}
+            height={210}
             loop={true}
             autoPlay={true}
             autoPlayInterval={2000}

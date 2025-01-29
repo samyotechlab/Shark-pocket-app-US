@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: '#2A1610',
-    fontSize: hp('3%'),
+    fontSize: hp('2%'),
     fontFamily: 'PatuaOne-Regular',
     marginTop: hp('1%'),
     textTransform: 'uppercase',
