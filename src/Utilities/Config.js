@@ -19,6 +19,7 @@ export default {
   Refund: 'refundPolicy',
   HowToPlay : "howToPlay",
   HelpSupport: 'helpAndSupport',
+  Support :'support',
   TermCondition: 'termsAndCondition',
   Transaction_List: 'api/wallet/transactionList',
   Transaction_store: 'api/transaction/store',

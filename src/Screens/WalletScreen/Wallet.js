@@ -94,7 +94,7 @@ const WalletScreen = () => {
                   />
                 </View>
                 <View style={{ flex: 0.5, justifyContent: 'center', alignItems: 'center' }}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Support')}>
                     <Text style={styles.needHelpText}>Need Help</Text>
                   </TouchableOpacity>
                 </View>

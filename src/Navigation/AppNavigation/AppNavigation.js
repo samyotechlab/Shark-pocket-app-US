@@ -26,15 +26,11 @@ import AmountDetails from '../../Components/AmountDetails';
 import Notification from '../../Screens/Notification/Notification';
 import BankAccount from '../../Screens/BankAccount/BankAccount';
 import PanVerfication from '../../Screens/PanVerfication/PanVerification';
-import ContactScreen from '../../Screens/Screens/ContactScreen';
-import TCScreen from '../../Screens/Screens/TCScreen';
-import RefundPolicyScreen from '../../Screens/Screens/RefundPolicyScreen';
-import SupportScreen from '../../Screens/Screens/SupportScreen';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
-import FAQ from '../../Screens/Screens/FAQ';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
-import HowToPlayScreen from '../../Screens/Screens/HowToPlayScreen';
+import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen,SupportScreen } from '../../Screens/Screens/Screen';
+
 export default function AppNavigation() {
   const Stack = createStackNavigator();
   return (
@@ -249,7 +245,7 @@ export default function AppNavigation() {
         />
         <Stack.Screen
           name="Faq"
-          component={FAQ}
+          component={FAQScreen}
           options={{
             headerShown: false,
           }}
