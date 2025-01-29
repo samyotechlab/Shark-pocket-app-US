@@ -77,7 +77,6 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await getGameData(loginData ? loginData?._id : data?._id)
-      console.log('response======>', response.banner);
       setMyGames(response?.myGames);
       setGameData(response.data);
       setBannerData(response.banner);
@@ -107,7 +106,6 @@ export default function HomeScreen() {
         bonus_wallet: parseFloat(response?.data?.bonus_wallet || 0).toFixed(2),
         total_earning: parseFloat(response?.data?.total_earning || 0).toFixed(2),
       };
-      console.log("=======>"  , formattedData)
       setUserData(formattedData);
     } catch (error) {
       console.log('error=====>', error);

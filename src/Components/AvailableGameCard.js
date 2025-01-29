@@ -13,7 +13,7 @@ const { width } = Dimensions.get('window');
 const AvailbleGameCard = (props) => {
   const navigation = useNavigation();
   const myGames = props?.gameData;
-
+  console.log('myGames', myGames);
   const [currentIndex, setCurrentIndex] = useState(0);
   const myGameData = myGames?.filter((game) => game.status === 3) || [];
 
@@ -47,7 +47,6 @@ const AvailbleGameCard = (props) => {
             renderItem={renderItem}
             width={width}
             height={250}
-            // onProgressChange={(index) => setCurrentIndex(index)}
             loop={true}
             autoPlay={true}
             autoPlayInterval={2000}

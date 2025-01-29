@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Carousel from 'react-native-reanimated-carousel';
 const { width } = Dimensions.get('window');
 const WinnerCard = (props) => {
   const { data } = props
+
   const renderItem = ({ item }) => {
     const clickable = item?.isClickable === true;
+
+    const openLink = () => {
+      Linking.openURL(item.sourceUrl).catch(err => console.error("Failed to open URL:", err));
+    };
+
     return (
-      <TouchableOpacity style={styles.container} disabled={!clickable}>
+      <TouchableOpacity style={styles.container} disabled={!clickable} onPress={openLink}>
         <Image
           source={{ uri: item?.banner }}
           style={styles.profileImage}
@@ -48,6 +54,7 @@ const WinnerCard = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 0.5,
+    paddingLeft: wp('3%'),
   },
   card: {
     backgroundColor: '#69C60A',

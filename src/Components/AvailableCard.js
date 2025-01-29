@@ -10,6 +10,7 @@ import {
 import { formatDate, truncateText } from '../Utilities/utilies';
 
 export default function AvailableCard({ gameData, status, index }) {
+
   const game_color = gameData.gameColor
   const Colors = {
     yellow: ['#F38424', '#F7A552', '#F9D479'],
@@ -71,10 +72,9 @@ export default function AvailableCard({ gameData, status, index }) {
             <View style={styles.buttonContainer}>
               <View style={styles.button}>
                 <Text style={styles.buttonText}>
-                  ₹{status === "4"
+                  {status === "4"
                     ? gameData.game_winning_cost
-                    : gameData.winning_cost}{' '}
-                  CASH WIN
+                    : gameData.winning_price}{' '}
                 </Text>
               </View>
             </View>

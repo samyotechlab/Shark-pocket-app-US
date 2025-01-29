@@ -6,23 +6,36 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Tickets from './Tickets'
 import PlayedHistory from './PlayedHistory'
 import { useRoute } from '@react-navigation/native'
+import { gameById } from '../../Service/Game'
 
 
 export default function GameName() {
   const route = useRoute();
   const { game_id } = route.params
   const [selectedTab, setSelectedTab] = useState('Tickets');
+  const [gameData, setGameData] = useState({});
   const handlePress = tab => {
     setSelectedTab(tab);
   };
 
-
+  const gameByid = async () => {
+    try {
+      const response = await gameById(game_id);
+      setGameData(response.data);
+    } catch (error) {
+      console.error('Error fetching game list:', error.message || error);
+      throw error; 
+    }
+  }
+  useEffect(() => {
+    gameByid();
+  }, [selectedTab]); 
   const dynamicStyles = getDynamicStyles(selectedTab);
   return (
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={dynamicStyles.linearGradient}>
-      <CommonHeader title={"Games Name"} screen_name={'Tickets'}/>
+      <CommonHeader title={gameData?.title} screen_name={'Tickets'}/>
       <View style={{ marginTop: 10,flex:1}}>
         <View
           style={{
@@ -46,7 +59,7 @@ export default function GameName() {
         </View>
      <View style={{flex:1}}>
         {selectedTab === 'Tickets' ? (
-          <Tickets game_id={game_id}/>
+          <Tickets gameData={gameData}/>
         ) : (
           <PlayedHistory game_id={game_id}/>
         )}

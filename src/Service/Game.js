@@ -34,13 +34,30 @@ export const gameList = async () => {
   }
 };
 
+export const gameById = async (
+  game_id
+) => {
+  try {
+    const response = await apiInstance.get(`${Config.GameById}${game_id}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Failed to fetch game list. Status code:', response.status);
+      throw new Error(`Failed to fetch games list:  ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error('Error fetching game list:', error.message || error);
+    throw error;
+  }
+};
+
+
+
 export const finalScore = async (
   encryptedData,
   user_id
 ) => {
-  console.log("encryptedData======>",encryptedData)
   try {
-    console.log("underteh call api=====>")
     const response = await apiInstance.post(Config.Final_Score, {
       encryptedData:encryptedData,
       user_id:user_id

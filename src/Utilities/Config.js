@@ -8,6 +8,7 @@ export default {
   AdharOptSend: 'api/AadharVerificationSendOtp',
   AdharVerifyOtp: 'api/AadharVerificationVerifyOtp',
   Game_Ticket_List: 'api/ticket/getUserTicket',
+  GameById :'/game/byId/',
   Store_Ticket: 'api/purchase_ticket/store',
   Game_Rule: 'api/getGameRules/list',
   Game_List: 'api/availableGame/list',

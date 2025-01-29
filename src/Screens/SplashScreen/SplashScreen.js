@@ -14,7 +14,6 @@ export default function SplashScreen() {
   const { loginData, isReady, storeLoginData } = useLoginDataStorage();
 
   const handelVerifyLogin = async (userdata, token) => {
-    console.log("userdata======>", userdata)
     setIsLoading(true)
     try {
       const response = await verifyLogin(userdata?._id, token);

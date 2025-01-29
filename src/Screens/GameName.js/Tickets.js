@@ -28,8 +28,10 @@ import Toast from 'react-native-toast-message';
 import { userDetail } from '../../Service/Login';
 import CloseDialog from '../../Components/CloseDialog';
 import { stateList } from '../../Utilities/CurrentState';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import InfoModal from '../../Components/InfoModal';
 
-export default function Tickets() {
+export default function Tickets({gameData}) {
   const navigation = useNavigation();
   const { loginData, isReady } = useLoginDataStorage();
   const data = isReady && loginData && loginData?.data;
@@ -44,8 +46,9 @@ export default function Tickets() {
   const [message, setMessage] = useState('');
   const [balances, setBalance] = useState('')
   const [usersData, setUserData] = useState({})
+  const [modalVisible, setModalVisible] = useState(false);
   const route = useRoute();
-  const { game_id } = route.params;
+  const { game_id} = route.params;
   const [refreshing, setRefreshing] = useState(false);
   const refreshData = () => {
     setRefreshing(true);
@@ -103,7 +106,7 @@ export default function Tickets() {
             (Number(response.total_earning) || 0) +
             (Number(response.bonus_wallet) || 0);
           const ticket_price = item.price
-          console.log("total_price,ticket_price", ticket_price , total_price)
+          console.log("total_price,ticket_price", ticket_price, total_price)
           const balance = ticket_price - total_price
           console.log("balance", balance)
           setBalance(balance)
@@ -127,7 +130,7 @@ export default function Tickets() {
 
     const handleNavigate = () => {
       setVisibles(false);
-      navigation.navigate("AddCash", { user_id: data._id, amounts: balances, status: 1,ticket_id:selectedItem._id,game_id:game_id });
+      navigation.navigate("AddCash", { user_id: data._id, amounts: balances, status: 1, ticket_id: selectedItem._id, game_id: game_id });
     }
 
     const handleStateCheck = () => {
@@ -183,6 +186,11 @@ export default function Tickets() {
           onClose={() => setVisibles(false)}
           onOkPress={handleNavigate}
           message={message}
+        />
+         <InfoModal
+          isVisible={modalVisible}
+          close={() => setModalVisible(false)}
+          data={gameData}
         />
         <CloseDialog visible={closeVisible} onClose={() => BackHandler.exitApp()} message={message} />
         <View style={styles.container1}>
@@ -245,10 +253,19 @@ export default function Tickets() {
                       {' '}
                       {isPurchased ? 'Play Now' : 'Purchase'}
                     </Text>
+
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
+            <TouchableOpacity
+              style={styles.infoIconContainer}
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            >
+              <Icon name={"info-circle"} size={24} color={'red'} />
+            </TouchableOpacity>
           </LinearGradient>
         </View>
       </>
@@ -375,13 +392,11 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderTopWidth: 5,
     borderBottomWidth: 5,
-
     elevation: 20,
     shadowColor: 'rgba(0, 0, 0, 0.4)',
     shadowOpacity: 0.8,
     shadowRadius: 15,
     shadowOffset: { width: 1, height: 11 },
-    // backgroundColor: '#00b63d',
     width: '100%',
     borderTopRightRadius: wp(3.3),
   },
@@ -395,23 +410,10 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,
     textTransform: 'uppercase',
   },
-
-  button: {
-    backgroundColor: '#3E2723',
-    borderRadius: wp('2%'),
-    paddingVertical: hp('1.5%'),
-    paddingHorizontal: wp('8%'),
-    alignItems: 'center',
-    borderColor: '#F5D236',
-    borderWidth: wp('0.5%'),
-  },
-  buttonText: {
-    fontSize: wp('4.5%'),
-    fontFamily: 'Inter_18pt-Bold',
-    color: '#FFDC4D',
-    letterSpacing: wp('0.7%'),
-    textShadowColor: '#F88600',
-    textShadowOffset: { width: 0, height: hp('0.3%') },
-    textShadowRadius: wp('2%'),
-  },
+  infoIconContainer: {
+    position: 'absolute',
+    bottom: hp('1%'),
+    right: hp('1%'),
+    padding: hp('0.5%'),
+  }
 });
