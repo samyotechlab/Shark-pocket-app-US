@@ -199,7 +199,6 @@ export default function Tickets({gameData}) {
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    locations={[0, 0.5, 1]}
                     style={styles.box}>
                     <Image source={coin} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.price}</Text>
@@ -209,7 +208,6 @@ export default function Tickets({gameData}) {
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    locations={[0, 0.5, 1]}
                     style={styles.box}>
                     <Image source={ticket} style={styles.boxIcon1} />
                     <Text style={styles.boxText}>{item.entries}</Text>
@@ -219,7 +217,6 @@ export default function Tickets({gameData}) {
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    locations={[0, 0.5, 1]}
                     style={styles.box}>
                     <Image source={timer} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.remaining_entries}</Text>

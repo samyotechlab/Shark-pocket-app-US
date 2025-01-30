@@ -62,7 +62,6 @@ const UpcomingGameCard = ({ items ,status}) => {
          colors={
           Colors[game_color] ? Colors[game_color] : ['#F38424', '#F7A552', '#F9D479']
         }
-          locations={[0, 0.5, 1]}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
           style={[styles.cardAlt, {borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" }]}
