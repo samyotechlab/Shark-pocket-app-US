@@ -7,7 +7,6 @@ import HeaderComponent from "./HeaderComponent";
 import Toast from "react-native-toast-message";
 
 const PaymentStatusCard = ({ checksPaymentStatus, status, setIsPaymentSuccess, setCheckPaymentStatus, amount, date, buttonText, toast,ticket_id,game_id,user_id }) => {
-  console.log(amount)
 
   const navigation = useNavigation()
   const transactionData = {

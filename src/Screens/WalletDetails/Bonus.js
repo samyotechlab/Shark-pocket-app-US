@@ -22,7 +22,6 @@ export default function Bonus(props) {
     setLoader(true)
     try {
       const response = await bonusWallet(user_id);
-      console.log("bonus",response)
       setBonusData(response?.data);
     } catch (error) {
       console.log('error', error);

@@ -19,11 +19,6 @@ export default function GameFinishHistory() {
   const [loader, setLoader] = useState(false);
   const route = useRoute();
   const {gameHistoryData} = route.params;
-
-  console.log('gameHistoryData---------->', gameHistoryData);
-
-  console.log('gameHistoryData', gameHistoryData?.double_digit);
-
   return (
     <>
       <LinearGradient

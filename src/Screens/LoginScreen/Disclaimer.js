@@ -5,8 +5,6 @@ import CheckBox from 'react-native-check-box'
 import { useNavigation, useRoute } from '@react-navigation/native';
 const Disclaimer = () => {
     const route = useRoute();
-    console.log('route--->------->', route.params);
-
     const {user_id,game_id} = route.params
 
     const navigation  = useNavigation()

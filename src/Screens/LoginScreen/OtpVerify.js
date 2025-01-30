@@ -78,7 +78,6 @@ export default function OtpVerify() {
     clearInterval(timer);
     setLoader(true);
     try {
-      console.log('phoneNumber', `${baseApiurl}/${Config.OtpVerify}`);
       axios
         .post(
           `${baseApiurl}/${Config.OtpVerify}`,
@@ -131,7 +130,6 @@ export default function OtpVerify() {
     setIsResendDisabled(true);
     setLoader(true);
     try {
-      console.log('phoneNumber', `${baseApiurl}/${Config.ResendOtp}`);
       axios
         .post(
           `${baseApiurl}/${Config.ResendOtp}`,
@@ -141,7 +139,6 @@ export default function OtpVerify() {
           headers,
         )
         .then(res => {
-          console.log('res--->', res.data);
           if (res.data.status === 1) {
               setLoader(false);          
             Toast.show({

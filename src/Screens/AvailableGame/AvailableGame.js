@@ -12,7 +12,6 @@ export default function AvailableGame() {
     const navigation = useNavigation()
     const route = useRoute();
     const { gameData, status } = route.params
-    console.log("route.params", gameData, status)
     let myGames = []
 
     if (status === "1") {

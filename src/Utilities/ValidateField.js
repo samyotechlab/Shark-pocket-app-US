@@ -1,5 +1,4 @@
 export function validateField  (name, value,account_no) {
-    console.log(account_no)
     const phoneRegex = /^[0-9]{10}$/;
     const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
     const accountRegex = /^\d{9,18}$/;

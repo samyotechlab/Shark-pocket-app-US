@@ -64,12 +64,11 @@ export default function AllPlayedGames() {
     }, [isReady, loginData])
 
     const renderItem = ({ item, index }) => {
-        console.log("item",item)
 
         return (<>
 
             <TouchableOpacity style={styles.container1} onPress={() => {
-                navigation.navigate('AllGameName', { game_id: item._id })
+                navigation.navigate('AllGameName', { game_id: item._id ,game_name:item.game_title})
             }} >
                 <AvailableCard gameData={item} status={"4"} index={index}/>
             </TouchableOpacity>

@@ -56,14 +56,11 @@ const ViewProfile = () => {
       name: '12345.jpg',
     });
     data.append('user_id', usersData._id);
-
-    console.log("formData", data)
     setLoader(true)
     try {
       const response = await updateImage(data)
       if (response.status == 1) {
         handleInputChange('avatar', response.data.avatar);
-        console.log('Image uploaded successfully:', response.data.avatar);
       }
     } catch (error) {
       console.error('Error uploading image:', error);

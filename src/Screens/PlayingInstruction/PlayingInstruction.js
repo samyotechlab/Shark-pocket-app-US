@@ -26,7 +26,6 @@ import CloseDialog from '../../Components/CloseDialog';
 
 export default function PlayingInstruction() {
   const route = useRoute();
-  console.log('Route:', route.params);
   const { game_id ,ticket_id,screen_name} = route.params;
   const [visible, setVisible] = useState(false);
   const [visibles, setVisibles] = useState(false);
@@ -87,7 +86,6 @@ export default function PlayingInstruction() {
     const stateList = async () => {
     try {
       const response = await state();
-      // console.log("response", response)
       checkCurrentState(response.data)
     } catch (error) {
       console.log("error", error)
@@ -111,7 +109,6 @@ export default function PlayingInstruction() {
 
   const handleStartGame = () => {
     if (selectedNumber) {
-      console.log('Starting game with super number:', selectedNumber);
       navigation.navigate('GameScreen', {
         selectedNumber: selectedNumber,
         game_id: game_id,

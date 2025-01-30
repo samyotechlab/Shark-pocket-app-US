@@ -9,12 +9,13 @@ import { useRoute } from '@react-navigation/native'
 
 export default function AllGameName() {
   const route = useRoute()
+  const {game_name} = route.params
 
   return (
  <LinearGradient
               colors={['#361911', '#361911', '#6A1700']}
               style={styles.linearGradient}>
-                 <CommonHeader title={"Game Name"}/>
+                 <CommonHeader title={game_name}/>
                  <View style={styles.container}>
                       <PlayedHistory/>
                     </View>

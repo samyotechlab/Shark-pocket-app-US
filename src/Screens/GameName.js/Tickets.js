@@ -94,9 +94,6 @@ export default function Tickets({gameData}) {
     const isPurchased = purchasedTickets[item._id] || item.is_bought === 1;
 
     const handlePurchase = async () => {
-      console.log("game_id", game_id)
-      console.log("selectedItem", selectedItem._id)
-      console.log("data", data._id)
       try {
         setVisible(false);
         const response = await storeTicket(game_id, selectedItem._id, data._id);
@@ -106,9 +103,7 @@ export default function Tickets({gameData}) {
             (Number(response.total_earning) || 0) +
             (Number(response.bonus_wallet) || 0);
           const ticket_price = item.price
-          console.log("total_price,ticket_price", ticket_price, total_price)
           const balance = ticket_price - total_price
-          console.log("balance", balance)
           setBalance(balance)
           setVisibles(true);
           setMessage(response.message);
@@ -133,23 +128,16 @@ export default function Tickets({gameData}) {
       navigation.navigate("AddCash", { user_id: data._id, amounts: balances, status: 1, ticket_id: selectedItem._id, game_id: game_id });
     }
 
-    const handleStateCheck = () => {
-      console.log("handleStateCheck")
-      setVisible(false);
-    }
-
     const handlePurchaseModal = async () => {
       if (usersData?.is_aadhar_verified === 0) {
         setVisible(true);
         setMessage('Aadhar not Verified , Firstly Aadhar Verification...');
         setOkPress('handleAadhar')
       } else if (usersData?.is_valid_state === 0) {
-        console.log("State is Not Valid", usersData?.is_valid_state)
         setCloseVisible(true);
         setMessage('State is Not Valid');
       }
       else if (!stateList()) {
-        console.log("State is Not Valid")
         setCloseVisible(true);
         setMessage('State is Not Valid');
       }

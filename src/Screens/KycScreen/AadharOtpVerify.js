@@ -72,7 +72,6 @@ export default function AadharOtpVerify() {
     setLoader(true)
     try {
       const response = await AdharVerificationSendOtp(aadhaar_number);
-      console.log("response", response)
       if (response.status === 1) {
         setLoader(false)
         Toast.show({
@@ -97,7 +96,6 @@ export default function AadharOtpVerify() {
       ref_id: data.ref_id,
       aadhaar_number: aadhaar_number
     }
-    console.log("verificationData", verificationData)
     setLoader(true);
     try {
       axios

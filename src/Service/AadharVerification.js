@@ -3,8 +3,6 @@ import Config from "../Utilities/Config";
 import apiInstance, { baseApiurl } from "./AxiosInstance";
 
 export const AdharVerificationSendOtp = async aadhaar_number => {
-  console.log('adhar_number', aadhaar_number);
-  console.log( `${baseApiurl}/${Config.AdharOptSend}`)
   try {
     const response = await axios.post(`${baseApiurl}/${Config.AdharOptSend}`, {
       aadhaar_number,
@@ -17,12 +15,10 @@ export const AdharVerificationSendOtp = async aadhaar_number => {
 };
 
 export const AadharVerificationVerifyOtp = async verificationData => {
-  console.log('verificationData', verificationData);
   try {
     const response = await apiInstance.post(`${Config.AdharVerifyOtp}`, {
       verificationData: verificationData,
     });
-    // console.log('response for userData', response.data);
     return response.data;
   } catch (error) {
     console.log('error------------', error);

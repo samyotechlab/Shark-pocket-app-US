@@ -29,7 +29,6 @@ export const storeTicket = async (gameId, ticketId, userId) => {
       ticket_id: ticketId,
       user_id: userId,
     });
-    console.log('response', response.data);
     return response.data;
   } catch (error) {
     console.log('error', error);

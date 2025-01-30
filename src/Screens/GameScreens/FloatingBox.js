@@ -318,15 +318,12 @@ export default function FloatingBoxGame() {
       ticket_id : routeData.ticket_id,
       user_id : routeData.user_id
     }
-    console.log(data)
         const mobileNumber = userData?.mobile;
         const username = userData?.name;
         const aadharNumber = userData?.aadhaar;
         const userId = userData?.userId;
         const key = generateKey(mobileNumber, username, aadharNumber, userId);
         const encryptedData = encryptData(key,data);
-
-        console.log("encryptedData",encryptedData)
 
     try {
       const response = await finalScore(

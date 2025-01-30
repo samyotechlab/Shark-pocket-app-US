@@ -10,7 +10,6 @@ import {
 import { formatDate, truncateText } from '../Utilities/utilies';
 
 export default function AvailableCard({ gameData, status, index, page }) {
-  console.log("gameData====>", status)
   const game_color = gameData.gameColor
   const Colors = {
     yellow: ['#F38424', '#F7A552', '#F9D479'],

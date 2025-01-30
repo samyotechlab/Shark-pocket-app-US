@@ -17,9 +17,7 @@ const groupByDateAndType = (data) => {
 };
 
 export default function All({ winningData }) {
-  console.log('winningData', winningData);
   const navigation = useNavigation();
-  // Group walletData by date
   const groupedData = winningData ? groupByDateAndType(winningData) : {};
 
   const handleNavigation = (item) => {

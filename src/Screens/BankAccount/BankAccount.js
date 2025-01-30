@@ -86,10 +86,8 @@ export default function BankAccount() {
                 ifsc: bank_data?.ifsc_code,
                 phone: bank_data?.phone,
             };
-            console.log('obj', obj);
 
             const response = await bankStore(obj);
-            console.log('response in bank', response);
             if (response?.status === 1) {
                 Toast.show({
                     type: 'success',

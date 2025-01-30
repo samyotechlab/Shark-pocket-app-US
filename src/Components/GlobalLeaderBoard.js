@@ -34,7 +34,6 @@ export default function GlobalLeaderBoard() {
     try {
       setLoader(true);
       const response = await globalLeaderBoard();
-      console.log("response======>",response)
       if (response) {
         setGlobalData(response.data);
       } else {

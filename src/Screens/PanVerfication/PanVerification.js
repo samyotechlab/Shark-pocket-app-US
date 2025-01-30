@@ -125,7 +125,6 @@ export default function PanVerfication() {
         setLoader(true)
         try {
             const response = await PanVerificationData(obj);
-            console.log("response",response)
             setResponse(response.status)
             if (response.status === 1) {
                 Toast.show({

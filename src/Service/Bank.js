@@ -2,7 +2,6 @@ import Config from "../Utilities/Config";
 import apiInstance from "./AxiosInstance";
 
 export const bankStore = async verificationData => {
-    console.log('verificationData', verificationData);
     try {
       const response = await apiInstance.post(`${Config.Bank_Store}`, {
         verificationData: verificationData,

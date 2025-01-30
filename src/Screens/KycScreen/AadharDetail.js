@@ -50,7 +50,6 @@ export default function AadharDetail() {
                     setLoader(false)
                     setAadharCard(response.data)
                 } else {   
-                    console.log("testiiinggg")
                     Toast.show({
                         type: 'error',
                         position: 'top',

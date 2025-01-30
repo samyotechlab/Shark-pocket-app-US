@@ -44,7 +44,6 @@ export default function Failed({ data }) {
 
 
   const renderSectionHeader = ({ section: { title } }) => {
-    console.log(title)
     return (
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{title}</Text>

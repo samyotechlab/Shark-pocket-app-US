@@ -22,7 +22,6 @@ export default function Withdraw({ dataUser }) {
   const [tdsData, setTdsData] = useState({})
 
   const handleWithdraw = () => {
-    console.log("value", amount)
     if (parseFloat(amount) > dataUser.total_earning) {
       setVisible(true);
       setMessage(`Your wallet balance is ₹${dataUser.total_earning}. Please enter a valid amount.`)
@@ -60,10 +59,8 @@ export default function Withdraw({ dataUser }) {
           user_id:dataUser?._id
         }
         const encryptedData = encryptData(key, data);
-        console.log("encryptedData", encryptedData)
         if (amount >= bankDetail.minAmount) {
           const response = await withdrawCash(dataUser._id, encryptedData);
-          console.log("response", response)
           Toast.show({
             type: 'success',
             position: 'top',
@@ -91,7 +88,6 @@ export default function Withdraw({ dataUser }) {
   const toggleModal = async () => {
     try {
       const response = await showTds(dataUser._id, amount);
-      console.log("response.data", response.data)
       if (response.status == 1) {
         setModalVisible(!isModalVisible);
         setTdsData(response.data)

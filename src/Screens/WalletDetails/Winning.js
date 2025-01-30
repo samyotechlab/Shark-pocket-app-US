@@ -10,7 +10,6 @@ import AnimatedLoader from '../../Components/AnimatedLoader';
 export default function Winning(props) {
 
   const  {user_id} = props
-  console.log("user_id",user_id)
   const [selectedTab, setSelectedTab] = useState('All');
   const [loader, setLoader] = useState(false);
   const [winningData, setWinningData] = useState([]);
@@ -23,7 +22,6 @@ export default function Winning(props) {
     setLoader(true)
     try {
       const response = await WinningList(user_id);
-      console.log("response",response)
       setWinningData(response?.data);
     } catch (error) {
       console.log('error', error);

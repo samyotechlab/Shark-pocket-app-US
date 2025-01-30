@@ -39,7 +39,6 @@ export const generateKey = (mobileNumber, username, aadharNumber, userId) => {
 
   const key = `${mobileStart}${mobileEnd}${usernamePart}${aadharPart}${userIdPart}${fixedPart}`;
   if (key.length !== 36) {
-    console.log("key.length",key.length)
     throw new Error("Generated key is not 36 characters long.");
   }
   return key;

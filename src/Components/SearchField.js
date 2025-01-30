@@ -5,7 +5,6 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const SearchField = ({ onSearch ,gameData = [], filteredData = []}) => {
-  console.log(gameData)
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
 

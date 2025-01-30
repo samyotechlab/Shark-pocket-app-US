@@ -7,7 +7,6 @@ export const TransactionStore = async (user_id, encryptedData) => {
         user_id: user_id,
         encryptedData: encryptedData,
       });
-      console.log("hello",response.data)
       return response.data;
     } catch (error) {
       console.log('error', error);
@@ -24,7 +23,6 @@ export const TransactionStore = async (user_id, encryptedData) => {
         gst_amt:data.gst
       });
       if (response.status === 200) {
-        console.log('Bonus Wallet added', response.data);
         return response.data;
       } else {
         console.error(

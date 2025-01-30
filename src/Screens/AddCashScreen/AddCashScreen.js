@@ -20,7 +20,6 @@ const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
   const { user_id, balance, status, amounts,ticket_id,game_id} = route.params
-  console.log("user_id", amounts)
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
   const [data1, setData] = useState({});
@@ -83,7 +82,6 @@ const AddCashScreen = () => {
       const encryptedData = encryptData(key, amount);
       try {
         const response = await TransactionStore(usersData?._id, encryptedData);
-        console.log("response", response)
         addBonusWallet(response)
         initPhonePeSDK(response);
         setData(response);
@@ -105,13 +103,9 @@ const AddCashScreen = () => {
   }
 
   const handlePurchase = async () => {
-    console.log("game_id", game_id)
-    console.log("selectedItem", ticket_id)
-    console.log("data", data._id)
     try {
       setVisible(false);
       const response = await storeTicket(game_id, ticket_id, data._id);
-      console.log("response==========>", response) 
       if (response.status === 1) {
         setToast(true)
       } else {
@@ -130,7 +124,6 @@ const AddCashScreen = () => {
       true,
     )
       .then(result => {
-        console.log("result", result)
         setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
         handleStartTransaction(
           response.base64,
@@ -158,14 +151,12 @@ const AddCashScreen = () => {
       callBack_url,
     )
       .then(async res => {
-        console.log('aaaa', res);
         setCheckPaymentStatus(true)
         setMessage(JSON.stringify(res));
         setDialog(true);
         setisLoading(true);
         if (res.status) {
           const response = await checkPaymentStatus(transaction_id);
-          console.log(response.data)
           setTimeout(() => {
             setCheckPaymentStatus(false)
           }, 3000)
@@ -173,7 +164,6 @@ const AddCashScreen = () => {
           if (response?.data?.status == 1) {
             setIsPaymentSuccess("success")
             if(status === 1){ 
-              console.log("statu=======?s",status)
               handlePurchase();
               setButtonText("Start Game")
             }

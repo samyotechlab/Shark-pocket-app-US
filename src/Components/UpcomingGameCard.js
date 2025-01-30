@@ -14,7 +14,6 @@ const UpcomingGameCard = ({ items ,status}) => {
     pink: ['#E3398C', '#CC8FAD'],
     green: ['#75B831', '#BAFF74'],
     blue: ['#0916B9', '#A1A8FF']
-
   }
   const borderColor = {
     yellow: '#F2E30B',
@@ -24,12 +23,10 @@ const UpcomingGameCard = ({ items ,status}) => {
   }
   const handleNavigation = (game_id) => {
     if(status === "1"){
-      console.log("game_id",game_id)
       navigation.navigate('AllGameName', { game_id: game_id })
     }
   }
   return (
-
     <View style={styles.container}>
       {/* First Card */}
       {

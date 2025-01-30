@@ -68,8 +68,11 @@ const PlayedHistory = () => {
     }
   }, [isReady, loginData])
 
+  const handleNavigation = ()=>{
+    navigation.navigate('LocalGameBoard', { game_id: game_id })
+  }
+
   const renderItem = ({ item }) => {
-    // console.log("iotem",item)
     return (
       <>
         <View style={styles.container1} >
@@ -92,12 +95,15 @@ const PlayedHistory = () => {
                 <Text style={styles.titleText}>Played On</Text>
                 <View style={styles.dateTimeRow}>
                   <Text style={styles.dateText}>{item.game_played_at}</Text>
-                  {/* <Text style={styles.timeText}>02:23 Pm</Text> */}
                 </View>
+                <TouchableOpacity style={styles.dateTimeRow} onPress={handleNavigation}>
+                  <Text style={styles.viewText}>View Dashboard</Text>
+                </TouchableOpacity>
               </View>
 
               {/* Score */}
               <Text style={styles.scoreText}>{item.score}</Text>
+
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -180,6 +186,12 @@ const styles = StyleSheet.create({
     color: '#000000B2',
     fontSize: wp('3.5%'),
     fontFamily: 'Montserrat-SemiBold',
+  },
+  viewText: {
+    color: 'red',
+    fontSize: wp('3.5%'),
+    fontFamily: 'Montserrat-SemiBold',
+    textDecorationLine: 'underline'
   },
   timeText: {
     color: '#000',

@@ -29,7 +29,6 @@ export default function All(props) {
   };
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
-    console.log(isDebit)
     const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
 
     return (

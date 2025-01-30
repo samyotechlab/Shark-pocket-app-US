@@ -32,13 +32,10 @@ export const updateProfile = async userData => {
 };
 
 export const updateImage = async userData => {
-
   try {
-    console.log("userData",userData)
     const response = await apiMultipartInstance.post(`${Config.EditImage}`, userData);
 
     if (response.status === 200) {
-      console.log('Image uploaded successfully:', response.data);
       return response.data;
     } else {
       console.error('Unexpected response status:', response.status);

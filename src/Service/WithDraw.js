@@ -40,7 +40,6 @@ export const showTds = async (user_id,withdraw_request) => {
       user_id,
       withdraw_request
     });
-    console.log("response.data",response.data)
     if (response.status === 200) {
       return response.data;
     } else {

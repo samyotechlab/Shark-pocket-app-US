@@ -25,7 +25,6 @@ export default function Notification() {
     setLoader(true)
     try {
       const response = await notificationList(user_id);
-      console.log('response', response);
       if (response) {
         setNotificationData(response.data);
       }
@@ -41,7 +40,6 @@ export default function Notification() {
 
   
   const renderItem = ({item}) => {
-    console.log('item',item)
     return (
       <>
         <View style={styles.notificationContainer}>

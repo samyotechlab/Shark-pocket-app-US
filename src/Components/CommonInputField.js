@@ -5,7 +5,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 
 export default function CommonInputField({data}) {
-  console.log(data)
   return (
     <View style={styles.inputContainer}>
       <Image source={call}   style={styles.icon} />

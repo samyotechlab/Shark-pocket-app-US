@@ -29,7 +29,6 @@ export const historyData = async ( user_id) => {
         game_id,
       });
       if (response.status === 200) {
-        // console.log('Game history data', response.data);
         return response.data;
       } else {
         console.error(
