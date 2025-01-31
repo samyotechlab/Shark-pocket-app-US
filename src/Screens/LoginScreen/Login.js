@@ -53,6 +53,7 @@ export default function Login() {
             headers,
           )
           .then(res => {
+            console.log("response=====>",res.data)
             if (res.data.status === 1) {
               Toast.show({
                 type: 'success',

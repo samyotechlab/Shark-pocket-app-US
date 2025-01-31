@@ -42,5 +42,8 @@ export default {
   State:'api/state/list',
   EditImage: 'api/editImage',
   ShowTds:'api/wallet_request/showtTdsCalculation',
-  Upload_Document:'api/documents/store'
+  Upload_Document:'api/documents/store',
+  Add_Expectation : 'api/userWinningExpectation/add',
+  Edit_Expectation:'api/userWinningExpectation/edit/',
+  Show_Expectation :'api/userWinningExpectation/',
 };
