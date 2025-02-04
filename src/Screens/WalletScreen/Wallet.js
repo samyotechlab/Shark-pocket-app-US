@@ -255,7 +255,7 @@ const WalletScreen = () => {
 
               </View>
               <View style={{ flex: 2, alignItems: 'center', justifyContent: 'flex-end', marginBottom: hp('2%') }}>
-                <Image source={gst} resizeMode='contain' />
+                {/* <Image source={gst} resizeMode='contain' /> */}
               </View>
             </>) : (<View style={styles.loaderContainer}>
               <AnimatedLoader />

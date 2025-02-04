@@ -10,6 +10,8 @@ import {
 import { formatDate, truncateText } from '../Utilities/utilies';
 
 export default function AvailableCard({ gameData, status, index, page }) {
+  // console.log("status======>",status)
+  // console.log(gameData)
   const game_color = gameData.gameColor
   const Colors = {
     yellow: ['#F38424', '#F7A552', '#F9D479'],
@@ -31,7 +33,7 @@ export default function AvailableCard({ gameData, status, index, page }) {
     blue: "#4644A7"
   }
 
-  const formattedDate = formatDate(gameData.start_date);
+  const formattedDate = formatDate(status === "4" ? gameData.game_start_date: gameData.start_date);
   return (
     <View style={{
       borderBottomWidth: wp(1.3),
@@ -69,15 +71,18 @@ export default function AvailableCard({ gameData, status, index, page }) {
             <Text style={styles.startText}>
               Start <Text style={styles.dateText}>{formattedDate}</Text>
             </Text>
-            <View style={styles.buttonContainer}>
-              <View style={styles.button}>
-                <Text style={styles.buttonText}>
-                  {status === "4"
-                    ? gameData.game_winning_cost
-                    : gameData.winning_price}{' '}
-                </Text>
-              </View>
-            </View>
+            {
+              gameData?.winning_price ? (<View style={styles.buttonContainer}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>
+                    {status === "4"
+                      ? gameData.game_winning_cost
+                      : gameData.winning_price}{' '}
+                  </Text>
+                </View>
+              </View>):("")
+            }
+            
           </View>
         </View>
         <View style={styles.linesContainer}>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonButton from '../../Components/CommonButton'
@@ -109,7 +109,7 @@ export default function AadharDetail() {
                     />
                     <Text style={styles.kycText}>
                         Why do we need KYC Verification?
-                        <Text style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }}> Read FAQ’s</Text>
+                        <TouchableOpacity style={{ textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold' }} onPress={()=>{navigation.navigate('Faq')}}> Read FAQ’s</TouchableOpacity>
                     </Text>
                 </View>
             </View>

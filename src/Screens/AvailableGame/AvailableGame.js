@@ -1,5 +1,5 @@
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import CommonHeader from '../../Components/CommonHeader'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -11,9 +11,11 @@ import AvailableCard from '../../Components/AvailableCard'
 export default function AvailableGame() {
     const navigation = useNavigation()
     const route = useRoute();
+    const [title,setTitle] = useState('')
+    const [disabled,setDisabled] = useState(false)
     const { gameData, status } = route.params
     let myGames = []
-
+    console.log("status",status)
     if (status === "1") {
         myGames = gameData;
     }
@@ -27,12 +29,34 @@ export default function AvailableGame() {
         myGames = gameData.filter(game => game?.status === 3);
     }
 
+    useEffect(() => {
+        if (status === "1") {
+            setTitle('My Game');
+        }else if(status === "2") {
+            setTitle('Available Games');
+        }else if (status === "3") {
+            setTitle('Upcoming Games');
+            setDisabled(true)
+        }else if(status === "4") {
+            setTitle('Game History');
+        }
+    }, [status]);
+
+    const handleNavigation = (item)=>{
+        if(status === "4"){
+            navigation.navigate('AllGameName', { game_id: item._id,game_name:item.title })
+        }else{
+            navigation.navigate('GameName', { game_id: item._id })
+        }
+    }
     const renderItem = ({ item, index }) => {
         return (<>
 
             <TouchableOpacity style={styles.container1} onPress={() => {
-                navigation.navigate('GameName', { game_id: item._id })
-            }} >
+                handleNavigation(item)
+            }} 
+            disabled={disabled}
+            >
                 {
                     status === "1" ? (
                         <AvailableCard gameData={item} status={"4"} index={index} />
@@ -50,7 +74,7 @@ export default function AvailableGame() {
         <LinearGradient
             colors={['#361911', '#361911', '#6A1700']}
             style={styles.linearGradient}>
-            <CommonHeader title={"Available Games"} />
+            <CommonHeader title={title ? title : 'Available Games'} />
             <View style={styles.container}>
                 <FlatList
                     data={myGames}

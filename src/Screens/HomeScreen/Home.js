@@ -31,6 +31,7 @@ import UpcomingGame from '../../Components/UpcomingGame';
 import CloseDialog from '../../Components/CloseDialog';
 import { userDetail } from '../../Service/Login';
 import GameHistory from '../../Components/GameHistory';
+import shark from '../../../assets/images/Applogo/Sharkpocket1.png'
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -149,6 +150,10 @@ export default function HomeScreen() {
                   <Image source={sharkLogo} style={styles.logo} />
                 </TouchableOpacity>
 
+                <View style={styles.logo1Container} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData })}>
+                  <Image source={shark} style={styles.logo} />
+                </View>
+
 
                 <LinearGradient colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']} style={styles.walletContainer}>
                   <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
@@ -161,9 +166,6 @@ export default function HomeScreen() {
                 <View style={styles.iconsContainer}>
                   <TouchableOpacity onPress={() => { navigation.navigate('Notification') }}>
                     <Image source={bell} style={styles.icon} />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => { navigation.navigate('HowtoPlay') }}>
-                    <Image source={wheel} style={styles.icon} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -323,7 +325,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: wp('4%'),
+    paddingHorizontal: wp('3%'),
     marginTop: hp('3%'),
   },
   logoContainer: {
@@ -331,17 +333,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  logo1Container: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   logo: {
     height: hp('5%'),
-    width: wp('10%'),
+    width: wp('35%'),
     resizeMode: 'contain',
   },
   walletContainer: {
-    flex: 1,
+    flex: 1.5,
     flexDirection: 'row',
     alignItems: 'center',
     padding: wp('1%'),
-    marginLeft: hp('5%'),
+    // marginLeft: hp('5%'),
     borderRadius: wp('2%'),
     justifyContent: 'center',
   },
@@ -358,7 +365,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   iconsContainer: {
-    flex: 1,
+    flex: 0.5,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',

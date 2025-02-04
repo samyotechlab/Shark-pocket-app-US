@@ -208,9 +208,7 @@ export default function PanVerfication() {
                     <CommonButton title={'Save'} onPress={handleVerifyPan} />
                     <Text style={styles.kycText}>
                         Why do we need PAN Verification?
-                        <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={() => {
-                            handleNavigation()
-                        }}>
+                        <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={()=>{navigation.navigate('Faq')}}>
                             <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Read FAQ’s</Text>
                         </TouchableOpacity>
                     </Text>

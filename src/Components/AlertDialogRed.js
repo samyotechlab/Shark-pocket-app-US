@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
+const AlertDialogRed = ({ visible, onClose, onOkPress, message, show }) => {
+  console.log("show===>", show)
   return (
     <Modal
       transparent={true}
@@ -34,17 +35,20 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message }) => {
             <TouchableOpacity style={styles.button} onPress={onClose}>
               <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
+            {
+              show ? (<TouchableOpacity onPress={onOkPress}>
+                <LinearGradient
+                  colors={['#67FF00', '#67FF00', '#3E9900']}
+                  style={styles.addCashButton}>
+                  <Text style={[styles.buttonText, { fontSize: hp('1.7%') }]}>ADD CASH</Text>
 
-            <TouchableOpacity onPress={onOkPress}>
-              <LinearGradient
-                colors={['#67FF00', '#67FF00', '#3E9900']}
-                style={styles.addCashButton}>
+                </LinearGradient>
+                {/* <Text style={styles.okText}>Add Cash</Text> */}
+              </TouchableOpacity>) : (<TouchableOpacity style={styles.button} onPress={onClose}>
+                <Text style={styles.cancelText}>Ok</Text>
+              </TouchableOpacity>)
+            }
 
-                <Text style={[styles.buttonText, { fontSize: hp('1.7%') }]}>ADD CASH</Text>
-
-              </LinearGradient>
-              {/* <Text style={styles.okText}>Add Cash</Text> */}
-            </TouchableOpacity>
           </View>
         </View>
       </View>

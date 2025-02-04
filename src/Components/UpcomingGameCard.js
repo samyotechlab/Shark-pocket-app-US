@@ -21,9 +21,9 @@ const UpcomingGameCard = ({ items ,status}) => {
     green: "#78C800",
     blue: "#1A0DAB"
   }
-  const handleNavigation = (game_id) => {
+  const handleNavigation = () => {
     if(status === "1"){
-      navigation.navigate('AllGameName', { game_id: game_id })
+      navigation.navigate('AllGameName', { game_id: item._id,game_name:item.title })
     }
   }
   return (
@@ -31,7 +31,7 @@ const UpcomingGameCard = ({ items ,status}) => {
       {/* First Card */}
       {
         index % 2 == 0 ? (
-        <TouchableOpacity onPress={() => {handleNavigation(item._id)}}> 
+        <TouchableOpacity onPress={() => {handleNavigation()}}> 
         <LinearGradient
           colors={
             status === "1" ? Colors[game_color] ? Colors[game_color] : ['#F38424', '#F7A552', '#F9D479']: ['#438301', '#438301', '#8BBE56']

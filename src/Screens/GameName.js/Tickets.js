@@ -174,6 +174,7 @@ export default function Tickets({gameData}) {
           onClose={() => setVisibles(false)}
           onOkPress={handleNavigate}
           message={message}
+          show={true}
         />
          <InfoModal
           isVisible={modalVisible}

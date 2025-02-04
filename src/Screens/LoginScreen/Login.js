@@ -10,6 +10,7 @@ import axios from 'axios'
 import Toast from 'react-native-toast-message'
 import Config from '../../Utilities/Config'
 import { baseApiurl } from '../../Service/AxiosInstance'
+import CheckBox from 'react-native-check-box'
 
 
 const headers = {
@@ -21,6 +22,7 @@ export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [loader, setLoader] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
 
 
   const validateInputs = () => {
@@ -123,11 +125,22 @@ export default function Login() {
             <Text style={styles.errorText}>{mobileError}</Text>
           )}
         </View>
+                <View style={styles.checkboxContainer}>
+                <CheckBox
+                style={styles.checkBox}
+                onClick={() => setIsChecked(!isChecked)} 
+                isChecked={isChecked}
+                checkedCheckBoxColor="#FFD700" 
+                uncheckedCheckBoxColor="#9B9B9B" 
+              />
+                  <Text style={styles.checkboxText}>Accept all terms and conditions</Text>
+                </View>
         <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
           <CommonButton 
             title={loader ? 'Loading...' : 'Login'}
             onPress={handleLogin}
-            disabled={loader} />
+            disabled={!isChecked}
+            />
         </View>
         <Toast ref={Toast.setRef} />
       </View>
@@ -188,5 +201,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dimmed background
     borderRadius: 10, // Matches button shape
     zIndex: 10,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkboxText: {
+    fontSize: 16,
+    marginLeft: 8,
+    color: '#FFFFFF',
   },
 })
