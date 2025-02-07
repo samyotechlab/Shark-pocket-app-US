@@ -7,6 +7,7 @@ import Tickets from './Tickets'
 import PlayedHistory from './PlayedHistory'
 import { useRoute } from '@react-navigation/native'
 import { gameById } from '../../Service/Game'
+import InfoModal from '../../Components/InfoModal'
 
 
 export default function GameName() {
@@ -21,6 +22,7 @@ export default function GameName() {
   const gameByid = async () => {
     try {
       const response = await gameById(game_id);
+      console.log("reponse",response)
       setGameData(response.data);
     } catch (error) {
       console.error('Error fetching game list:', error.message || error);
@@ -49,6 +51,12 @@ export default function GameName() {
               Tickets
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('GameInfo')}>
+            <Text
+              style={dynamicStyles.GameInfo}>
+              Game Info
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => handlePress('PlayedHistory')}>
             <Text
               style={dynamicStyles.PlayedHistory}>
@@ -56,13 +64,17 @@ export default function GameName() {
             </Text>
           </TouchableOpacity>
 
+
         </View>
      <View style={{flex:1}}>
         {selectedTab === 'Tickets' ? (
           <Tickets gameData={gameData}/>
-        ) : (
+        ) : selectedTab === 'GameInfo'? (
+          <InfoModal gameData={gameData}/>
+        ):(
           <PlayedHistory game_id={game_id}/>
-        )}
+        )
+        }
         </View>
       </View>
     </LinearGradient>
@@ -87,5 +99,12 @@ const getDynamicStyles = selectedTab =>
       borderBottomColor: selectedTab === 'PlayedHistory' ? '#FEB801' : '#565656',
       color: selectedTab === 'PlayedHistory' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'PlayedHistory' ? 'Montserrat-Bold' : 'Montserrat-Regular',
+    },
+    GameInfo: {
+      fontSize: 18,
+      borderBottomWidth: 3,
+      borderBottomColor: selectedTab === 'GameInfo' ? '#FEB801' : '#565656',
+      color: selectedTab === 'GameInfo' ? '#FEB801' : '#FFFFFF',
+      fontFamily: selectedTab === 'GameInfo' ? 'Montserrat-Bold' : 'Montserrat-Regular',
     }
   });

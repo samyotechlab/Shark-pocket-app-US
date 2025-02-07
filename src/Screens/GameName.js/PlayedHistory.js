@@ -114,7 +114,8 @@ const PlayedHistory = () => {
 
     <View style={styles.container}>
       {
-        gameHistoryData ? (!loader ? (<FlatList
+        gameHistoryData ? (!loader ? (
+        <FlatList
           data={gameHistoryData}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
@@ -122,7 +123,8 @@ const PlayedHistory = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
           }
-        />) : (<AnimatedLoader />)) : (
+        />
+      ) : (<AnimatedLoader />)) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
               No games or tickets are currently available.

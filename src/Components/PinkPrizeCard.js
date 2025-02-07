@@ -41,7 +41,7 @@ const PinkPrizeCard = ({ item}) => {
         <View style={styles.innerCard}>
           <Image source={Button} />
         <Text style={styles.heading}>{item.game_title}</Text>
-        <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
+        {/* <Text style={styles.amount}>₹{item.game_winning_cost}</Text> */}
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   },
   card: {
     // flex:1,
-    width: wp('40%'),
-    height: hp('15%'),
+    width: wp('43%'),
+    height: hp('12%'),
     justifyContent: 'center',
     alignItems: 'center',
     elevation: hp('5%'),

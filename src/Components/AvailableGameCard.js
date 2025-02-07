@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Text, Dimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Carousel from 'react-native-reanimated-carousel'; 
+import Carousel from 'react-native-reanimated-carousel';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -12,9 +12,21 @@ const { width } = Dimensions.get('window');
 
 const AvailbleGameCard = (props) => {
   const navigation = useNavigation();
-  const myGames = props?.gameData;
+  const { gameData, availability } = props
+  console.log("--------->", availability)
   const [currentIndex, setCurrentIndex] = useState(0);
-  const myGameData = myGames?.filter((game) => game.status === 3) || [];
+  let myGameData = []
+  let data = []
+
+  if (availability === '2') {
+     myGameData = gameData?.filter((game) => game.status === 3) 
+     data =  myGameData?.filter((item)=>item.frequency === "daily")
+  }else if(availability === "3"){
+     myGameData = gameData?.filter((game) => game.status === 3) 
+     data =  myGameData?.filter((item)=>item.frequency === "weekly")
+  }else{
+    data = gameData?.filter((game) => game.status === 3) 
+  }
 
   const handleNavigation = (item) => {
     navigation.navigate('GameName', { game_id: item._id });
@@ -27,13 +39,13 @@ const AvailbleGameCard = (props) => {
         handleNavigation(item);
       }}
     >
-      <AvailableCard gameData={item} status={'1'} index={index}/>
+      <AvailableCard gameData={item} status={'1'} index={index} />
     </TouchableOpacity>
   );
 
   return (
     <>
-      {!myGameData.length ? (
+      {!data.length ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
             No games or tickets are currently available.
@@ -42,7 +54,7 @@ const AvailbleGameCard = (props) => {
       ) : (
         <View style={styles.container}>
           <Carousel
-            data={myGameData}
+            data={data}
             renderItem={renderItem}
             width={width}
             height={210}

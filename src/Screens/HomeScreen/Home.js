@@ -231,13 +231,75 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                   </View>
                   <View style={{ flex: 1, marginLeft: hp('0.7%') }}>
-                    <AvailbleGameCard gameData={gameData} />
+                    <AvailbleGameCard gameData={gameData} availability = "1"/>
                   </View>
                 </View>
               ) : (
                 <AnimatedLoader />
               )
             }
+                        {
+              Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
+                <View style={{ flex: 1.2}}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Image source={Lighting} style={styles.light} />
+                      <Text style={styles.myGame}>DAILY GAMES</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ flex: 0.5, alignItems: 'flex-end', marginRight: hp('1%') }}
+                      onPress={() => {
+                        navigation.navigate('AvailableGame', { gameData ,status :"2"});
+                      }}
+                    >
+                      <Text style={styles.view}>View All</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1, marginLeft: hp('0.7%') }}>
+                    <AvailbleGameCard gameData={gameData} availability = "2"/>
+                  </View>
+                </View>
+              ) : (
+                <AnimatedLoader />
+              )
+            }
+
+{
+              Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
+                <View style={{ flex: 1.2 ,marginVertical:'1%'}}>
+                  <View
+                    style={{
+                      flex: 0.5,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Image source={Lighting} style={styles.light} />
+                      <Text style={styles.myGame}>WEEKLY GAMES</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ flex: 0.5, alignItems: 'flex-end', marginRight: hp('1%') }}
+                      onPress={() => {
+                        navigation.navigate('AvailableGame', { gameData ,status :"2"});
+                      }}
+                    >
+                      <Text style={styles.view}>View All</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1, marginLeft: hp('0.7%') }}>
+                    <AvailbleGameCard gameData={gameData} availability = "3"/>
+                  </View>
+                </View>
+              ) : (
+                <AnimatedLoader />
+              )
+            }
+
             {
               Array.isArray(UpcomingGames) && UpcomingGames.length > 0 ? (
                 <View style={{ flex: 1 }}>

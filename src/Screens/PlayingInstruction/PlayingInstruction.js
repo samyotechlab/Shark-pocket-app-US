@@ -27,7 +27,8 @@ import { addExpectation, editExpectation, getExpectation } from '../../Service/E
 
 export default function PlayingInstruction() {
   const route = useRoute();
-  const { game_id, ticket_id, screen_name } = route.params;
+  const { game_id, ticket_id, screen_name ,question} = route.params;
+  console.log("question",question)
   const [visible, setVisible] = useState(false);
   const [visibles, setVisibles] = useState(false);
   const [message, setMessage] = useState('');
@@ -128,9 +129,19 @@ export default function PlayingInstruction() {
     }
   },[loginData,isReady])
 
+  const handleShow = () =>{
+    setVisible(true)
+    setMessage('enter your expectation')
+  }
+
 
   const handleStartGame = async () => {
     let responseData;
+    if(question != ""){
+      return  (
+          handleShow()
+      )
+    }
     if (expectation === "") {
       if (selectedNumber) {
         navigation.navigate('GameScreen', {
@@ -429,7 +440,7 @@ export default function PlayingInstruction() {
       <AlertDialogRed
         visible={visible}
         onClose={() => setVisible(false)}
-        message={'Please Select a Super Number.'}
+        message={message ? message : 'Please Select a Super Number.'}
         onOkPress={() => setVisible(false)}
       />
       <CloseDialog visible={visibles} onClose={() => BackHandler.exitApp()} message={message} />
@@ -527,7 +538,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerBackground: {
-    height: Platform.OS === 'ios' ? height * 0.1 : 50,
+    // height: Platform.OS === 'ios' ? height * 0.1 : 50,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

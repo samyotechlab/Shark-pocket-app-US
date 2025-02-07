@@ -9,9 +9,7 @@ import {
 } from 'react-native-responsive-screen';
 import { formatDate, truncateText } from '../Utilities/utilies';
 
-export default function AvailableCard({ gameData, status, index, page }) {
-  // console.log("status======>",status)
-  // console.log(gameData)
+export default function AvailableCard({ gameData, status }) {
   const game_color = gameData.gameColor
   const Colors = {
     yellow: ['#F38424', '#F7A552', '#F9D479'],
@@ -36,6 +34,7 @@ export default function AvailableCard({ gameData, status, index, page }) {
   const formattedDate = formatDate(status === "4" ? gameData.game_start_date: gameData.start_date);
   return (
     <View style={{
+      // backgroundColor:'red',
       borderBottomWidth: wp(1.3),
       borderBottomColor: borderBottom[game_color] ? borderBottom[game_color] : "#C05112", borderBottomStartRadius: wp(3), borderBottomEndRadius: wp(8)
     }}>

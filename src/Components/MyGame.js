@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, FlatList } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PinkPrizeCard from './PinkPrizeCard';
@@ -10,6 +10,7 @@ const { width } = Dimensions.get('window');
 const MyGame = (props) => {
     const { myGame } = props;
     const [carouselData, setCarouselData] = useState([]);
+
     useEffect(() => {
         setCarouselData(myGame);
     }, [myGame]);
@@ -26,43 +27,25 @@ const MyGame = (props) => {
 
     return (
         <View style={styles.container}>
-            {carouselData.length <= 2 ? (
-                <View style={styles.twoCardsContainer}>
-                    {carouselData.map((item, index) => (
-                        <View key={index} style={styles.cardContainer}>
-                            {index % 2 === 0 ? (
-                                <PinkPrizeCard item={item} />
-                            ) : (
-                                <GoldenCard item={item} />
-                            )}
-                        </View>
-                    ))}
-                </View>
-            ) : carouselData.length > 2 ? (
-                <Carousel
-                    data={carouselData}
-                    renderItem={renderItem}
-                    sliderWidth={width}
-                    itemWidth={width * 0.45}
-                    loop={true} 
-                    autoplay={true} 
-                    autoplayInterval={2000}
-                    inactiveSlideScale={0.95}
-                    inactiveSlideOpacity={0.7}
-                    enableMomentum={false}
-                    lockScrollWhileSnapping={true}
-                />
-            ) : (
+            {carouselData.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Text style={styles.emptyText}>
                         No games or tickets are currently available.
                     </Text>
                 </View>
+            ) : (
+                <FlatList
+                    data={carouselData}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => index.toString()}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 10 }}
+                />
             )}
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

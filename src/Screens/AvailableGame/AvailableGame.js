@@ -6,16 +6,16 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useRoute } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
 import AvailableCard from '../../Components/AvailableCard'
+import DailyWeeklyBar from '../../Components/DailyWeeklyBar'
 
 
 export default function AvailableGame() {
     const navigation = useNavigation()
     const route = useRoute();
-    const [title,setTitle] = useState('')
-    const [disabled,setDisabled] = useState(false)
+    const [title, setTitle] = useState('')
+    const [disabled, setDisabled] = useState(false)
     const { gameData, status } = route.params
     let myGames = []
-    console.log("status",status)
     if (status === "1") {
         myGames = gameData;
     }
@@ -32,20 +32,20 @@ export default function AvailableGame() {
     useEffect(() => {
         if (status === "1") {
             setTitle('My Game');
-        }else if(status === "2") {
+        } else if (status === "2") {
             setTitle('Available Games');
-        }else if (status === "3") {
+        } else if (status === "3") {
             setTitle('Upcoming Games');
             setDisabled(true)
-        }else if(status === "4") {
+        } else if (status === "4") {
             setTitle('Game History');
         }
     }, [status]);
 
-    const handleNavigation = (item)=>{
-        if(status === "4"){
-            navigation.navigate('AllGameName', { game_id: item._id,game_name:item.title })
-        }else{
+    const handleNavigation = (item) => {
+        if (status === "4") {
+            navigation.navigate('AllGameName', { game_id: item._id, game_name: item.title })
+        } else {
             navigation.navigate('GameName', { game_id: item._id })
         }
     }
@@ -54,15 +54,15 @@ export default function AvailableGame() {
 
             <TouchableOpacity style={styles.container1} onPress={() => {
                 handleNavigation(item)
-            }} 
-            disabled={disabled}
+            }}
+                disabled={disabled}
             >
                 {
                     status === "1" ? (
-                        <AvailableCard gameData={item} status={"4"} index={index} />
+                        <AvailableCard gameData={item} status={"4"}  />
                     )
                         : (
-                            <AvailableCard gameData={item} status={"2"} index={index} />
+                            <AvailableCard gameData={item} status={"2"} />
                         )
 
                 }
@@ -71,20 +71,35 @@ export default function AvailableGame() {
         </>)
     }
     return (
-        <LinearGradient
-            colors={['#361911', '#361911', '#6A1700']}
-            style={styles.linearGradient}>
-            <CommonHeader title={title ? title : 'Available Games'} />
-            <View style={styles.container}>
-                <FlatList
-                    data={myGames}
-                    renderItem={renderItem}
-                    keyExtractor={(item, index) => index.toString()}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.scrollContainer}
-                />
-            </View>
-        </LinearGradient>
+        <>
+            {
+                status === "2" ?
+                    (
+                        <LinearGradient
+                            colors={['#361911', '#361911', '#6A1700']}
+                            style={styles.linearGradient}>
+                            <DailyWeeklyBar gameData={gameData}/>
+                        </LinearGradient>
+                    ) : (
+
+                        <LinearGradient
+                            colors={['#361911', '#361911', '#6A1700']}
+                            style={styles.linearGradient}>
+                            <CommonHeader title={title ? title : 'Available Games'} />
+                            <View style={styles.container}>
+                                <FlatList
+                                    data={myGames}
+                                    renderItem={renderItem}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    showsVerticalScrollIndicator={false}
+                                    contentContainerStyle={styles.scrollContainer}
+                                />
+                            </View>
+                        </LinearGradient>
+                    )
+            }
+
+        </>
     )
 }
 
@@ -102,6 +117,6 @@ const styles = StyleSheet.create({
     container1: {
         flex: 1,
         paddingLeft: wp('5%'),
-        marginBottom: hp('2%')
+        marginBottom: hp('2%'),
     }
 })

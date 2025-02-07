@@ -31,7 +31,9 @@ import { stateList } from '../../Utilities/CurrentState';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import InfoModal from '../../Components/InfoModal';
 
-export default function Tickets({gameData}) {
+export default function Tickets({ gameData }) {
+  const question = gameData?.questions
+  console.log(question)
   const navigation = useNavigation();
   const { loginData, isReady } = useLoginDataStorage();
   const data = isReady && loginData && loginData?.data;
@@ -48,7 +50,7 @@ export default function Tickets({gameData}) {
   const [usersData, setUserData] = useState({})
   const [modalVisible, setModalVisible] = useState(false);
   const route = useRoute();
-  const { game_id} = route.params;
+  const { game_id } = route.params;
   const [refreshing, setRefreshing] = useState(false);
   const refreshData = () => {
     setRefreshing(true);
@@ -158,6 +160,7 @@ export default function Tickets({gameData}) {
       navigation.navigate('PlayingInstruction', {
         ticket_id: item._id,
         game_id: item.game_id,
+        question: question
       });
     };
     return (
@@ -176,11 +179,6 @@ export default function Tickets({gameData}) {
           message={message}
           show={true}
         />
-         <InfoModal
-          isVisible={modalVisible}
-          close={() => setModalVisible(false)}
-          data={gameData}
-        />
         <CloseDialog visible={closeVisible} onClose={() => BackHandler.exitApp()} message={message} />
         <View style={styles.container1}>
           <LinearGradient
@@ -191,41 +189,40 @@ export default function Tickets({gameData}) {
             <View style={styles.content}>
               <Image source={Game} style={styles.characterImage} />
               <View style={styles.textContainer}>
-                <Text style={styles.description}>
-                  Enroll in the "{item.title}" ticket now! Register before the game starts.
 
-                </Text>
-                <View style={styles.boxContainer}>
-                  <LinearGradient
-                    colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                <View style={{ flex: 0.1,}}>
+                  <Text style={styles.description}>{item.title}</Text>
+                </View>
+                <View style={{ flex: 0.5,flexDirection:'row',justifyContent:'space-evenly',alignItems:'center'}}>
+                  <Text style={styles.title}>Amount</Text>
+                  <Text style={styles.title}>Entries</Text>
+                  <Text style={styles.title}>Rem. Entries</Text>
+                </View>
+                <View style={{ flex: 1,flexDirection:'row',justifyContent:'space-evenly'}}>
+                <View
                     style={styles.box}>
                     <Image source={coin} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.price}</Text>
-                  </LinearGradient>
+                  </View>
 
-                  <LinearGradient
-                    colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                  <View
                     style={styles.box}>
                     <Image source={ticket} style={styles.boxIcon1} />
                     <Text style={styles.boxText}>{item.entries}</Text>
-                  </LinearGradient>
+                  </View>
 
-                  <LinearGradient
+                  <View
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={styles.box}>
                     <Image source={timer} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.remaining_entries}</Text>
-                  </LinearGradient>
+                  </View>
                 </View>
-
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
+                <View style={{ flex: 1}}>
+                  <View style={styles.buttonContainer}>
+                <TouchableOpacity
                     style={[
                       styles.playButton,
                       {
@@ -241,17 +238,10 @@ export default function Tickets({gameData}) {
                     </Text>
 
                   </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
-            <TouchableOpacity
-              style={styles.infoIconContainer}
-              onPress={() => {
-                setModalVisible(true);
-              }}
-            >
-              <Icon name={"info-circle"} size={24} color={'red'} />
-            </TouchableOpacity>
           </LinearGradient>
         </View>
       </>
@@ -286,7 +276,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   buttonContainer: {
     borderWidth: 2,
     borderRadius: 10,
@@ -295,7 +284,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     backgroundColor: 'white',
   },
-
   container1: {
     flex: 1,
     paddingLeft: wp('3%'),
@@ -316,8 +304,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     flex: 1,
+
   },
   characterImage: {
     width: wp('25%'),
@@ -326,13 +315,21 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    paddingLeft: wp('3%'),
-    justifyContent: 'space-between',
+    // paddingLeft: wp('1%'),
+    // justifyContent: 'space-between',
   },
   description: {
-    fontSize: wp('3.5%'),
+    fontSize: wp('4%'),
     color: '#000000',
     fontFamily: 'Audiowide-Regular',
+    textAlign: 'center'
+  },
+  title: {
+    fontSize: wp('3%'),
+    color: '#000000',
+    fontFamily: 'Audiowide-Regular',
+    textAlign: 'center',
+    textDecorationLine:'underline'
   },
   boxContainer: {
     flexDirection: 'row',
@@ -341,7 +338,7 @@ const styles = StyleSheet.create({
   },
   box: {
     borderRadius: wp('2%'),
-    padding: wp('1%'),
+    padding: wp('0.5%'),
     alignItems: 'center',
     width: wp('20%'),
     flexDirection: 'row',

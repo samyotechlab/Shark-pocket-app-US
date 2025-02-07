@@ -47,9 +47,9 @@ const WalletScreen = () => {
     }
   };
   const totalAmount =
-    parseFloat(dataUser?.total_balance || 0) +
-    parseFloat(dataUser?.bonus_wallet || 0) +
-    parseFloat(dataUser?.total_earning || 0);
+    parseFloat(dataUser?.total_balance || 0).toFixed(2) +
+    parseFloat(dataUser?.bonus_wallet || 0).toFixed(2) +
+    parseFloat(dataUser?.total_earning || 0).toFixed(2);
 
    useFocusEffect(
       React.useCallback(() => {

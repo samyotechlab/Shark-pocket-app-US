@@ -34,7 +34,7 @@ const GoldenCard = ({ item }) => {
           <Text style={styles.winnerText} numberOfLines={2} adjustsFontSizeToFit>
             {item.game_title}
           </Text>
-          <Text style={styles.amount}>₹{item.game_winning_cost}</Text>
+          {/* <Text style={styles.amount}>₹{item.game_winning_cost}</Text> */}
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   },
   card: {
     // flex:1,
-    width: wp('40%'),
-    height: hp('15%'),
+    width: wp('43%'),
+    height: hp('12%'),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: hp('2.5%'),
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: hp('1%'), // Add padding to prevent text overflow
-    width: wp('40%'), // Ensure the card has a defined width
+    padding: hp('1%'), 
+    width: wp('40%'), 
   },
   winnerImage: {
     justifyContent: 'center',
@@ -70,18 +70,14 @@ const styles = StyleSheet.create({
     height: 'auto',
     maxHeight: hp('5%'),
   },
-  // winImage: {
-  //   width: wp('35%'),
-  //   height: 'auto', // Let height adjust dynamically
-  //   maxHeight: hp('5%'), // Set max height to prevent excessive stretching
-  // },
+  
   winnerText: {
     color: '#FFFFFF',
     fontSize: hp('2%'),
-    textAlign: 'center', // Center the text
+    textAlign: 'center',
     fontFamily: 'Rajdhani-Medium',
     marginTop: hp('0.5%'),
-    maxWidth: wp('35%'), // Prevents text from overflowing
+    maxWidth: wp('35%'), 
   },
   amount: {
     color: '#463614',

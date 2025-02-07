@@ -18,11 +18,7 @@ export default function SplashScreen() {
     try {
       const response = await verifyLogin(userdata?._id, token);
       const Responsedata = response.data;
-      // const mobileNumber = userdata?.mobile;
-      // const username = userdata?.name;
-      // const aadharNumber = userdata?.aadhaar;
-      // const userId = userdata?._id;
-      // const key = generateKey(mobileNumber, username, aadharNumber, userId);
+      // console.log("response",response.data)
       const key = "sharkpocketdevelopedbysamyoindoreteam"
       const decrypt_data = decryptData(key,Responsedata)
       const data = JSON.parse(decrypt_data)

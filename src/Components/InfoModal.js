@@ -1,115 +1,69 @@
 import React from 'react';
-import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-export default function InfoModal({ isVisible, close ,data}) {
+export default function GameInfo({ gameData }) {
     return (
-        <Modal
-            transparent={true}
-            visible={isVisible}
-            onRequestClose={close}
-        >
-            <View style={styles.centeredView}>
-                <LinearGradient style={styles.modalView}
-                    colors={['#F38424', '#F7A552', '#F9D479']}
-                    start={{ x: 0, y: 0.5 }}
-                    end={{ x: 0.8, y: 1 }}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        <Text style={[styles.modalText,{fontSize:hp('2.5%')}]}>Game Information</Text>
-                        <Text style={styles.modalText}>
-                            {data.game_info}
-                        </Text>
-                    </ScrollView>
-                    <TouchableOpacity
-                        style={[
-                            styles.playButton,
-                            {
-                                backgroundColor: '#00b63d',
-                                borderTopColor: '#00e968',
-                                borderBottomColor: '#018312',
-                            },
-                        ]}
-                        onPress={close}
-                    >
-                        <Text style={styles.playButtonText}>Close</Text>
-                    </TouchableOpacity>
-                </LinearGradient>
+        // <LinearGradient colors={['#431c0d', '#742D1A', '#A6401E']} style={styles.container}>
+        <View>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <View style={styles.card}>
+                    <Text style={styles.title}>📜 Game Info</Text>
+                    <Text style={styles.text}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                    </Text>
+                </View>
+            </ScrollView>
             </View>
-        </Modal>
+        // </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
-    centeredView: {
+    container: {
         flex: 1,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        padding: wp('5%'),
+        alignItems: 'center',
         justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
     },
-    modalView: {
-        width: '80%',
-        maxHeight: '30%',
-        borderRadius: 20,
-        padding: 20,
-        alignItems: 'center',
+    card: {
+        backgroundColor: '#F8D9A8',
+        borderRadius: wp('4%'),
+        padding: hp('2.5%'),
+        width: '100%',
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        borderWidth: wp('1%'),
-        borderColor: '#F2E30B',
+        shadowOffset: { width: 0, height: hp('0.5%') },
+        shadowOpacity: 0.3,
+        shadowRadius: wp('2%'),
+        elevation: 6,
+        borderWidth: wp('0.7%'),
+        borderColor: '#FFD700',
     },
-    modalText: {
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
         marginBottom: 15,
         textAlign: 'center',
-        fontSize: wp('3.5%'),
-        color: '#000000',
-        fontFamily: 'Audiowide-Regular',
+        color: '#742D1A',
     },
-    closeButton: {
-        backgroundColor: '#2196F3',
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-        marginTop: 10, // Add some spacing above the button
-    },
-    closeButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    playButton: {
-        borderRadius: 8,
-        paddingVertical: hp('0.7%'),
-        paddingHorizontal: wp('1%'),
-        alignItems: 'center',
-        borderRightWidth: 1,
-        borderLeftWidth: 1,
-        borderTopWidth: 5,
-        borderBottomWidth: 5,
-        shadowColor: 'rgba(0, 0, 0, 0.4)',
-        shadowOpacity: 0.8,
-        shadowRadius: 15,
-        shadowOffset: { width: 1, height: 11 },
-        width: '60%',
-        borderTopRightRadius: wp(3.3),
-    },
-    playButtonText: {
-        letterSpacing: 2,
-        fontSize: wp('4.5%'),
-        fontFamily: 'LilitaOne-Regular',
-        color: '#FFFFFF',
-        textShadowColor: '#000',
-        textShadowOffset: { width: 2, height: 2 },
-        textShadowRadius: 1,
-        textTransform: 'uppercase',
+    text: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: '#333',
+        textAlign: 'justify',
     },
 });
+
