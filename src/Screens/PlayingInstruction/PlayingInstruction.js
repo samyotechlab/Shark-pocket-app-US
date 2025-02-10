@@ -27,8 +27,8 @@ import { addExpectation, editExpectation, getExpectation } from '../../Service/E
 
 export default function PlayingInstruction() {
   const route = useRoute();
-  const { game_id, ticket_id, screen_name ,question} = route.params;
-  console.log("question",question)
+  const { game_id, ticket_id, screen_name, question } = route.params;
+  console.log("question", question)
   const [visible, setVisible] = useState(false);
   const [visibles, setVisibles] = useState(false);
   const [message, setMessage] = useState('');
@@ -40,7 +40,7 @@ export default function PlayingInstruction() {
   const [numberArray, setNumberArray] = useState([]);
   const [loader, setLoader] = useState(false);
   const [expectation, setExpectation] = useState('')
-  const [expectData,setExpectData] = useState({})
+  const [expectData, setExpectData] = useState({})
 
   const { loginData, isReady } = useLoginDataStorage();
   const navigation = useNavigation();
@@ -109,9 +109,9 @@ export default function PlayingInstruction() {
     }
   }
 
-  const showExpectations = async()=>{
+  const showExpectations = async () => {
     try {
-      const response =await getExpectation(data._id,game_id)
+      const response = await getExpectation(data._id, game_id)
       setExpectData(response)
 
       if (response?.dataShow) {
@@ -123,26 +123,27 @@ export default function PlayingInstruction() {
     }
   }
 
-  useEffect(()=>{
-    if(loginData && isReady){
+  useEffect(() => {
+    if (loginData && isReady) {
       showExpectations();
     }
-  },[loginData,isReady])
+  }, [loginData, isReady])
 
-  const handleShow = () =>{
+  const handleShow = () => {
     setVisible(true)
+    
     setMessage('enter your expectation')
   }
 
 
   const handleStartGame = async () => {
     let responseData;
-    if(question != ""){
-      return  (
-          handleShow()
-      )
+    if (question&& expectation=="") {
+      console.log("question-->",question,"expectation-->",expectation)
+      
+        handleShow()
+      
     }
-    if (expectation === "") {
       if (selectedNumber) {
         navigation.navigate('GameScreen', {
           selectedNumber: selectedNumber,
@@ -151,19 +152,16 @@ export default function PlayingInstruction() {
           user_id: data._id,
           gameRuleData: { oddData, negativeData, superData, bonusPoint },
         });
-      } else {
-        setVisible(true);
-      }
     } else {
       if (selectedNumber) {
         try {
-          if(expectData.dataShow){
+          if (expectData.dataShow) {
             responseData = await editExpectation({
               user_id: data._id,
               game_id: game_id,
               userExpectations: expectation
             })
-          }else{
+          } else {
             responseData = await addExpectation({
               user_id: data._id,
               game_id: game_id,
@@ -408,18 +406,23 @@ export default function PlayingInstruction() {
                   justifyContent: 'flex-start',
                 }}>
                 <View style={{ justifyContent: 'center', marginVertical: hp('3%'), marginHorizontal: hp('2%') }}>
-                <Text style={[styles.oddtext,{ fontFamily: 'Montserrat-SemiBold'}]}>Your Expected Amount</Text>
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Enter Your Expectation Here..."
-                      placeholderTextColor="#FFFFFFCC"
-                      keyboardType="default"
-                      value={expectation}
-                      maxLength={25}
-                      onChangeText={(text) => setExpectation(text)}
-                    />
-                  </View>
+                  {
+                    question&&
+                    <>
+                      <Text style={[styles.oddtext, { fontFamily: 'Montserrat-SemiBold' }]}>{question}</Text>
+                      <View style={styles.inputContainer}>
+                        <TextInput
+                          style={styles.input}
+                          placeholder="Enter your answer..."
+                          placeholderTextColor="#FFFFFFCC"
+                          keyboardType="default"
+                          value={expectation}
+                          maxLength={25}
+                          onChangeText={(text) => setExpectation(text)}
+                        />
+                      </View>
+                    </>
+                  }
                 </View>
                 <View
                   style={{

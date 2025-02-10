@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, FlatList } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PinkPrizeCard from './PinkPrizeCard';
 import GoldenCard from './GoldenCard';

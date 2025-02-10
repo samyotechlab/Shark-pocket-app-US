@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Carousel from 'react-native-reanimated-carousel';
+import banner from '../../assets/images/Screens/banner.jpg'
 const { width } = Dimensions.get('window');
 const WinnerCard = (props) => {
   const { data } = props
@@ -17,6 +18,7 @@ const WinnerCard = (props) => {
       <TouchableOpacity style={styles.container} disabled={!clickable} onPress={openLink}>
         <Image
           source={{ uri: item?.banner }}
+          // source={require('../../assets/images/Screens/banner.jpg') }
           style={styles.profileImage}
         />
       </TouchableOpacity>
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
     height: hp('10%'),
     resizeMode: 'cover',
   },
+
   content: {
     flex: 1,
     justifyContent: 'space-evenly',

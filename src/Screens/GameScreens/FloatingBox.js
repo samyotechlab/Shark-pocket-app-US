@@ -336,7 +336,7 @@ export default function FloatingBoxGame() {
         setStatus(0)
       }
     } catch (error) {
-      console.log('error--------------->>>>>>>', error);
+      console.log('error', error);
     }
   };
 

@@ -28,8 +28,6 @@ import Toast from 'react-native-toast-message';
 import { userDetail } from '../../Service/Login';
 import CloseDialog from '../../Components/CloseDialog';
 import { stateList } from '../../Utilities/CurrentState';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import InfoModal from '../../Components/InfoModal';
 
 export default function Tickets({ gameData }) {
   const question = gameData?.questions
@@ -199,26 +197,32 @@ export default function Tickets({ gameData }) {
                   <Text style={styles.title}>Rem. Entries</Text>
                 </View>
                 <View style={{ flex: 1,flexDirection:'row',justifyContent:'space-evenly'}}>
-                <View
+                <LinearGradient
+                    colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     style={styles.box}>
                     <Image source={coin} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.price}</Text>
-                  </View>
+                    </LinearGradient>
 
-                  <View
+                    <LinearGradient
+                    colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     style={styles.box}>
                     <Image source={ticket} style={styles.boxIcon1} />
                     <Text style={styles.boxText}>{item.entries}</Text>
-                  </View>
+                  </LinearGradient>
 
-                  <View
+                  <LinearGradient
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={styles.box}>
                     <Image source={timer} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.remaining_entries}</Text>
-                  </View>
+                  </LinearGradient>
                 </View>
                 <View style={{ flex: 1}}>
                   <View style={styles.buttonContainer}>

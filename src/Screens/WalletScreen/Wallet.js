@@ -108,7 +108,7 @@ const WalletScreen = () => {
                   </View>
                   <View style={styles.balanceContent}>
                     <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-                    <Text style={styles.balanceAmount}>₹{totalAmount || 0}</Text>
+                    <Text style={styles.balanceAmount}>₹{parseFloat(totalAmount|| 0).toFixed(2) || 0}</Text>
                   </View>
                 </View>
               </LinearGradient>

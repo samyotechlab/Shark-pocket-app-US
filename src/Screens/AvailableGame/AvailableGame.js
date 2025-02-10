@@ -7,6 +7,8 @@ import { useRoute } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
 import AvailableCard from '../../Components/AvailableCard'
 import DailyWeeklyBar from '../../Components/DailyWeeklyBar'
+import DailyCard from '../../Components/DailyCard'
+import WeeklyCard from '../../Components/WeeklyCard'
 
 
 export default function AvailableGame() {
@@ -39,6 +41,10 @@ export default function AvailableGame() {
             setDisabled(true)
         } else if (status === "4") {
             setTitle('Game History');
+        }else if(status === "5"){
+            setTitle('Daily Game')
+        }else if(status === "6"){
+            setTitle('Weekly Game')
         }
     }, [status]);
 
@@ -86,15 +92,21 @@ export default function AvailableGame() {
                             colors={['#361911', '#361911', '#6A1700']}
                             style={styles.linearGradient}>
                             <CommonHeader title={title ? title : 'Available Games'} />
-                            <View style={styles.container}>
-                                <FlatList
-                                    data={myGames}
-                                    renderItem={renderItem}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    showsVerticalScrollIndicator={false}
-                                    contentContainerStyle={styles.scrollContainer}
-                                />
-                            </View>
+                            {
+                                status === "5"?( <DailyCard  gameData={gameData}/>): 
+                                status === "6" ?(<WeeklyCard  gameData={gameData}/>):
+                                (<View style={styles.container}>
+                                    <FlatList
+                                        data={myGames}
+                                        renderItem={renderItem}
+                                        keyExtractor={(item, index) => index.toString()}
+                                        showsVerticalScrollIndicator={false}
+                                        contentContainerStyle={styles.scrollContainer}
+                                    />
+                                </View>)
+                            }
+                           
+                            
                         </LinearGradient>
                     )
             }

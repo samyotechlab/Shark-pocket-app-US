@@ -48,7 +48,6 @@ export default function SplashScreen() {
     }, 3000)
     return () => clearTimeout(timeout);
   }, [isReady, loginData]);
-
   return (
     <>
       <View style={styles.container}>

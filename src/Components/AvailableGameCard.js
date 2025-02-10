@@ -13,7 +13,6 @@ const { width } = Dimensions.get('window');
 const AvailbleGameCard = (props) => {
   const navigation = useNavigation();
   const { gameData, availability } = props
-  console.log("--------->", availability)
   const [currentIndex, setCurrentIndex] = useState(0);
   let myGameData = []
   let data = []

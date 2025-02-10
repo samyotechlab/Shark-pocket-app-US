@@ -1,19 +1,27 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, View } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import AvailableCard from './AvailableCard';
+import { useNavigation } from '@react-navigation/native';
 
 const WeeklyCard = ({gameData}) => {
+    const navigation = useNavigation()
+
   const weeklyGameData = gameData?.filter(item => item.frequency === "weekly")
+  const handleNavigation = (item) => {
+    navigation.navigate('GameName', { game_id: item._id })
+}
   const renderItem = ({ item, index }) => {
     return (<>
-
-      <TouchableOpacity style={styles.container1} >
+      <TouchableOpacity style={styles.container1} onPress={()=>{
+        handleNavigation(item)
+      }}>
         <AvailableCard gameData={item} status={"2"} />
       </TouchableOpacity>
     </>)
   }
   return (
+    <View style={styles.container}>
     <FlatList
       data={weeklyGameData}
       renderItem={renderItem}
@@ -21,6 +29,7 @@ const WeeklyCard = ({gameData}) => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollContainer}
     />
+    </View>
   );
 };
 
@@ -32,7 +41,11 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: wp('5%'),
     marginBottom: hp('2%'),
-  }
+  },
+  container: {
+    flex: 1,
+    marginTop: hp('3%')
+},
 });
 
 export default WeeklyCard;

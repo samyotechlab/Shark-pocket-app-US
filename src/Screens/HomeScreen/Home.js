@@ -68,10 +68,8 @@ export default function HomeScreen() {
         ]);
         return true;
       };
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-      };
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => backHandler.remove();
     }, [loginData]),
   );
 
@@ -254,7 +252,7 @@ export default function HomeScreen() {
                     <TouchableOpacity
                       style={{ flex: 0.5, alignItems: 'flex-end', marginRight: hp('1%') }}
                       onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData ,status :"2"});
+                        navigation.navigate('AvailableGame', { gameData ,status :"5"});
                       }}
                     >
                       <Text style={styles.view}>View All</Text>
@@ -285,7 +283,7 @@ export default function HomeScreen() {
                     <TouchableOpacity
                       style={{ flex: 0.5, alignItems: 'flex-end', marginRight: hp('1%') }}
                       onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData ,status :"2"});
+                        navigation.navigate('AvailableGame', { gameData ,status :"6"});
                       }}
                     >
                       <Text style={styles.view}>View All</Text>

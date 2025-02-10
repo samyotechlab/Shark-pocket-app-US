@@ -1,10 +1,11 @@
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -17,8 +18,10 @@ import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function GameFinishHistory() {
   const [loader, setLoader] = useState(false);
+  const navigation = useNavigation()
   const route = useRoute();
   const {gameHistoryData} = route.params;
+  // console.log("gameHistoryData",gameHistoryData.selected_number)
   return (
     <>
       <LinearGradient
@@ -213,6 +216,11 @@ export default function GameFinishHistory() {
                   </View>
                 </View>
               </LinearGradient>
+              <TouchableOpacity style={{marginTop:hp('2%')}} onPress={()=>{
+                navigation.navigate('SelectedNumbers',{numbers:gameHistoryData.selected_number})
+              }}>
+              <Text style={styles.viewText}>View Selected Numbers</Text>
+              </TouchableOpacity>
               <View
                 style={{
                   flex: 0.3,
@@ -220,6 +228,7 @@ export default function GameFinishHistory() {
                   alignItems: 'center',
                 }}></View>
             </View>
+           
           </>
         ) : (
           <AnimatedLoader />
@@ -370,5 +379,11 @@ const styles = StyleSheet.create({
     fontFamily: 'LilitaOne-Regular',
     color: '#FFF',
     textAlign: 'center',
+  },
+  viewText: {
+    color: 'red',
+    fontSize: wp('3.5%'),
+    fontFamily: 'Montserrat-SemiBold',
+    textDecorationLine: 'underline'
   },
 });
