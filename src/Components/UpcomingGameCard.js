@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
 const UpcomingGameCard = ({ items ,status}) => {
+  console.log("status",status)
   const navigation = useNavigation()
   const { index,item } = items
   const game_color = item.gameColor 
@@ -24,11 +25,12 @@ const UpcomingGameCard = ({ items ,status}) => {
   const handleNavigation = () => {
     if(status === "1"){
       navigation.navigate('AllGameName', { game_id: item._id,game_name:item.title })
+    }else{
+      navigation.navigate('UpcomingGameInfo', { game_id: item._id,game_name:item.title })
     }
   }
   return (
     <View style={styles.container}>
-      {/* First Card */}
       {
         index % 2 == 0 ? (
         <TouchableOpacity onPress={() => {handleNavigation()}}> 
@@ -57,7 +59,7 @@ const UpcomingGameCard = ({ items ,status}) => {
         </LinearGradient>
         </TouchableOpacity> 
         ) : (
-        <TouchableOpacity onPress={() => {handleNavigation(item._id)}}>
+        <TouchableOpacity onPress={() => {handleNavigation()}}>
         <LinearGradient
          colors={
           Colors[game_color] ? Colors[game_color] : ['#F38424', '#F7A552', '#F9D479']
@@ -130,7 +132,6 @@ const styles = StyleSheet.create({
   cardAlt: {
     width: 170,
     height: 120,
-    // backgroundColor: '#F08030',
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',

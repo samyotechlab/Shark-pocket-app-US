@@ -22,7 +22,7 @@ export default function Login() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [mobileError, setMobileError] = useState('');
   const [loader, setLoader] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
 
   const validateInputs = () => {
@@ -55,7 +55,7 @@ export default function Login() {
             headers,
           )
           .then(res => {
-            console.log("response=====>",res.data)
+            console.log("response=====>", res.data)
             if (res.data.status === 1) {
               Toast.show({
                 type: 'success',
@@ -85,7 +85,7 @@ export default function Login() {
           });
 
       }
-      else{
+      else {
         setLoader(false)
       }
     } catch (error) {
@@ -125,22 +125,28 @@ export default function Login() {
             <Text style={styles.errorText}>{mobileError}</Text>
           )}
         </View>
-                <View style={styles.checkboxContainer}>
-                <CheckBox
-                style={styles.checkBox}
-                onClick={() => setIsChecked(!isChecked)} 
-                isChecked={isChecked}
-                checkedCheckBoxColor="#FFD700" 
-                uncheckedCheckBoxColor="#9B9B9B" 
-              />
-                  <Text style={styles.checkboxText}>Accept all terms and conditions</Text>
-                </View>
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            style={styles.checkBox}
+            onClick={() => setIsChecked(!isChecked)}
+            isChecked={isChecked}
+            checkedCheckBoxColor="#FFD700"
+            uncheckedCheckBoxColor="#9B9B9B"
+          />
+          <Text style={styles.checkboxText}>Accept all terms and conditions ?
+            <TouchableOpacity style={{ marginBottom: hp('1.1%') }} onPress={() => {
+              navigation.navigate('T&CScreen')
+            }}>
+              <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Terms & Con.</Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
         <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
-          <CommonButton 
+          <CommonButton
             title={loader ? 'Loading...' : 'Login'}
             onPress={handleLogin}
             disabled={!isChecked}
-            />
+          />
         </View>
         <Toast ref={Toast.setRef} />
       </View>
@@ -198,8 +204,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dimmed background
-    borderRadius: 10, // Matches button shape
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 10, 
     zIndex: 10,
   },
   checkboxContainer: {
@@ -212,4 +218,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#FFFFFF',
   },
+  kycText: {
+    color: '#FFFFFF',
+    fontSize: hp('1.5'),
+    fontFamily: 'Montserrat-Regular',
+    marginTop: hp('1%'),
+  }
 })

@@ -10,7 +10,6 @@ import DailyWeeklyBar from '../../Components/DailyWeeklyBar'
 import DailyCard from '../../Components/DailyCard'
 import WeeklyCard from '../../Components/WeeklyCard'
 
-
 export default function AvailableGame() {
     const navigation = useNavigation()
     const route = useRoute();
@@ -38,7 +37,6 @@ export default function AvailableGame() {
             setTitle('Available Games');
         } else if (status === "3") {
             setTitle('Upcoming Games');
-            setDisabled(true)
         } else if (status === "4") {
             setTitle('Game History');
         }else if(status === "5"){
@@ -51,7 +49,10 @@ export default function AvailableGame() {
     const handleNavigation = (item) => {
         if (status === "4") {
             navigation.navigate('AllGameName', { game_id: item._id, game_name: item.title })
-        } else {
+        }else if (status === "3"){
+            navigation.navigate('UpcomingGameInfo', { game_id: item._id, game_name: item.title })
+        }
+         else {
             navigation.navigate('GameName', { game_id: item._id })
         }
     }

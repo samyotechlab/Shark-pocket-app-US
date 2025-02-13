@@ -16,11 +16,7 @@ const MyGame = (props) => {
 
     const renderItem = ({ item, index }) => (
         <View style={styles.cardContainer}>
-            {index % 2 === 0 ? (
-                <PinkPrizeCard item={item} />
-            ) : (
-                <GoldenCard item={item} />
-            )}
+            <PinkPrizeCard item={item} />
         </View>
     );
 
@@ -48,16 +44,17 @@ const MyGame = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingTop: ('2%')
     },
     twoCardsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: wp('2%'),
+        marginHorizontal: wp('1%'),
     },
     cardContainer: {
         width: width * 0.43,
         marginHorizontal: wp('1%'),
-    
+
     },
     emptyContainer: {
         flex: 1,

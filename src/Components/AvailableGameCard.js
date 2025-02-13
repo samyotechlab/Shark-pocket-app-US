@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Text, Dimensions, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Dimensions, View, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 import {
@@ -12,8 +12,7 @@ const { width } = Dimensions.get('window');
 
 const AvailbleGameCard = (props) => {
   const navigation = useNavigation();
-  const { gameData, availability } = props
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { gameData, availability,setScrollEnabled } = props
   let myGameData = []
   let data = []
 
@@ -63,6 +62,13 @@ const AvailbleGameCard = (props) => {
             mode='stack-horizontal-right'
             pagingEnabled={true}
             style={styles.carouselContainer}
+            panGestureHandlerProps={{
+              activeOffsetX: [-10, 10], 
+              failOffsetY: [-10, 10], 
+            }}
+            onTouchStart={() => setScrollEnabled(false)}
+            onTouchEnd={() => setScrollEnabled(true)} 
+            onTouchCancel={() => setScrollEnabled(true)} 
           />
         </View>
       )}
@@ -73,6 +79,7 @@ const AvailbleGameCard = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop:hp('1%')
   },
   emptyContainer: {
     flex: 1,

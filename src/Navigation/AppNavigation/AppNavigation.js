@@ -31,6 +31,7 @@ import AllGameName from '../../Screens/GameHistory/AllGameName';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
 import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen,SupportScreen } from '../../Screens/Screens/Screen';
 import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
+import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
 
 export default function AppNavigation() {
   const Stack = createStackNavigator();
@@ -275,6 +276,13 @@ export default function AppNavigation() {
          <Stack.Screen
           name="SelectedNumbers"
           component={SelectedNumbers}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="UpcomingGameInfo"
+          component={UpcomingGameInfo}
           options={{
             headerShown: false,
           }}

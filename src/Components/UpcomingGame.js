@@ -6,7 +6,6 @@ import UpcomingGameCard from './UpcomingGameCard';
 
 
 const UpcomingGame = (props) => {
-
     const {gameData} = props;
 
     const filteredData = gameData.filter((item) => item.status === 1);
@@ -37,10 +36,6 @@ const UpcomingGame = (props) => {
     );
 };
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: hp('45%')
-    },
     emptyContainer: {
         flex: 1,
         alignItems: 'center',
