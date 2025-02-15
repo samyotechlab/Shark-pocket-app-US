@@ -137,7 +137,7 @@ export default function Login() {
             <TouchableOpacity style={{ marginBottom: hp('1.1%') }} onPress={() => {
               navigation.navigate('T&CScreen')
             }}>
-              <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Terms & Con.</Text>
+              <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Terms & Condition</Text>
             </TouchableOpacity>
           </Text>
         </View>

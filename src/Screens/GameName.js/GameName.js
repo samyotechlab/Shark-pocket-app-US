@@ -7,7 +7,7 @@ import Tickets from './Tickets'
 import PlayedHistory from './PlayedHistory'
 import { useRoute } from '@react-navigation/native'
 import { gameById } from '../../Service/Game'
-import InfoModal from '../../Components/InfoModal'
+import InfoModal from '../../Components/GameInfo'
 
 
 export default function GameName() {

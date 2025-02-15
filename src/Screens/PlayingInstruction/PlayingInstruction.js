@@ -407,7 +407,7 @@ export default function PlayingInstruction() {
                 }}>
                 <View style={{ justifyContent: 'center', marginVertical: hp('3%'), marginHorizontal: hp('2%') }}>
                   {
-                    question&&
+                    question &&
                     <>
                       <Text style={[styles.oddtext, { fontFamily: 'Montserrat-SemiBold' }]}>{question}</Text>
                       <View style={styles.inputContainer}>
