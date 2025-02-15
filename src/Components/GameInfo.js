@@ -7,7 +7,7 @@ import {
 
 export default function GameInfo({ gameData }) {
     return (
-        // <LinearGradient colors={['#431c0d', '#742D1A', '#A6401E']} style={styles.container}>
+
         <View>
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.card}>
@@ -45,20 +45,33 @@ const styles = StyleSheet.create({
         padding: hp('2.5%'),
         width: '100%',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: hp('0.5%') },
-        shadowOpacity: 0.3,
-        shadowRadius: wp('2%'),
-        elevation: 6,
+        shadowOffset: { width: 5, height: 10 }, 
+        shadowOpacity: 0.5, 
+        shadowRadius: wp('4%'), 
+        elevation: 12,
         borderWidth: wp('0.7%'),
         borderColor: '#FFD700',
-    },
+        transform: [{ perspective: 1000 }, { rotateX: '-5deg' }], 
+    },    
     title: {
-        fontSize: 24,
+        fontSize: wp('6%'),
         fontWeight: 'bold',
-        marginBottom: 15,
+        marginBottom: hp('2%'),
         textAlign: 'center',
-        color: '#742D1A',
-    },
+        color: '#FFD700', // Gold color for highlighting
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 4,
+        textTransform: 'uppercase',
+        letterSpacing: 2,
+        backgroundColor: '#742D1A', // Dark background for contrast
+        paddingVertical: hp('1%'),
+        paddingHorizontal: wp('5%'),
+        borderRadius: wp('3%'),
+        overflow: 'hidden',
+        borderWidth: 2,
+        borderColor: '#FFD700',
+    },    
     text: {
         fontSize: 16,
         lineHeight: 24,

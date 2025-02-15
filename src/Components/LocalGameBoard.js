@@ -14,18 +14,15 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Person2 from '../../assets/images/Screens/Person2.jpeg';
-import Person3 from '../../assets/images/Screens/Person3.jpeg';
+import Icon from 'react-native-vector-icons/Entypo';
 import Person4 from '../../assets/images/Screens/Person4.jpeg';
-import Person from '../../assets/images/Screens/person.jpeg';
-import dummyProfile2 from '../../assets/images/Screens/dummmyProfile2.jpeg'
-import Frame from '../../assets/images/Screens/Frame.png';
 import SearchField from './SearchField';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { leaderBoard } from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
 import { truncateName } from '../Utilities/utilies';
 import AnimatedLoader from './AnimatedLoader';
+import GameInfoModal from './GameInfoModal';
 
 export default function LocalGameBoard() {
   const route = useRoute();
@@ -34,9 +31,11 @@ export default function LocalGameBoard() {
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [firstRanking, setFirstRanking] = useState(null);
-  const [secondRanking, setSecondRanking] = useState(null);
-  const [thirdRanking, setThirdRanking] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // const [firstRanking, setFirstRanking] = useState(null);
+  // const [secondRanking, setSecondRanking] = useState(null);
+  // const [thirdRanking, setThirdRanking] = useState(null);
 
   const handleNavigation = () => {
     navigation.goBack();
@@ -90,18 +89,18 @@ export default function LocalGameBoard() {
     }
   };
 
-  useEffect(() => {
-    if (gameData && gameData.length > 0) {
-      const rakingData = () => {
-        gameData.forEach(item => {
-          if (item.ranking === 1) setFirstRanking(item);
-          if (item.ranking === 2) setSecondRanking(item);
-          if (item.ranking === 3) setThirdRanking(item);
-        });
-      };
-      rakingData();
-    }
-  }, [gameData]);
+  // useEffect(() => {
+  //   if (gameData && gameData.length > 0) {
+  //     const rakingData = () => {
+  //       gameData.forEach(item => {
+  //         if (item.ranking === 1) setFirstRanking(item);
+  //         if (item.ranking === 2) setSecondRanking(item);
+  //         if (item.ranking === 3) setThirdRanking(item);
+  //       });
+  //     };
+  //     rakingData();
+  //   }
+  // }, [gameData]);
 
   const renderItem = items => {
     const { item } = items;
@@ -148,10 +147,12 @@ export default function LocalGameBoard() {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <GameInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
-        <View style={{ flex: 1, marginTop: wp('10%') }}>
+        <View style={{ flex: 1, marginTop: wp('5%') }}>
           <View style={styles.leaderBoard}>
             <TouchableOpacity
               style={{ flex: 0.5, justifyContent: 'center' }}
@@ -166,172 +167,16 @@ export default function LocalGameBoard() {
             </View>
           </View>
         </View>
-        <View style={{ flex: 1.5, flexDirection: 'row', marginBottom: 20 }}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: hp(8),
-                width: hp(8),
-                borderRadius: hp(8),
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 2,
-                borderColor: '#F1C328',
-              }}>
-              <Image
-                source={
-                  secondRanking?.userAvatar ? { uri:secondRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
-        
-                }
-                style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
-              />
-            </View>
-            <View style={{ position: 'absolute' }}>
-              <View
-                style={{
-                  height: hp(3),
-                  width: hp(3),
-                  backgroundColor: '#F1C328',
-                  borderRadius: hp(3),
-                  top: hp('2%'),
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={{ color: '#000000CC' }}>2</Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                color: '#FFFFFFCC',
-                fontFamily: 'PlusJakartaSans-Bold',
-                fontSize: 14,
-                paddingTop: wp('3%'),
-              }}>
-              {secondRanking?.user_name
-                ? truncateName(secondRanking?.user_name, 1)
-                : 'user'}
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: hp('5%'),
-                width: wp('10%'),
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                top: wp('2%'),
-              }}>
-              <Image source={Frame} />
-            </View>
-            <View
-              style={{
-                height: hp(11),
-                width: hp(11),
-                borderRadius: hp(11),
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 2,
-                borderColor: '#F1C328',
-              }}>
-              <Image
-                source={
-                  firstRanking?.userAvatar?{ uri:firstRanking?.userAvatar}:require('../../assets/images/Screens/dummmyProfile2.jpeg')
-                }
-                style={{ height: hp(10), width: hp(10), borderRadius: hp(10) }}
-              />
-            </View>
-            <View style={{ position: 'absolute' }}>
-              <View
-                style={{
-                  height: hp(3),
-                  width: hp(3),
-                  borderRadius: hp(3),
-                  backgroundColor: '#F1C328',
-                  top: hp('6%'),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{ color: '#000000CC' }}>1</Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                color: '#FFFFFFCC',
-                fontWeight: '500',
-                fontSize: 14,
-                fontFamily: 'PlusJakartaSans-Bold',
-              }}>
-              {firstRanking?.user_name
-                ? truncateName(firstRanking?.user_name, 1)
-                : 'user'}
-            </Text>
-          </View>
-
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: hp(8),
-                width: hp(8),
-                borderRadius: hp(8),
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderWidth: 2,
-                borderColor: '#F1C328',
-              }}>
-              <Image
-                  source={
-                    thirdRanking?.userAvatar?{ uri:thirdRanking?.userAvatar}: require('../../assets/images/Screens/dummmyProfile2.jpeg')
-                  }
-                style={{ height: hp(7), width: hp(7), borderRadius: hp(7) }}
-              />
-            </View>
-            <View style={{ position: 'absolute' }}>
-              <View
-                style={{
-                  height: hp(3),
-                  width: hp(3),
-                  backgroundColor: '#F1C328',
-                  borderRadius: hp(3),
-                  top: hp('2%'),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={{ color: '#000000CC' }}>3</Text>
-              </View>
-            </View>
-            <Text
-              style={{
-                color: '#FFFFFFCC',
-                fontSize: 14,
-                paddingTop: wp('3%'),
-                fontFamily: 'PlusJakartaSans-Bold',
-              }}>
-              {thirdRanking?.user_name
-                ? truncateName(thirdRanking?.user_name, 1)
-                : 'user'}
-            </Text>
-          </View>
-        </View>
+        <TouchableOpacity style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: hp('2%') }} onPress={() => {
+          setModalVisible(true)
+        }}>
+          <Icon name={'info-with-circle'} size={30} color={'red'} />
+        </TouchableOpacity>
         <View
           style={{
             flex: 6,
             backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            margin: wp('6%'),
+            margin: wp('5%'),
             borderRadius: 15,
           }}>
           <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>

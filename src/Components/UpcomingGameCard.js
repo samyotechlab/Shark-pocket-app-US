@@ -4,9 +4,11 @@ import Trophy from '../../assets/images/Screens/trophy1.png'
 import PlayNow from '../../assets/images/Screens/playNowBtn.png'
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import Button from '../../assets/images/Screens/Button.png'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 const UpcomingGameCard = ({ items ,status}) => {
-  console.log("status",status)
   const navigation = useNavigation()
   const { index,item } = items
   const game_color = item.gameColor 
@@ -41,21 +43,32 @@ const UpcomingGameCard = ({ items ,status}) => {
           start={{ x: 0, y: 0.5 }}
           end={{ x: 0.8, y: 1 }}
           style={
-            status === "1" ?  [styles.card,
+            status === "1" ? [styles.card1,
               { 
                 borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" 
               }] : [styles.card]
            }
         >
           <View style={styles.button}>
-            <Image source={PlayNow} />
+            <Image source={ status === "1" ? Button : PlayNow} />
           </View>
-          <View style={styles.trophiesRow}>
-            <Image source={Trophy} style={styles.trophyIcon} />
-            <Text style={styles.winText}>{status === "1" ? item.title:"WIN"}</Text>
-            <Image source={Trophy} style={styles.trophyIcon} />
-          </View>
-          <Text style={styles.amountText}>₹{item.winning_cost}</Text>
+          {
+            status === "1"?(
+              <View style={styles.trophiesRow}>
+              <Text style={styles.heading}>{ item.title}</Text>
+            </View>
+            ):(     
+              <View style={styles.trophiesRow}>
+              <Image source={Trophy} style={styles.trophyIcon} />
+              <Text style={styles.winText}>{"WIN"}</Text>
+              <Image source={Trophy} style={styles.trophyIcon} />
+            </View>)
+          }
+
+          {
+            status === "1"? (<></>):( <Text style={styles.amountText}>₹{item.winning_cost}</Text>)
+          }
+         
         </LinearGradient>
         </TouchableOpacity> 
         ) : (
@@ -66,14 +79,33 @@ const UpcomingGameCard = ({ items ,status}) => {
         }
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={[styles.cardAlt, {borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" }]}
+          style={
+            status === "1" ? [styles.card1,
+              { 
+                borderColor: borderColor[game_color] ? borderColor[game_color] : "#F2E30B" 
+              }] : [styles.cardAlt]
+           }
         >
-          <Text style={styles.winNowText}>
-            <Text style={styles.winTextAlt}>WIN</Text>
-            <Text style={styles.nowTextAlt}> NOW</Text>
-          </Text>
-          <Text style={styles.gainText}>{status === "1" ? item.title:"Gain"}</Text>
-          <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text>
+          {
+            status ==="1"?(<>
+            <View style={styles.button}>
+            <Image source={ status === "1" ? Button : PlayNow} />
+          </View>
+             <View style={styles.trophiesRow}>
+              <Text style={styles.heading}>{ item.title}</Text>
+            </View>
+            </>):(  
+              <>
+            <Text style={styles.winNowText}>
+              <Text style={styles.winTextAlt}>WIN</Text>
+              <Text style={styles.nowTextAlt}> NOW</Text>
+            </Text>
+            <Text style={styles.gainText}>{status === "1" ? item.title:"Gain"}</Text>
+            <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text>
+            </>
+            )
+          }
+        
         </LinearGradient>
         </TouchableOpacity>
         )
@@ -93,7 +125,16 @@ const styles = StyleSheet.create({
   card: {
     width: 170,
     height: 120,
-    // backgroundColor: '#4CAF50',
+    borderRadius: 20,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    padding: 10,
+    borderColor: '#569218',
+    borderWidth: 4
+  },
+  card1: {
+    width: 170,
+    height: 100,
     borderRadius: 20,
     justifyContent: 'space-evenly',
     alignItems: 'center',
@@ -163,6 +204,17 @@ const styles = StyleSheet.create({
     color: '#FFF',
     marginTop: 10,
   },
+    heading: {
+      color: '#2A1610',
+      fontSize: hp('2%'),
+      fontFamily: 'PatuaOne-Regular',
+      marginTop: hp('1%'),
+      textTransform: 'uppercase',
+      textShadowColor: '#000000',
+      textShadowOffset: { width: 1, height: 2 },
+      textShadowRadius: 2,
+      letterSpacing: 1
+    },
 });
 
 export default UpcomingGameCard;

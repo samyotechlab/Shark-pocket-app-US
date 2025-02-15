@@ -7,7 +7,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
   } from 'react-native-responsive-screen';
-  import InfoModal from './InfoModal'
+  import InfoModal from './GameInfo'
 
 
 export default function UpcomingGameInfo() {
@@ -35,15 +35,7 @@ export default function UpcomingGameInfo() {
 
       </View>
    <View style={{flex:1}}>
-   <InfoModal />
-      {/* {selectedTab === 'Tickets' ? (
-        <Tickets gameData={gameData}/>
-      ) : selectedTab === 'GameInfo'? (
-        <InfoModal gameData={gameData}/>
-      ):(
-        <PlayedHistory game_id={game_id}/>
-      )
-      } */}
+        <InfoModal />
       </View>
     </View>
   </LinearGradient>

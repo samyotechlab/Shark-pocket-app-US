@@ -58,7 +58,7 @@ const AvailbleGameCard = (props) => {
             height={210}
             loop={true}
             autoPlay={true}
-            autoPlayInterval={2000}
+            autoPlayInterval={5000}
             mode='stack-horizontal-right'
             pagingEnabled={true}
             style={styles.carouselContainer}
