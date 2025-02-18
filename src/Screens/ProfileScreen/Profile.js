@@ -214,7 +214,7 @@ const SharkPocketScreen = () => {
           <View style={styles.profileDetailsContainer}>
             <View>
               <Text style={styles.profileName}>
-                {truncateName(userData.name, 1)}
+                {truncateName(userData.userName, 1)}
               </Text>
               <Text style={styles.profilePhone}>(+91) {userData.mobile}</Text>
               <View style={styles.profileInfoContainer}>

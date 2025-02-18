@@ -137,11 +137,11 @@ export default function HomeScreen() {
           <View style={{ backgroundColor: '#552113' }}>
             <View style={styles.container}>
 
-              <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData })}>
+              <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData ,status:1})}>
                 <Image source={sharkLogo} style={styles.logo} />
               </TouchableOpacity>
 
-              <View style={styles.logo1Container} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData })}>
+              <View style={styles.logo1Container} >
                 <Image source={shark} style={styles.logo} />
               </View>
 

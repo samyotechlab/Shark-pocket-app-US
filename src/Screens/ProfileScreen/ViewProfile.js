@@ -19,7 +19,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 const ViewProfile = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const { usersData } = route.params
+  const { usersData,status } = route.params
   const [loader, setLoader] = useState(false)
   const [profileImage, setProfileImage] = useState(usersData.avatar || null);
   const [isEditing, setIsEditing] = useState({ mobile: false, email: false });
@@ -99,7 +99,8 @@ const ViewProfile = () => {
         !loader ? (
           <>
             <View style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 10 }}>
-              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+              <TouchableOpacity onPress={status === 1 ?(()=>navigation.navigate('HomeScreen', { screen: "Profile" })
+) :(() => navigation.goBack())} style={styles.back}>
                 <Iconics name="chevron-back" size={27} color={'black'} />
               </TouchableOpacity>
               <Text style={styles.header}>My Profile</Text>

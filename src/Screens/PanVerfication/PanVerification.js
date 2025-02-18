@@ -125,6 +125,7 @@ export default function PanVerfication() {
         setLoader(true)
         try {
             const response = await PanVerificationData(obj);
+            console.log("This PAN number is already registered",response)
             setResponse(response.status)
             if (response.status === 1) {
                 Toast.show({
@@ -148,11 +149,12 @@ export default function PanVerfication() {
             }
         } catch (error) {
             const msg = error.message
+            console.log('msg',msg)
             Toast.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Error!',
-                text2: msg,
+                text1: 'Pan Already Registered',
+                text2: 'Please Try Different Number',
                 visibilityTime: 3000,
             });
         } finally {
