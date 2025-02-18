@@ -9,9 +9,12 @@ import {
 import LocalLeaderBoard from './LocalLeaderBoard';
 import GlobalLeaderBoard from './GlobalLeaderBoard';
 import Iconics from 'react-native-vector-icons/Ionicons';
+import GameInfoModal from './GameInfoModal';
 
 export default function LeaderBoard() {
   const [selectedTab, setSelectedTab] = useState('Local');
+    const [modalVisible, setModalVisible] = useState(false);
+  
 
   const handlePress = tab => {
     setSelectedTab(tab);
@@ -25,9 +28,27 @@ export default function LeaderBoard() {
 
   return (
     <>
+          <GameInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+
       <View style={{flex: 1.5}}>
         <View style={styles.leaderBoard}>
           <Text style={styles.leaderTxt}>Leader Board</Text>
+          <TouchableOpacity style={styles.button} onPress={()=>{
+                      setModalVisible(true)
+
+          }}>
+        <LinearGradient
+          colors={["#FEB801", "#361911"]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+          style={styles.gradientButton}
+        >
+          <View>
+            <Text style={styles.buttonText}>Points</Text>
+            <Text style={styles.buttonText}>Selection</Text>
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
         </View>
         <View style={{flex: 1}}>
           <View
@@ -59,7 +80,7 @@ export default function LeaderBoard() {
                     color: selectedTab === 'Local' ? 'white' : '#FFFFFFB2',
                     fontFamily: 'Montserrat-Medium',
                   }}>
-                  Local
+                  Weekly
                 </Text>
               </TouchableOpacity>
               {selectedTab === 'Local' && (
@@ -96,7 +117,7 @@ export default function LeaderBoard() {
                     color: selectedTab === 'Global' ? 'white' : '#FFFFFFB2',
                     fontFamily: 'Montserrat-Medium',
                   }}>
-                  Global
+                  Daily
                 </Text>
               </TouchableOpacity>
               {selectedTab === 'Global' && (
@@ -115,7 +136,7 @@ export default function LeaderBoard() {
         </View>
       </View>
       <View style={{flex: 6}}>
-        {selectedTab === 'Local' ? <LocalLeaderBoard /> : <GlobalLeaderBoard />}
+        {selectedTab === 'Local' ? <LocalLeaderBoard  type="weekly"/> : <LocalLeaderBoard type="daily"/>}
       </View>
     </>
   );
@@ -135,5 +156,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-SemiBold',
     fontSize: wp('5'),
     // letterSpacing:hp('0.2%')
+  },
+  button: {
+    borderRadius: hp('1%'),
+    overflow: "hidden",
+    marginRight:hp('2%'),
+  },
+  gradientButton: {
+    paddingVertical: hp('1%'),
+    paddingHorizontal: hp('1%'),
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: hp('1.5%'),
+    textAlign: "center",
+    fontFamily: 'Montserrat-SemiBold',
   },
 });

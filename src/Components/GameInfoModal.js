@@ -19,7 +19,7 @@ const GameInfoModal = ({ visible, onClose }) => {
         >
 
           <View style={styles.header}>
-            <Text style={styles.headerText}>Game Information</Text>
+            <Text style={styles.headerText}>Points Selection</Text>
           </View>
           <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.description}>

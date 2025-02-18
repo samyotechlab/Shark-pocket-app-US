@@ -28,16 +28,17 @@ export default function DailyWeeklyBar() {
             padding: hp('2%'),
             gap: wp('10%')
           }}>
-          <TouchableOpacity onPress={() => handlePress('Daily')}>
-            <Text
-              style={dynamicStyles.Daily}>
-              Daily Games
-            </Text>
-          </TouchableOpacity>
+         
           <TouchableOpacity onPress={() => handlePress('Weekly')}>
             <Text
               style={dynamicStyles.Weekly}>
                Weekly Games
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('Daily')}>
+            <Text
+              style={dynamicStyles.Daily}>
+              Daily Games
             </Text>
           </TouchableOpacity>
 

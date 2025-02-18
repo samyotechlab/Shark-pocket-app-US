@@ -33,11 +33,13 @@ const WalletScreen = () => {
     setLoader(true);
     try {
       const response = await userDetail(data._id);
+      console.log("response", response)
       const formattedData = {
         ...response.data,
-        total_balance: parseFloat(response?.data?.total_balance).toFixed(2),
-        bonus_wallet: parseFloat(response?.data?.bonus_wallet).toFixed(2),
-        total_earning: parseFloat(response?.data?.total_earning || 0).toFixed(2),
+        total_balance: Number(parseFloat(response?.data?.total_balance || 0).toFixed(2)),
+        bonus_wallet: Number(parseFloat(response?.data?.bonus_wallet || 0).toFixed(2)),
+        total_earning: Number(parseFloat(response?.data?.total_earning || 0).toFixed(2)),
+
       };
       setData(formattedData);
     } catch (error) {
@@ -46,16 +48,11 @@ const WalletScreen = () => {
       setLoader(false);
     }
   };
-  const totalAmount =
-    parseFloat(dataUser?.total_balance || 0).toFixed(2) +
-    parseFloat(dataUser?.bonus_wallet || 0).toFixed(2) +
-    parseFloat(dataUser?.total_earning || 0).toFixed(2);
-
-   useFocusEffect(
-      React.useCallback(() => {
-        userData();
-      }, [isReady]),
-    );
+  useFocusEffect(
+    React.useCallback(() => {
+      userData();
+    }, [isReady]),
+  );
 
   useEffect(() => {
     if (isReady) {
@@ -65,9 +62,12 @@ const WalletScreen = () => {
     }
   }, [isReady]);
 
+  const total_amount = (dataUser?.total_balance) + (dataUser?.bonus_wallet) + (dataUser?.total_earning)
+  
   const handleNavigation = (name, user_id) => {
     navigation.navigate(name, user_id);
   };
+  console.log("dataUser",)
   return (
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
@@ -108,7 +108,7 @@ const WalletScreen = () => {
                   </View>
                   <View style={styles.balanceContent}>
                     <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-                    <Text style={styles.balanceAmount}>₹{parseFloat(totalAmount|| 0).toFixed(2) || 0}</Text>
+                    <Text style={styles.balanceAmount}>₹ {total_amount || 0}</Text>
                   </View>
                 </View>
               </LinearGradient>
@@ -130,7 +130,7 @@ const WalletScreen = () => {
                     </View>
                     <View style={{ flex: 1 }}>
                       <Text style={styles.label}>Deposit</Text>
-                      <Text style={styles.amount}>₹ {dataUser?.total_balance}</Text>
+                      <Text style={styles.amount}>₹ {dataUser?.total_balance || 0}</Text>
                     </View>
                     <TouchableOpacity
                       style={{ flex: 1, marginRight: hp('1%') }}
@@ -172,7 +172,7 @@ const WalletScreen = () => {
                     </View>
                     <View style={{ flex: 2, justifyContent: 'center' }}>
                       <Text style={styles.label}>Bonus</Text>
-                      <Text style={styles.amount}>₹ {dataUser?.bonus_wallet}</Text>
+                      <Text style={styles.amount}>₹ {dataUser?.bonus_wallet || 0}</Text>
                     </View>
 
 
@@ -202,7 +202,7 @@ const WalletScreen = () => {
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center' }}>
                       <Text style={styles.label}>Winning</Text>
-                      <Text style={styles.amount}>₹ {dataUser?.total_earning}</Text>
+                      <Text style={styles.amount}>₹ {dataUser?.total_earning || 0}</Text>
                     </View>
                     <TouchableOpacity
                       style={{ flex: 1, marginRight: hp('1%') }}

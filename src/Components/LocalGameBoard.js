@@ -18,11 +18,13 @@ import Icon from 'react-native-vector-icons/Entypo';
 import Person4 from '../../assets/images/Screens/Person4.jpeg';
 import SearchField from './SearchField';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { leaderBoard } from '../Service/LeaderBoard';
+import { leaderBoard, rangeShow } from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
 import { truncateName } from '../Utilities/utilies';
 import AnimatedLoader from './AnimatedLoader';
 import GameInfoModal from './GameInfoModal';
+import RangeInfoModal from './RangeInfoModal';
+import CommonHeader from './CommonHeader';
 
 export default function LocalGameBoard() {
   const route = useRoute();
@@ -32,14 +34,7 @@ export default function LocalGameBoard() {
   const [gameData, setGameData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  // const [firstRanking, setFirstRanking] = useState(null);
-  // const [secondRanking, setSecondRanking] = useState(null);
-  // const [thirdRanking, setThirdRanking] = useState(null);
-
-  const handleNavigation = () => {
-    navigation.goBack();
-  };
+  const [rangeData,setRangeData] = useState([])
 
   const leaderBoardData = async () => {
     setLoader(true);
@@ -75,19 +70,19 @@ export default function LocalGameBoard() {
     leaderBoardData();
   }, []);
 
-  const handleSearch = query => {
-    if (!query) {
-      setFilteredData(gameData);
-    } else {
-      const filtered = gameData.filter(
-        item =>
-          (item.user_name &&
-            item.user_name.toLowerCase().includes(query.toLowerCase())) ||
-          (item.ranking && item.ranking.toString().includes(query)),
-      );
-      setFilteredData(filtered);
-    }
-  };
+  // const handleSearch = query => {
+  //   if (!query) {
+  //     setFilteredData(gameData);
+  //   } else {
+  //     const filtered = gameData.filter(
+  //       item =>
+  //         (item.user_name &&
+  //           item.user_name.toLowerCase().includes(query.toLowerCase())) ||
+  //         (item.ranking && item.ranking.toString().includes(query)),
+  //     );
+  //     setFilteredData(filtered);
+  //   }
+  // };
 
   // useEffect(() => {
   //   if (gameData && gameData.length > 0) {
@@ -101,6 +96,17 @@ export default function LocalGameBoard() {
   //     rakingData();
   //   }
   // }, [gameData]);
+
+  const showRange = async ()=>{
+    try {
+      const response = await rangeShow(game_id)
+      console.log("responser of the leader board",response.ranges)
+      setRangeData(response.ranges)
+    } catch (error) {
+      console.error('Error fetching Data', error.message || error);
+      throw error;
+    }
+  }
 
   const renderItem = items => {
     const { item } = items;
@@ -125,7 +131,7 @@ export default function LocalGameBoard() {
               <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.txt}>₹{item.score}</Text>
+              <Text style={styles.txt}>{item.score}</Text>
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.txt1}>#{item.ranking}</Text>
@@ -147,34 +153,42 @@ export default function LocalGameBoard() {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <GameInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+      <RangeInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} rangeData={rangeData} />
 
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
-        <View style={{ flex: 1, marginTop: wp('5%') }}>
-          <View style={styles.leaderBoard}>
-            <TouchableOpacity
-              style={{ flex: 0.5, justifyContent: 'center' }}
-              onPress={() => {
-                handleNavigation();
-              }}>
-              <Iconics name="chevron-back" size={25} color={'white'} />
-            </TouchableOpacity>
-            <View style={{ flex: 3.5, justifyContent: 'center' }}>
-              <SearchField onSearch={handleSearch} gameData={gameData}
-                filteredData={filteredData} />
+        <View style={{flex:0.15}}>
+            <CommonHeader title={'Leader Board'}/>
             </View>
-          </View>
-        </View>
-        <TouchableOpacity style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: hp('2%') }} onPress={() => {
+          <View style={{flex:0.1,margin:hp('2%'),marginTop:hp('1%'),flexDirection:'row'}}>
+            <View style={{flex:1,backgroundColor:'rgba(255, 255, 255, 0.5)',margin:hp('1%'),borderRadius:hp('1%'),flexDirection: 'row',alignItems:'center'}}>
+            <View style={{ flex: 0.4 }}>
+              <Image
+                source={Person4}
+                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
+              />
+            </View>
+            <View style={{ flex: 1.5 }}>
+              <Text style={styles.txt}>Manoj</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.txt}>566.3</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.txt1}>#1</Text>
+            </View>
+            </View>
+        <TouchableOpacity style={{ flex: 0.1,justifyContent:'center',alignItems:'center'}} onPress={() => {
           setModalVisible(true)
+          showRange()
         }}>
           <Icon name={'info-with-circle'} size={30} color={'red'} />
         </TouchableOpacity>
+          </View>
         <View
           style={{
-            flex: 6,
+            flex: 1,
             backgroundColor: 'rgba(255, 255, 255, 0.5)',
             margin: wp('5%'),
             borderRadius: 15,
@@ -212,9 +226,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   leaderBoard: {
-    flex: 1,
+    flex: 0.1,
     flexDirection: 'row',
-    padding: wp('4%'),
   },
   leaderTxt: {
     color: 'white',

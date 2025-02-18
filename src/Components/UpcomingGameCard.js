@@ -49,25 +49,34 @@ const UpcomingGameCard = ({ items ,status}) => {
               }] : [styles.card]
            }
         >
-          <View style={styles.button}>
-            <Image source={ status === "1" ? Button : PlayNow} />
-          </View>
+          {
+            status === "1" ?( <View style={styles.button}>
+              <Image source={ status === "1" ? Button : PlayNow} />
+            </View>):(
+             <></>
+            )
+          }
+         
           {
             status === "1"?(
               <View style={styles.trophiesRow}>
               <Text style={styles.heading}>{ item.title}</Text>
             </View>
-            ):(     
+            ):(  
+              <>
               <View style={styles.trophiesRow}>
               <Image source={Trophy} style={styles.trophyIcon} />
               <Text style={styles.winText}>{"WIN"}</Text>
               <Image source={Trophy} style={styles.trophyIcon} />
-            </View>)
+            </View>
+             <Text style={styles.winText}>{item.title}</Text>
+             </>   
+            )
           }
 
-          {
+          {/* {
             status === "1"? (<></>):( <Text style={styles.amountText}>₹{item.winning_cost}</Text>)
-          }
+          } */}
          
         </LinearGradient>
         </TouchableOpacity> 
@@ -100,8 +109,8 @@ const UpcomingGameCard = ({ items ,status}) => {
               <Text style={styles.winTextAlt}>WIN</Text>
               <Text style={styles.nowTextAlt}> NOW</Text>
             </Text>
-            <Text style={styles.gainText}>{status === "1" ? item.title:"Gain"}</Text>
-            <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text>
+            <Text style={styles.gainText}>{item.title}</Text>
+            {/* <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text> */}
             </>
             )
           }
