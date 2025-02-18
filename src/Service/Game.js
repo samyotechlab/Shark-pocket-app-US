@@ -19,9 +19,10 @@ export const gameRule = async () => {
   }
 };
 
-export const gameList = async () => {
+export const gameList = async (user_id) => {
+  console.log("------->====",`${Config.Game_List}/${user_id}`)
   try {
-    const response = await apiInstance.post(Config.Game_List);
+    const response = await apiInstance.get(`${Config.Game_List}/${user_id}`);
     if (response.status === 200) {
       return response.data;
     } else {

@@ -46,4 +46,5 @@ export default {
   Add_Expectation : 'api/userWinningExpectation/add',
   Edit_Expectation:'api/userWinningExpectation/edit/',
   Show_Expectation :'api/userWinningExpectation/',
+  Range_Show : 'api/userWinningRange/'
 };

@@ -8,13 +8,14 @@ import {
 } from 'react-native-responsive-screen';
 import AvailableCard from './AvailableCard';
 
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 
 const AvailbleGameCard = (props) => {
   const navigation = useNavigation();
   const { gameData, availability,setScrollEnabled } = props
   let myGameData = []
   let data = []
+  const carouselHeight = height * 0.22; 
 
   if (availability === '2') {
      myGameData = gameData?.filter((game) => game.status === 3) 
@@ -55,13 +56,13 @@ const AvailbleGameCard = (props) => {
             data={data}
             renderItem={renderItem}
             width={width}
-            height={210}
+            height={carouselHeight}
             loop={true}
             autoPlay={true}
             autoPlayInterval={5000}
             mode='stack-horizontal-right'
             pagingEnabled={true}
-            style={styles.carouselContainer}
+            style={[styles.carouselContainer]}
             panGestureHandlerProps={{
               activeOffsetX: [-10, 10], 
               failOffsetY: [-10, 10], 

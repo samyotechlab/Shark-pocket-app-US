@@ -6,19 +6,27 @@ import { useNavigation } from '@react-navigation/native'
 import AnimatedLoader from './AnimatedLoader'
 import AvailableCard from './AvailableCard'
 import Toast from 'react-native-toast-message'
+import useLoginDataStorage from '../Service/CustomStorageHook'
 
-export default function LocalLeaderBoard() {
+export default function LocalLeaderBoard({type}) {
   const [loader, setLoader] = useState(false)
-  const [gameData, setGameData] = useState([])
+  const [weeklyData, setWeeklyData] = useState([])
+  const [dailyData, setDailyData] = useState([])
   const navigation = useNavigation();
+  const { loginData, isReady, storeLoginData } = useLoginDataStorage();
+
   let msg;
 
-  const availableGames = async () => {
+  const availableGames = async (user_id) => {
     setLoader(true)
     try {
-      const response = await gameList();
+      const response = await gameList(user_id);
+      console.log("response========>",response)
       if (response) {
-        setGameData(response.data);
+       const weekData = response.data?.filter((item)=>item.frequency === "weekly")
+       const dayData = response.data?.filter((item)=>item.frequency === "daily")
+        setWeeklyData(weekData);
+        setDailyData(dayData)
       } else {
         msg = response.message
         Toast.show({
@@ -43,10 +51,12 @@ export default function LocalLeaderBoard() {
     }
   };
 
-  useEffect(() => {
-    availableGames();
-  }, [])
-
+    useEffect(() => {
+      const data = isReady && loginData && loginData?.data;
+      if (loginData && isReady) {
+        availableGames(data._id);
+      }
+    }, [isReady, loginData]);
 
   const renderItem = ({ item, index }) => {
     return (<>
@@ -62,9 +72,9 @@ export default function LocalLeaderBoard() {
   return (
     <View style={styles.container}>
       {
-      gameData ? 
+      weeklyData ? 
         (!loader ? (<FlatList
-          data={gameData}
+          data={type === "weekly" ? weeklyData :dailyData}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}

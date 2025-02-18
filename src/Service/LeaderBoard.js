@@ -30,3 +30,22 @@ export const leaderBoard = async game_id => {
       throw error;
     }
   };
+
+  export const rangeShow = async(game_id)=>{
+    try {
+      const response = await apiInstance.get(`${Config.Range_Show}${game_id}`);
+      console.log("response.data======>",response.data)
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error(
+          'Failed:',
+          response.status,
+        );
+        throw new Error(`Failed to fetch the data: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error fetching Data', error.message || error);
+      throw error;
+    }
+  } 
