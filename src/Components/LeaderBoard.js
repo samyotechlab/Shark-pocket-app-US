@@ -44,8 +44,8 @@ export default function LeaderBoard() {
           style={styles.gradientButton}
         >
           <View>
-            <Text style={styles.buttonText}>Points</Text>
-            <Text style={styles.buttonText}>Selection</Text>
+            <Text style={styles.buttonText}>Points Selection</Text>
+           
           </View>
         </LinearGradient>
       </TouchableOpacity>
