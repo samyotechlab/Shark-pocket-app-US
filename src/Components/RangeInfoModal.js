@@ -8,7 +8,6 @@ import {
 } from 'react-native-responsive-screen';
 
 const RangeInfoModal = ({ visible, onClose ,rangeData}) => {
-    console.log("rangeData======",rangeData)
   return (
     <Modal transparent={true} visible={visible} animationType="slide">
       <View style={styles.overlay}>

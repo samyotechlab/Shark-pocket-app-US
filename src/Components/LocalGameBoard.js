@@ -25,6 +25,7 @@ import AnimatedLoader from './AnimatedLoader';
 import GameInfoModal from './GameInfoModal';
 import RangeInfoModal from './RangeInfoModal';
 import CommonHeader from './CommonHeader';
+import { gameHistoryUser } from '../Service/GameHistory';
 
 export default function LocalGameBoard() {
   const route = useRoute();
@@ -35,6 +36,8 @@ export default function LocalGameBoard() {
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [rangeData,setRangeData] = useState([])
+  const [gameHistoryData, setGameHistory] = useState([]);
+  
 
   const leaderBoardData = async () => {
     setLoader(true);
@@ -69,6 +72,38 @@ export default function LocalGameBoard() {
   useEffect(() => {
     leaderBoardData();
   }, []);
+
+    const allGameHistory = async (user_id,_id) => {
+      setLoader(true)
+      try {
+        const response = await gameHistoryUser(user_id, game_id,_id);
+        if (response) {
+          setGameHistory(response?.data);
+          navigation.navigate('GameFinishHistory',{gameHistoryData:response?.data})
+        } else {
+          msg = response?.message || 'An unexpected error occurred.';
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Error!',
+            text2: msg,
+            visibilityTime: 3000,
+          });
+        }
+      } catch (error) {
+        msg = error?.message || 'An unexpected error occurred.';
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Error!',
+          text2: msg,
+          visibilityTime: 3000,
+        });
+      }
+      finally {
+        setLoader(false)
+      }
+    };
 
   // const handleSearch = query => {
   //   if (!query) {
@@ -117,7 +152,6 @@ export default function LocalGameBoard() {
           <View
             style={{
               flex: 1,
-              width: wp('80%'),
               flexDirection: 'row',
               paddingBlock: 6,
             }}>
@@ -127,13 +161,15 @@ export default function LocalGameBoard() {
                 style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
               />
             </View>
-            <View style={{ flex: 1.5 }}>
-              <Text style={styles.txt}>{truncateName(item?.user_name, 1)}</Text>
-            </View>
+            <TouchableOpacity style={{ flex: 1.2 }} onPress={()=>{
+              allGameHistory(item?.user_id,item?._id)
+            }}>
+              <Text style={[styles.txt,{textDecorationLine:'underline'}]}>{truncateName(item?.userName, 1)}</Text>
+            </TouchableOpacity>
             <View style={{ flex: 1 }}>
               <Text style={styles.txt}>{item.score}</Text>
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 0.5 }}>
               <Text style={styles.txt1}>#{item.ranking}</Text>
             </View>
           </View>
@@ -190,10 +226,10 @@ export default function LocalGameBoard() {
           style={{
             flex: 1,
             backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            margin: wp('5%'),
+            // margin: wp('5%'),
             borderRadius: 15,
           }}>
-          <SafeAreaView style={{ flex: 1, margin: wp('4%') }}>
+          <SafeAreaView style={{ flex: 1, margin: wp('2%') }}>
             {gameData ? (
               !loader ? (
                 <FlatList
@@ -238,6 +274,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Bold',
     fontSize: hp('1.8%'),
+
   },
   txt1: {
     color: '#FFFFFF',

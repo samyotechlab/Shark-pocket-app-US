@@ -16,6 +16,7 @@ export default {
   Global_ByDate: 'api/game_score/byDate',
   History_Api: 'api/game_score/getPlayedGamesByUserId',
   Game_History: 'api/game_score/by_user_id_and_game_id',
+  Game_History_User : 'api/game_score/getScoreByParticularUserId',
   Contact: 'contactUs',
   Refund: 'refundPolicy',
   HowToPlay : "howToPlay",

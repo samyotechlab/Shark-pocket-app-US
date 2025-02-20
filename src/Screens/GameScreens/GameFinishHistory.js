@@ -20,8 +20,19 @@ export default function GameFinishHistory() {
   const [loader, setLoader] = useState(false);
   const navigation = useNavigation()
   const route = useRoute();
-  const {gameHistoryData} = route.params;
-  // console.log("gameHistoryData",gameHistoryData.selected_number)
+  const {gameHistoryData} = route.params || {};
+
+      if (!gameHistoryData) {
+          return (
+              <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
+                  <CommonHeader title={'Selected Number'} />
+                  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <Text style={{ color: 'white', fontSize: 18 }}>No numbers available</Text>
+                  </View>
+              </LinearGradient>
+          );
+      }
+
   return (
     <>
       <LinearGradient
@@ -211,7 +222,7 @@ export default function GameFinishHistory() {
                   </View>
                   <View style={{flex: 1}}>
                     <Text style={styles.rowText}>
-                      {gameHistoryData.wrong_selection_score}
+                      {Number(parseFloat(gameHistoryData.wrong_selection_score || 0).toFixed(2))}
                     </Text>
                   </View>
                 </View>
