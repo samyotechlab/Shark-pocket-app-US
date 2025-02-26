@@ -72,12 +72,7 @@ const UpcomingGameCard = ({ items ,status}) => {
              <Text style={styles.winText}>{item.title}</Text>
              </>   
             )
-          }
-
-          {/* {
-            status === "1"? (<></>):( <Text style={styles.amountText}>₹{item.winning_cost}</Text>)
-          } */}
-         
+          }         
         </LinearGradient>
         </TouchableOpacity> 
         ) : (
@@ -110,7 +105,6 @@ const UpcomingGameCard = ({ items ,status}) => {
               <Text style={styles.nowTextAlt}> NOW</Text>
             </Text>
             <Text style={styles.gainText}>{item.title}</Text>
-            {/* <Text style={styles.amountTextAlt}>₹{item.winning_cost}</Text> */}
             </>
             )
           }
@@ -155,11 +149,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
   },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-  },
   trophiesRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -173,11 +162,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#FFD700',
-  },
-  amountText: {
-    fontSize: 22,
-    color: '#FFF',
-    fontFamily: 'Overlock-Bold',
   },
   cardAlt: {
     width: 170,
@@ -205,12 +189,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#000',
-    marginTop: 10,
-  },
-  amountTextAlt: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FFF',
     marginTop: 10,
   },
     heading: {

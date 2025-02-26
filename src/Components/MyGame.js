@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, FlatList } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PinkPrizeCard from './PinkPrizeCard';
-import GoldenCard from './GoldenCard';
 
 const { width } = Dimensions.get('window');
 
@@ -45,11 +44,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: ('2%')
-    },
-    twoCardsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: wp('1%'),
     },
     cardContainer: {
         width: width * 0.43,

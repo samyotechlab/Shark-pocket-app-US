@@ -4,7 +4,6 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp } from 'react-na
 import Debit from '../Deposite/Debit';
 import Credit from '../Deposite/Credit';
 import All from '../Deposite/All';
-import WalletDetailsCard from '../../Components/WalletDetailsCard';
 import { WalletTransactionList } from '../../Service/Wallet';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 

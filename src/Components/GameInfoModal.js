@@ -39,10 +39,6 @@ const GameInfoModal = ({ visible, onClose }) => {
             gravida vel non orci.
           </Text>
           </ScrollView>
-
-          {/* <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity> */}
         </LinearGradient>
       </View>
     </Modal>

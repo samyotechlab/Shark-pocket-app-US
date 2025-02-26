@@ -9,9 +9,10 @@ import WeeklyCard from './WeeklyCard'
 
 
 export default function DailyWeeklyBar() {
+
   const route = useRoute();
-  const { gameData } = route.params
-  const [selectedTab, setSelectedTab] = useState('Daily');
+  const { gameData, status } = route.params
+  const [selectedTab, setSelectedTab] = useState('Weekly');
   const handlePress = tab => {
     setSelectedTab(tab);
   };
@@ -20,19 +21,19 @@ export default function DailyWeeklyBar() {
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={dynamicStyles.linearGradient}>
-      <CommonHeader title={'Availbale Game'}/>
-      <View style={{ marginTop: 10,flex:1}}>
+      <CommonHeader title={ status === "1" ? 'My Game' : 'Availbale Game'} />
+      <View style={{ marginTop: 10, flex: 1 }}>
         <View
           style={{
             flexDirection: 'row',
             padding: hp('2%'),
             gap: wp('10%')
           }}>
-         
+
           <TouchableOpacity onPress={() => handlePress('Weekly')}>
             <Text
               style={dynamicStyles.Weekly}>
-               Weekly Games
+              Weekly Games
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handlePress('Daily')}>
@@ -43,13 +44,21 @@ export default function DailyWeeklyBar() {
           </TouchableOpacity>
 
         </View>
-     <View style={{flex:1}}>
-        {selectedTab === 'Daily' ? (
-            <DailyCard gameData={gameData}/>
-        ) : (
-            <WeeklyCard gameData={gameData}/>
-                )}
-        
+        <View style={{ flex: 1 }}>
+          {selectedTab === 'Daily' ? (
+            status === "1" ? (
+              <DailyCard gameData={gameData} frequencyStatus={"1"} />
+            ) : (
+              <DailyCard gameData={gameData} frequencyStatus={"2"} />
+            )
+          ) : (
+            status === "1" ? (
+              <WeeklyCard gameData={gameData} frequencyStatus={"1"} />
+            ) : (
+            <WeeklyCard gameData={gameData} frequencyStatus={"2"} />
+            )
+          )}
+
         </View>
       </View>
     </LinearGradient>

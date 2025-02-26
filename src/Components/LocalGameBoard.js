@@ -4,6 +4,7 @@ import {
   FlatList,
   Image,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -23,16 +24,15 @@ import Person4 from '../../assets/images/Screens/Person4.jpeg';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { leaderBoard, rangeShow } from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
-import { truncateName } from '../Utilities/utilies';
-import AnimatedLoader from './AnimatedLoader';
 import RangeInfoModal from './RangeInfoModal';
 import CommonHeader from './CommonHeader';
 import { gameHistoryUser } from '../Service/GameHistory';
-import SelectedNumbers from '../Screens/GameScreens/SelectedNumbers';
+import useLoginDataStorage from '../Service/CustomStorageHook';
+
 
 export default function LocalGameBoard() {
   const route = useRoute();
-  const { game_id } = route.params;
+  const { game_id, user_id } = route.params;
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
@@ -42,17 +42,12 @@ export default function LocalGameBoard() {
   const [gameHistoryData, setGameHistory] = useState([]);
   const [modalVisibles, setModalVisibles] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
-
-  const data = [
-    { id: "1", image: "https://via.placeholder.com/40", username: "John", points: 150, rank: 1, A: 10, B: 20, C: 30, D: 40 },
-    { id: "2", image: "https://via.placeholder.com/40", username: "Jane", points: 140, rank: 2, A: 15, B: 25, C: 35, D: 45 },
-    { id: "3", image: "https://via.placeholder.com/40", username: "Mike", points: 130, rank: 3, A: 12, B: 22, C: 32, D: 42 },
-    { id: "4", image: "https://via.placeholder.com/40", username: "Anna", points: 120, rank: 4, A: 18, B: 28, C: 38, D: 48 },
-  ];
+  const { loginData, isReady } = useLoginDataStorage();
 
   const headerScrollRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const rowScrollRefs = useRef({});
+
   const handleHeaderScroll = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
     setScrollPosition(offsetX);
@@ -79,10 +74,11 @@ export default function LocalGameBoard() {
     setLoader(true);
     try {
       const response = await leaderBoard(game_id);
-      console.log("responseeeeeee", response)
       if (response) {
-        setGameData(response.data);
-        setFilteredData(response.data);
+        const filteredData = response.data.filter(item => item.user_id == user_id);
+        const unFilterData = response.data.filter(item => item.user_id != user_id);
+        setGameData(unFilterData);
+        setFilteredData(filteredData);
       } else {
         const msg = response?.message;
         Toast.show({
@@ -143,10 +139,8 @@ export default function LocalGameBoard() {
   };
 
   const showRange = async () => {
-    console.log("hewllooo")
     try {
       const response = await rangeShow(game_id)
-      console.log("responser of the leader board", response.ranges)
       setRangeData(response.ranges)
     } catch (error) {
       console.error('Error fetching Data', error.message || error);
@@ -155,10 +149,16 @@ export default function LocalGameBoard() {
   }
 
   const handleTouch = (title) => {
-
     setSelectedTitle(title);
     setModalVisibles(true);
   };
+
+  const headers = [
+    { key: 'Total Prime Number Selected - DESC', label: 'A' },
+    { key: 'Total Super Number Selected - DESC', label: 'B' },
+    { key: 'Total Super Number Score - DESC', label: 'C' },
+    { key: 'Total Even Number Selected - ASC', label: 'D' },
+  ];
 
 
   const renderRow = ({ item }) => {
@@ -183,16 +183,16 @@ export default function LocalGameBoard() {
           contentOffset={{ x: scrollPosition, y: 0 }}
         >
           <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
-          <Text style={[styles.cell, { paddingRight: hp('2%')}]}>{item?.prime_number?.selected}</Text>
+            <Text style={[styles.cell, { paddingRight: hp('2%') }]}>{item?.prime_number?.selected}</Text>
           </View>
           <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
-          <Text style={[styles.cell, { paddingRight: hp('6%') }]}>{item?.super_number?.selected}</Text>
+            <Text style={[styles.cell, { paddingRight: hp('6%') }]}>{item?.super_number?.selected}</Text>
           </View>
           <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
-          <Text style={[styles.cell, { width: 20 }]}>{item?.super_number?.score}</Text>
+            <Text style={[styles.cell, { width: 20 }]}>{item?.super_number?.score}</Text>
           </View>
           <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
-          <Text style={[styles.cell]}>{item?.super_number?.score}</Text>
+            <Text style={[styles.cell]}>{item?.super_number?.score}</Text>
           </View>
         </ScrollView>
       </View>
@@ -202,7 +202,6 @@ export default function LocalGameBoard() {
   return (
     <SafeAreaView style={styles.container}>
       <RangeInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} rangeData={rangeData} />
-
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
@@ -230,6 +229,7 @@ export default function LocalGameBoard() {
                 <Text style={[styles.headerCell, { width: 80 }]}>Points</Text>
                 <Text style={[styles.headerCell, { width: 80 }]}>Rank</Text>
               </View>
+
               <ScrollView
                 horizontal
                 ref={headerScrollRef}
@@ -239,22 +239,65 @@ export default function LocalGameBoard() {
                 scrollEventThrottle={16}
                 contentOffset={{ x: scrollPosition, y: 0 }}
               >
-                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Prime Number Selected - DESC')}>
-                  <Text style={[styles.headerCell, { width: 60 }]}>A</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Super Number Selected - DESC')}>
-                  <Text style={[styles.headerCell, { width: 60 }]}>B</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Super Number Score - DESC')}>
-                  <Text style={[styles.headerCell, { width: 60 }]}>C</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Even Number Selected - ASC')}>
-                  <Text style={[styles.headerCell, { width: 60 }]}>D</Text>
-                </TouchableOpacity>
+                {headers.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={{
+                      backgroundColor: '#FFFFFF80',
+                      borderRadius: 10,
+                      paddingVertical: hp('0.5%'),
+                      marginHorizontal: hp('1%'),
+                    }}
+                    onPress={() => handleTouch(item.key)}
+                  >
+                    <Text style={[styles.headerCell, { width: 60 }]}>{item.label}</Text>
+                  </TouchableOpacity>
+                ))}
               </ScrollView>
             </View>
+            {
+              filteredData.map((item, index) => {
+                const rowRef = (ref) => (rowScrollRefs.current[item.id] = ref)
+                return (
+                  <View style={[styles.row, { backgroundColor: "white", opacity: 0.7 }]}>
+                    <View style={styles.fixedColumns}>
+                      <Image source={Person4} style={styles.image} />
+                      <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id)}>
+                        <Text style={[styles.cell, { width: 100, textDecorationLine: 'underline', color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item.userName}</Text>
+                      </TouchableOpacity>
+                      <Text style={[styles.cell, { color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item.score}</Text>
+                      <Text style={[styles.cell, { color: "#361911", fontFamily: 'Montserrat-Bold' }]}>#{item.rank}</Text>
+                    </View>
+                    <ScrollView
+                      horizontal
+                      ref={rowRef}
+                      showsHorizontalScrollIndicator={false}
+                      style={styles.scrollableColumns}
+                      onScroll={(e) => handleRowScroll(e, item.id)}
+                      scrollEventThrottle={16}
+                      contentOffset={{ x: scrollPosition, y: 0 }}
+                    >
+                      <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+                        <Text style={[styles.cell, { paddingRight: hp('2%'), color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item?.prime_number?.selected}</Text>
+                      </View>
+                      <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+                        <Text style={[styles.cell, { paddingRight: hp('6%'), color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item?.super_number?.selected}</Text>
+                      </View>
+                      <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+                        <Text style={[styles.cell, { width: 20, color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item?.super_number?.score}</Text>
+                      </View>
+                      <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+                        <Text style={[styles.cell, { color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item?.super_number?.score}</Text>
+                      </View>
+                    </ScrollView>
+                  </View>
+                )
+
+              })
+            }
+
             <FlatList
-              data={filteredData}
+              data={gameData}
               keyExtractor={(item) => item.id}
               renderItem={renderRow}
               showsVerticalScrollIndicator={false}
@@ -265,23 +308,23 @@ export default function LocalGameBoard() {
       <Toast ref={Toast.setRef} />
 
       <Modal
-  transparent
-  visible={modalVisibles}
-  animationType="fade"
-  onRequestClose={() => setModalVisibles(false)}
->
-  <View style={styles.modalOverlay}>
-    <View style={styles.smallModal}>
-      <Text style={styles.modalText}>{selectedTitle}</Text>
-      <TouchableOpacity
-        onPress={() => setModalVisibles(false)}
-        style={styles.closeButton}
+        transparent
+        visible={modalVisibles}
+        animationType="fade"
+        onRequestClose={() => setModalVisibles(false)}
       >
-        <Text style={styles.closeButtonText}>Close</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
+        <View style={styles.modalOverlay}>
+          <View style={styles.smallModal}>
+            <Text style={styles.modalText}>{selectedTitle}</Text>
+            <TouchableOpacity
+              onPress={() => setModalVisibles(false)}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -295,7 +338,6 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flex: 1,
-    // margin: 10,
   },
   header: {
     flexDirection: "row",
@@ -348,7 +390,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
+
   smallModal: {
     width: wp('35%'),
     height: hp('10%'),
@@ -363,20 +405,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  
+
   modalText: {
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  
+
   closeButton: {
     marginTop: 5,
     padding: 5,
     backgroundColor: 'red',
     borderRadius: 5,
   },
-  
+
   closeButtonText: {
     color: 'white',
     fontSize: 12,

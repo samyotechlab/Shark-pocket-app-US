@@ -25,10 +25,6 @@ export default function GlobalLeaderBoard() {
   const [globalData, setGlobalData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // const [firstRanking, setFirstRanking] = useState(null);
-  // const [secondRanking, setSecondRanking] = useState(null);
-  // const [thirdRanking, setThirdRanking] = useState(null);
-
   const globalLeaderData = async () => {
     try {
       setLoader(true);
@@ -62,25 +58,6 @@ export default function GlobalLeaderBoard() {
   useEffect(() => {
     globalLeaderData();
   }, []);
-
-  // useEffect(() => {
-  //   rakingData();
-  // }, [globalData]);
-
-  // const rakingData = () => {
-  //   if (globalData && globalData.length > 0) {
-  //     globalData.map(item => {
-  //       if (item.ranking === 1) {
-  //         setFirstRanking(item);
-  //       } else if (item.ranking === 2) {
-  //         setSecondRanking(item);
-  //       } else if (item.ranking === 3) {
-  //         setThirdRanking(item);
-  //       }
-  //     });
-  //   }
-
-  // };
 
   const renderItem = items => {
     const { item } = items;

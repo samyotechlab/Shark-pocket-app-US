@@ -22,7 +22,6 @@ export default function GameName() {
   const gameByid = async () => {
     try {
       const response = await gameById(game_id);
-      console.log("reponse",response)
       setGameData(response.data);
     } catch (error) {
       console.error('Error fetching game list:', error.message || error);

@@ -58,22 +58,22 @@ const SelectedNumbers = () => {
                                 <Text style={styles.tabHeaderText}>{section.title}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
-                        {activeTab === index && ( 
+                        {activeTab === index && (
                             <View style={styles.tabContentContainer}>
-                            <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-                                {section.data.length > 0 ? (
-                                    <View style={styles.numberContainer}>
-                                        {section.data.map((number, numIndex) => (
-                                            <LinearGradient key={numIndex} colors={section.colors} style={[styles.numberBox, { borderColor: section.borderColor }]}>
-                                                <Text style={styles.numberText}>{number}</Text>
-                                            </LinearGradient>
-                                        ))}
-                                    </View>
-                                ) : (
-                                    <Text style={styles.emptyText}>No numbers available</Text>
-                                )}
-                            </ScrollView>
-                        </View>
+                                <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
+                                    {section.data.length > 0 ? (
+                                        <View style={styles.numberContainer}>
+                                            {section.data.map((number, numIndex) => (
+                                                <LinearGradient key={numIndex} colors={section.colors} style={[styles.numberBox, { borderColor: section.borderColor }]}>
+                                                    <Text style={styles.numberText}>{number}</Text>
+                                                </LinearGradient>
+                                            ))}
+                                        </View>
+                                    ) : (
+                                        <Text style={styles.emptyText}>No numbers available</Text>
+                                    )}
+                                </ScrollView>
+                            </View>
                         )}
                     </View>
                 ))}
@@ -103,12 +103,12 @@ const styles = StyleSheet.create({
     },
     tabHeaderText: { fontSize: 20, fontFamily: 'LilitaOne-Regular', color: '#361911' },
     tabContentContainer: {
-        maxHeight: 300, 
+        maxHeight: 300,
     },
     tabContent: {
         maxHeight: 300,
     },
-    numberContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10 , padding: 10},
+    numberContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10, padding: 10 },
     numberBox: {
         padding: 10,
         borderRadius: 8,

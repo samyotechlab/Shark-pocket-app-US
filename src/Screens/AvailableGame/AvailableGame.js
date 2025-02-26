@@ -80,12 +80,20 @@ export default function AvailableGame() {
     return (
         <>
             {
-                status === "2" ?
+                status === "2" || status === "1" ?
                     (
                         <LinearGradient
                             colors={['#361911', '#361911', '#6A1700']}
                             style={styles.linearGradient}>
-                            <DailyWeeklyBar gameData={gameData}/>
+                                  <DailyWeeklyBar gameData={gameData} />
+                                {/* {
+                                    status === "2" ? (
+                                        <DailyWeeklyBar gameData={gameData} />
+                                    ) : (
+                                        <DailyWeeklyBar gameData={gameData} />
+                                    )
+                                } */}
+                          
                         </LinearGradient>
                     ) : (
 

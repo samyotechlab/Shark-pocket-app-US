@@ -6,7 +6,7 @@ export default function CommonButton({ title, onPress, disabled }) {
     <TouchableOpacity
       style={[styles.button, disabled && styles.disabledButton]}
       onPress={onPress}
-      disabled={disabled} // Ensuring the correct disabled prop is used
+      disabled={disabled}
     >
       <Text style={[styles.buttonText, disabled && styles.disabledButtonText]}>{title}</Text>
     </TouchableOpacity>

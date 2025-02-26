@@ -9,7 +9,6 @@ import Icon from 'react-native-vector-icons/Entypo';
 
 
 const RangeInfoModal = ({ visible, onClose, rangeData }) => {
-  console.log("rangeData", rangeData.length);
   return (
     <Modal transparent={true} visible={visible} animationType="slide">
       <View style={styles.overlay}>
@@ -118,27 +117,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: '#D4B300',
   },
-  headerCell: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   headerTextStyle: {
     fontSize: wp('4%'),
     fontFamily:'Montserrat-SemiBold',
     color: '#000',
-  },
-  subHeaderRow: {
-    flexDirection: 'row',
-    gap: 50,
-
-    width: '100%',
-    paddingHorizontal: 50,
-    marginTop: 4,
-  },
-  subHeaderText: {
-    fontSize: wp('3.5%'),
-    fontWeight: 'bold',
-    color: '#333',
   },
   tableRow: {
     flexDirection: 'row',
@@ -149,43 +131,11 @@ const styles = StyleSheet.create({
   tableCell: {
     justifyContent: 'center',
     alignItems: 'center',
-    // paddingVertical: 8,
   },
   cellText: {
     fontSize: wp('4%'),
     color: '#fff',
     fontFamily:'Montserrat-SemiBold',
-  },
-  closeButton: {
-    borderRadius: 8,
-    paddingVertical: hp('0.7%'),
-    paddingHorizontal: wp('0.5%'),
-    alignItems: 'center',
-    borderRightWidth: 1,
-    borderLeftWidth: 1,
-    borderTopWidth: 5,
-    borderBottomWidth: 5,
-    elevation: 20,
-    shadowColor: 'rgba(0, 0, 0, 0.4)',
-    shadowOpacity: 0.8,
-    shadowRadius: 15,
-    shadowOffset: { width: 1, height: 11 },
-    width: '100%',
-    borderTopRightRadius: wp(3.3),
-    backgroundColor: '#00b63d',
-    borderTopColor: '#00e968',
-    borderBottomColor: '#018312',
-    marginTop: 10,
-  },
-  closeButtonText: {
-    letterSpacing: 2,
-    fontSize: wp('4.5%'),
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textShadowColor: '#000',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 1,
-    textTransform: 'uppercase',
   },
   noDataContainer: {
     flex: 1,

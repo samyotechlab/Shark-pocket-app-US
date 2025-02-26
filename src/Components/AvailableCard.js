@@ -16,7 +16,6 @@ export default function AvailableCard({ gameData, status }) {
     pink: ['#E3398C', '#CC8FAD'],
     green: ['#75B831', '#BAFF74'],
     blue: ['#0916B9', '#A1A8FF']
-
   }
   const borderColor = {
     yellow: '#F2E30B',
@@ -31,7 +30,7 @@ export default function AvailableCard({ gameData, status }) {
     blue: "#4644A7"
   }
 
-  const formattedDate = formatDate(status === "4" ? gameData.game_start_date: gameData.start_date);
+  const formattedDate = formatDate(status === "4" ? gameData.game_start_date : gameData.start_date);
   return (
     <View style={{
       // backgroundColor:'red',
@@ -71,17 +70,17 @@ export default function AvailableCard({ gameData, status }) {
               Start <Text style={styles.dateText}>{formattedDate}</Text>
             </Text>
             {
-              gameData?.winning_price ? (<View style={styles.buttonContainer}>
+              gameData?.winning_price || gameData?.game_winning_price  ? (<View style={styles.buttonContainer}>
                 <View style={styles.button}>
                   <Text style={styles.buttonText}>
                     {status === "4"
-                      ? gameData.game_winning_cost
+                      ? gameData.game_winning_price
                       : gameData.winning_price}{' '}
                   </Text>
                 </View>
               </View>):("")
-            }
-            
+            }          
+
           </View>
         </View>
         <View style={styles.linesContainer}>

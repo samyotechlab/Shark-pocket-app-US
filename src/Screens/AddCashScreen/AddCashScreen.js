@@ -13,8 +13,6 @@ import useLoginDataStorage from '../../Service/CustomStorageHook';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import { encryptData, generateKey } from '../../Utilities/utilies';
 import { storeTicket } from '../../Service/Tickets';
-import Toast from 'react-native-toast-message';
-
 
 const AddCashScreen = () => {
   const navigation = useNavigation();
@@ -33,8 +31,7 @@ const AddCashScreen = () => {
   const [isPaymentSuccess, setIsPaymentSuccess] = useState("")
   const { loginData, isReady } = useLoginDataStorage();
   const [buttonText, setButtonText] = useState("")
-   const [purchasedTickets, setPurchasedTickets] = useState({});
-   const [toast, setToast] = useState(false);
+  const [toast, setToast] = useState(false);
 
   const data = isReady && loginData && loginData?.data
 
@@ -108,8 +105,6 @@ const AddCashScreen = () => {
       const response = await storeTicket(game_id, ticket_id, data._id);
       if (response.status === 1) {
         setToast(true)
-      } else {
-        console.log("response", response);
       }
     } catch (error) {
       console.log('Purchase failed:', error);

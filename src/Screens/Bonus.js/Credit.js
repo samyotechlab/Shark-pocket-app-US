@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
-    const date = item.created_at.split(' ')[0];
+    const date = item.deposite_date.split(' ')[0];
     const typeKey = `${date}.credit`;
     if (!acc[typeKey]) acc[typeKey] = [];
     acc[typeKey].push(item);
@@ -21,7 +21,7 @@ export default function Credit(props) {
   const { bonusData = [] } = props;
   const navigation = useNavigation();
   const creditTransactions = Array.isArray(bonusData)
-    ? bonusData.filter((item) => item.type === 1)
+    ? bonusData.filter((item) => item.type === 0)
     : [];
 
   const groupedData = groupByDateAndType(creditTransactions);
@@ -32,7 +32,7 @@ export default function Credit(props) {
   };
 
   const renderTransaction = ({ item }) => {
-    const transaction_amount = parseFloat(item.gst_amount).toFixed(2)
+    const transaction_amount =  parseFloat(item?.gst_amount ?? 0).toFixed(2)
     return (<>
       <TouchableOpacity
         style={styles.itemContainer}

@@ -31,7 +31,6 @@ import { stateList } from '../../Utilities/CurrentState';
 
 export default function Tickets({ gameData }) {
   const question = gameData?.questions
-  console.log(question)
   const navigation = useNavigation();
   const { loginData, isReady } = useLoginDataStorage();
   const data = isReady && loginData && loginData?.data;

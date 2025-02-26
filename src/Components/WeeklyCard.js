@@ -4,31 +4,37 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import AvailableCard from './AvailableCard';
 import { useNavigation } from '@react-navigation/native';
 
-const WeeklyCard = ({gameData}) => {
-    const navigation = useNavigation()
+const WeeklyCard = ({ gameData ,frequencyStatus }) => {
+  const navigation = useNavigation()
 
   const weeklyGameData = gameData?.filter(item => item.frequency === "weekly")
   const handleNavigation = (item) => {
     navigation.navigate('GameName', { game_id: item._id })
-}
+  }
   const renderItem = ({ item, index }) => {
     return (<>
-      <TouchableOpacity style={styles.container1} onPress={()=>{
+      <TouchableOpacity style={styles.container1} onPress={() => {
         handleNavigation(item)
       }}>
-        <AvailableCard gameData={item} status={"2"} />
+        {
+          frequencyStatus === "1" ? (
+            <AvailableCard gameData={item} status={"4"} />
+          ) : (
+            <AvailableCard gameData={item} status={"2"} />
+          )
+        }
       </TouchableOpacity>
     </>)
   }
   return (
     <View style={styles.container}>
-    <FlatList
-      data={weeklyGameData}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.scrollContainer}
-    />
+      <FlatList
+        data={weeklyGameData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+      />
     </View>
   );
 };
@@ -45,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: hp('3%')
-},
+  },
 });
 
 export default WeeklyCard;

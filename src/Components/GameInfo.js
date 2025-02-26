@@ -25,14 +25,10 @@ export default function GameInfo({ gameData }) {
                 </View>
             </ScrollView>
             </View>
-        // </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     scrollContent: {
         flexGrow: 1,
         padding: wp('5%'),
@@ -58,13 +54,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: hp('2%'),
         textAlign: 'center',
-        color: '#FFD700', // Gold color for highlighting
+        color: '#FFD700', 
         textShadowColor: 'rgba(0, 0, 0, 0.5)',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 4,
         textTransform: 'uppercase',
         letterSpacing: 2,
-        backgroundColor: '#742D1A', // Dark background for contrast
+        backgroundColor: '#742D1A', 
         paddingVertical: hp('1%'),
         paddingHorizontal: wp('5%'),
         borderRadius: wp('3%'),

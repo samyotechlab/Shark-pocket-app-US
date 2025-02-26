@@ -14,6 +14,7 @@ export default function LocalLeaderBoard({type}) {
   const [dailyData, setDailyData] = useState([])
   const navigation = useNavigation();
   const { loginData, isReady, storeLoginData } = useLoginDataStorage();
+  const [userId, setUserId] = useState('');
 
   let msg;
 
@@ -21,7 +22,6 @@ export default function LocalLeaderBoard({type}) {
     setLoader(true)
     try {
       const response = await gameList(user_id);
-      console.log("response========>",response)
       if (response) {
        const weekData = response.data?.filter((item)=>item.frequency === "weekly")
        const dayData = response.data?.filter((item)=>item.frequency === "daily")
@@ -55,6 +55,7 @@ export default function LocalLeaderBoard({type}) {
       const data = isReady && loginData && loginData?.data;
       if (loginData && isReady) {
         availableGames(data._id);
+        setUserId(data._id);
       }
     }, [isReady, loginData]);
 
@@ -62,7 +63,7 @@ export default function LocalLeaderBoard({type}) {
     return (<>
       <View style={{ flex: 1}}>
         <TouchableOpacity style={styles.container1} onPress={() => {
-          navigation.navigate('LocalGameBoard', { game_id: item._id })
+          navigation.navigate('LocalGameBoard', { game_id: item._id ,user_id:userId })
         }} >
           <AvailableCard gameData={item} status={"3"} index={index} />
         </TouchableOpacity>

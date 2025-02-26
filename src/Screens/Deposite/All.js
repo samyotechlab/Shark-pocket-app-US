@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
+
     const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
     if (!acc[typeKey]) acc[typeKey] = [];
     acc[typeKey].push(item);
@@ -21,7 +22,6 @@ export default function All(props) {
   const { walletData = [] } = props;
   const navigation = useNavigation();
   const [transactionData, setTransactionData] = useState({})
-
   const groupedData = walletData.length > 0 ? groupByDateAndType(walletData) : {};
 
   const handleNavigation = (item) => {
@@ -73,6 +73,7 @@ export default function All(props) {
   };
 
   const renderSection = ({ item }) => (
+    console.log("item", item),
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -97,9 +98,12 @@ export default function All(props) {
   return (
     <View style={styles.container}>
       {
-        walletData == 0 ? (<View style={styles.noDataContainer}>
+        walletData == 0 ? (
+        <View style={styles.noDataContainer}>
           <Text style={styles.noDataText}>No data found</Text>
-        </View>) : (<FlatList
+        </View>
+        ) : (
+        <FlatList
           data={sectionData}
           renderItem={renderSection}
           keyExtractor={(item) => item.date}

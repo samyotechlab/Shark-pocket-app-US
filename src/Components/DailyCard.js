@@ -5,7 +5,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useNavigation } from '@react-navigation/native';
 
 
-const DailyCard = ({ gameData }) => {
+const DailyCard = ({ gameData,frequencyStatus }) => {
     const navigation = useNavigation()
     const dailyGameData = gameData?.filter(item => item.frequency === "daily")
 
@@ -18,7 +18,14 @@ const DailyCard = ({ gameData }) => {
             <TouchableOpacity style={styles.container1} onPress={() => {
                 handleNavigation(item)
             }}>
-                <AvailableCard gameData={item} status={"2"} />
+                {
+                    frequencyStatus === "1" ? (
+                        <AvailableCard gameData={item} status={"4"} />
+                    ) : (
+                        <AvailableCard gameData={item} status={"2"} />
+                    )
+                }
+            
 
 
             </TouchableOpacity>
