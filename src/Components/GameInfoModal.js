@@ -6,6 +6,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/Entypo';
+
 
 const GameInfoModal = ({ visible, onClose }) => {
   return (
@@ -17,10 +19,13 @@ const GameInfoModal = ({ visible, onClose }) => {
           end={{ x: 0.8, y: 1 }}
           style={styles.modalContainer}
         >
-
+          <TouchableOpacity onPress={onClose} style={{position: 'absolute', top: 3, right: 2}}>
+            <Icon name="circle-with-cross" size={30} color="red" />
+          </TouchableOpacity>
           <View style={styles.header}>
             <Text style={styles.headerText}>Points Selection</Text>
           </View>
+          
           <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
@@ -35,9 +40,9 @@ const GameInfoModal = ({ visible, onClose }) => {
           </Text>
           </ScrollView>
 
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+          {/* <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </LinearGradient>
       </View>
     </Modal>

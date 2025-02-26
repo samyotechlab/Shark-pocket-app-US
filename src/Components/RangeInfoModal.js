@@ -1,63 +1,61 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Icon from 'react-native-vector-icons/Entypo';
 
-const RangeInfoModal = ({ visible, onClose ,rangeData}) => {
+
+const RangeInfoModal = ({ visible, onClose, rangeData }) => {
+  console.log("rangeData", rangeData.length);
   return (
     <Modal transparent={true} visible={visible} animationType="slide">
       <View style={styles.overlay}>
-        <LinearGradient 
-          colors={['#F38424', '#F7A552', '#F9D479']} 
+        <LinearGradient
+          colors={['#F38424', '#F7A552', '#F9D479']}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 0.8, y: 1 }}
           style={styles.modalContainer}
         >
-
+          <TouchableOpacity style={{ position: 'absolute', top: 5, right: 2 }} onPress={onClose}>
+            <Icon name="circle-with-cross" size={30} color="red" />
+          </TouchableOpacity>
           <View style={styles.header}>
             <Text style={styles.headerText}>Range Selection</Text>
           </View>
 
           {
-            rangeData.length === 0 ? (<View style={styles.tableContainer}>
+            rangeData.length != 0 ? (
+            <View style={styles.tableContainer}>
               {/* Table Header */}
               <View style={styles.tableHeader}>
-                <View style={[styles.tableCell, styles.headerCell, { flex: 2 }]}>
-                  <Text style={styles.headerTextStyle}>Range</Text>
-                  <View style={styles.subHeaderRow}>
-                    <Text style={styles.subHeaderText}>Start</Text>
-                    <Text style={styles.subHeaderText}>End</Text>
-                  </View>
+                <View style={[styles.tableCell, { flex: 1 }]}>
+                  <Text style={styles.headerTextStyle}>Rank</Text>
                 </View>
-                <View style={[styles.tableCell, styles.headerCell, { flex: 1 }]}>
-                  <Text style={styles.headerTextStyle}>Winning Amount</Text>
+                <View style={[styles.tableCell, { flex: 1 }]}>
+                  <Text style={styles.headerTextStyle}>Winnings</Text>
                 </View>
               </View>
 
               {/* Table Rows */}
               {rangeData.map((item, index) => (
                 <View key={index} style={styles.tableRow}>
-                  <View style={[styles.tableCell, { flex: 2, flexDirection: "row", gap:50}]}>
-                    <Text style={styles.cellText}>{item.startRange}</Text>
-                    <Text style={styles.cellText}>{item.endRange}</Text>
+                  <View style={[styles.tableCell, { flex: 1}]}>
+                    <Text style={styles.cellText}>{item.startRange} - {item.endRange}</Text>
                   </View>
                   <View style={[styles.tableCell, { flex: 1 }]}>
                     <Text style={styles.cellText}>{item.value}</Text>
                   </View>
                 </View>
               ))}
-            </View>):(<View></View>)
+            </View>) : (
+            <View style={styles.noDataContainer}>
+                            <Text style={styles.noDataText}>No data found</Text>
+                          </View>
+            )
           }
-            
-
-          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-          
         </LinearGradient>
       </View>
     </Modal>
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: '85%',
-    height: '55%', 
+    height: '55%',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -117,7 +115,6 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: 'row',
     backgroundColor: '#F2E30B',
-    paddingVertical: 8,
     borderBottomWidth: 2,
     borderBottomColor: '#D4B300',
   },
@@ -126,14 +123,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTextStyle: {
-    fontSize: wp('4.2%'),
-    fontWeight: 'bold',
+    fontSize: wp('4%'),
+    fontFamily:'Montserrat-SemiBold',
     color: '#000',
   },
   subHeaderRow: {
     flexDirection: 'row',
-    gap:50,
-    // justifyContent: 'space-between',
+    gap: 50,
+
     width: '100%',
     paddingHorizontal: 50,
     marginTop: 4,
@@ -152,11 +149,12 @@ const styles = StyleSheet.create({
   tableCell: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 8,
+    // paddingVertical: 8,
   },
   cellText: {
     fontSize: wp('4%'),
     color: '#fff',
+    fontFamily:'Montserrat-SemiBold',
   },
   closeButton: {
     borderRadius: 8,
@@ -174,9 +172,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 1, height: 11 },
     width: '100%',
     borderTopRightRadius: wp(3.3),
-    backgroundColor:'#00b63d',
+    backgroundColor: '#00b63d',
     borderTopColor: '#00e968',
-    borderBottomColor:'#018312',
+    borderBottomColor: '#018312',
     marginTop: 10,
   },
   closeButtonText: {
@@ -188,6 +186,17 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 1,
     textTransform: 'uppercase',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transprent',
+  },
+  noDataText: {
+    fontSize: wp('5%'),
+    color: 'black',
+    fontFamily: 'Montserrat-Regular',
   },
 });
 

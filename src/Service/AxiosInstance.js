@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-export const baseApiurl = 'http://192.168.131.112:3001'
-// export const baseApiurl='https://api.sharkpocket.in'
+// export const baseApiurl = 'http://192.168.131.112:3001'
+export const baseApiurl='https://api.sharkpocket.in'
+
 
 console.log("baseApiurl", baseApiurl)
 

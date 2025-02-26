@@ -1,15 +1,18 @@
 import {
   Alert,
+  Animated,
   FlatList,
   Image,
   Modal,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   widthPercentageToDP as wp,
@@ -39,6 +42,38 @@ export default function LocalGameBoard() {
   const [gameHistoryData, setGameHistory] = useState([]);
   const [modalVisibles, setModalVisibles] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
+
+  const data = [
+    { id: "1", image: "https://via.placeholder.com/40", username: "John", points: 150, rank: 1, A: 10, B: 20, C: 30, D: 40 },
+    { id: "2", image: "https://via.placeholder.com/40", username: "Jane", points: 140, rank: 2, A: 15, B: 25, C: 35, D: 45 },
+    { id: "3", image: "https://via.placeholder.com/40", username: "Mike", points: 130, rank: 3, A: 12, B: 22, C: 32, D: 42 },
+    { id: "4", image: "https://via.placeholder.com/40", username: "Anna", points: 120, rank: 4, A: 18, B: 28, C: 38, D: 48 },
+  ];
+
+  const headerScrollRef = useRef(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const rowScrollRefs = useRef({});
+  const handleHeaderScroll = (event) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    setScrollPosition(offsetX);
+    Object.values(rowScrollRefs.current).forEach((ref) => {
+      if (ref) {
+        ref.scrollTo({ x: offsetX, animated: false });
+      }
+    });
+  };
+  const handleRowScroll = (event, rowId) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    setScrollPosition(offsetX);
+    if (headerScrollRef.current) {
+      headerScrollRef.current.scrollTo({ x: offsetX, animated: false });
+    }
+    Object.entries(rowScrollRefs.current).forEach(([id, ref]) => {
+      if (id !== rowId && ref) {
+        ref.scrollTo({ x: offsetX, animated: false });
+      }
+    });
+  };
 
   const leaderBoardData = async () => {
     setLoader(true);
@@ -107,34 +142,8 @@ export default function LocalGameBoard() {
     }
   };
 
-  // const handleSearch = query => {
-  //   if (!query) {
-  //     setFilteredData(gameData);
-  //   } else {
-  //     const filtered = gameData.filter(
-  //       item =>
-  //         (item.user_name &&
-  //           item.user_name.toLowerCase().includes(query.toLowerCase())) ||
-  //         (item.ranking && item.ranking.toString().includes(query)),
-  //     );
-  //     setFilteredData(filtered);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (gameData && gameData.length > 0) {
-  //     const rakingData = () => {
-  //       gameData.forEach(item => {
-  //         if (item.ranking === 1) setFirstRanking(item);
-  //         if (item.ranking === 2) setSecondRanking(item);
-  //         if (item.ranking === 3) setThirdRanking(item);
-  //       });
-  //     };
-  //     rakingData();
-  //   }
-  // }, [gameData]);
-
   const showRange = async () => {
+    console.log("hewllooo")
     try {
       const response = await rangeShow(game_id)
       console.log("responser of the leader board", response.ranges)
@@ -146,50 +155,116 @@ export default function LocalGameBoard() {
   }
 
   const handleTouch = (title) => {
+
     setSelectedTitle(title);
     setModalVisibles(true);
   };
 
-  const data = [
-    { id: '1', value: 'A',title:"Show Total Score Of Super Number - Desc"},
-    { id: '2', value: 'B',title:"Show Total Super Number Selected - Desc" },
-    { id: '3', value: 'C',title:"Show Total Prime Number Selected - Desc" },
-    { id: '4', value: 'D',title:"Show Total Even Number Selected -ASc"},
-  ];
 
-
-  const renderHeader = () => {
+  const renderRow = ({ item }) => {
+    const rowRef = (ref) => (rowScrollRefs.current[item.id] = ref);
     return (
-      <>
-        <View style={styles.headerContainer}>
-          <View style={styles.headerItem}>
-            <Text style={styles.headerText}>Photo</Text>
+      <View style={styles.row}>
+        <View style={styles.fixedColumns}>
+          <Image source={Person4} style={styles.image} />
+          <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id)}>
+            <Text style={[styles.cell, { width: 100, textDecorationLine: 'underline' }]}>{item.userName}</Text>
+          </TouchableOpacity>
+          <Text style={styles.cell}>{item.score}</Text>
+          <Text style={styles.cell}>#{item.rank}</Text>
+        </View>
+        <ScrollView
+          horizontal
+          ref={rowRef}
+          showsHorizontalScrollIndicator={false}
+          style={styles.scrollableColumns}
+          onScroll={(e) => handleRowScroll(e, item.id)}
+          scrollEventThrottle={16}
+          contentOffset={{ x: scrollPosition, y: 0 }}
+        >
+          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <Text style={[styles.cell, { paddingRight: hp('2%')}]}>{item?.prime_number?.selected}</Text>
           </View>
-          <View style={styles.headerItem}>
-            <Text style={styles.headerText}>Name</Text>
+          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <Text style={[styles.cell, { paddingRight: hp('6%') }]}>{item?.super_number?.selected}</Text>
           </View>
-          <View style={styles.headerItem}>
-            <Text style={styles.headerText}>Score</Text>
+          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <Text style={[styles.cell, { width: 20 }]}>{item?.super_number?.score}</Text>
           </View>
-          <View style={styles.headerItem}>
-            <Text style={styles.headerText}>Rank</Text>
+          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <Text style={[styles.cell]}>{item?.super_number?.score}</Text>
           </View>
-          <View style={styles.flatListContainer}>
-            <FlatList
-              data={data}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={[styles.gameItem, { backgroundColor: 'rgba(255, 255, 255, 0.5)', }]} onPress={() => handleTouch(item.title)}>
-                  <Text style={styles.headerText}>{item.value}</Text>
+        </ScrollView>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <RangeInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} rangeData={rangeData} />
+
+      <LinearGradient
+        colors={['#361911', '#361911', '#6A1700']}
+        style={styles.linearGradient}>
+        <View style={{ flex: 0.15 }}>
+          <CommonHeader title={'Leader Board'} />
+          <TouchableOpacity style={{ position: 'absolute', top: hp('6%'), right: hp('1%') }} onPress={() => {
+            setModalVisible(true)
+            showRange()
+          }}>
+            <Icon name={'info-with-circle'} size={30} color={'red'} />
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+          }}>
+
+          <View style={styles.headerContainer}>
+            <View style={styles.header}>
+              <View style={styles.fixedColumns}>
+                <Text style={[styles.headerCell, { width: 60 }]}>Image</Text>
+                <Text style={[styles.headerCell, { width: 80 }]}>Username</Text>
+                <Text style={[styles.headerCell, { width: 80 }]}>Points</Text>
+                <Text style={[styles.headerCell, { width: 80 }]}>Rank</Text>
+              </View>
+              <ScrollView
+                horizontal
+                ref={headerScrollRef}
+                showsHorizontalScrollIndicator={false}
+                style={styles.scrollableColumns}
+                onScroll={handleHeaderScroll}
+                scrollEventThrottle={16}
+                contentOffset={{ x: scrollPosition, y: 0 }}
+              >
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Prime Number Selected - DESC')}>
+                  <Text style={[styles.headerCell, { width: 60 }]}>A</Text>
                 </TouchableOpacity>
-              )}
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Super Number Selected - DESC')}>
+                  <Text style={[styles.headerCell, { width: 60 }]}>B</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Super Number Score - DESC')}>
+                  <Text style={[styles.headerCell, { width: 60 }]}>C</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ backgroundColor: '#FFFFFF80', borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }} onPress={() => handleTouch('Total Even Number Selected - ASC')}>
+                  <Text style={[styles.headerCell, { width: 60 }]}>D</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+            <FlatList
+              data={filteredData}
+              keyExtractor={(item) => item.id}
+              renderItem={renderRow}
+              showsVerticalScrollIndicator={false}
             />
           </View>
         </View>
+      </LinearGradient>
+      <Toast ref={Toast.setRef} />
 
-        <Modal
+      <Modal
   transparent
   visible={modalVisibles}
   animationType="fade"
@@ -207,135 +282,6 @@ export default function LocalGameBoard() {
     </View>
   </View>
 </Modal>
-
-
-      </>
-      
-    )
-  }
-
-  const renderItem = items => {
-    const { item } = items;
-    console.log("item", item)
-
-    return (
-      <>
-        <View style={{ flex: 1, paddingBottom: hp('0.5%') }}>
-          <View style={styles.subHeaderContainer}>
-            <View style={styles.headerItem}>
-              <Image
-                source={Person4}
-                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
-              />
-            </View>
-            <TouchableOpacity style={styles.headerItem} onPress={() => {
-              allGameHistory(item?.user_id, item?._id)
-            }}>
-              <Text style={[styles.txt, { textDecorationLine: 'underline' }]}>{truncateName(item?.userName, 1)}</Text>
-            </TouchableOpacity>
-            <View style={styles.headerItem}>
-              <Text style={styles.txt}>{item.score}</Text>
-            </View>
-            <View style={styles.headerItem}>
-              <Text style={styles.txt1}>#{item.rank}</Text>
-            </View>
-            <View style={styles.flatListContainer}>
-              <FlatList
-                data={[
-                  { key: 'super_score', value: item?.super_number?.score },
-                  { key: 'super_selected', value: item?.super_number?.selected },
-                  { key: 'prime', value: item?.prime_number?.selected },
-                  { key: 'even', value: item?.even_number?.selected }
-                ]}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <TouchableOpacity style={[styles.gameItem]}>
-                    <Text style={styles.headerText}>{item.value}</Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-          </View>
-
-          <LinearGradient
-            colors={['#999999', '#FFFFFF', '#999999']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{
-              height: 1,
-              marginTop: 10,
-              marginHorizontal: wp(2),
-            }}
-          />
-        </View>
-      </>
-    );
-  };
-  return (
-    <SafeAreaView style={styles.container}>
-      <RangeInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} rangeData={rangeData} />
-
-      <LinearGradient
-        colors={['#361911', '#361911', '#6A1700']}
-        style={styles.linearGradient}>
-        <View style={{ flex: 0.15 }}>
-          <CommonHeader title={'Leader Board'} />
-        </View>
-        <View style={{ flex: 0.1, margin: hp('2%'), marginTop: hp('1%'), flexDirection: 'row' }}>
-          <View style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.5)', margin: hp('1%'), borderRadius: hp('1%'), flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ flex: 0.4 }}>
-              <Image
-                source={Person4}
-                style={{ height: hp(3), width: wp(6), borderRadius: wp(3) }}
-              />
-            </View>
-            <View style={{ flex: 1.5 }}>
-              <Text style={styles.txt}>Manoj</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.txt}>566.3</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.txt1}>#1</Text>
-            </View>
-          </View>
-          <TouchableOpacity style={{ flex: 0.1, justifyContent: 'center', alignItems: 'center' }} onPress={() => {
-            setModalVisible(true)
-            showRange()
-          }}>
-            <Icon name={'info-with-circle'} size={30} color={'red'} />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-            borderRadius: hp('2%'),
-          }}>
-          {renderHeader()}
-          <SafeAreaView style={{ flex: 1.5, marginTop: hp('0.5%') }}>
-            {gameData ? (
-              !loader ? (
-                <FlatList
-                  data={filteredData}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                  showsVerticalScrollIndicator={false}
-                />
-              ) : (
-                <AnimatedLoader />
-              )
-            ) : (
-              <View style={styles.noDataContainer}>
-                <Text style={styles.noDataText}>No data found</Text>
-              </View>
-            )}
-          </SafeAreaView>
-        </View>
-      </LinearGradient>
-      <Toast ref={Toast.setRef} />
     </SafeAreaView>
   );
 }
@@ -347,86 +293,54 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
   },
-  leaderBoard: {
-    flex: 0.1,
-    flexDirection: 'row',
-  },
-  leaderTxt: {
-    color: 'white',
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 20,
-  },
-  txt: {
-    color: '#FFFFFF',
-    fontFamily: 'Montserrat-Bold',
-    fontSize: hp('1.8%'),
-
-  },
-  txt1: {
-    color: '#FFFFFF',
-    fontFamily: 'Montserrat-Bold',
-    fontSize: hp('1.8%'),
-    width: wp('20%'),
-    paddingLeft: wp('10%'),
-  },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transprent',
-  },
-  noDataText: {
-    fontSize: wp('5%'),
-    color: 'black',
-    fontFamily: 'Montserrat-Regular',
-  },
-  headerItem: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   headerContainer: {
-    flex: 0.1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#361911',
-    // paddingVertical: hp('1%'),
-    // paddingHorizontal: wp('2%'),
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
-    borderColor: '#ddd',
-  },
-  subHeaderContainer: {
-    flex: 0.1,
-    flexDirection: 'row',
-  },
-  headerItem: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: hp('1%'),
-    paddingHorizontal: wp('2%'),
+    // margin: 10,
   },
-  headerText: {
-    fontSize: hp('1.5%'),
-    fontFamily: 'Montserrat-Bold',
-    color: 'white',
+  header: {
+    flexDirection: "row",
+    backgroundColor: "#361911",
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "white",
+    borderTopWidth: 1,
+    borderTopColor: "white",
   },
-  flatListContainer: {
-    flex: 1.5,
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingVertical: 10,
   },
-  gameItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: hp('1%'),
-    marginHorizontal: hp('1%'),
-    paddingHorizontal: wp('4%'),
-    paddingVertical: hp('1%'),
-
+  fixedColumns: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: 300,
+  },
+  scrollableColumns: {
+    flexDirection: "row",
+    width: 60,
+  },
+  image: {
+    width: 30,
+    height: 30,
+    marginHorizontal: 5,
+    borderRadius: 20
+  },
+  cell: {
+    width: 80,
+    textAlign: "center",
+    color: "white",
+    fontFamily: 'Montserrat-SemiBold'
+  },
+  headerCell: {
+    color: "white",
+    textAlign: "center",
+    fontFamily: 'Montserrat-Bold'
   },
   modalOverlay: {
     position: 'absolute',
-    top: hp('9%'),
+    top: hp('3%'),
     left: '70%',
     transform: [{ translateX: -wp('10%') }],
     width: wp('35%'),
@@ -468,5 +382,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
   },
-  
 });
+
