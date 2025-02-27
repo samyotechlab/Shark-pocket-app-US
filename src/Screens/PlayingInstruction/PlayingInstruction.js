@@ -28,7 +28,6 @@ import { addExpectation, editExpectation, getExpectation } from '../../Service/E
 export default function PlayingInstruction() {
   const route = useRoute();
   const { game_id, ticket_id, screen_name, question } = route.params;
-  console.log("question", question)
   const [visible, setVisible] = useState(false);
   const [visibles, setVisibles] = useState(false);
   const [message, setMessage] = useState('');
@@ -113,7 +112,6 @@ export default function PlayingInstruction() {
     try {
       const response = await getExpectation(data._id, game_id)
       setExpectData(response)
-
       if (response?.dataShow) {
         setExpectation(response?.data?.userExpectations);
       }
@@ -131,20 +129,16 @@ export default function PlayingInstruction() {
 
   const handleShow = () => {
     setVisible(true)
-    
     setMessage('enter your expectation')
   }
 
 
   const handleStartGame = async () => {
     let responseData;
-    if (question&& expectation=="") {
-      console.log("question-->",question,"expectation-->",expectation)
-      
-        handleShow()
-      
+    if (question && expectation == "") {
+       return handleShow();
     }
-      if (selectedNumber) {
+      if (selectedNumber && question === undefined) {
         navigation.navigate('GameScreen', {
           selectedNumber: selectedNumber,
           game_id: game_id,
@@ -168,6 +162,7 @@ export default function PlayingInstruction() {
               userExpectations: expectation
             })
           }
+          console.log("responseData", responseData) 
           if (responseData.status === "success") {
             navigation.navigate('GameScreen', {
               selectedNumber: selectedNumber,
@@ -413,7 +408,7 @@ export default function PlayingInstruction() {
                       <View style={styles.inputContainer}>
                         <TextInput
                           style={styles.input}
-                          placeholder="Enter your answer..."
+                          placeholder="Enter your expectation..."
                           placeholderTextColor="#FFFFFFCC"
                           keyboardType="default"
                           value={expectation}

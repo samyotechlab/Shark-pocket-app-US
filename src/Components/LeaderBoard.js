@@ -1,7 +1,7 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useState} from 'react';
-import {useFocusEffect} from '@react-navigation/native';
-import LinearGradient from 'react-native-linear-gradient'; // Import LinearGradient
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -13,8 +13,8 @@ import GameInfoModal from './GameInfoModal';
 
 export default function LeaderBoard() {
   const [selectedTab, setSelectedTab] = useState('Local');
-    const [modalVisible, setModalVisible] = useState(false);
-  
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   const handlePress = tab => {
     setSelectedTab(tab);
@@ -28,29 +28,29 @@ export default function LeaderBoard() {
 
   return (
     <>
-          <GameInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+      <GameInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} />
 
-      <View style={{flex: 1.5}}>
+      <View style={{ flex: 1.5 }}>
         <View style={styles.leaderBoard}>
           <Text style={styles.leaderTxt}>Leader Board</Text>
-          <TouchableOpacity style={styles.button} onPress={()=>{
-                      setModalVisible(true)
+          <TouchableOpacity style={styles.button} onPress={() => {
+            setModalVisible(true)
 
           }}>
-        <LinearGradient
-          colors={["#FEB801", "#361911"]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={styles.gradientButton}
-        >
-          <View>
-            <Text style={styles.buttonText}>Points Selection</Text>
-           
-          </View>
-        </LinearGradient>
-      </TouchableOpacity>
+            <LinearGradient
+              colors={["#FEB801", "#361911"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.gradientButton}
+            >
+              <View>
+                <Text style={styles.buttonText}>Points Selection</Text>
+
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View
             style={{
               flex: 1,
@@ -59,7 +59,7 @@ export default function LeaderBoard() {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View style={{flex: 1, marginHorizontal: hp('0.5%')}}>
+            <View style={{ flex: 1, marginHorizontal: hp('0.5%') }}>
               <TouchableOpacity
                 onPress={() => {
                   handlePress('Local');
@@ -86,8 +86,8 @@ export default function LeaderBoard() {
               {selectedTab === 'Local' && (
                 <LinearGradient
                   colors={['#FEB801', '#361911']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   style={{
                     height: hp('0.5%'),
                     borderRadius: hp('0.25%'),
@@ -96,7 +96,7 @@ export default function LeaderBoard() {
               )}
             </View>
 
-            <View style={{flex: 1, marginHorizontal: hp('0.5%')}}>
+            <View style={{ flex: 1, marginHorizontal: hp('0.5%') }}>
               <TouchableOpacity
                 onPress={() => {
                   handlePress('Global');
@@ -122,9 +122,9 @@ export default function LeaderBoard() {
               </TouchableOpacity>
               {selectedTab === 'Global' && (
                 <LinearGradient
-                  colors={['#361911','#FEB801']}
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  colors={['#361911', '#FEB801']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   style={{
                     height: hp('0.5%'),
                     borderRadius: hp('0.25%'),
@@ -135,8 +135,8 @@ export default function LeaderBoard() {
           </View>
         </View>
       </View>
-      <View style={{flex: 6}}>
-        {selectedTab === 'Local' ? <LocalLeaderBoard  type="weekly"/> : <LocalLeaderBoard type="daily"/>}
+      <View style={{ flex: 6 }}>
+        {selectedTab === 'Local' ? <LocalLeaderBoard type="weekly" /> : <LocalLeaderBoard type="daily" />}
       </View>
     </>
   );
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: hp('1%'),
     overflow: "hidden",
-    marginRight:hp('2%'),
+    marginRight: hp('2%'),
   },
   gradientButton: {
     paddingVertical: hp('1%'),

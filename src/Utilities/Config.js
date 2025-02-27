@@ -2,7 +2,7 @@
 export default {
   Login: 'api/login',
   OtpVerify: 'api/verifyOtp',
-  ResendOtp:'api//sendOtp',
+  ResendOtp:'api/sendOtp',
   Home_Api: 'api/game/list',
   Profile: 'api/get_details',
   AdharOptSend: 'api/AadharVerificationSendOtp',
@@ -29,7 +29,7 @@ export default {
   checkPaymentStatus: 'api/checkPaymentStatus',
   DepositeTransaction: 'api/wallet/transactionDepositeDetails',
   Bank_Store: 'api/bank_account/store',
-  Bank_Detail : 'api//bank_account/byId',
+  Bank_Detail : 'api/bank_account/byId',
   PanVerification: 'api/PanVerification',
   Notification_List: 'notification/list',
   Notification_ById:'/notification/getNotificationById',

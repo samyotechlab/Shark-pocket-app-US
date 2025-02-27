@@ -10,8 +10,11 @@ import {
 
 const SelectedNumbers = () => {
     const route = useRoute();
-    const { numbers } = route.params || {};
-    const super_number = 5;
+    console.log(route.params);
+    const { numbers, super_numbers } = route.params || {};
+
+    const super_number = super_numbers ? super_numbers : 5;
+    console.log("super_number", super_number);
     const [activeTab, setActiveTab] = useState(null);
 
     if (!numbers || typeof numbers !== 'string' || numbers.trim() === '') {
@@ -50,6 +53,11 @@ const SelectedNumbers = () => {
     return (
         <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
             <CommonHeader title={'Selected Number'} />
+
+            <LinearGradient colors={['#0916B9', '#7F71BF', '#0916B9']} start={{x: 0.3, y: 0}} end={{x: 0.7, y: 1}} style={styles.superNumberBox}>
+                <Text style={styles.superNumberText}>{super_number}</Text>
+            </LinearGradient>
+
             <ScrollView>
                 {sections.map((section, index) => (
                     <View key={index}>
@@ -64,7 +72,7 @@ const SelectedNumbers = () => {
                                     {section.data.length > 0 ? (
                                         <View style={styles.numberContainer}>
                                             {section.data.map((number, numIndex) => (
-                                                <LinearGradient key={numIndex} colors={section.colors} style={[styles.numberBox, { borderColor: section.borderColor }]}>
+                                                <LinearGradient key={numIndex} colors={section.colors}  start={{x: 0.3, y: 0}} end={{x: 0.7, y: 1}} style={[styles.numberBox, { borderColor: section.borderColor }]}>
                                                     <Text style={styles.numberText}>{number}</Text>
                                                 </LinearGradient>
                                             ))}
@@ -99,28 +107,44 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
-        borderWidth: 2,
+        borderWidth: hp('0.2%'),
     },
-    tabHeaderText: { fontSize: 20, fontFamily: 'LilitaOne-Regular', color: '#361911' },
+    tabHeaderText: { fontSize: hp('2.2%'), fontFamily: 'LilitaOne-Regular', color: '#361911' },
     tabContentContainer: {
-        maxHeight: 300,
+        maxHeight: hp('30%'),
     },
     tabContent: {
-        maxHeight: 300,
+        maxHeight: hp('30%'),
+
     },
-    numberContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 10, padding: 10 },
+    numberContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: hp('1.5%'), padding: hp('1%')},
     numberBox: {
-        padding: 10,
-        borderRadius: 8,
+        padding: hp('1%'),
+        borderRadius: hp('1%'),
         alignItems: 'center',
         justifyContent: 'center',
-        width: 55,
-        height: 55,
+        width: hp('6%'),
+        height: hp('6%'),
         borderWidth: 1,
         backgroundColor: 'white'
     },
-    numberText: { fontSize: 14, fontFamily: 'LilitaOne-Regular' },
-    emptyText: { color: 'white', fontSize: 16, marginTop: 10 }
+    numberText: { fontSize: hp('1.5%'), fontFamily: 'LilitaOne-Regular' },
+    emptyText: { color: 'white', fontSize: 16, marginTop: 10 },
+    superNumberBox: {
+        width: hp('6%'),
+        height: hp('6%'),
+        borderRadius: hp('1%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 3,
+        borderColor: '#7F71BF',
+        marginHorizontal:hp('35%'),
+    },
+    superNumberText: {
+        fontSize: hp('3%'),
+        fontFamily: 'LilitaOne-Regular',
+        color: '#361911',
+    },
 });
 
 export default SelectedNumbers;

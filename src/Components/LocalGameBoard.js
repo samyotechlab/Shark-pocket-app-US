@@ -27,8 +27,6 @@ import Toast from 'react-native-toast-message';
 import RangeInfoModal from './RangeInfoModal';
 import CommonHeader from './CommonHeader';
 import { gameHistoryUser } from '../Service/GameHistory';
-import useLoginDataStorage from '../Service/CustomStorageHook';
-
 
 export default function LocalGameBoard() {
   const route = useRoute();
@@ -42,7 +40,6 @@ export default function LocalGameBoard() {
   const [gameHistoryData, setGameHistory] = useState([]);
   const [modalVisibles, setModalVisibles] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
-  const { loginData, isReady } = useLoginDataStorage();
 
   const headerScrollRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);

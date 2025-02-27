@@ -228,7 +228,7 @@ export default function GameFinishHistory() {
                 </View>
               </LinearGradient>
               <TouchableOpacity style={{marginTop:hp('2%')}} onPress={()=>{
-                navigation.navigate('SelectedNumbers',{numbers:gameHistoryData.selected_number})
+                navigation.navigate('SelectedNumbers',{numbers:gameHistoryData.selected_number,super_numbers:gameHistoryData.super_number_selected})
               }}>
               <Text style={styles.viewText}>View Selected Numbers</Text>
               </TouchableOpacity>

@@ -12,6 +12,8 @@ export default function DailyWeeklyBar() {
 
   const route = useRoute();
   const { gameData, status } = route.params
+  const myGames = gameData.filter(game => game?.status === 1);
+  console.log('myGames', myGames)
   const [selectedTab, setSelectedTab] = useState('Weekly');
   const handlePress = tab => {
     setSelectedTab(tab);
@@ -21,7 +23,7 @@ export default function DailyWeeklyBar() {
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={dynamicStyles.linearGradient}>
-      <CommonHeader title={ status === "1" ? 'My Game' : 'Availbale Game'} />
+      <CommonHeader title={ status === "1" ? 'My Game' : status === "2" ?'Available Game' : 'Upcoming Game'} />
       <View style={{ marginTop: 10, flex: 1 }}>
         <View
           style={{
@@ -48,14 +50,18 @@ export default function DailyWeeklyBar() {
           {selectedTab === 'Daily' ? (
             status === "1" ? (
               <DailyCard gameData={gameData} frequencyStatus={"1"} />
-            ) : (
+            ) : status === "2" ? (
               <DailyCard gameData={gameData} frequencyStatus={"2"} />
+            ) : (
+              <DailyCard gameData={myGames} frequencyStatus={"3"} />
             )
           ) : (
             status === "1" ? (
               <WeeklyCard gameData={gameData} frequencyStatus={"1"} />
-            ) : (
-            <WeeklyCard gameData={gameData} frequencyStatus={"2"} />
+            ) : status === "2" ? (
+             <WeeklyCard gameData={gameData} frequencyStatus={"2"} />
+            ):(
+              <WeeklyCard gameData={myGames} frequencyStatus={"3"} />
             )
           )}
 

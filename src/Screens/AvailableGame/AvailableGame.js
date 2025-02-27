@@ -16,6 +16,7 @@ export default function AvailableGame() {
     const [title, setTitle] = useState('')
     const [disabled, setDisabled] = useState(false)
     const { gameData, status } = route.params
+    console.log('gameData', status)
     let myGames = []
     if (status === "1") {
         myGames = gameData;
@@ -80,7 +81,7 @@ export default function AvailableGame() {
     return (
         <>
             {
-                status === "2" || status === "1" ?
+                status === "2" || status === "1" || status === "3" ?
                     (
                         <LinearGradient
                             colors={['#361911', '#361911', '#6A1700']}
