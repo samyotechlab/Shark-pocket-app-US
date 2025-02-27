@@ -48,13 +48,14 @@ export default function AvailableGame() {
     }, [status]);
 
     const handleNavigation = (item) => {
+
         if (status === "4") {
             navigation.navigate('AllGameName', { game_id: item._id, game_name: item.title })
         }else if (status === "3"){
             navigation.navigate('UpcomingGameInfo', { game_id: item._id, game_name: item.title })
         }
          else {
-            navigation.navigate('GameName', { game_id: item._id })
+            navigation.navigate('GameName', { game_id: item._id, title: item.title });
         }
     }
     const renderItem = ({ item, index }) => {
@@ -87,13 +88,6 @@ export default function AvailableGame() {
                             colors={['#361911', '#361911', '#6A1700']}
                             style={styles.linearGradient}>
                                   <DailyWeeklyBar gameData={gameData} />
-                                {/* {
-                                    status === "2" ? (
-                                        <DailyWeeklyBar gameData={gameData} />
-                                    ) : (
-                                        <DailyWeeklyBar gameData={gameData} />
-                                    )
-                                } */}
                           
                         </LinearGradient>
                     ) : (

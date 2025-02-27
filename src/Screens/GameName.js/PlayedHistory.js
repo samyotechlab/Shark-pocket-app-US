@@ -17,7 +17,7 @@ const PlayedHistory = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const [refreshing, setRefreshing] = useState(false);
-  const { game_id } = route.params
+  const { game_id ,title} = route.params
   let msg
 
   const refreshData = () => {
@@ -77,7 +77,7 @@ const PlayedHistory = () => {
       <>
         <View style={styles.container1} >
           <TouchableOpacity style={styles.cardOuterContainer} onPress={() => {
-            navigation.navigate('GameFinishHistory', { gameHistoryData: item })
+            navigation.navigate('GameFinishHistory', { gameHistoryData: item , title:title})
           }}>
             <LinearGradient
               colors={['#F38424', '#F7A552', '#F9D479']}

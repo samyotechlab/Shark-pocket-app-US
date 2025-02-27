@@ -20,7 +20,8 @@ export default function GameFinishHistory() {
   const [loader, setLoader] = useState(false);
   const navigation = useNavigation()
   const route = useRoute();
-  const {gameHistoryData} = route.params || {};
+
+  const {gameHistoryData,title} = route.params || {};
 
       if (!gameHistoryData) {
           return (
@@ -38,7 +39,7 @@ export default function GameFinishHistory() {
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.container}>
-        <CommonHeader title={'Games Name'} />
+        <CommonHeader title={title ? title : 'Game Name'} />
         {!loader ? (
           <>
             <View style={styles.headerContainer}>

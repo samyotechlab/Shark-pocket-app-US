@@ -10,7 +10,7 @@ const DailyCard = ({ gameData,frequencyStatus }) => {
     const dailyGameData = gameData?.filter(item => item.frequency === "daily")
 
     const handleNavigation = (item) => {
-        navigation.navigate('GameName', { game_id: item._id })
+        navigation.navigate('GameName', { game_id: item._id , title: item.game_title });
     }
     const renderItem = ({ item, index }) => {
         return (<>

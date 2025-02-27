@@ -9,7 +9,7 @@ const WeeklyCard = ({ gameData ,frequencyStatus }) => {
 
   const weeklyGameData = gameData?.filter(item => item.frequency === "weekly")
   const handleNavigation = (item) => {
-    navigation.navigate('GameName', { game_id: item._id })
+    navigation.navigate('GameName', { game_id: item._id , title: item.title });
   }
   const renderItem = ({ item, index }) => {
     return (<>

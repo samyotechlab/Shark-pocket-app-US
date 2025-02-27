@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Text, Dimensions, View, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, Dimensions, View, ScrollView, PixelRatio } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 import {
@@ -15,7 +15,14 @@ const AvailbleGameCard = (props) => {
   const { gameData, availability,setScrollEnabled } = props
   let myGameData = []
   let data = []
-  const carouselHeight = height * 0.22; 
+
+  const getResponsiveHeight = () => {
+    const baseHeight = height * 0.24;
+    const adjustedHeight = PixelRatio.roundToNearestPixel(baseHeight);
+    return adjustedHeight;
+};
+
+const carouselHeight =getResponsiveHeight(); 
 
   if (availability === '2') {
      myGameData = gameData?.filter((game) => game.status === 3) 
@@ -28,7 +35,8 @@ const AvailbleGameCard = (props) => {
   }
 
   const handleNavigation = (item) => {
-    navigation.navigate('GameName', { game_id: item._id });
+    console.log("item",item)
+    navigation.navigate('GameName', { game_id: item._id , title: item.title });
   };
 
   const renderItem = ({ item, index }) => (

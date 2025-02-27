@@ -12,7 +12,9 @@ import InfoModal from '../../Components/GameInfo'
 
 export default function GameName() {
   const route = useRoute();
-  const { game_id } = route.params
+
+  const { game_id  } = route.params
+  console.log('game_id', route.params)
   const [selectedTab, setSelectedTab] = useState('Tickets');
   const [gameData, setGameData] = useState({});
   const handlePress = tab => {
@@ -42,7 +44,7 @@ export default function GameName() {
           style={{
             flexDirection: 'row',
             padding: hp('2%'),
-            gap: wp('10%')
+            justifyContent: 'space-around',
           }}>
           <TouchableOpacity onPress={() => handlePress('Tickets')}>
             <Text
@@ -71,7 +73,7 @@ export default function GameName() {
         ) : selectedTab === 'GameInfo'? (
           <InfoModal gameData={gameData}/>
         ):(
-          <PlayedHistory game_id={game_id}/>
+          <PlayedHistory game_id={game_id} />
         )
         }
         </View>

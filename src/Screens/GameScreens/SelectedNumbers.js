@@ -54,7 +54,7 @@ const SelectedNumbers = () => {
         <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
             <CommonHeader title={'Selected Number'} />
 
-            <LinearGradient colors={['#0916B9', '#7F71BF', '#0916B9']} start={{x: 0.3, y: 0}} end={{x: 0.7, y: 1}} style={styles.superNumberBox}>
+            <LinearGradient colors={['#0916B9', '#7F71BF', '#0916B9']} start={{ x: 0.3, y: 0 }} end={{ x: 0.7, y: 1 }} style={styles.superNumberBox}>
                 <Text style={styles.superNumberText}>{super_number}</Text>
             </LinearGradient>
 
@@ -72,13 +72,15 @@ const SelectedNumbers = () => {
                                     {section.data.length > 0 ? (
                                         <View style={styles.numberContainer}>
                                             {section.data.map((number, numIndex) => (
-                                                <LinearGradient key={numIndex} colors={section.colors}  start={{x: 0.3, y: 0}} end={{x: 0.7, y: 1}} style={[styles.numberBox, { borderColor: section.borderColor }]}>
+                                                <LinearGradient key={numIndex} colors={section.colors} start={{ x: 0.3, y: 0 }} end={{ x: 0.7, y: 1 }} style={[styles.numberBox, { borderColor: section.borderColor }]}>
                                                     <Text style={styles.numberText}>{number}</Text>
                                                 </LinearGradient>
                                             ))}
                                         </View>
                                     ) : (
-                                        <Text style={styles.emptyText}>No numbers available</Text>
+                                        <View style={styles.centeredView}>
+                                            <Text style={styles.noNumbersText}>No numbers Selected</Text>
+                                        </View>
                                     )}
                                 </ScrollView>
                             </View>
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
         maxHeight: hp('30%'),
 
     },
-    numberContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: hp('1.5%'), padding: hp('1%')},
+    numberContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: hp('1.5%'), padding: hp('1%') },
     numberBox: {
         padding: hp('1%'),
         borderRadius: hp('1%'),
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 3,
         borderColor: '#7F71BF',
-        marginHorizontal:hp('35%'),
+        marginHorizontal: hp('35%'),
     },
     superNumberText: {
         fontSize: hp('3%'),

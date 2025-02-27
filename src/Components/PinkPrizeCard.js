@@ -26,7 +26,8 @@ const PinkPrizeCard = ({ item}) => {
 
   const navigation = useNavigation()
   const handleNavigation = (item) => {
-    navigation.navigate('GameName', { game_id: item._id });
+    console.log("item===>", item) 
+    navigation.navigate('GameName', { game_id: item._id , title: item.game_title});
   };
   return (
     <TouchableOpacity style={styles.container} onPress={() => {

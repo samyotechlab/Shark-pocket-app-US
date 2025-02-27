@@ -8,13 +8,14 @@ import {
   Animated,
   Image,
   ImageBackground,
+  AppState,
 } from 'react-native';
 import Coin from '../../../assets/images/Screens/CoinStack.png';
 import Iconicons from 'react-native-vector-icons/Entypo';
 import StarImage from '../../../assets/images/GameImage/star.png';
 import BombImage from '../../../assets/images/GameImage/smash-icon.png';
 import Speaker from '../../../assets/images/Screens/speaker.png';
-import SpeakerOff from '../../../assets/images/Screens/loudspeaker_off.png'
+import SpeakerOff from '../../../assets/images/Screens/loudspeaker_off.png';
 import Sound from 'react-native-sound';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
@@ -34,7 +35,6 @@ import { encryptData, generateKey } from '../../Utilities/utilies';
 
 const { width, height } = Dimensions.get('window');
 
-
 const getRandomNumber = () => {
   const ranges = [
     { min: 1, max: 100 },
@@ -43,7 +43,6 @@ const getRandomNumber = () => {
   ];
 
   const totalNumbers = ranges.reduce((sum, range) => sum + (range.max - range.min + 1), 0);
-
   const randomIndex = Math.floor(Math.random() * totalNumbers);
 
   let cumulative = 0;
@@ -70,7 +69,8 @@ export default function FloatingBoxGame() {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [status, setStatus] = useState('')
+  const [isPaused, setIsPaused] = useState(false);
+  const [status, setStatus] = useState('');
   const [floatingBoxes, setFloatingBoxes] = useState([]);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -88,15 +88,35 @@ export default function FloatingBoxGame() {
     mobile: "",
     userId: "",
     aadhaar: ""
-  })
-  const {loginData , isReady}  = useLoginDataStorage();
+  });
+  const { loginData, isReady } = useLoginDataStorage();
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prevTime => prevTime + 1);
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'background') {
+        setIsPaused(true);
+        soundRef.current?.pause();
+      } else if (nextAppState === 'active' && isPaused) {
+        setIsPaused(false);
+        if (isMusicPlaying) {
+          soundRef.current?.play();
+        }
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [isPaused, isMusicPlaying]);
+
+  useEffect(() => {
+    if (!isPaused && !isGameOver) {
+      const timer = setInterval(() => {
+        setTimeLeft(prevTime => prevTime + 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [isPaused, isGameOver]);
 
   useEffect(() => {
     if (loginData && isReady) {
@@ -105,20 +125,17 @@ export default function FloatingBoxGame() {
         mobile: loginData?.data?.mobile,
         userId: loginData?.data?._id,
         aadhaar: loginData?.data?.aadhaar
-      })
+      });
     }
-
-  }, [loginData, isReady])
+  }, [loginData, isReady]);
 
   useEffect(() => {
     Sound.setCategory('Playback');
-
     soundRef.current = new Sound('sound.mp3', Sound.MAIN_BUNDLE, error => {
       if (error) {
         console.log('Failed to load the sound', error);
         return;
       }
-
       soundRef.current.setNumberOfLoops(-1);
     });
 
@@ -130,22 +147,20 @@ export default function FloatingBoxGame() {
   useEffect(() => {
     if (isGameOver) {
       soundRef.current?.stop();
-    } else if (isMusicPlaying) {
+    } else if (isMusicPlaying && !isPaused) {
       soundRef.current?.play();
     }
-
     return () => {
       soundRef.current?.stop();
     };
-  }, [isGameOver, isMusicPlaying]);
+  }, [isGameOver, isMusicPlaying, isPaused]);
 
   useEffect(() => {
     toggleMusic();
   }, []);
 
   const toggleMusic = () => {
-    if (isGameOver) return;
-
+    if (isGameOver || isPaused) return;
     if (isMusicPlaying) {
       soundRef.current?.stop();
     } else {
@@ -153,19 +168,19 @@ export default function FloatingBoxGame() {
     }
     setIsMusicPlaying(!isMusicPlaying);
   };
+
   const isNotEmpty = (obj) => {
     return Object.values(obj).some(value => value !== "");
-};
+  };
 
   useEffect(() => {
-    if (!isGameOver) {
+    if (!isGameOver && !isPaused) {
       const interval = setInterval(() => {
         if (floatingBoxes.length >= 7) {
           return;
         }
 
         if (generatedBoxes >= 300) {
-
           clearInterval(interval);
           if (!isApiCalled && isNotEmpty(userData)) {
             setIsApiCalled(true);
@@ -173,6 +188,7 @@ export default function FloatingBoxGame() {
           }
           return () => clearInterval(interval);
         }
+
         const startY = height;
         const animatedY = new Animated.Value(startY);
         const opacityAnim = new Animated.Value(0);
@@ -181,7 +197,6 @@ export default function FloatingBoxGame() {
         const xPosition = getRandomX();
         const alternateXPosition = getRandomX();
         const zigzagX = Math.random() < 0.5 ? xPosition : alternateXPosition;
-
 
         const newBox = {
           id: Math.random(),
@@ -197,7 +212,7 @@ export default function FloatingBoxGame() {
           canClick: true,
         };
 
-        if (soundRef.current && !isGameOver) {
+        if (soundRef.current && !isGameOver && !isPaused) {
           soundRef.current.play(success => {
             if (!success) {
               console.log('Sound playback failed');
@@ -207,28 +222,24 @@ export default function FloatingBoxGame() {
 
         Animated.timing(newBox.y, {
           toValue: -200,
-          duration: 2700,
+          duration: 3000,
           useNativeDriver: true,
         }).start(() => {
           setFloatingBoxes(prev => prev.filter(box => box.id !== newBox.id));
         });
 
-
-
         setGeneratedBoxes(prev => prev + 1);
-
         setFloatingBoxes(prev => [...prev, newBox]);
-      }, 300);
+      }, 500);
 
       return () => clearInterval(interval);
     }
-  }, [isGameOver, floatingBoxes.length, generatedBoxes, isApiCalled,userData]);
+  }, [isGameOver, isPaused, floatingBoxes.length, generatedBoxes, isApiCalled, userData]);
 
   const handleBoxClick = box => {
-    if (!box.canClick || box.feedbackColor) return;
+    if (!box.canClick || box.feedbackColor || isPaused) return;
 
     const points = handleNumberClick(box.number);
-
     setScore(points);
 
     const isOdd = box.number % 2 !== 0;
@@ -237,7 +248,6 @@ export default function FloatingBoxGame() {
     const feedbackBgColor = isOdd
       ? ['#438301', '#84CB3C', '#438301']
       : ['#830101', '#BF7474', '#830101'];
-
     const feedbackBorderColor = isOdd ? '#569218' : '#921818';
     const textColor = 'white';
     const actionType = isOdd ? 'success' : 'failure';
@@ -270,7 +280,6 @@ export default function FloatingBoxGame() {
       ]).start();
     }, 300);
 
-    // Existing shake animation
     Animated.sequence([
       Animated.timing(box.shakeAnimation, {
         toValue: 1,
@@ -293,15 +302,15 @@ export default function FloatingBoxGame() {
       prev.map(item =>
         item.id === box.id
           ? {
-            ...item,
-            feedbackColor: feedbackColor,
-            feedbackImage: feedbackImage,
-            textColor: textColor,
-            feedbackBgColor: feedbackBgColor,
-            feedbackBorderColor: feedbackBorderColor,
-            canClick: false,
-            actionType: actionType,
-          }
+              ...item,
+              feedbackColor: feedbackColor,
+              feedbackImage: feedbackImage,
+              textColor: textColor,
+              feedbackBgColor: feedbackBgColor,
+              feedbackBorderColor: feedbackBorderColor,
+              canClick: false,
+              actionType: actionType,
+            }
           : item,
       ),
     );
@@ -309,31 +318,28 @@ export default function FloatingBoxGame() {
 
   const handleCallApi = async () => {
     const defaultNumberStringData =
-    numberStringData.trim() === '' ? '0' : numberStringData;
+      numberStringData.trim() === '' ? '0' : numberStringData;
 
-    const data ={
+    const data = {
       defaultNumberStringData,
       superNumber,
-      game_id : routeData.game_id,
-      ticket_id : routeData.ticket_id,
-      user_id : routeData.user_id
-    }
-        const mobileNumber = userData?.mobile;
-        const username = userData?.name;
-        const aadharNumber = userData?.aadhaar;
-        const userId = userData?.userId;
-        const key = generateKey(mobileNumber, username, aadharNumber, userId);
-        const encryptedData = encryptData(key,data);
+      game_id: routeData.game_id,
+      ticket_id: routeData.ticket_id,
+      user_id: routeData.user_id
+    };
+    const mobileNumber = userData?.mobile;
+    const username = userData?.name;
+    const aadharNumber = userData?.aadhaar;
+    const userId = userData?.userId;
+    const key = generateKey(mobileNumber, username, aadharNumber, userId);
+    const encryptedData = encryptData(key, data);
 
     try {
-      const response = await finalScore(
-        encryptedData,
-        routeData.user_id
-      );
+      const response = await finalScore(encryptedData, routeData.user_id);
       if (response) {
         setScoreData(response.data);
         setIsGameOver(true);
-        setStatus(0)
+        setStatus(0);
       }
     } catch (error) {
       console.log('error', error);
@@ -346,8 +352,8 @@ export default function FloatingBoxGame() {
 
   const handleNavigate = () => {
     setIsGameOver(true);
-    setStatus(1)
-    navigation.navigate('HomeScreen', { screen: "Home" })
+    setStatus(1);
+    navigation.navigate('HomeScreen', { screen: "Home" });
   };
 
   const getShadowOpt = type => {
@@ -372,6 +378,13 @@ export default function FloatingBoxGame() {
       style: { marginVertical: 5 },
     };
   };
+
+  const PauseOverlay = () => (
+    <View style={styles.pauseOverlay}>
+      <Text style={styles.pauseText}>Game Paused</Text>
+    </View>
+  );
+
   return (
     <ImageBackground
       source={require('../../../assets/images/Screens/background-image.png')}
@@ -386,6 +399,8 @@ export default function FloatingBoxGame() {
           message={'Are you sure you want to Quit game?'}
         />
 
+        {isPaused && <PauseOverlay />}
+
         {isGameOver ? (
           status === 0 ? (
             <GameFinishScreen
@@ -398,7 +413,6 @@ export default function FloatingBoxGame() {
           <>
             <View style={styles.header}>
               <View style={styles.timerContainer}>
-                {/* <Image source={ClockImage} style={styles.clockImage} /> */}
                 <Text style={styles.timerText}>
                   {Math.floor(timeLeft / 60)}:{timeLeft % 60 < 10 ? '0' : ''}
                   {timeLeft % 60}
@@ -428,26 +442,18 @@ export default function FloatingBoxGame() {
                 <View style={styles.magicNumberContainer}>
                   <Text style={styles.magicNumberText}>{superNumber}</Text>
                 </View>
-
                 <TouchableOpacity onPress={toggleMusic} style={{ marginLeft: 5 }}>
                   <Image
                     source={isMusicPlaying ? Speaker : SpeakerOff}
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
+                    style={{ width: 30, height: 30 }}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsModalVisible(true);
-                  }}>
+                <TouchableOpacity onPress={() => setIsModalVisible(true)}>
                   <Iconicons name={'cross'} size={50} color={'red'} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Game Area */}
             <View style={styles.gameArea}>
               {floatingBoxes.map(box => (
                 <Animated.View
@@ -466,9 +472,6 @@ export default function FloatingBoxGame() {
                         },
                       ],
                       backgroundColor: box.feedbackBgColor,
-                      // borderColor: box.feedbackBorderColor,
-                      // borderWidth: box.feedbackColor === 'transparent' ? 5 : 1,
-                      color: box.textColor,
                       borderRadius: 10,
                     },
                   ]}>
@@ -496,7 +499,6 @@ export default function FloatingBoxGame() {
                                 },
                               ]}
                             />
-
                             <Text style={styles.boxText2}>{box.number}</Text>
                           </LinearGradient>
                         </BoxShadow>
@@ -527,7 +529,6 @@ export default function FloatingBoxGame() {
   );
 }
 
-// Styles
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -567,11 +568,6 @@ const styles = StyleSheet.create({
   timerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  clockImage: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
   },
   timerText: {
     fontSize: 25,
@@ -622,7 +618,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     zIndex: 1,
   },
-
   blurContainer: {
     position: 'absolute',
     width: 140,
@@ -632,40 +627,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     opacity: 0.9,
   },
-
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  gameOverText: {
-    color: 'white',
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  finalScore: {
-    color: 'white',
-    fontSize: 24,
-    marginBottom: 30,
-  },
-  restartButton: {
-    backgroundColor: '#2ECC71',
-    paddingHorizontal: 40,
-    paddingVertical: 15,
-    borderRadius: 10,
-  },
-  restartText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-
   feedbackBoxwrapper: {
     borderRadius: 25,
     justifyContent: 'center',
@@ -680,12 +641,27 @@ const styles = StyleSheet.create({
     zIndex: 99999,
     top: 0,
   },
-
   boxText2: {
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 32,
     position: 'relative',
     zIndex: 1,
+  },
+  pauseOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  pauseText: {
+    color: 'white',
+    fontSize: 36,
+    fontFamily: 'LilitaOne-Regular',
   },
 });

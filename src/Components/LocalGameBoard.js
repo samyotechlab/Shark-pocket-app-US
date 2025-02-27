@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import _ from 'lodash';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     backgroundColor: "#361911",
-    paddingVertical: 15,
+    paddingVertical: hp('1.5%'),
     borderBottomWidth: 1,
     borderBottomColor: "white",
     borderTopWidth: 1,
@@ -349,28 +349,31 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    paddingVertical: 10,
+    paddingVertical: hp('1.5%'),
   },
   fixedColumns: {
     flexDirection: "row",
     alignItems: "center",
-    width: 300,
+    width: wp('70%'),
+
   },
   scrollableColumns: {
     flexDirection: "row",
-    width: 60,
+    width: wp('70%'),
+
   },
   image: {
-    width: 30,
-    height: 30,
+    width: hp('3%'),
+    height: hp('3%'),
     marginHorizontal: 5,
-    borderRadius: 20
+    borderRadius: hp('3%') / 2,
   },
   cell: {
     width: 80,
     textAlign: "center",
     color: "white",
     fontFamily: 'Montserrat-SemiBold'
+    
   },
   headerCell: {
     color: "white",
