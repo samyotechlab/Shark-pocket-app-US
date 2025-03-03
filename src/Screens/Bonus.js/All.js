@@ -9,16 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.deposite_date.split(' ')[0];
-    const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
-    if (!acc[typeKey]) acc[typeKey] = [];
-    acc[typeKey].push(item);
+    // const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(item);
     return acc;
   }, {});
 };
 
 export default function All(props) {
-
-
 
   const { bonusData = [] } = props;
   const navigation = useNavigation();
@@ -32,8 +30,8 @@ export default function All(props) {
 
 
   const renderTransaction = ({ item }) => {
-  
-    const isDebit = item.type === 0;
+    console.log("item", item)
+    const isDebit = item.type === 1;
     const transaction_amount =  parseFloat(item?.gst_amount ?? 0).toFixed(2)
 
     return (
@@ -92,7 +90,6 @@ export default function All(props) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-
     return {
       date: `${date}`,
       transactions: groupedData[key],

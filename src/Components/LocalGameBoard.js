@@ -179,16 +179,16 @@ export default function LocalGameBoard() {
           scrollEventThrottle={16}
           contentOffset={{ x: scrollPosition, y: 0 }}
         >
-          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <View style={{ borderRadius: 10, marginHorizontal: hp('1%'),paddingTop:hp('0.5%') }}>
             <Text style={[styles.cell, { paddingRight: hp('2%') }]}>{item?.prime_number?.selected}</Text>
           </View>
-          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <View style={{ borderRadius: 10, marginHorizontal: hp('1%'),paddingTop:hp('0.5%') }}>
             <Text style={[styles.cell, { paddingRight: hp('6%') }]}>{item?.super_number?.selected}</Text>
           </View>
-          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
-            <Text style={[styles.cell, { width: 20 }]}>{item?.super_number?.score}</Text>
+          <View style={{ borderRadius: 10, marginHorizontal: hp('1%'),paddingTop:hp('0.5%') }}>
+            <Text style={[styles.cell, { width: 30 }]}>{item?.super_number?.score}</Text>
           </View>
-          <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+          <View style={{ borderRadius: 10, marginHorizontal: hp('1%'),paddingTop:hp('0.5%') }}>
             <Text style={[styles.cell]}>{item?.super_number?.score}</Text>
           </View>
         </ScrollView>
@@ -274,10 +274,10 @@ export default function LocalGameBoard() {
                       scrollEventThrottle={16}
                       contentOffset={{ x: scrollPosition, y: 0 }}
                     >
-                      <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+                      <View style={{ borderRadius: 10, paddingVertical: hp('1%'), marginHorizontal: hp('1%')}}>
                         <Text style={[styles.cell, { paddingRight: hp('2%'), color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item?.prime_number?.selected}</Text>
                       </View>
-                      <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
+                      <View style={{ borderRadius: 10, paddingVertical: hp('1%'), marginHorizontal: hp('1%') }}>
                         <Text style={[styles.cell, { paddingRight: hp('6%'), color: "#361911", fontFamily: 'Montserrat-Bold' }]}>{item?.super_number?.selected}</Text>
                       </View>
                       <View style={{ borderRadius: 10, paddingVertical: hp('0.5%'), marginHorizontal: hp('1%') }}>
@@ -355,12 +355,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: wp('70%'),
-
   },
   scrollableColumns: {
     flexDirection: "row",
-    width: wp('70%'),
-
+    width: wp('60%'),
   },
   image: {
     width: hp('3%'),

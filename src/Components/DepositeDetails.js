@@ -20,6 +20,7 @@ import useLoginDataStorage from '../Service/CustomStorageHook';
 export default function DepositeDetails() {
   const route = useRoute();
   const { item, page } = route.params
+  console.log("item", item) 
   const [transactionData, setTransactionData] = useState({})
   const [loader, setLoader] = useState()
   const {loginData , isReady}  = useLoginDataStorage();
@@ -30,6 +31,11 @@ export default function DepositeDetails() {
     userId:"",
     aadhaar:""
   })
+
+  const headerTitle = {
+    bonus: "Bonus Details",
+    winning: "Winning Details"
+  }
 
   const Header = {
     bonus: "Bonus Details",
@@ -52,7 +58,6 @@ export default function DepositeDetails() {
   const depositeAmount = {
     bonus: parseFloat(item.actual_amount).toFixed(2),
     winning: parseFloat(item.user_amount).toFixed(2)
-
   }
 
   const gstAmount = {
@@ -88,6 +93,8 @@ export default function DepositeDetails() {
     const userId = userData?.userId;
     const key = generateKey(mobileNumber, username, aadharNumber, userId);
     const encryptedData = encryptData(key, item.user_id);
+
+    console.log("encryptedData", item.transaction_id)
 
     setLoader(true)
     try {
@@ -127,6 +134,7 @@ export default function DepositeDetails() {
 };
   useEffect(() => {
     if (page !== "bonus" && isNotEmpty(userData)) {
+      console.log("userData",userData)
       depositeData();
     }
   }, [page,userData])
@@ -151,7 +159,7 @@ export default function DepositeDetails() {
 
   return (
     <>
-      <HeaderComponent transactionData={bonusData[page] ? bonusData[page] : transactionData} title={"Deposite Details"} status={"deposite"} />
+      <HeaderComponent transactionData={bonusData[page] ? bonusData[page] : transactionData} title={headerTitle[page] ? headerTitle[page] : 'Deposite Details'} status={"deposite"} />
       {
         !loader ? (
           <SafeAreaView style={styles.main}>

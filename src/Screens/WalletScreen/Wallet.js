@@ -33,7 +33,6 @@ const WalletScreen = () => {
     setLoader(true);
     try {
       const response = await userDetail(data._id);
-      console.log("response", response)
       const formattedData = {
         ...response.data,
         total_balance: Number(parseFloat(response?.data?.total_balance || 0).toFixed(2)),
@@ -67,7 +66,6 @@ const WalletScreen = () => {
   const handleNavigation = (name, user_id) => {
     navigation.navigate(name, user_id);
   };
-  console.log("dataUser",)
   return (
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}

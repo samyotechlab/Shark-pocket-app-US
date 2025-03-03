@@ -26,16 +26,11 @@ export default function Debit(props) {
 
   const groupedData = groupByDateAndType(debitTransactions);
 
-  const handleNavigation = () => {
-    navigation.navigate('DepositeDetails');
-  };
-
   const renderTransaction = ({ item }) => {
 
     const transaction_amount = parseFloat(item.gst_amount ?? 0).toFixed(2)
     return (<TouchableOpacity
       style={styles.itemContainer}
-      onPress={handleNavigation}
     >
       <View style={[styles.circle, { backgroundColor: '#F100001A' }]}>
         <Image

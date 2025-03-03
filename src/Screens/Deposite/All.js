@@ -10,9 +10,9 @@ const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
 
-    const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
-    if (!acc[typeKey]) acc[typeKey] = [];
-    acc[typeKey].push(item);
+    // const typeKey = item.type === 0 ? `${date}.debit` : `${date}.credit`;
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(item);
     return acc;
   }, {});
 };
@@ -63,7 +63,7 @@ export default function All(props) {
           >
             {item.transaction_note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm </Text>
+          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : '0'} pm </Text>
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>
@@ -73,7 +73,6 @@ export default function All(props) {
   };
 
   const renderSection = ({ item }) => (
-    console.log("item", item),
     <View>
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{item.date}</Text>
@@ -88,7 +87,6 @@ export default function All(props) {
 
   const sectionData = Object.keys(groupedData).map((key) => {
     const [date] = key.split('.');
-
     return {
       date: `${date}`,
       transactions: groupedData[key],
