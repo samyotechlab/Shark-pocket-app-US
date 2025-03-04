@@ -25,3 +25,16 @@ export const bankStore = async verificationData => {
       throw error;
     }
   };
+
+  export const deleteBankAccount = async (user_id,account_no) => {
+    try {
+      const response = await apiInstance.post(`${Config.Bank_Delete}`, {
+        user_id,
+        account_no
+      });
+      return response.data;
+    } catch (error) {
+      console.log('error------------', error);
+      throw error;
+    }
+  };

@@ -195,7 +195,7 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message, show }) => {
                 </LinearGradient>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.okButton} onPress={onClose}>
+              <TouchableOpacity style={styles.okButton} onPress={onOkPress}>
                 <Text style={styles.okText}>Ok</Text>
               </TouchableOpacity>
             )}

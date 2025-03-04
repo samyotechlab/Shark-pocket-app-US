@@ -44,18 +44,21 @@ const SharkPocketScreen = () => {
       icon: 'bank-outline',
       url: 'BankAccount',
       is_verified: userData.is_account_verified,
+
     },
     {
       title: 'Pan verification',
       icon: 'security',
       url: 'PanVerification',
       is_verified: userData.is_pan_verified,
+      touch :true
     },
     {
       title: 'Aadhar Verification',
       icon: 'security',
       url: 'AadharDetail',
       is_verified: userData.is_aadhar_verified,
+      touch :true
     },
     {
       title: 'Contact us',
@@ -160,7 +163,7 @@ const SharkPocketScreen = () => {
             handleNavigation(item.url);
 
           }}
-          disabled={item.is_verified === 1}>
+          disabled={item.is_verified === 1 && item.touch === true }>
           <View style={{ flex: 0.5 }}>
             <LinearGradient
               colors={['#3D1911', '#3D1911', '#6A1701']}
@@ -180,7 +183,7 @@ const SharkPocketScreen = () => {
           </View>
 
           <View style={styles.verificationIcon}>
-            {item.is_verified !== undefined && (
+            {item.is_verified !== undefined  &&  (
               <VerificationIcon isVerified={item.is_verified} />
             )}
           </View>

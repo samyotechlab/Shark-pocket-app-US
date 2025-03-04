@@ -30,6 +30,7 @@ export default {
   DepositeTransaction: 'api/wallet/transactionDepositeDetails',
   Bank_Store: 'api/bank_account/store',
   Bank_Detail : 'api/bank_account/byId',
+  Bank_Delete : 'api/bank_account/delete',
   PanVerification: 'api/PanVerification',
   Notification_List: 'notification/list',
   Notification_ById:'/notification/getNotificationById',
