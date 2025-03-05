@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import TDSBreakupDialog from '../../Components/TDSBreakupDialog'
@@ -18,7 +18,7 @@ export default function Withdraw({ dataUser }) {
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false);
-  const [bankDetail, setBankDetail] = useState({})
+  const [bankDetail, setBankDetail] = useState([])
   const [tdsData, setTdsData] = useState({})
 
   const handleWithdraw = () => {
@@ -34,6 +34,7 @@ export default function Withdraw({ dataUser }) {
     try {
       setIsLoading(true);
       const response = await bankAccountDetails(dataUser._id);
+      console.log("bank Details === >", response)
       setBankDetail(response.data)
     } catch (error) {
       console.log('error', error);
@@ -55,8 +56,8 @@ export default function Withdraw({ dataUser }) {
         const userId = dataUser?._id
         const key = generateKey(mobileNumber, username, aadharNumber, userId);
         const data = {
-          amount:amount,
-          user_id:dataUser?._id
+          amount: amount,
+          user_id: dataUser?._id
         }
         const encryptedData = encryptData(key, data);
         if (amount >= bankDetail.minAmount) {
@@ -134,7 +135,6 @@ export default function Withdraw({ dataUser }) {
             </View>
           </View>
 
-          {/* Tax and Learn More */}
           <View style={{ flex: 0.5, justifyContent: 'center' }}>
             <Text style={styles.infoText}>
               No Govt. Tax on this withdrawal {' '}
@@ -163,14 +163,25 @@ export default function Withdraw({ dataUser }) {
             <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
             <View style={styles.bankInfo}>
               <Iconics name={'bank'} size={hp('3.5%')} />
-              <View>
-                {
-                  dataUser.is_account_verified == 1 ? (<>
-                    <Text style={styles.bankName}>{bankDetail.bank_name}</Text>
-                    <Text style={styles.bankAccount}>{bankDetail.account_no}</Text>
-                  </>) : (<Text style={styles.bankAccount}>Bank Details Not Found </Text>)
-                }
+              <View style={{ maxHeight: hp('8%'),flex:1}}>
+                {dataUser?.is_account_verified == 1 ? (
+                  <FlatList
+                    data={bankDetail}
+                    keyExtractor={(item, index) => index.toString()}
+                    showsVerticalScrollIndicator={true}
+                    style={{ maxHeight: hp('20%') }}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity style={{ marginBottom: hp('1%')}}>
+                        <Text style={styles.bankName}>{item.bank_name}</Text>
+                        <Text style={styles.bankAccount}>{item.account_no}</Text>
+                      </TouchableOpacity>
+                    )}
+                  />
+                ) : (
+                  <Text style={styles.bankAccount}>Bank Details Not Found</Text>
+                )}
               </View>
+
             </View>
           </View>
 

@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import CommonButton from '../../Components/CommonButton'
 import Toast from 'react-native-toast-message'
 import { useRoute } from '@react-navigation/native'
-import { bankAccountDetails, bankStore } from '../../Service/Bank'
+import { bankAccountDetails, bankStore, deleteBankAccount } from '../../Service/Bank'
 import { useNavigation } from '@react-navigation/native'
 import { userDetail } from '../../Service/Login'
 import AlertDialogRed from '../../Components/AlertDialogRed'
@@ -114,6 +114,7 @@ export default function BankAccount() {
         try {
             setLoader(true);
             const response = await bankAccountDetails(user_id);
+            console.log("response",response)
             if (response.data.length > 0) {
                 setBankAccounts(response.data);
                 setHasBankAccount(true);
@@ -148,7 +149,7 @@ export default function BankAccount() {
     const handleDelete = async (account_no) => {
         console.log("Deleting account:", account_no);
         try {
-            const response = await bankDelete(user_id, account_no);
+            const response = await deleteBankAccount(user_id, account_no);
             if (response.status === 1) {
                 Toast.show({
                     type: 'success',
@@ -255,9 +256,7 @@ export default function BankAccount() {
                     </View>
                 ))}
 
-                <AlertDialogRed visible={isModalVisible} onClose={() => setModalVisible(false)} message='Are you sure you want to delete this account?' onOkPress={handleConfirmDelete} />
-
-             
+                <AlertDialogRed visible={isModalVisible} onClose={() => setModalVisible(false)} message='Are you sure you want to delete this account?' onOkPress={handleConfirmDelete} />  
             </ScrollView>
             <Toast ref={Toast.setRef} />
         </>
@@ -329,7 +328,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     bankForm: {
-        // backgroundColor: '#222',
         padding: hp('2%'),
         marginBottom: hp('2%'),
         borderRadius: 8,

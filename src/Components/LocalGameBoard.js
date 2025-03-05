@@ -230,11 +230,29 @@ export default function LocalGameBoard() {
                 contentOffset={{ x: scrollPosition, y: 0 }}
                 contentContainerStyle={  { justifyContent:'center'}}
               >
+                <TouchableOpacity>
                 <Text style={styles.headerCell}>Rank</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  handleTouch('Total Prime Number Selected - DESC')
+                }}>
                 <Text style={styles.headerCell}>A</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  handleTouch('Total Super Number Selected - DESC')
+                }}>
                 <Text style={styles.headerCell}>B</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  handleTouch('Total Super Number Score - DESC')
+                }}>
                 <Text style={styles.headerCell}>C</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  handleTouch('Total Prime Number Selected - DESC')
+                }}>
                 <Text style={styles.headerCell}>D</Text>
+                </TouchableOpacity>
               </ScrollView>
             </View>
             {
