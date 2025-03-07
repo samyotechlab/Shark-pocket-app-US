@@ -157,7 +157,7 @@ export default function Withdraw({ dataUser }) {
           </TouchableOpacity>
 
         </View>
-
+        
         <View style={{ flex: 1, backgroundColor: 'white', marginTop: hp('1%') }}>
           <View style={styles.bankDetails}>
             <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>

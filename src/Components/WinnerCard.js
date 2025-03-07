@@ -16,7 +16,7 @@ const WinnerCard = (props) => {
     return (
       <TouchableOpacity style={styles.container} disabled={!clickable} onPress={openLink}>
         <Image
-          source={{ uri: item?.banner }}
+          source={{ uri: item?.bannerUrl }}
           // source={require('../../assets/images/Screens/banner.jpg') }
           style={styles.profileImage}
         />

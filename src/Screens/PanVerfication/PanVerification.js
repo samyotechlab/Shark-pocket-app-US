@@ -21,7 +21,8 @@ export default function PanVerfication() {
     const { isReady, loginData } = useLoginDataStorage();
     const route = useRoute();
     const [loader, setLoader] = useState(false)
-    const { user_id } = route.params
+    const { user_id , mobile} = route.params
+    console.log("mobile",mobile)
     const [panData, setPanData] = useState({
         name: '',
         pan_number: '',
@@ -77,7 +78,7 @@ export default function PanVerfication() {
             cropping: true,
         })
             .then(image => {
-                setUploadedImage(image?.path);
+                setUploadedImage(image);
             }).catch((error) => {
                 console.log(error)
             })
@@ -86,16 +87,23 @@ export default function PanVerfication() {
     const handleUploadDocument = async () => {
         const data = new FormData();
         data.append('pancard', {
-            uri: uploadedImage,
-            type: 'image/jpeg',
-            name: '12345.jpg',
+            uri: uploadedImage?.path,
+            type: uploadedImage.type || 'image/jpeg',
+            name: uploadedImage.filename || `pan_card_${Date.now()}.jpg`,
         });
         data.append('user_id', userData._id);
+        data.append('mobile',mobile)
         setLoader(true)
         try {
             const response = await PanDocumentUpload(data)
             if (response.status == 1) {
-                console.log('Image uploaded successfully:', response.data);
+                Toast.show({
+                    type: 'success',
+                    position: 'top',
+                    text1: 'Image Upload SuccessFully',
+                    text2: 'Admin Verify Your Details',
+                    visibilityTime: 3000
+                })
             }
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -143,7 +151,7 @@ export default function PanVerfication() {
                     type: 'error',
                     position: 'top',
                     text1: 'Error!',
-                    text2: 'Invalid Pan Number',
+                    text2: response.message,
                     visibilityTime: 3000,
                 });
             }
@@ -153,10 +161,11 @@ export default function PanVerfication() {
             Toast.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Pan Already Registered',
-                text2: 'Please Try Different Number',
+                text1: 'Error',
+                text2: msg,
                 visibilityTime: 3000,
             });
+            setResponse(0)
         } finally {
             setLoader(false)
         }
@@ -207,7 +216,7 @@ export default function PanVerfication() {
                     )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton title={'Save'} onPress={handleVerifyPan} />
+                    <CommonButton title={loader ? 'Loading...': 'Save'} onPress={handleVerifyPan} />
                     <Text style={styles.kycText}>
                         Why do we need PAN Verification?
                         <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={()=>{navigation.navigate('Faq')}}>
@@ -233,7 +242,7 @@ export default function PanVerfication() {
                             >
                                 {uploadedImage ? (
                                     <Image
-                                        source={{ uri: uploadedImage }}
+                                        source={{ uri: uploadedImage?.path}}
                                         style={{
                                             height: '100%',
                                             width: '100%',
@@ -252,14 +261,13 @@ export default function PanVerfication() {
                             </TouchableOpacity>
                             {
                                 uploadedImage && (<View style={{ padding: wp('5%') }}>
-                                    <CommonButton title={'Upload Documnet'} onPress={handleUploadDocument} />
+                                    <CommonButton title={loader ? 'Loading...' :'Upload Documnet'} onPress={handleUploadDocument} />
                                 </View>)
                             }
 
                         </View>
                     )
                 }
-
                 <Toast ref={Toast.setRef} />
             </View>
         </>

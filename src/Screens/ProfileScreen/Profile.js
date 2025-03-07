@@ -101,7 +101,7 @@ const SharkPocketScreen = () => {
     if (url === "Logout") {
       setVisible(true)
     } else {
-      navigation.navigate(url, { user_id: data._id });
+      navigation.navigate(url, { user_id: data._id ,mobile : userData.mobile});
     }
   }
   const handleLogout = async () => {

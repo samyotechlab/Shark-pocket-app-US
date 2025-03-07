@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonHeader from '../../Components/CommonHeader'
@@ -10,58 +10,63 @@ import { bankAccountDetails, bankStore, deleteBankAccount } from '../../Service/
 import { useNavigation } from '@react-navigation/native'
 import { userDetail } from '../../Service/Login'
 import AlertDialogRed from '../../Components/AlertDialogRed'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from 'react-native-linear-gradient'
+import AnimatedLoader from '../../Components/AnimatedLoader'
+import { validateField } from '../../Utilities/ValidateField'
+
 
 export default function BankAccount() {
     const navigation = useNavigation()
     const route = useRoute();
     const { user_id } = route.params
     const [bankAccounts, setBankAccounts] = useState([
-        { id: Date.now(), account_no: '', confirm_account_no: '', ifsc_code: ''}
+        { account_no: '', confirm_account_no: '', ifsc_code: '' }
     ]);
-    const [hasBankAccount, setHasBankAccount] = useState(false);
+    const [bankAccount, setBankAccount] = useState([]);
     const [userData, setUserData] = useState({});
     const [loader, setLoader] = useState(false);
-    const [verifiedAccounts, setVerifiedAccounts] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedAccount, setSelectedAccount] = useState(null);
+    const [visible, setVisible] = useState(false)
+    const [account, setAccountError] = useState('')
+    const [confirmAccount, setConfirmAccError] = useState('')
+    const [ifsc, setIfscError] = useState('')
 
 
-    const handleInputChange = (id, name, value) => {
-        setBankAccounts(prevAccounts => prevAccounts.map(account => {
-            return (
-                account.id === id ? { ...account, [name]: value} : account
-            )
+    const handleInputChange = (name, value) => {
+        setBankAccounts(prevFormData => ({
+            ...prevFormData,
+            [name]: value,
         }))
-        // const error = validateField(name, value);
-        // switch (name) {
-        //     case "account_no":
-        //         setAccountError(error);
-        //         break;
-        //     case "confirm_account_no":
-        //         setConfirmAccError(error);
-        //         break;
-        //     case "ifsc_code":
-        //         setIfscError(error);
-        //         break;
-        //     default:
-        //         break;
-        // }
+        const error = validateField(name, value);
+        switch (name) {
+            case "account_no":
+                setAccountError(error);
+                break;
+            case "confirm_account_no":
+                setConfirmAccError(error);
+                break;
+            case "ifsc_code":
+                setIfscError(error);
+                break;
+            default:
+                break;
+        }
     };
 
-    const addBankAccountForm = () => {
-        setBankAccounts([...bankAccounts, { id: Date.now(), account_no: '', confirm_account_no: '', ifsc_code: '' }]);
-    };
-
-    const verifyBankDetails = async (account) => {
+    const verifyBankDetails = async () => {
         const obj = {
             user_id: user_id,
             name: userData.name,
-            bank_account: account.account_no,
-            ifsc: account.ifsc_code,
+            bank_account: bankAccounts.account_no,
+            ifsc: bankAccounts.ifsc_code,
         };
+        console.log("obj === >", obj)
+
         try {
             setLoader(true);
-            if (account.account_no !== account.confirm_account_no) {
+            if (bankAccounts.account_no !== bankAccounts.confirm_account_no) {
                 Toast.show({
                     type: 'error',
                     text1: 'Account numbers do not match',
@@ -78,8 +83,8 @@ export default function BankAccount() {
                     text2: 'Bank Account Verify Successfull',
                     visibilityTime: 3000
                 });
+                setVisible(false)
                 bankDetails();
-                setVerifiedAccounts((prev) => [...prev, account.id]);
             } else {
                 Toast.show({
                     type: 'error',
@@ -114,13 +119,8 @@ export default function BankAccount() {
         try {
             setLoader(true);
             const response = await bankAccountDetails(user_id);
-            console.log("response",response)
             if (response.data.length > 0) {
-                setBankAccounts(response.data);
-                setHasBankAccount(true);
-            } else {
-                setBankAccounts([{ id: Date.now(), account_no: '', confirm_account_no: '', ifsc_code: '' }]);
-                setHasBankAccount(false);
+                setBankAccount(response.data);
             }
         } catch (error) {
             console.log('error', error);
@@ -145,6 +145,8 @@ export default function BankAccount() {
             setModalVisible(false);
         }
     };
+
+
 
     const handleDelete = async (account_no) => {
         console.log("Deleting account:", account_no);
@@ -180,163 +182,237 @@ export default function BankAccount() {
         }
     };
 
+    const renderItem = ({ item }) => {
+        return (<>
+            <View style={styles.container}>
+                <View style={styles.logoContainer}>
+                    <Icon name="bank" size={30} color="#361911" />
+                </View>
+
+                <View style={styles.detailsContainer}>
+                    <Text style={styles.bankName}>{item.bank_name}</Text>
+                    <Text style={styles.detail}>Account No: {item.account_no}</Text>
+                    <Text style={styles.detail}>IFSC Code: {item.ifsc_code}</Text>
+                </View>
+
+                <TouchableOpacity style={styles.logoContainer} onPress={() => confirmDelete(item.account_no)}>
+                    <Icon name="trash" size={30} color="red" />
+                </TouchableOpacity>
+            </View>
+        </>)
+    }
+
 
     return (
         <>
             <BackgroundScreen />
             <CommonHeader title={"Bank Account"} />
             <Text style={styles.kyc}>Complete Your Bank Details  </Text>
-            <ScrollView style={styles.container}>
-                {bankAccounts.map((account, index) => (
-                    <View key={account.id} style={styles.bankForm}>
-
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Account Number"
-                                placeholderTextColor="#FFFFFFCC"
-                                keyboardType="numeric"
-                                value={userData?.name}
-                                maxLength={20}
-                                onChangeText={(value) => handleInputChange(account.id, 'account_no', value)}
-                            />
+            <View style={{ padding: 10, margin: 10, alignItems: 'flex-end' }}>
+                <TouchableOpacity
+                    style={{
+                        backgroundColor: "#EFC328",
+                        paddingVertical: 12,
+                        paddingHorizontal: 15,
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }}
+                    onPress={() => setVisible(true)}
+                >
+                    <Icon name="plus" size={15} color="#361911" />
+                    <Text style={{ color: "#361911", fontSize: 16, fontFamily: 'Montserrat-SemiBold', marginHorizontal: 5 }}>Add Bank Details</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1 }}>
+                {
+                    bankAccount.length != 0 ? (
+                        !loader ? (<FlatList
+                            data={bankAccount}
+                            renderItem={renderItem}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsVerticalScrollIndicator={false}
+                        />) : (
+                            <AnimatedLoader />
+                        )
+                    ) : (
+                        <View style={styles.noDataContainer}>
+                            <Text style={styles.noDataText}>No data found</Text>
                         </View>
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter Account Number"
-                                placeholderTextColor="#FFFFFFCC"
-                                keyboardType="numeric"
-                                value={account?.account_no?.toString()}
-                                maxLength={20}
-                                onChangeText={(value) => handleInputChange(account.id, 'account_no', value)}
-                            />
-                        </View>
+                    )
+                }
 
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Confirm Account Number"
-                                placeholderTextColor="#FFFFFFCC"
-                                keyboardType="numeric"
-                                value={account?.confirm_account_no?.toString()}
-                                maxLength={20}
-                                onChangeText={(value) => handleInputChange(account.id, 'confirm_account_no', value)}
-                            />
-                        </View>
+            </View>
+            <AlertDialogRed visible={isModalVisible} onClose={() => setModalVisible(false)} message='Are you sure you want to delete this account?' onOkPress={handleConfirmDelete} />
 
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Enter IFSC Code"
-                                placeholderTextColor="#FFFFFFCC"
-                                keyboardType="default"
-                                value={account.ifsc_code}
-                                maxLength={11}
-                                onChangeText={(value) => handleInputChange(account.id, 'ifsc_code', value)}
-                                autoCapitalize="characters"
-                            />
-                        </View>
-
-                        {(account.isVerified !== 1) && (
-                            <CommonButton
-                                title={loader ? 'Loading...' : 'Verify'}
-                                onPress={() => verifyBankDetails(account)}
-                                disabled={verifiedAccounts.includes(account.id)}
-                            />
-                        )}
-                        {(hasBankAccount && account.isVerified === 1 ) && (
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-
-                                <CommonButton title="Add Account" onPress={addBankAccountForm} />
-
-                                <CommonButton title="Delete Account" onPress={() => confirmDelete(account.account_no)} />
-                            </View>
-                        )}
-                    </View>
-                ))}
-
-                <AlertDialogRed visible={isModalVisible} onClose={() => setModalVisible(false)} message='Are you sure you want to delete this account?' onOkPress={handleConfirmDelete} />  
-            </ScrollView>
             <Toast ref={Toast.setRef} />
+
+            <Modal visible={visible} animationType="slide" transparent>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContainer}>
+                        <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.modalBottomContainer}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                <Text style={styles.modalTitle}>Bank Details</Text>
+                                <TouchableOpacity onPress={() => setVisible(false)}>
+                                    <Icon name="close" size={30} color="red" />
+                                </TouchableOpacity>
+                            </View>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Name"
+                                placeholderTextColor="white"
+                                value={userData?.name}
+                            />
+                            {Boolean(account) && (
+                                <Text style={styles.errorText}>{account}</Text>
+                            )}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Account Number"
+                                placeholderTextColor="white"
+                                keyboardType="numeric"
+                                value={bankAccounts?.account_no}
+                                maxLength={20}
+                                onChangeText={(value) => handleInputChange('account_no', value)}
+                                error={Boolean(account)}
+                            />
+                            {/* {Boolean(confirmAccount) && (
+                                <Text style={styles.errorText}>{confirmAccount}</Text>
+                            )} */}
+
+
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Confirm Account Number"
+                                placeholderTextColor="white"
+                                keyboardType="numeric"
+                                value={bankAccounts?.confirm_account_no}
+                                maxLength={20}
+                                onChangeText={(value) => handleInputChange('confirm_account_no', value)}
+                                error={Boolean(confirmAccount)}
+
+                            />
+                             {Boolean(ifsc) && (
+                                <Text style={styles.errorText}>{ifsc}</Text>
+                            )}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Enter Ifsc Code"
+                                placeholderTextColor="white"
+                                keyboardType="default"
+                                value={bankAccounts?.ifsc_code}
+                                maxLength={11}
+                                onChangeText={(value) => handleInputChange('ifsc_code', value)}
+                                autoCapitalize="characters"
+                                error={Boolean(ifsc)}
+                            />
+
+                            <CommonButton title={loader ? 'Loading...' : 'Verify'} onPress={() => verifyBankDetails()} />
+
+                        </LinearGradient>
+
+                    </View>
+                </View>
+            </Modal>
+
         </>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 0.5,
-        margin: hp('2%'),
-    },
-    box: {
-        flex: 1,
-        backgroundColor: 'red',
-    },
-    text: {
-        textAlign: 'center',
-        color: '#FFFFFF',
-    },
-    inputContainer: {
-        backgroundColor: 'transparent',
-        borderRadius: hp('1.5%'),
-        paddingHorizontal: wp('4%'),
-        paddingVertical: hp('0.5%'),
-        borderWidth: 1,
-        borderColor: '#FFFFFF80',
-        marginBottom: hp('1.5%'),
-    },
-    input: {
-        flex: 1,
-        fontSize: 16,
-        color: '#FFFFFF',
-    },
-    errorText: {
-        color: 'red',
-        fontSize: 16,
-        marginTop: hp('1%'),
-        marginLeft: wp('2%'),
-    },
     kyc: {
         color: '#FFFFFFCC',
         fontSize: hp('1.3'),
         fontFamily: 'Montserrat-Regular',
         paddingHorizontal: hp('8%'),
     },
-    kycText: {
-        color: '#FFFFFF',
-        fontSize: hp('1.5'),
-        fontFamily: 'Montserrat-Regular',
-        marginTop: hp('1%'),
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+        justifyContent: "center",
+        alignItems: "center",
     },
-    button: {
-        backgroundColor: '#2A1610',
-        borderColor: '#F5D236',
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#F5D236',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 1,
-        shadowRadius: 12,
-        elevation: 15,
+
+    modalContainer: {
+        flex: 0.6,
+        width: wp('95%'),
     },
-    buttonText: {
-        color: '#F5D236',
-        fontSize: 18,
-    },
-    bankForm: {
+    modalBottomContainer: {
+        flex: 1,
         padding: hp('2%'),
-        marginBottom: hp('2%'),
-        borderRadius: 8,
+        borderRadius: hp('4%'),
+        backgroundColor: 'white',
+        opacity: 0.9,
+        borderWidth: hp('1%'),
+        borderColor: 'rgba(255,255,255, 0.5)'
     },
-    formTitle: {
-        color: '#F5D236',
-        fontSize: hp('2%'),
-        fontWeight: 'bold',
-        marginBottom: hp('1%'),
+    modalTitle: {
+        fontSize: hp('2.5%'),
+        fontFamily: 'Montserrat-SemiBold',
+        color: 'white',
+        marginRight: hp('8%'),
+        marginBottom: hp('2%')
+    },
+    input: {
+        width: "100%",
+        height: hp('6%'),
+        borderWidth: hp('0.12%'),
+        borderColor: "#fff",
+        borderRadius: hp('2%'),
+        paddingHorizontal: hp('1%'),
+        color: "#fff",
+        marginBottom: hp('2.5%'),
+    },
+    container: {
+        flex: 1,
+        backgroundColor: "rgba(255,255,255, 0.6)",
+        borderRadius: 10,
+        padding: 15,
+        margin: 10,
+        elevation: 5,
+        borderWidth: 2,
+        borderColor: 'white',
+        flexDirection: 'row'
+    },
+    logoContainer: {
+        flex: 0.5,
+        alignItems: "center",
+        marginBottom: 10,
+        justifyContent: 'center'
+    },
+    detailsContainer: {
+        flex: 2,
+        marginBottom: 10,
+    },
+    bankName: {
+        fontSize: 18,
+        textAlign: "center",
+        marginBottom: 5,
+        fontFamily: 'Montserrat-Bold',
+        color: '#361911'
+    },
+    detail: {
+        fontSize: 16,
+        textAlign: "center",
+        color: "#361911",
+        fontFamily: 'Montserrat-SemiBold'
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+    },
+    noDataText: {
+        fontSize: wp('5%'),
+        color: 'white',
+        fontFamily: 'Montserrat-Regular',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 16,
+        marginLeft: wp('2%'),
     },
 })
 

@@ -14,9 +14,7 @@ export function validateField  (name, value,account_no) {
             break;
         case "confirm_account_no":
             if (!value.trim()) return "Confirm account number is required.";
-            if (value !== account_no)
-                return "Account Number and Confirm Account Number must match.";
-            break;
+             if (!accountRegex.test(value)) return "Incorrect Account Number.";
         case "ifsc_code":
             if (!value.trim()) return "IFSC code is required.";
             if (!ifscRegex.test(value)) return "Invalid IFSC Code.";
