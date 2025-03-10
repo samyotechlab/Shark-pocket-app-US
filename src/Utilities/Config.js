@@ -46,8 +46,11 @@ export default {
   ShowTds:'api/wallet_request/showtTdsCalculation',
   Pan_Document:'api/documents/pan',
   Aadhar_Document:'api/documents/aadhar',
+  Bank_Document:'api/documents/bank_account',
   Add_Expectation : 'api/userWinningExpectation/add',
   Edit_Expectation:'api/userWinningExpectation/edit/',
   Show_Expectation :'api/userWinningExpectation/',
-  Range_Show : 'api/userWinningRange/'
+  Range_Show : 'api/userWinningRange/',
+  Show_Reason:'reason/list',
+
 };

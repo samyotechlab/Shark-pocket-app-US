@@ -1,4 +1,5 @@
 import Config from "../Utilities/Config";
+import apiMultipartInstance from "./ApiMultiPartInstance";
 import apiInstance from "./AxiosInstance";
 
 export const bankStore = async verificationData => {
@@ -38,3 +39,29 @@ export const bankStore = async verificationData => {
       throw error;
     }
   };
+
+  export const showReason = async () => {
+    try {
+      const response = await apiInstance.get(`${Config.Show_Reason}`);
+
+      return response.data;
+    } catch (error) {
+      console.log('error------------', error);
+      throw error;
+    }
+  };
+
+export const bankDocumentUpload = async (userData)=>{
+
+  try {
+    const response = await apiMultipartInstance.post(`${Config.Bank_Document}`, userData);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error uploading image:', error.response || error.message);
+    throw error;
+  }
+}

@@ -40,11 +40,11 @@ const SharkPocketScreen = () => {
       url: 'GameHistory',
     },
     {
-      title: 'Bank Account',
-      icon: 'bank-outline',
-      url: 'BankAccount',
-      is_verified: userData.is_account_verified,
-
+      title: 'Aadhar Verification',
+      icon: 'security',
+      url: 'AadharDetail',
+      is_verified: userData.is_aadhar_verified,
+      touch :true
     },
     {
       title: 'Pan verification',
@@ -54,11 +54,11 @@ const SharkPocketScreen = () => {
       touch :true
     },
     {
-      title: 'Aadhar Verification',
-      icon: 'security',
-      url: 'AadharDetail',
-      is_verified: userData.is_aadhar_verified,
-      touch :true
+      title: 'Bank Account',
+      icon: 'bank-outline',
+      url: 'BankAccount',
+      is_verified: userData.is_account_verified,
+
     },
     {
       title: 'Contact us',
@@ -155,6 +155,14 @@ const SharkPocketScreen = () => {
   );
 
   const _renderCard = ({ item }) => {
+    const isAadharVerified = userData.is_aadhar_verified === 1;
+    const isPanVerified = userData.is_pan_verified === 1;
+  
+    const isDisabled =
+      (item.url === 'AadharDetail' && isAadharVerified) || 
+      (item.url === 'PanVerification' && (!isAadharVerified || isPanVerified)) || 
+      (item.url === 'BankAccount' && (!isAadharVerified || !isPanVerified)); 
+  
     return (
       <>
         <TouchableOpacity
@@ -163,7 +171,7 @@ const SharkPocketScreen = () => {
             handleNavigation(item.url);
 
           }}
-          disabled={item.is_verified === 1 && item.touch === true }>
+          disabled={isDisabled }>
           <View style={{ flex: 0.5 }}>
             <LinearGradient
               colors={['#3D1911', '#3D1911', '#6A1701']}

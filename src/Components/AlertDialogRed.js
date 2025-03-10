@@ -161,7 +161,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const AlertDialogRed = ({ visible, onClose, onOkPress, message, show }) => {
+const AlertDialogRed = ({ visible, onClose, onOkPress, message, show ,bankShow}) => {
   return (
     <Modal
       transparent={true}
@@ -191,7 +191,7 @@ const AlertDialogRed = ({ visible, onClose, onOkPress, message, show }) => {
                 <LinearGradient
                   colors={['#67FF00', '#3E9900']}
                   style={styles.addCashButton}>
-                  <Text style={styles.buttonText}>ADD CASH</Text>
+                  <Text style={styles.buttonText}>{bankShow ? "Verify" :"ADD CASH" }</Text>
                 </LinearGradient>
               </TouchableOpacity>
             ) : (

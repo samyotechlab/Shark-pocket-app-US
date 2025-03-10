@@ -15,6 +15,9 @@ const groupByDateAndType = (data) => {
     return acc;
   }, {});
 };
+const groupByDateAndTyp = ()=>{
+  return data.reduce((acc))
+}
 
 export default function All({ winningData }) {
   const navigation = useNavigation();

@@ -6,7 +6,6 @@ import {
   Modal,
   Platform,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -36,36 +35,42 @@ export default function LocalGameBoard() {
   const [gameData, setGameData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [rangeData, setRangeData] = useState([])
+  const [rangeData, setRangeData] = useState([]);
   const [gameHistoryData, setGameHistory] = useState([]);
   const [modalVisibles, setModalVisibles] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState('');
 
   const headerScrollRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const rowScrollRefs = useRef({});
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   const handleHeaderScroll = (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    setScrollPosition(offsetX);
     Object.values(rowScrollRefs.current).forEach((ref) => {
       if (ref) {
-        ref.scrollTo({ x: offsetX, animated: false });
+        ref.scrollToOffset({ offset: offsetX, animated: false });
       }
     });
   };
-  const handleRowScroll = (event, rowId) => {
+
+  const handleRowScroll = (rowId) => (event) => {
     const offsetX = event.nativeEvent.contentOffset.x;
-    setScrollPosition(offsetX);
     if (headerScrollRef.current) {
-      headerScrollRef.current.scrollTo({ x: offsetX, animated: false });
+      headerScrollRef.current.scrollToOffset({ offset: offsetX, animated: false });
     }
     Object.entries(rowScrollRefs.current).forEach(([id, ref]) => {
       if (id !== rowId && ref) {
-        ref.scrollTo({ x: offsetX, animated: false });
+        ref.scrollToOffset({ offset: offsetX, animated: false });
       }
     });
   };
+
+  const data = [
+    { id: "1", image: "https://via.placeholder.com/40", userName: "John", score: 150, rank: 1, A: 10, B: 20, C: 30, D: 40 },
+    { id: "2", image: "https://via.placeholder.com/40", userName: "Jane", score: 140, rank: 2, A: 15, B: 25, C: 35, D: 45 },
+    { id: "3", image: "https://via.placeholder.com/40", userName: "Mike", score: 130, rank: 3, A: 12, B: 22, C: 32, D: 42 },
+    { id: "4", image: "https://via.placeholder.com/40", userName: "Anna", score: 120, rank: 4, A: 18, B: 28, C: 38, D: 48 },
+  ];
 
   const leaderBoardData = async () => {
     setLoader(true);
@@ -76,15 +81,6 @@ export default function LocalGameBoard() {
         const unFilterData = response.data.filter(item => item.user_id != user_id);
         setGameData(unFilterData);
         setFilteredData(filteredData);
-      } else {
-        const msg = response?.message;
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Error!',
-          text2: msg,
-          visibilityTime: 3000,
-        });
       }
     } catch (error) {
       Toast.show({
@@ -104,89 +100,73 @@ export default function LocalGameBoard() {
   }, []);
 
   const allGameHistory = async (user_id, _id) => {
-    setLoader(true)
+    setLoader(true);
     try {
       const response = await gameHistoryUser(user_id, game_id, _id);
       if (response) {
         setGameHistory(response?.data);
-        navigation.navigate('GameFinishHistory', { gameHistoryData: response?.data })
-      } else {
-        const msg = response?.message || 'An unexpected error occurred.';
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Error!',
-          text2: msg,
-          visibilityTime: 3000,
-        });
+        navigation.navigate('GameFinishHistory', { gameHistoryData: response?.data });
       }
     } catch (error) {
-      const msg = error?.message || 'An unexpected error occurred.';
       Toast.show({
         type: 'error',
         position: 'top',
         text1: 'Error!',
-        text2: msg,
+        text2: error.message || 'An unexpected error occurred.',
         visibilityTime: 3000,
       });
-    }
-    finally {
-      setLoader(false)
+    } finally {
+      setLoader(false);
     }
   };
 
   const showRange = async () => {
     try {
-      const response = await rangeShow(game_id)
-      setRangeData(response.ranges)
+      const response = await rangeShow(game_id);
+      setRangeData(response.ranges);
     } catch (error) {
       console.error('Error fetching Data', error.message || error);
-      throw error;
     }
-  }
+  };
 
   const handleTouch = (title) => {
     setSelectedTitle(title);
     setModalVisibles(true);
   };
 
-  const headers = [
-    { key: 'Rank', label: 'Rank' },
-    { key: 'Total Prime Number Selected - DESC', label: 'A' },
-    { key: 'Total Super Number Selected - DESC', label: 'B' },
-    { key: 'Total Super Number Score - DESC', label: 'C' },
-    { key: 'Total Even Number Selected - ASC', label: 'D' },
-
-  ];
-
-
   const renderRow = ({ item }) => {
-    const rowRef = (ref) => (rowScrollRefs.current[item.id] = ref);
+    const rowRef = (ref) => {
+      if (ref) {
+        rowScrollRefs.current[item.id] = ref;
+      }
+    };
+
     return (
       <View style={styles.row}>
         <View style={styles.fixedColumns}>
           <Image source={Person4} style={styles.image} />
-             <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id)}>
+          <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id)}>
             <Text style={[styles.cell, { width: 100, textDecorationLine: 'underline' }]}>{item.userName}</Text>
-           </TouchableOpacity>
+          </TouchableOpacity>
           <Text style={styles.cell}>{item.score}</Text>
         </View>
-        <ScrollView
-          horizontal
+        <FlatList
           ref={rowRef}
+          horizontal
+          data={[
+            { key: 'rank', value: `#${item.rank}` },
+            { key: 'prime', value: item?.prime_number?.selected || item.A },
+            { key: 'super_sel', value: item?.super_number?.selected || item.B },
+            { key: 'super_score', value: item?.super_number?.score || item.C },
+            { key: 'even', value: item?.super_number?.score || item.D },
+          ]}
+          renderItem={({ item }) => <Text style={styles.cell}>{item.value}</Text>}
+          keyExtractor={(item) => item.key}
           showsHorizontalScrollIndicator={false}
-          style={styles.scrollableColumns}
-          onScroll={(e) => handleRowScroll(e, item.id)}
-          scrollEventThrottle={16}
-          contentOffset={{ x: scrollPosition, y: 0 }}
-          contentContainerStyle={  { justifyContent:'center'}}
-        >
-          <Text style={styles.cell}>#{item.rank}</Text>
-          <Text style={styles.cell}>{item?.prime_number?.selected}</Text>
-          <Text style={styles.cell}>{item?.super_number?.selected}</Text>
-          <Text style={styles.cell}>{item?.super_number?.score}</Text>
-          <Text style={styles.cell}>{item?.super_number?.score}</Text>
-        </ScrollView>
+          onScroll={handleRowScroll(item.id)}
+          scrollEventThrottle={1}
+          decelerationRate="fast"
+        />
       </View>
     );
   };
@@ -199,20 +179,20 @@ export default function LocalGameBoard() {
         style={styles.linearGradient}>
         <View style={{ flex: 0.15 }}>
           <CommonHeader title={'Leader Board'} />
-          <TouchableOpacity style={{ position: 'absolute', top: hp('6%'), right: hp('1%') }} onPress={() => {
-            setModalVisible(true)
-            showRange()
-          }}>
+          <TouchableOpacity 
+            style={{ position: 'absolute', top: hp('6%'), right: hp('1%') }} 
+            onPress={() => {
+              setModalVisible(true);
+              showRange();
+            }}>
             <Icon name={'info-with-circle'} size={30} color={'red'} />
           </TouchableOpacity>
         </View>
 
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
-          }}>
-
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        }}>
           <View style={styles.headerContainer}>
             <View style={styles.header}>
               <View style={styles.fixedColumns}>
@@ -220,76 +200,68 @@ export default function LocalGameBoard() {
                 <Text style={styles.headerCell}>Username</Text>
                 <Text style={styles.headerCell}>Points</Text>
               </View>
-              <ScrollView
-                horizontal
+              <FlatList
                 ref={headerScrollRef}
+                horizontal
+                data={[
+                  { key: 'rank', value: 'Rank' },
+                  { key: 'A', value: 'A' },
+                  { key: 'B', value: 'B' },
+                  { key: 'C', value: 'C' },
+                  { key: 'D', value: 'D' },
+                ]}
+                renderItem={({ item, index }) => (
+                  <TouchableOpacity 
+                    onPress={() => handleTouch(item.key === 'rank' ? 'Rank' : `Total ${item.value} Data`)}>
+                    <Text style={styles.headerCell}>{item.value}</Text>
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.key}
                 showsHorizontalScrollIndicator={false}
-                style={styles.scrollableColumns}
                 onScroll={handleHeaderScroll}
-                scrollEventThrottle={16}
-                contentOffset={{ x: scrollPosition, y: 0 }}
-                contentContainerStyle={  { justifyContent:'center'}}
-              >
-                <TouchableOpacity>
-                <Text style={styles.headerCell}>Rank</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{
-                  handleTouch('Total Prime Number Selected - DESC')
-                }}>
-                <Text style={styles.headerCell}>A</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{
-                  handleTouch('Total Super Number Selected - DESC')
-                }}>
-                <Text style={styles.headerCell}>B</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{
-                  handleTouch('Total Super Number Score - DESC')
-                }}>
-                <Text style={styles.headerCell}>C</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=>{
-                  handleTouch('Total Prime Number Selected - DESC')
-                }}>
-                <Text style={styles.headerCell}>D</Text>
-                </TouchableOpacity>
-              </ScrollView>
+                scrollEventThrottle={1}
+                decelerationRate="fast"
+              />
             </View>
-            {
-              filteredData.map((item, index) => {
-                const rowRef = (ref) => (rowScrollRefs.current[item.id] = ref)
-                return (
-                  <View style={[styles.row,{ backgroundColor: "white", opacity: 0.7 }]}>
+
+            {filteredData.map((item, index) => {
+              const rowRef = (ref) => {
+                if (ref) {
+                  rowScrollRefs.current[item?.id || index] = ref;
+                }
+              };
+              return (
+                <View style={[styles.row, { backgroundColor: "white", opacity: 0.7 }]} key={index}>
                   <View style={styles.fixedColumns}>
                     <Image source={Person4} style={styles.image} />
-                       <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id)}>
-                      <Text style={[styles.cel, { width: 100, textDecorationLine: 'underline' }]}>{item.userName}</Text>
-                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => allGameHistory(item?.user_id, item?._id)}>
+                      <Text style={[styles.cel, { width: 100, textDecorationLine: 'underline' }]}>{item?.userName}</Text>
+                    </TouchableOpacity>
                     <Text style={styles.cel}>{item.score}</Text>
                   </View>
-                  <ScrollView
-                    horizontal
+                  <FlatList
                     ref={rowRef}
+                    horizontal
+                    data={[
+                      { key: 'rank', value: `#${item?.rank}` },
+                      { key: 'prime', value: item?.prime_number?.selected },
+                      { key: 'super_sel', value: item?.super_number?.selected },
+                      { key: 'super_score', value: item?.super_number?.score },
+                      { key: 'even', value: item?.super_number?.score },
+                    ]}
+                    renderItem={({ item }) => <Text style={styles.cel}>{item.value}</Text>}
+                    keyExtractor={(item) => item.key}
                     showsHorizontalScrollIndicator={false}
-                    style={styles.scrollableColumns}
-                    onScroll={(e) => handleRowScroll(e, item.id)}
-                    scrollEventThrottle={16}
-                    contentOffset={{ x: scrollPosition, y: 0 }}
-                    contentContainerStyle={  { justifyContent:'center'}}
-                  >
-                    <Text style={styles.cel}>#{item.rank}</Text>
-                    <Text style={styles.cel}>{item?.prime_number?.selected}</Text>
-                    <Text style={styles.cel}>{item?.super_number?.selected}</Text>
-                    <Text style={styles.cel}>{item?.super_number?.score}</Text>
-                    <Text style={styles.cel}>{item?.super_number?.score}</Text>
-                  </ScrollView>
+                    onScroll={handleRowScroll(item?.id || index)}
+                    scrollEventThrottle={1}
+                    decelerationRate="fast"
+                  />
                 </View>
-                )
+              );
+            })}
 
-              })
-            }
             <FlatList
-              data={gameData}
+              data={data}
               keyExtractor={(item) => item.id}
               renderItem={renderRow}
               showsVerticalScrollIndicator={false}
@@ -347,7 +319,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   smallModal: {
     width: wp('35%'),
     height: hp('10%'),
@@ -362,20 +333,17 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-
   modalText: {
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
   },
-
   closeButton: {
     marginTop: 5,
     padding: 5,
     backgroundColor: 'red',
     borderRadius: 5,
   },
-
   closeButtonText: {
     color: 'white',
     fontSize: 12,
@@ -395,38 +363,36 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
     paddingVertical: hp('1.5%'),
-    paddingHorizontal:hp('1.2%')
+    paddingHorizontal: hp('1.2%'),
   },
   fixedColumns: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:'center',
+    justifyContent: 'center',
     width: wp('50%'),
   },
   scrollableColumns: {
-    flexDirection: "row",
-    width: wp('10%'),
+    width: wp('50%'),
   },
   cell: {
     width: wp('20%'),
     textAlign: "center",
     fontFamily: 'Montserrat-SemiBold',
     color: "white",
-    fontSize:hp('1.5%'),
+    fontSize: hp('1.5%'),
   },
   headerCell: {
-    width: wp('19%'),
+    width: wp('20%'),
     color: "white",
     textAlign: "center",
     fontFamily: 'Montserrat-Bold',
-    fontSize:hp('1.5%'),
+    fontSize: hp('1.5%'),
   },
   cel: {
     width: wp('20%'),
     textAlign: "center",
     fontFamily: 'Montserrat-SemiBold',
     color: "#361911",
-    fontSize:hp('1.5%'),
+    fontSize: hp('1.5%'),
   },
 });
-

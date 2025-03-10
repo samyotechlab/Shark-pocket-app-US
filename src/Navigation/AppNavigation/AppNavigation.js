@@ -32,6 +32,7 @@ import PaymentStatusCard from '../../Components/PaymentStatusCard';
 import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen,SupportScreen } from '../../Screens/Screens/Screen';
 import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
 import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
+import UploadDocuments from '../../Components/UploadDocuments';
 
 export default function AppNavigation() {
   const Stack = createStackNavigator();
@@ -283,6 +284,13 @@ export default function AppNavigation() {
          <Stack.Screen
           name="UpcomingGameInfo"
           component={UpcomingGameInfo}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UploadDocument"
+          component={UploadDocuments}
           options={{
             headerShown: false,
           }}

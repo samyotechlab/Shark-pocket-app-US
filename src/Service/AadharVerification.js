@@ -12,7 +12,7 @@ export const AdharVerificationSendOtp = async aadhaar_number => {
     console.log("response",response)
     return response.data;
   } catch (error) {
-    console.log('error =====>', error);
+    console.log('error', error);
     throw error;
   }
 };
@@ -24,7 +24,7 @@ export const AadharVerificationVerifyOtp = async verificationData => {
     });
     return response.data;
   } catch (error) {
-    console.log('error------------', error);
+    console.log('error', error);
     throw error;
   }
 };

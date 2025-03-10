@@ -9,6 +9,7 @@ import {
   Image,
   ImageBackground,
   AppState,
+  Modal,
 } from 'react-native';
 import Coin from '../../../assets/images/Screens/CoinStack.png';
 import Iconicons from 'react-native-vector-icons/Entypo';
@@ -16,6 +17,8 @@ import StarImage from '../../../assets/images/GameImage/star.png';
 import BombImage from '../../../assets/images/GameImage/smash-icon.png';
 import Speaker from '../../../assets/images/Screens/speaker.png';
 import SpeakerOff from '../../../assets/images/Screens/loudspeaker_off.png';
+import PlayIcon from 'react-native-vector-icons/AntDesign';
+import PauseIcon from 'react-native-vector-icons/AntDesign';
 import Sound from 'react-native-sound';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
@@ -35,6 +38,9 @@ import { encryptData, generateKey } from '../../Utilities/utilies';
 
 const { width, height } = Dimensions.get('window');
 
+// Track used numbers to prevent repetition
+const usedNumbers = new Set();
+
 const getRandomNumber = () => {
   const ranges = [
     { min: 1, max: 100 },
@@ -42,17 +48,14 @@ const getRandomNumber = () => {
     { min: 3001, max: 3100 },
   ];
 
-  const totalNumbers = ranges.reduce((sum, range) => sum + (range.max - range.min + 1), 0);
-  const randomIndex = Math.floor(Math.random() * totalNumbers);
+  let number;
+  do {
+    const range = ranges[Math.floor(Math.random() * ranges.length)];
+    number = Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+  } while (usedNumbers.has(number) && usedNumbers.size < 300);
 
-  let cumulative = 0;
-  for (const range of ranges) {
-    const rangeSize = range.max - range.min + 1;
-    if (randomIndex < cumulative + rangeSize) {
-      return range.min + (randomIndex - cumulative);
-    }
-    cumulative += rangeSize;
-  }
+  usedNumbers.add(number);
+  return number;
 };
 
 const getRandomX = () => Math.random() * (width - 100);
@@ -95,19 +98,17 @@ export default function FloatingBoxGame() {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'background') {
         setIsPaused(true);
+        setIsModalVisible(true);
         soundRef.current?.pause();
-      } else if (nextAppState === 'active' && isPaused) {
-        setIsPaused(false);
-        if (isMusicPlaying) {
-          soundRef.current?.play();
-        }
+      } else if (nextAppState === 'active') {
+        setIsModalVisible(true);
+        // setIsPaused(false);
       }
     });
-
     return () => {
       subscription.remove();
     };
-  }, [isPaused, isMusicPlaying]);
+  }, [AppState]);
 
   useEffect(() => {
     if (!isPaused && !isGameOver) {
@@ -167,6 +168,16 @@ export default function FloatingBoxGame() {
       soundRef.current?.play();
     }
     setIsMusicPlaying(!isMusicPlaying);
+  };
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
+    setIsModalVisible(false);
+    if (!isPaused && isMusicPlaying) {
+      soundRef.current?.pause();
+    } else if (isPaused && isMusicPlaying) {
+      soundRef.current?.play();
+    }
   };
 
   const isNotEmpty = (obj) => {
@@ -390,16 +401,35 @@ export default function FloatingBoxGame() {
       source={require('../../../assets/images/Screens/background-image.png')}
       style={styles.background}>
       <View style={styles.container}>
-        <AlertDialogGreen
+        <Modal
+          animationType="slide"
+          transparent={true}
           visible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          onOkPress={() => {
-            handleNavigate();
-          }}
-          message={'Are you sure you want to Quit game?'}
-        />
+          onRequestClose={() => setIsModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>
+                {isPaused ? 'Game Paused' : 'Pause Game?'}
+              </Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity onPress={togglePause} style={styles.modalButton}>
+                  {isPaused ? (
+                    <PlayIcon name="play" size={30} color="#fff" />
+                  ) : (
+                    <PauseIcon name="pausecircle" size={30} color="#fff" />
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleNavigate}
+                  style={styles.modalButton}>
+                  <Text style={styles.modalButtonText}>Quit</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
-        {isPaused && <PauseOverlay />}
+        {isPaused && !isModalVisible && <PauseOverlay />}
 
         {isGameOver ? (
           status === 0 ? (
@@ -644,7 +674,7 @@ const styles = StyleSheet.create({
   boxText2: {
     color: '#FFFFFF',
     fontWeight: 'bold',
-    fontSize: 32,
+    fontSize: 26,
     position: 'relative',
     zIndex: 1,
   },
@@ -662,6 +692,41 @@ const styles = StyleSheet.create({
   pauseText: {
     color: 'white',
     fontSize: 36,
+    fontFamily: 'LilitaOne-Regular',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
+  },
+  modalText: {
+    fontSize: 24,
+    fontFamily: 'LilitaOne-Regular',
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  modalButton: {
+    backgroundColor: '#00B300',
+    padding: 10,
+    borderRadius: 5,
+    minWidth: 80,
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 18,
     fontFamily: 'LilitaOne-Regular',
   },
 });

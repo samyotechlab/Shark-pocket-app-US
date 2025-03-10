@@ -11,7 +11,7 @@ import { decryptData, generateKey } from '../../Utilities/utilies'
 export default function SplashScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
-  const { loginData, isReady, storeLoginData } = useLoginDataStorage();
+  const { loginData, isReady, clearLoginData} = useLoginDataStorage();
 
   const handelVerifyLogin = async (userdata, token) => {
     setIsLoading(true)
@@ -28,14 +28,21 @@ export default function SplashScreen() {
       if (response.status === 1) {
         navigation.navigate('HomeScreen')
       } else {
+        await clearLoginData();
         navigation.navigate('LoginScreen')
       }
     } catch (error) {
+      await clearLoginData();
       navigation.navigate('LoginScreen')
     } finally {
       setIsLoading(false)
     }
   }
+  
+  const clearData = async ()=>{
+    await clearLoginData();
+  }
+
   useEffect(() => {
     const data = isReady && loginData && loginData?.data;
     const token = isReady && loginData && loginData?.token;
@@ -43,6 +50,7 @@ export default function SplashScreen() {
       if (loginData && isReady) {
         handelVerifyLogin(data, token);
       } else {
+        clearData();
         navigation.navigate('LoginScreen')
       }
     }, 3000)

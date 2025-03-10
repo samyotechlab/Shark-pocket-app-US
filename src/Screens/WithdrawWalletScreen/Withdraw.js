@@ -12,14 +12,18 @@ import Tds from '../../../assets/images/Screens/tds.png';
 import Iconic from 'react-native-vector-icons/Ionicons';
 import { bankAccountDetails } from '../../Service/Bank';
 import { encryptData, generateKey } from '../../Utilities/utilies';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Withdraw({ dataUser }) {
+  const navigation = useNavigation();
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false);
   const [bankDetail, setBankDetail] = useState([])
   const [tdsData, setTdsData] = useState({})
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedBank, setSelectedBank] = useState(bankDetail[0] || null);
 
   const handleWithdraw = () => {
     if (parseFloat(amount) > dataUser.total_earning) {
@@ -49,33 +53,48 @@ export default function Withdraw({ dataUser }) {
   const handleCick = async () => {
     try {
       setIsLoading(true);
-      if (amount) {
-        const mobileNumber = dataUser?.mobile;
-        const username = dataUser?.name;
-        const aadharNumber = dataUser?.aadhaar;
-        const userId = dataUser?._id
-        const key = generateKey(mobileNumber, username, aadharNumber, userId);
-        const data = {
-          amount: amount,
-          user_id: dataUser?._id
-        }
-        const encryptedData = encryptData(key, data);
-        if (amount >= bankDetail.minAmount) {
-          const response = await withdrawCash(dataUser._id, encryptedData);
-          Toast.show({
-            type: 'success',
-            position: 'top',
-            text1: 'Withdraw Request',
-            text2: 'Withdraw Request generate successfully',
-            visibilityTime: 3000
-          })
-        } else {
-          setVisible(true);
-          setMessage('Minimun Withdrawl amount is 50 Rupees');
-        }
-      } else {
+      if (dataUser?.is_pan_verified !== 1) {
         setVisible(true);
-        setMessage('please enter amount');
+        setMessage('Your PAN is not verified. Please verify your PAN to proceed.');
+        navigation.navigate('PanDetailsScreen');
+        return;
+      } else {
+        if (dataUser?.is_account_verified !== 1) {
+          setVisible(true);
+          setMessage('Your bank is not verified. Please verify your bank to proceed.');
+          navigation.navigate('BankDetailsScreen');
+          return;
+        }
+        else {
+          if (amount) {
+            const mobileNumber = dataUser?.mobile;
+            const username = dataUser?.name;
+            const aadharNumber = dataUser?.aadhaar;
+            const userId = dataUser?._id
+            const key = generateKey(mobileNumber, username, aadharNumber, userId);
+            const data = {
+              amount: amount,
+              user_id: dataUser?._id
+            }
+            const encryptedData = encryptData(key, data);
+            if (amount >= bankDetail.minAmount) {
+              const response = await withdrawCash(dataUser._id, encryptedData);
+              Toast.show({
+                type: 'success',
+                position: 'top',
+                text1: 'Withdraw Request',
+                text2: 'Withdraw Request generate successfully',
+                visibilityTime: 3000
+              })
+            } else {
+              setVisible(true);
+              setMessage('Minimun Withdrawl amount is 50 Rupees');
+            }
+          } else {
+            setVisible(true);
+            setMessage('please enter amount');
+          }
+        }
       }
     } catch (error) {
       console.log('error', error);
@@ -100,6 +119,9 @@ export default function Withdraw({ dataUser }) {
       console.log("error", error)
     }
 
+  };
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
   return (
     <>
@@ -143,6 +165,49 @@ export default function Withdraw({ dataUser }) {
               </TouchableOpacity>
             </Text>
           </View>
+          <View style={styles.bankDetails}>
+            <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
+
+            <View style={styles.bankInfo}>
+              <Iconics name={'bank'} size={hp('3.5%')} />
+
+              <View style={styles.dropdownContainer}>
+                {dataUser?.is_account_verified == 1 ? (
+                  <>
+                    <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
+                      <View>
+                        <Text style={styles.bankName}>{selectedBank?.bank_name || bankDetail[0]?.bank_name}</Text>
+                        <Text style={styles.bankAccount}>{selectedBank?.account_no || bankDetail[0]?.account_no}</Text>
+                      </View>
+                      <Iconics name={isDropdownOpen ? 'chevron-up' : 'chevron-down'} size={hp('2.5%')} />
+                    </TouchableOpacity>
+
+                    {isDropdownOpen && (
+                      <FlatList
+                        data={bankDetail}
+                        keyExtractor={(item, index) => index.toString()}
+                        style={styles.dropdownList}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            style={styles.dropdownItem}
+                            onPress={() => {
+                              setSelectedBank(item);
+                              setIsDropdownOpen(false);
+                            }}
+                          >
+                            <Text style={styles.bankName}>{item.bank_name}</Text>
+                            <Text style={styles.bankAccount}>{item.account_no}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <Text style={styles.bankAccount}>Bank Details Not Found</Text>
+                )}
+              </View>
+            </View>
+          </View>
           <TouchableOpacity
             style={[
               styles.withdrawButton,
@@ -157,33 +222,9 @@ export default function Withdraw({ dataUser }) {
           </TouchableOpacity>
 
         </View>
-        
-        <View style={{ flex: 1, backgroundColor: 'white', marginTop: hp('1%') }}>
-          <View style={styles.bankDetails}>
-            <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
-            <View style={styles.bankInfo}>
-              <Iconics name={'bank'} size={hp('3.5%')} />
-              <View style={{ maxHeight: hp('8%'),flex:1}}>
-                {dataUser?.is_account_verified == 1 ? (
-                  <FlatList
-                    data={bankDetail}
-                    keyExtractor={(item, index) => index.toString()}
-                    showsVerticalScrollIndicator={true}
-                    style={{ maxHeight: hp('20%') }}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity style={{ marginBottom: hp('1%')}}>
-                        <Text style={styles.bankName}>{item.bank_name}</Text>
-                        <Text style={styles.bankAccount}>{item.account_no}</Text>
-                      </TouchableOpacity>
-                    )}
-                  />
-                ) : (
-                  <Text style={styles.bankAccount}>Bank Details Not Found</Text>
-                )}
-              </View>
 
-            </View>
-          </View>
+        <View style={{ flex: 0.5, backgroundColor: 'white', marginTop: hp('1%') }}>
+
 
           <TouchableOpacity style={styles.buttonContainer}>
             <View style={styles.iconContainer}>
@@ -335,8 +376,9 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
     fontFamily: 'Montserrat-Regular',
-    backgroundColor: 'white',
+    // backgroundColor: 'red',
     paddingLeft: wp('5%')
+
   },
   learnMore: {
     fontSize: hp('1.5%'),
@@ -370,19 +412,48 @@ const styles = StyleSheet.create({
     textShadowRadius: wp('2%'),
   },
   bankDetails: {
+    padding: hp('2%'),
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    elevation: 5,
+    margin: hp('1%'),
+  },
+  bankInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dropdownContainer: {
+    flex: 1,
+    marginLeft: hp('2%'),
+  },
+  dropdownHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: hp('1%'),
+    // borderWidth: 1,
+    // borderColor: '#ccc',
+    borderRadius: 8,
     backgroundColor: 'white',
-    padding: wp('8%'),
+  },
+  dropdownList: {
+    maxHeight: hp('20%'),
+    backgroundColor: '#fff',
+    // borderWidth: 1,
+    // borderColor: '#ccc',
+    borderRadius: 8,
+    marginTop: hp('1%'),
+  },
+  dropdownItem: {
+    padding: hp('1%'),
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   bankDetailsLabel: {
     fontSize: hp('2%'),
     marginBottom: hp('1%'),
     color: '#000000',
     fontFamily: 'Montserrat-Medium',
-  },
-  bankInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: wp('5%'),
   },
   bankIcon: {
     width: wp('10%'),
