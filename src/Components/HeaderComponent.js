@@ -4,8 +4,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import CommonHeader from "./CommonHeader";
 import Iconics from "react-native-vector-icons/Feather";
 
-
-
 const HeaderComponent = ({title,transactionData,status}) => {
   const icon = {
     success:"check-circle",
@@ -34,7 +32,7 @@ const HeaderComponent = ({title,transactionData,status}) => {
       <View style={styles.container}>
 
       <View style={styles.content}>
-        <Text style={styles.amount}>₹ {transactionData.transaction_amount}</Text>
+        <Text style={styles.amount}>₹ {status === "deposite" ? 77.89:(transactionData.transaction_amount)}</Text>
         <Iconics name={icon[status]?icon[status]:"clock"} size={wp("7%")} color={color[status]?color[status]:"#FDCB50"} />
       </View>
 
@@ -42,7 +40,7 @@ const HeaderComponent = ({title,transactionData,status}) => {
       <View style={[styles.successBadge,{backgroundColor:backgroundColor[status]?backgroundColor[status]:"#FDCB50"}]}>
           <Text style={styles.successText}>{message[status]?message[status]:"Checking"}</Text>
         </View>       
-         <Text style={styles.date}>•{transactionData.deposite_date}</Text>
+         <Text style={styles.date}>•{status === "deposite" ? ("03-03-2025"):(transactionData.deposite_date)}</Text>
       </View>
     </View>
     </View>

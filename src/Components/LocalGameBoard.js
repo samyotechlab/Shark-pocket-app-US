@@ -261,7 +261,7 @@ export default function LocalGameBoard() {
             })}
 
             <FlatList
-              data={data}
+              data={gameData}
               keyExtractor={(item) => item.id}
               renderItem={renderRow}
               showsVerticalScrollIndicator={false}

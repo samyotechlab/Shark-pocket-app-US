@@ -36,15 +36,15 @@ export default function Success({ data }) {
     data: groupedData[date],
   }));
 
-  // const handleNavigation = () => {
-  //   navigation.navigate('AmountDetails');
-  // };
+  const handleNavigation = () => {
+    navigation.navigate('AmountDetails');
+  };
 
   const renderItem = ({ item }) => (
     <>
     <TouchableOpacity
       style={styles.itemContainer}
-      // onPress={handleNavigation}
+      onPress={handleNavigation}
     >
       <View style={styles.circle}>
         <Image

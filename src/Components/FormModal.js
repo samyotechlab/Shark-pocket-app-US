@@ -23,6 +23,14 @@ export default function FormModal({ visible, onClose, userData, setVisible,bankD
     const [message, setMessage] = useState('')
     const [bankDetail,setBankDetails] = useState({})
 
+    const resetForm = () => {
+        setBankAccounts({
+            account_no: '',
+            confirm_account_no: '',
+            ifsc_code: '',
+        });
+    };
+
     const verifyBankDetails = async () => {
         const obj = {
             user_id: userData._id,
@@ -51,11 +59,13 @@ export default function FormModal({ visible, onClose, userData, setVisible,bankD
                 });
                 setVisible(false)
                 bankDetails();
+                resetForm();
             } else if(response?.status === 0){
                 setModalVisible(true)
                 setMessage(response.message)
                 bankDetails();
                 setVisible(false)
+                resetForm();
             }else{
                 Toast.show({
                     type: 'error',
@@ -65,6 +75,7 @@ export default function FormModal({ visible, onClose, userData, setVisible,bankD
                     visibilityTime: 3000,
                 });
                 setVisible(false)
+                resetForm();
             }
         } catch (error) {
             console.log('error', error);
