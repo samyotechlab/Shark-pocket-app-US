@@ -6,14 +6,11 @@ import CommonButton from '../../Components/CommonButton'
 import Backarrow from '../../../assets/images/Applogo/arrow_back.png'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import axios from 'axios'
-
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
 import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
 import { baseApiurl } from '../../Service/AxiosInstance'
-import CommonHeader from '../../Components/CommonHeader'
-
 
 const headers = {
   'Content-Type': 'application/json',

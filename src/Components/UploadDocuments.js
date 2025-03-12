@@ -38,7 +38,6 @@ const UploadDocuments = () => {
         } catch (error) {
             console.log("error", error)
         }
-
     }
 
     useEffect(() => {

@@ -89,7 +89,7 @@ const SharkPocketScreen = () => {
     {
       title: 'Support',
       icon: 'help-circle-outline',
-      url: 'Support',
+      url: 'SupportScreen',
     },
     {
       title: 'Log out',

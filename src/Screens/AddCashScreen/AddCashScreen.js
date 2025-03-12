@@ -17,7 +17,7 @@ import { storeTicket } from '../../Service/Tickets';
 const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
-  const { user_id, balance, status, amounts,ticket_id,game_id} = route.params
+  const { user_id, status, amounts,ticket_id,game_id} = route.params
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
   const [data1, setData] = useState({});
@@ -79,9 +79,16 @@ const AddCashScreen = () => {
       const encryptedData = encryptData(key, amount);
       try {
         const response = await TransactionStore(usersData?._id, encryptedData);
-        addBonusWallet(response)
-        initPhonePeSDK(response);
-        setData(response);
+        console.log("response====>",response.status)
+        if(response.status === 0){
+          console.log("heloooooo")
+          initPhonePeSDK(response);
+          setData(response);
+        }else{
+          addBonusWallet(response)
+          initPhonePeSDK(response);
+          setData(response);
+        }
       } catch (error) {
         console.log('error', error);
       }
@@ -119,6 +126,7 @@ const AddCashScreen = () => {
       true,
     )
       .then(result => {
+        console.log("result======>",result)
         setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
         handleStartTransaction(
           response.base64,

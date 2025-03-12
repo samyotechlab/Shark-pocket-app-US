@@ -33,8 +33,8 @@ export const TCScreen = () => {
   )
 }
 
-export const SupportScreen = () => {
-  return(
-    <WebViewScreen title="Support" uri={`${baseApiurl}/${Config.Support}`} />
-  )
-}
+// export const SupportScreen = () => {
+//   return(
+//     <WebViewScreen title="Support" uri={`${baseApiurl}/${Config.Support}`} />
+//   )
+// }

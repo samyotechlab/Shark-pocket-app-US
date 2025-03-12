@@ -29,10 +29,11 @@ import PanVerfication from '../../Screens/PanVerfication/PanVerification';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
-import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen,SupportScreen } from '../../Screens/Screens/Screen';
+import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen } from '../../Screens/Screens/Screen';
 import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
 import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
 import UploadDocuments from '../../Components/UploadDocuments';
+import SupportScreen from '../../Components/SupportScreen';
 
 export default function AppNavigation() {
   const Stack = createStackNavigator();
@@ -291,6 +292,13 @@ export default function AppNavigation() {
         <Stack.Screen
           name="UploadDocument"
           component={UploadDocuments}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="SupportScreen"
+          component={SupportScreen}
           options={{
             headerShown: false,
           }}

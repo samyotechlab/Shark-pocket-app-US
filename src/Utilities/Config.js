@@ -52,5 +52,6 @@ export default {
   Show_Expectation :'api/userWinningExpectation/',
   Range_Show : 'api/userWinningRange/',
   Show_Reason:'reason/list',
-
+  HelpAndSupport:'api/helpAndSupport_request/store',
+  SupportTitle:'supportTitle/list'
 };
