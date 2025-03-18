@@ -79,9 +79,7 @@ const AddCashScreen = () => {
       const encryptedData = encryptData(key, amount);
       try {
         const response = await TransactionStore(usersData?._id, encryptedData);
-        console.log("response====>",response.status)
         if(response.status === 0){
-          console.log("heloooooo")
           initPhonePeSDK(response);
           setData(response);
         }else{
@@ -126,7 +124,6 @@ const AddCashScreen = () => {
       true,
     )
       .then(result => {
-        console.log("result======>",result)
         setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
         handleStartTransaction(
           response.base64,

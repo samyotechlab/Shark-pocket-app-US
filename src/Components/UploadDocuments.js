@@ -16,9 +16,6 @@ const UploadDocuments = () => {
     const navigation =useNavigation();
     const route = useRoute()
     const { user_id, mobile,bank_id } = route.params
-    console.log("user_id",user_id)
-    console.log("bank_id",bank_id)
-    console.log("mobile",mobile)
     const [uploadedImage, setUploadedImage] = useState(null);
     const [selectedReason, setSelectedReason] = useState([]);
     const [loader, setLoader] = useState(false);
@@ -32,7 +29,6 @@ const UploadDocuments = () => {
     const reasonList = async () => {
         try {
             const response = await showReason();
-            console.log("response", response)
             const formattedData = response.map((item) => ({
                 label: item.reason,
                 value: item.reason,
@@ -125,7 +121,6 @@ const UploadDocuments = () => {
                         setValue={setValue}
                         setItems={setReasons}
                         onChangeValue={(selectedValue) => {
-                            console.log("Selected Value:", selectedValue);
                             setValue(selectedValue);
                         }}
                         placeholder="Select a reason"

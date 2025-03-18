@@ -16,7 +16,6 @@ export default function AvailableGame() {
     const [title, setTitle] = useState('')
     const [disabled, setDisabled] = useState(false)
     const { gameData, status } = route.params
-    console.log('gameData', status)
     let myGames = []
     if (status === "1") {
         myGames = gameData;

@@ -25,7 +25,6 @@ const SupportScreen = () => {
         const fetchReasons = async () => {
             try {
                 const response = await showIssue();
-                console.log("response",response)
                 const formattedData = response.map((item) => ({
                     label: item.title,
                     value: item.title,
@@ -57,7 +56,6 @@ const SupportScreen = () => {
                 description: remark
             }
             const response = await helpAndSupport(data)
-            console.log("response",response)
             Toast.show({
                 type: 'success',
                 position: 'top',

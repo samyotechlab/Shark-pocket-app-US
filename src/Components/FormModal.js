@@ -187,14 +187,14 @@ export default function FormModal({ visible, onClose, userData, setVisible,bankD
 
 const styles = StyleSheet.create({
     modalOverlay: {
-        flex: 1,
+        flex: 0.8,
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         justifyContent: "center",
         alignItems: "center",
     },
 
     modalContainer: {
-        flex: 0.6,
+        flex: 0.7,
         width: wp('95%'),
     },
     modalBottomContainer: {

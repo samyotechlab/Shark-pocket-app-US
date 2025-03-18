@@ -78,7 +78,6 @@ export default function BankAccount() {
         }
     };
     const handleDelete = async (account_no) => {
-        console.log("Deleting account:", account_no);
         try {
             const response = await deleteBankAccount(user_id, account_no);
             if (response.status === 1) {
@@ -100,7 +99,6 @@ export default function BankAccount() {
                 });
             }
         } catch (error) {
-            console.log('Error deleting account:', error);
             Toast.show({
                 type: 'error',
                 position: 'top',

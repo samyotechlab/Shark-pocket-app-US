@@ -47,7 +47,6 @@ export default function AadharDetail() {
             cropping: true,
         })
             .then(image => {
-                console.log("imagee  ====== >", image)
                 setUploadedImage(image);
             }).catch((error) => {
                 console.log(error)
@@ -102,7 +101,6 @@ export default function AadharDetail() {
         try {
             if (validateInputs()) {
                 const response = await AdharVerificationSendOtp(aadhaar_number);
-                console.log("response", response)
                 setResponse(response.status)
                 if (response.status === 1) {
                     Toast.show({

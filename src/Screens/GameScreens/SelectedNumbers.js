@@ -10,11 +10,9 @@ import {
 
 const SelectedNumbers = () => {
     const route = useRoute();
-    console.log(route.params);
     const { numbers, super_numbers } = route.params || {};
 
     const super_number = super_numbers ? super_numbers : 5;
-    console.log("super_number", super_number);
     const [activeTab, setActiveTab] = useState(null);
 
     if (!numbers || typeof numbers !== 'string' || numbers.trim() === '') {

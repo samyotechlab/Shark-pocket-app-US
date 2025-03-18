@@ -4,12 +4,10 @@ import apiInstance, { baseApiurl } from "./AxiosInstance";
 import apiMultipartInstance from "./ApiMultiPartInstance";
 
 export const AdharVerificationSendOtp = async aadhaar_number => {
-  console.log("AdharVerificationSendOtp")
   try {
     const response = await axios.post(`${baseApiurl}/${Config.AdharOptSend}`, {
       aadhaar_number,
     });
-    console.log("response",response)
     return response.data;
   } catch (error) {
     console.log('error', error);

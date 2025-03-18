@@ -13,7 +13,6 @@ export default function DailyWeeklyBar() {
   const route = useRoute();
   const { gameData, status } = route.params
   const myGames = gameData.filter(game => game?.status === 1);
-  console.log('myGames', myGames)
   const [selectedTab, setSelectedTab] = useState('Weekly');
   const handlePress = tab => {
     setSelectedTab(tab);

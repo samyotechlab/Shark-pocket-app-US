@@ -35,7 +35,6 @@ const carouselHeight =getResponsiveHeight();
   }
 
   const handleNavigation = (item) => {
-    console.log("item",item)
     navigation.navigate('GameName', { game_id: item._id , title: item.title });
   };
 

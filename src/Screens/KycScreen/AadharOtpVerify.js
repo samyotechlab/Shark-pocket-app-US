@@ -138,7 +138,6 @@ export default function AadharOtpVerify() {
     try {
       setLoader(true)
       const response = await AadharConfirmVerification(user_id);
-      console.log("response",response)
       if(response.status === 1){
         setVisible(false);
         if (!game_id) {

@@ -28,7 +28,6 @@ export default function Credit(props) {
 
 
   const handleNavigation = (item) => {
-    console.log("item====", item)
     navigation.navigate('DepositeDetails', { item :item,page:"bonus"});
   };
 
