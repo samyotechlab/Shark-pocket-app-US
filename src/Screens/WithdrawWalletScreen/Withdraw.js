@@ -38,8 +38,8 @@ export default function Withdraw({ dataUser }) {
     try {
       setIsLoading(true);
       const response = await bankAccountDetails(dataUser._id);
-      console.log("bank Details === >", response)
-      setBankDetail(response.data)
+      const filterData = response.data.filter((item)=>item.status === "approved")
+      setBankDetail(filterData)
     } catch (error) {
       console.log('error', error);
     } finally {

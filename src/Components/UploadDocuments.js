@@ -7,15 +7,18 @@ import CommonHeader from './CommonHeader';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { bankDocumentUpload, showReason } from '../Service/Bank';
 import DropDownPicker from "react-native-dropdown-picker";
 import Toast from 'react-native-toast-message'
 
 const UploadDocuments = () => {
+    const navigation =useNavigation();
     const route = useRoute()
     const { user_id, mobile,bank_id } = route.params
-    console.log(bank_id)
+    console.log("user_id",user_id)
+    console.log("bank_id",bank_id)
+    console.log("mobile",mobile)
     const [uploadedImage, setUploadedImage] = useState(null);
     const [selectedReason, setSelectedReason] = useState([]);
     const [loader, setLoader] = useState(false);
@@ -93,6 +96,7 @@ const UploadDocuments = () => {
             setUploadedImage(null);
             setRemark('');
             setValue('');
+            navigation.navigate("BankAccount",{user_id:user_id})
         } catch (error) {
             console.error('Error uploading image:', error);
         } finally {

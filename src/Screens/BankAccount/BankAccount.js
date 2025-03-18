@@ -1,20 +1,22 @@
 import { FlatList, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonHeader from '../../Components/CommonHeader'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Toast from 'react-native-toast-message'
-import { useRoute } from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
 import { bankAccountDetails, deleteBankAccount } from '../../Service/Bank'
 import { userDetail } from '../../Service/Login'
 import AlertDialogRed from '../../Components/AlertDialogRed'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AnimatedLoader from '../../Components/AnimatedLoader'
 import FormModal from '../../Components/FormModal'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
+
 
 export default function BankAccount() {
     const route = useRoute();
     const { user_id, mobile } = route.params
+    const navigation = useNavigation()
     const [bankAccount, setBankAccount] = useState([]);
     const [userData, setUserData] = useState({});
     const [loader, setLoader] = useState(false);
@@ -49,6 +51,14 @@ export default function BankAccount() {
             setLoader(false);
         }
     };
+
+      useFocusEffect(
+        useCallback(() => {
+          viewProfile();
+          bankDetails();
+        }, []),
+      );
+    
 
     useEffect(() => {
         viewProfile();
@@ -100,28 +110,34 @@ export default function BankAccount() {
             });
         }
     };
+    const handleNavigation = (item) => {
+        navigation.navigate('UploadDocument', { user_id: userData._id, mobile: userData.mobile, bank_id: item._id })
+    }
 
     const renderItem = ({ item }) => {
         return (
             <View style={styles.container}>
-                <Text style={[
-                    styles.status,
-                    { color: item.status === "pending" ? "#EFC328" : "green" }
-                ]}>
-                    {item.status}
-                </Text>
-    
-                <View style={styles.logoContainer}>
+                <TouchableOpacity style={styles.statusContainer}
+                    onPress={() => handleNavigation(item)}
+                    disabled={item.status === "approved"}
+                >
+                    <Text
+                        style={[styles.status, { color: item.status === "approved" ? "green" : "#EFC328" }]}>
+                         {item.status}
+                    </Text>
+                </TouchableOpacity>
+
+                <View style={[styles.logoContainer,{ flex: 0.5}]}>
                     <Icon name="bank" size={30} color="#361911" />
                 </View>
-    
+
                 <View style={styles.detailsContainer}>
                     <Text style={styles.bankName}>{item.bank_name}</Text>
                     <Text style={styles.detail}>Account No: {item.account_no}</Text>
                     <Text style={styles.detail}>IFSC Code: {item.ifsc_code}</Text>
                 </View>
-    
-                <TouchableOpacity style={styles.logoContainer} onPress={() => confirmDelete(item.account_no)}>
+
+                <TouchableOpacity style={[styles.deleteButton,{ flex: 0.7}]} onPress={() => confirmDelete(item.account_no)}>
                     <Icon name="trash" size={30} color="#D80000" />
                 </TouchableOpacity>
             </View>
@@ -133,24 +149,30 @@ export default function BankAccount() {
         <>
             <BackgroundScreen />
             <CommonHeader title={"Bank Account"} />
-            <Text style={styles.kyc}>Complete Your Bank Details  </Text>
+            <Text style={styles.kyc}>Complete Your Bank Details  </Text>xx
             <View style={{ padding: 10, margin: 10, alignItems: 'flex-end' }}>
                 <TouchableOpacity
                     style={{
-                        backgroundColor: "#EFC328",
+                        backgroundColor: '#2A1610',
                         paddingVertical: 12,
                         paddingHorizontal: 100,
                         borderRadius: 10,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        borderWidth: 2,
+                        borderColor: '#efc328',
+                        shadowColor: '#F5D236',
+                        shadowOpacity: 1,
+                        shadowRadius: 12,
+                        elevation: 15,
                     }}
                     onPress={() =>
                         setVisible(true)
                     }
                 >
                     <Icon name="plus" size={15} color="#361911" />
-                    <Text style={{ color: "#361911", fontSize: 16, fontFamily: 'Montserrat-SemiBold', marginHorizontal: 5 }}>Add Bank Details</Text>
+                    <Text style={{ color: "#efc328", fontSize: 16, fontFamily: 'Montserrat-SemiBold', marginHorizontal: 5 }}>Add Bank Details</Text>
                 </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>
@@ -187,46 +209,52 @@ const styles = StyleSheet.create({
         paddingHorizontal: hp('8%'),
     },
     container: {
-        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
         backgroundColor: "rgba(255,255,255, 0.6)",
         borderRadius: 10,
         padding: 15,
-        margin: 10,
+        marginVertical: 8,
+        marginHorizontal: 12,
         elevation: 5,
-        borderWidth: 2,
+        borderWidth: 1.5,
         borderColor: 'white',
-        flexDirection: 'row',
-        position: 'relative',
     },
+    statusContainer: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+
+    },
+      status: {
+        fontSize: 15,
+        fontFamily: 'Montserrat-SemiBold',
+      },
     logoContainer: {
-        flex: 0.5,
         alignItems: "center",
-        marginBottom: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     detailsContainer: {
         flex: 2,
-        marginBottom: 10,
+        paddingHorizontal: 10,
     },
     bankName: {
         fontSize: 18,
-        textAlign: "center",
+        textAlign: "left",
         marginBottom: 5,
         fontFamily: 'Montserrat-Bold',
         color: '#361911'
     },
-    status: {
-        fontSize: 14,
-        fontFamily: 'Montserrat-SemiBold',
-        position: 'absolute',
-        top: 5,
-        right: 10,
-    },
     detail: {
-        fontSize: 16,
-        textAlign: "center",
+        fontSize: 14,
+        textAlign: "left",
         color: "#361911",
         fontFamily: 'Montserrat-SemiBold'
+    },
+    deleteButton: {
+        flex: 0.5,
+        alignItems: "center",
+        justifyContent: 'center',
     },
     noDataContainer: {
         flex: 1,
@@ -239,7 +267,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'Montserrat-Regular',
     },
-
 })
 
 

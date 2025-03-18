@@ -43,3 +43,18 @@ export const AadharDocumentUpload = async (userData)=>{
     throw error;
   }
 }
+
+export const AadharConfirmVerification = async (user_id)=>{
+
+  try {
+    const response = await apiInstance.post(`${Config.Aadhar_Verify}`, {user_id});
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error to verify Aadhar', error.response || error.message);
+    throw error;
+  }
+}

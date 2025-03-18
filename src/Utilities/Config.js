@@ -1,4 +1,3 @@
-// Desc: API Endpoints are stored in this file.
 export default {
   Login: 'api/login',
   OtpVerify: 'api/verifyOtp',
@@ -46,6 +45,7 @@ export default {
   ShowTds:'api/wallet_request/showtTdsCalculation',
   Pan_Document:'api/documents/pan',
   Aadhar_Document:'api/documents/aadhar',
+  Aadhar_Verify : 'api/aadharVerificationConfirmation',
   Bank_Document:'api/documents/bank_account',
   Add_Expectation : 'api/userWinningExpectation/add',
   Edit_Expectation:'api/userWinningExpectation/edit/',

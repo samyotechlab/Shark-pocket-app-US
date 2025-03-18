@@ -54,6 +54,7 @@ const PaymentStatusCard = ({ checksPaymentStatus, status, setIsPaymentSuccess, s
     setIsPaymentSuccess("")
     setCheckPaymentStatus(false)
     if(toast){
+    // navigation.navigate('GameName', { game_id: game_id});
      navigation.navigate('PlayingInstruction',{
       ticket_id: ticket_id,
       game_id: game_id,
@@ -64,7 +65,7 @@ const PaymentStatusCard = ({ checksPaymentStatus, status, setIsPaymentSuccess, s
     }
   }
 
-  if (!checksPaymentStatus && status == "") {
+  if (!checksPaymentStatus && status == "" ) {
     return <></>
   }
 
@@ -79,7 +80,7 @@ const PaymentStatusCard = ({ checksPaymentStatus, status, setIsPaymentSuccess, s
         <Text style={[styles.statusText, { color: color[status] }]}>{message[status] ? message[status].heading : message.pending.heading}</Text>
         <Text style={styles.transactionId}>{message[status] ? message[status].title : message.pending.title}</Text>
         <Text style={styles.subText}>{message[status] ? message[status].subTitle : message.pending.subTitle}</Text>
-        <TouchableOpacity style={styles.button} onPress={() => {
+        <TouchableOpacity style={[styles.button,{ backgroundColor: color[status] }]} onPress={() => {
           handelNavigation()
         }}>
           <Text style={styles.buttonText}>{buttonText ? buttonText : "Tap to view balance"}</Text>
@@ -116,9 +117,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
   },
   button: {
-    backgroundColor: "#fff",
+    // backgroundColor: "#D80000",
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "white",
     borderRadius: wp("4%"),
     paddingVertical: hp("1.7%"),
     paddingHorizontal: wp("24%"),
@@ -126,7 +127,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: wp("4%"),
-    color: "#000",
+    color: "white",
+    fontFamily:'Montserrat-SemiBold'
   },
   statusText: {
     fontSize: 28,

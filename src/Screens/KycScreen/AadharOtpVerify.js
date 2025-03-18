@@ -9,8 +9,9 @@ import axios from 'axios'
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
-import { AdharVerificationSendOtp } from '../../Service/AadharVerification'
+import { AadharConfirmVerification, AdharVerificationSendOtp } from '../../Service/AadharVerification'
 import { baseApiurl } from '../../Service/AxiosInstance'
+import AlertDialogGreen from '../../Components/AlertDialogGreen'
 
 const headers = {
   'Content-Type': 'application/json',
@@ -19,15 +20,16 @@ const headers = {
 export default function AadharOtpVerify() {
   const route = useRoute()
   const { storeLoginData } = useLoginDataStorage();
-  const { data,user_id ,aadhaar_number ,game_id } = route.params
+  const { data, user_id, aadhaar_number, game_id, mobile } = route.params
   const navigation = useNavigation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const inputs = useRef([]);
   const [loader, setLoader] = useState(false);
   const [timer, setTimer] = useState(120);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
-
-
+  const [visible, setVisible] = useState(false);
+  const [message,setMessage] =useState('')
+  
   useEffect(() => {
     let interval = null;
     if (timer > 0) {
@@ -91,7 +93,8 @@ export default function AadharOtpVerify() {
       otp: otp.join(''),
       status: data.status,
       ref_id: data.ref_id,
-      aadhaar_number: aadhaar_number
+      aadhaar_number: aadhaar_number,
+      mobileNumber: mobile
     }
     setLoader(true);
     try {
@@ -106,15 +109,9 @@ export default function AadharOtpVerify() {
         .then(res => {
           if (res.data.status === 1) {
             setLoader(false)
-            Toast.show({
-              type: 'success',
-              position: 'top',
-              text1: 'Welcome!',
-              text2: 'Otp Verify Successfully',
-              visibilityTime: 5000
-            });
+            setVisible(true)
             storeLoginData(res.data)
-            navigation.navigate('GameName',{game_id:game_id});
+            setMessage(res.data.message)
           } else {
             setLoader(false)
             Toast.show({
@@ -135,18 +132,40 @@ export default function AadharOtpVerify() {
       setLoader(false)
       console.log('An error occurred:', error);
     }
-
   };
+
+  const handleConfirmation = async ()=>{
+    try {
+      setLoader(true)
+      const response = await AadharConfirmVerification(user_id);
+      console.log("response",response)
+      if(response.status === 1){
+        setVisible(false);
+        if (!game_id) {
+          navigation.navigate('HomeScreen', { screen: "Profile" });
+        } else {
+          navigation.navigate('GameName', { game_id: game_id });
+        }
+      }
+    } catch (error) {
+      setLoader(false)
+      console.log('An error occurred:', error);
+    }
+  }
+  const closeConfirmation = ()=>{
+    setVisible(false)
+    navigation.navigate("AadharDetail",{user_id:user_id})
+  }
   return (
     <>
       <BackgroundScreen />
       <View style={styles.container}>
         <View style={[styles.box, { justifyContent: 'center' }]}>
           <View style={styles.headerContent}>
-            <TouchableOpacity style={{flex:0.5,justifyContent:'center'}} onPress={() => navigation.goBack()}>
-               <Image source={Backarrow} style={styles.icon} />
+            <TouchableOpacity style={{ flex: 0.5, justifyContent: 'center' }} onPress={() => navigation.goBack()}>
+              <Image source={Backarrow} style={styles.icon} />
             </TouchableOpacity>
-            <View style={{flex:1.5,justifyContent:'center'}}>
+            <View style={{ flex: 1.5, justifyContent: 'center' }}>
               <Text style={styles.headerText}>Verification</Text>
             </View>
           </View>
@@ -176,7 +195,7 @@ export default function AadharOtpVerify() {
             title={loader ? 'Verifying...' : 'Verify'}
             onPress={handleOtp}
             disabled={loader} />
-            <Text style={styles.timer}>{formatTime(timer)}</Text>
+          <Text style={styles.timer}>{formatTime(timer)}</Text>
           <TouchableOpacity
             onPress={handleResendOtp}
             disabled={isResendDisabled}
@@ -193,8 +212,14 @@ export default function AadharOtpVerify() {
         </View>
         <Toast ref={Toast.setRef} />
       </View>
-
+      <AlertDialogGreen
+        visible={visible}
+        onClose={closeConfirmation}
+        onOkPress={handleConfirmation}
+        message={message}
+      />
     </>
+
   )
 }
 const styles = StyleSheet.create({
@@ -215,7 +240,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: hp('1.3%'),
     backgroundColor: '#FFC107',
-    flex:1
+    flex: 1
   },
   inputContainer: {
     flexDirection: 'row',

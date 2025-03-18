@@ -112,15 +112,16 @@ export default function AadharDetail() {
                         text2: 'Otp Send Succesffully in your given phone Number',
                         visibilityTime: 5000
                     });
-                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number, game_id })
+                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number, game_id ,mobile})
                     setLoader(false)
                     setAadharCard(response.data)
                 } else {
+                    console
                     Toast.show({
                         type: 'error',
                         position: 'top',
-                        text1: 'Error!',
-                        text2: response?.data?.message,
+                        text1: response?.message,
+                        text2: "something went wrong please try after some time",
                         visibilityTime: 4000,
                     });
                     setLoader(false)
@@ -136,8 +137,8 @@ export default function AadharDetail() {
             Toast.show({
                 type: 'error',
                 position: 'top',
-                text1: 'Aadhar Already Registered',
-                text2: "Please Try Different Number",
+                text1: 'Error',
+                text2: "something went wrong please try after some time",
                 visibilityTime: 4000,
             });
             setResponse(0)

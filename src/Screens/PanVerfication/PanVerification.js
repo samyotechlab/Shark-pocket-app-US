@@ -14,6 +14,7 @@ import useLoginDataStorage from '../../Service/CustomStorageHook'
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Image } from 'react-native'
+import AlertDialogRed from '../../Components/AlertDialogRed'
 
 
 export default function PanVerfication() {
@@ -21,8 +22,8 @@ export default function PanVerfication() {
     const { isReady, loginData } = useLoginDataStorage();
     const route = useRoute();
     const [loader, setLoader] = useState(false)
-    const { user_id , mobile} = route.params
-    console.log("mobile",mobile)
+    const { user_id, mobile } = route.params
+    console.log("mobile", mobile)
     const [panData, setPanData] = useState({
         name: '',
         pan_number: '',
@@ -32,6 +33,8 @@ export default function PanVerfication() {
     const [userData, setUserData] = useState({});
     const [responseData, setResponse] = useState(1)
     const [uploadedImage, setUploadedImage] = useState(null);
+    const [visible,setVisible] = useState(false)
+    const [message,setMessage] = useState('')
     const data = isReady && loginData && loginData?.data;
 
     const viewProfile = async () => {
@@ -92,7 +95,7 @@ export default function PanVerfication() {
             name: uploadedImage.filename || `pan_card_${Date.now()}.jpg`,
         });
         data.append('user_id', userData._id);
-        data.append('mobile',mobile)
+        data.append('mobile', mobile)
         setLoader(true)
         try {
             const response = await PanDocumentUpload(data)
@@ -133,7 +136,7 @@ export default function PanVerfication() {
         setLoader(true)
         try {
             const response = await PanVerificationData(obj);
-            console.log("This PAN number is already registered",response)
+            console.log("This PAN number is already registered", response)
             setResponse(response.status)
             if (response.status === 1) {
                 Toast.show({
@@ -147,17 +150,19 @@ export default function PanVerfication() {
                     navigation.goBack();
                 }, 2000);
             } else {
-                Toast.show({
-                    type: 'error',
-                    position: 'top',
-                    text1: 'Error!',
-                    text2: response.message,
-                    visibilityTime: 3000,
-                });
+                setVisible(true)
+                setMessage(response.message)
+                // Toast.show({
+                //     type: 'error',
+                //     position: 'top',
+                //     text1: 'Error!',
+                //     text2: response.message,
+                //     visibilityTime: 3000,
+                // });
             }
         } catch (error) {
             const msg = error.message
-            console.log('msg',msg)
+            console.log('msg', msg)
             Toast.show({
                 type: 'error',
                 position: 'top',
@@ -216,10 +221,10 @@ export default function PanVerfication() {
                     )}
                 </View>
                 <View style={[{ padding: hp('1%') }]}>
-                    <CommonButton title={loader ? 'Loading...': 'Save'} onPress={handleVerifyPan} />
+                    <CommonButton title={loader ? 'Loading...' : 'Save'} onPress={handleVerifyPan} />
                     <Text style={styles.kycText}>
                         Why do we need PAN Verification?
-                        <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={()=>{navigation.navigate('Faq')}}>
+                        <TouchableOpacity style={{ marginBottom: hp('1.3%') }} onPress={() => { navigation.navigate('Faq') }}>
                             <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Read FAQ’s</Text>
                         </TouchableOpacity>
                     </Text>
@@ -242,7 +247,7 @@ export default function PanVerfication() {
                             >
                                 {uploadedImage ? (
                                     <Image
-                                        source={{ uri: uploadedImage?.path}}
+                                        source={{ uri: uploadedImage?.path }}
                                         style={{
                                             height: '100%',
                                             width: '100%',
@@ -261,7 +266,7 @@ export default function PanVerfication() {
                             </TouchableOpacity>
                             {
                                 uploadedImage && (<View style={{ padding: wp('5%') }}>
-                                    <CommonButton title={loader ? 'Loading...' :'Upload Documnet'} onPress={handleUploadDocument} />
+                                    <CommonButton title={loader ? 'Loading...' : 'Upload Documnet'} onPress={handleUploadDocument} />
                                 </View>)
                             }
 
@@ -270,6 +275,12 @@ export default function PanVerfication() {
                 }
                 <Toast ref={Toast.setRef} />
             </View>
+            <AlertDialogRed
+                visible={visible}
+                onClose={()=>{setVisible(false)}}
+                onOkPress={()=>{setVisible(false)}}
+                message={message}
+            />
         </>
     )
 }
