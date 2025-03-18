@@ -46,6 +46,7 @@ export default {
   Pan_Document:'api/documents/pan',
   Aadhar_Document:'api/documents/aadhar',
   Aadhar_Verify : 'api/aadharVerificationConfirmation',
+  Aadhar_Reject : 'api/aadharVerificationRejection',
   Bank_Document:'api/documents/bank_account',
   Add_Expectation : 'api/userWinningExpectation/add',
   Edit_Expectation:'api/userWinningExpectation/edit/',

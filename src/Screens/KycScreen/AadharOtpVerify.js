@@ -9,7 +9,7 @@ import axios from 'axios'
 import Config from '../../Utilities/Config'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../../Service/CustomStorageHook'
-import { AadharConfirmVerification, AdharVerificationSendOtp } from '../../Service/AadharVerification'
+import { AadharConfirmVerification, AadharVerificationRejection, AdharVerificationSendOtp } from '../../Service/AadharVerification'
 import { baseApiurl } from '../../Service/AxiosInstance'
 import AlertDialogGreen from '../../Components/AlertDialogGreen'
 
@@ -151,9 +151,19 @@ export default function AadharOtpVerify() {
       console.log('An error occurred:', error);
     }
   }
-  const closeConfirmation = ()=>{
+  const closeConfirmation = async ()=>{
+    console.log("hellooooo")
     setVisible(false)
-    navigation.navigate("AadharDetail",{user_id:user_id})
+    try {
+      const response = await AadharVerificationRejection(user_id)
+      console.log("response",response)
+      if(response.status === 1){
+        navigation.navigate("AadharDetail",{user_id:user_id})
+      }
+    } catch (error) {
+      console.log('An error occurred:', error);
+    }
+
   }
   return (
     <>

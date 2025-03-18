@@ -56,3 +56,19 @@ export const AadharConfirmVerification = async (user_id)=>{
     throw error;
   }
 }
+
+export const AadharVerificationRejection = async (user_id)=>{
+  console.log("user_id======>",user_id)
+  try {
+    const response = await apiInstance.post(`${Config.Aadhar_Reject}`, {user_id});
+    console.log("response",response)
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error to verify Aadhar', error.response || error.message);
+    throw error;
+  }
+}

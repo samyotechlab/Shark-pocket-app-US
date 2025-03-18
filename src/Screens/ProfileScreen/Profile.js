@@ -19,6 +19,7 @@ import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { userDetail } from '../../Service/Login';
 import { truncateName } from '../../Utilities/utilies';
 import AlertDialogGreen from '../../Components/AlertDialogGreen';
+import AlertDialogRed from '../../Components/AlertDialogRed';
 const SharkPocketScreen = () => {
   const navigation = useNavigation();
   const { isReady, loginData } = useLoginDataStorage();
@@ -26,6 +27,8 @@ const SharkPocketScreen = () => {
   const [visible, setVisible] = useState(false);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
+  const [isModalVisible,setIsModalVisible] = useState(false)
+  const [message,setMessage] = useState('')
   const data = isReady && loginData && loginData?.data;
 
   const data2 = [
@@ -104,6 +107,10 @@ const SharkPocketScreen = () => {
       navigation.navigate(url, { user_id: data._id ,mobile : userData.mobile});
     }
   }
+  const handleModal =(item)=>{
+    setMessage(item)
+    setIsModalVisible(true)
+  }
   const handleLogout = async () => {
     try {
       await clearLoginData();
@@ -168,10 +175,13 @@ const SharkPocketScreen = () => {
         <TouchableOpacity
           style={styles.cardContainer}
           onPress={() => {
-            handleNavigation(item.url);
-
-          }}
-          disabled={isDisabled }>
+            {
+              !isDisabled ? (handleNavigation(item.url)):
+              !isAadharVerified ? (handleModal("Aadhar is not Verified, please verify aadhar first.")):
+              (handleModal("Pancard is not verified, please verify pancard first."))
+            }
+           
+          }}>
           <View style={{ flex: 0.5 }}>
             <LinearGradient
               colors={['#3D1911', '#3D1911', '#6A1701']}
@@ -265,6 +275,7 @@ const SharkPocketScreen = () => {
           </View>
         </View>
       </SafeAreaView>
+      <AlertDialogRed visible={isModalVisible} onClose={() => setIsModalVisible(false)} message={message} onOkPress={() => setIsModalVisible(false)} />
     </>
   );
 };
