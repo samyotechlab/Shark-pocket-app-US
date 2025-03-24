@@ -5,12 +5,14 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { useNavigation } from '@react-navigation/native';
 
 
-const DailyCard = ({ gameData,frequencyStatus }) => {
+const DailyCard = ({ gameData, frequencyStatus }) => {
     const navigation = useNavigation()
     const dailyGameData = gameData?.filter(item => item.frequency === "daily")
 
     const handleNavigation = (item) => {
-        navigation.navigate('GameName', { game_id: item._id , title: item.game_title });
+        frequencyStatus === "3" ? (
+            navigation.navigate('UpcomingGameInfo', { game_id: item._id, game_name: item.title })) :
+            (navigation.navigate('GameName', { game_id: item._id, title: item.title }))
     }
     const renderItem = ({ item, index }) => {
         return (<>
@@ -25,7 +27,7 @@ const DailyCard = ({ gameData,frequencyStatus }) => {
                         <AvailableCard gameData={item} status={"2"} />
                     )
                 }
-            
+
 
 
             </TouchableOpacity>
@@ -33,13 +35,13 @@ const DailyCard = ({ gameData,frequencyStatus }) => {
     }
     return (
         <View style={styles.container}>
-        <FlatList
-            data={dailyGameData}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContainer}
-        />
+            <FlatList
+                data={dailyGameData}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollContainer}
+            />
         </View>
     );
 };

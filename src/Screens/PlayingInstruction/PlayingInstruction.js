@@ -85,20 +85,20 @@ export default function PlayingInstruction() {
   const stateList = async () => {
     try {
       const response = await state();
+      console.log("state=======>",response)
       checkCurrentState(response.data)
     } catch (error) {
       console.log("error", error)
     }
   }
-
-
-
   async function checkCurrentState(states) {
     try {
       const response = await fetch("http://ip-api.com/json");
       const data = await response.json();
       const currentState = data.regionName;
-      const isStateInList = states.some((state) => state.name === currentState);
+      console.log("dtaaaaa-->",data)
+      console.log("---->",currentState)
+      const isStateInList = states.some((state) => state?.name?.toLowerCase() === currentState?.toLowerCase() ||state?.name?.includes(currentState) );
       if (!isStateInList) {
         setVisibles(true);
         setMessage(`The current state (${currentState}) is NOT in the state list.`)

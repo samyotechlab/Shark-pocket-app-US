@@ -33,4 +33,13 @@ export const getGameData = async _id => {
     }
   };
 
+  export const getVersionData = async ()=>{
+    try {
+      const response = await apiInstance.get(Config.Version)
+      return response.data
+    } catch (error) {
+      console.log('errror', error);
+    }
+  }
+
 

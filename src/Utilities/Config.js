@@ -44,6 +44,7 @@ export default {
   EditImage: 'api/editImage',
   ShowTds:'api/wallet_request/showtTdsCalculation',
   Pan_Document:'api/documents/pan',
+  Pan_Upload:'api/getPandetailsByUserId',
   Aadhar_Document:'api/documents/aadhar',
   Aadhar_Verify : 'api/aadharVerificationConfirmation',
   Aadhar_Reject : 'api/aadharVerificationRejection',
@@ -54,5 +55,6 @@ export default {
   Range_Show : 'api/userWinningRange/',
   Show_Reason:'reason/list',
   HelpAndSupport:'api/helpAndSupport_request/store',
-  SupportTitle:'supportTitle/list'
+  SupportTitle:'supportTitle/list',
+  Version : 'api/getVersion'
 };

@@ -12,9 +12,8 @@ import InfoModal from '../../Components/GameInfo'
 
 export default function GameName() {
   const route = useRoute();
-
   const { game_id  } = route.params
-  console.log('game_id', route.params)
+  console.log("===============>",game_id)
   const [selectedTab, setSelectedTab] = useState('Tickets');
   const [gameData, setGameData] = useState({});
   const handlePress = tab => {

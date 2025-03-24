@@ -16,6 +16,7 @@ export default function AvailableGame() {
     const [title, setTitle] = useState('')
     const [disabled, setDisabled] = useState(false)
     const { gameData, status } = route.params
+    console.log("game sTatus",status)
     let myGames = []
     if (status === "1") {
         myGames = gameData;
@@ -28,6 +29,7 @@ export default function AvailableGame() {
         myGames = gameData.filter(game => game?.status === 4);
     } else {
         myGames = gameData.filter(game => game?.status === 3);
+        console.log("myGames",myGames)
     }
 
     useEffect(() => {
@@ -90,14 +92,13 @@ export default function AvailableGame() {
                           
                         </LinearGradient>
                     ) : (
-
                         <LinearGradient
                             colors={['#361911', '#361911', '#6A1700']}
                             style={styles.linearGradient}>
                             <CommonHeader title={title ? title : 'Available Games'} />
                             {
-                                status === "5"?( <DailyCard  gameData={gameData}/>): 
-                                status === "6" ?(<WeeklyCard  gameData={gameData}/>):
+                                status === "5"?( <DailyCard  gameData={myGames}/>): 
+                                status === "6" ?(<WeeklyCard  gameData={myGames}/>):
                                 (<View style={styles.container}>
                                     <FlatList
                                         data={myGames}

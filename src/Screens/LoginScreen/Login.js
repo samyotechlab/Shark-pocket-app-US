@@ -24,7 +24,6 @@ export default function Login() {
   const [loader, setLoader] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-
   const validateInputs = () => {
     let valid = true;
     const mobileRegex = /^[0-9]{10}$/;
@@ -39,8 +38,6 @@ export default function Login() {
     }
     return valid;
   };
-
-
 
   const handleLogin = () => {
     setLoader(true);
@@ -83,7 +80,6 @@ export default function Login() {
             console.log('error--->', err);
             setLoader(false);
           });
-
       }
       else {
         setLoader(false)

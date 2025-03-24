@@ -6,10 +6,11 @@ import { useNavigation } from '@react-navigation/native';
 
 const WeeklyCard = ({ gameData ,frequencyStatus }) => {
   const navigation = useNavigation()
-
   const weeklyGameData = gameData?.filter(item => item.frequency === "weekly")
   const handleNavigation = (item) => {
-    navigation.navigate('GameName', { game_id: item._id , title: item.title });
+    frequencyStatus === "3" ? (
+      navigation.navigate('UpcomingGameInfo', { game_id: item._id,game_name:item.title })):
+      (navigation.navigate('GameName', { game_id: item._id , title: item.title }))  
   }
   const renderItem = ({ item, index }) => {
     return (<>

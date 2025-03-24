@@ -2,6 +2,7 @@ import {
   Alert,
   BackHandler,
   Image,
+  Linking,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -22,7 +23,7 @@ import WinnerCard from '../../Components/WinnerCard';
 import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import { getGameData } from '../../Service/Home';
+import { getGameData, getVersionData } from '../../Service/Home';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
@@ -31,6 +32,8 @@ import CloseDialog from '../../Components/CloseDialog';
 import { userDetail } from '../../Service/Login';
 import GameHistory from '../../Components/GameHistory';
 import shark from '../../../assets/images/Applogo/Sharkpocket1.png'
+import { Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -43,8 +46,11 @@ export default function HomeScreen() {
   const [message, setMessage] = useState('');
   const [usersData, setUserData] = useState({})
   const [bannerData, setBannerData] = useState([]);
+  const [version, setVersion] = useState({})
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const data = isReady && loginData && loginData?.data;
+  const os = Platform.OS;
+  const appVersion = DeviceInfo.getVersion();
 
   const refreshData = () => {
     setRefreshing(true);
@@ -53,6 +59,58 @@ export default function HomeScreen() {
       setRefreshing(false);
     }, 2000);
   };
+
+
+
+  const getVesion = async () => {
+    try {
+      const response = await getVersionData();
+      setVersion(response.data)
+      if (os === 'android') {
+        if (response.data.android !== appVersion) {
+          Alert.alert(
+            "Update Available",
+            "Newer version available. Please update it.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel"
+              },
+              {
+                text: "Update",
+                onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME")
+              }
+            ]
+          );
+        }
+      } else if (os === "ios") {
+        if (response.data.ios !== appVersion) {
+          Alert.alert(
+            "Update Available",
+            "Newer version available. Please update it.",
+            [
+              {
+                text: "Cancel",
+                style: "cancel"
+              },
+              {
+                text: "Update",
+                onPress: () => Linking.openURL("https://apps.apple.com/app/idYOUR_APP_ID")
+              }
+            ]
+          );
+        }
+      }
+      
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
+  useEffect(() => {
+    getVesion();
+  }, []);
+
 
   useFocusEffect(
     React.useCallback(() => {
@@ -92,7 +150,6 @@ export default function HomeScreen() {
     ? gameData.filter((item) => item.status === 3)
     : [];
 
-
   const UpcomingGames = Array.isArray(gameData)
     ? gameData.filter((item) => item.status === 1)
     : [];
@@ -109,7 +166,7 @@ export default function HomeScreen() {
       };
       setUserData(formattedData);
     } catch (error) {
-      console.log('error=====>', error);
+      console.log('error', error);
     } finally {
       setLoader(false);
     }
@@ -137,7 +194,7 @@ export default function HomeScreen() {
           <View style={{ backgroundColor: '#552113' }}>
             <View style={styles.container}>
 
-              <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData ,status:1})}>
+              <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData, status: 1 })}>
                 <Image source={sharkLogo} style={styles.logo} />
               </TouchableOpacity>
 
@@ -152,8 +209,6 @@ export default function HomeScreen() {
                   ₹ {totalAmount || 0}
                 </Text>
               </LinearGradient>
-
-
               <View style={styles.iconsContainer}>
                 <TouchableOpacity onPress={() => { navigation.navigate('Notification') }}>
                   <Image source={bell} style={styles.icon} />
@@ -164,7 +219,7 @@ export default function HomeScreen() {
           <Divider color="#FFCE63" width={2.5} style={{ marginVertical: wp(0.2) }} />
 
           <ScrollView
-          scrollEnabled={scrollEnabled}
+            scrollEnabled={scrollEnabled}
             contentContainerStyle={{ flexGrow: 1, margin: hp('1%') }}
             showsVerticalScrollIndicator={false}
             refreshControl={
@@ -240,7 +295,7 @@ export default function HomeScreen() {
               )
             }
 
-{
+            {
               Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
                 <View style={{ flex: 1, marginTop: hp('1%') }}>
                   <View

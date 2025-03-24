@@ -48,6 +48,7 @@ export default function Tickets({ gameData }) {
   const [modalVisible, setModalVisible] = useState(false);
   const route = useRoute();
   const { game_id } = route.params;
+  console.log("game_id", game_id)
   const [refreshing, setRefreshing] = useState(false);
   const refreshData = () => {
     setRefreshing(true);
@@ -63,7 +64,7 @@ export default function Tickets({ gameData }) {
       const response = await userDetail(loginData ? loginData?._id : data?._id);
       setUserData(response.data);
     } catch (error) {
-      console.log('error=====>', error);
+      console.log('error', error);
     } finally {
       setLoader(false);
     }
@@ -187,25 +188,25 @@ export default function Tickets({ gameData }) {
               <Image source={Game} style={styles.characterImage} />
               <View style={styles.textContainer}>
 
-                <View style={{ flex: 0.1,}}>
+                <View style={{ flex: 0.1, }}>
                   <Text style={styles.description}>{item.title}</Text>
                 </View>
-                <View style={{ flex: 0.5,flexDirection:'row',justifyContent:'space-evenly',alignItems:'center'}}>
+                <View style={{ flex: 0.5, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
                   <Text style={styles.title}>Amount</Text>
                   <Text style={styles.title}>Entries</Text>
                   <Text style={styles.title}>Rem. Entries</Text>
                 </View>
-                <View style={{ flex: 1,flexDirection:'row',justifyContent:'space-evenly'}}>
-                <LinearGradient
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                  <LinearGradient
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={styles.box}>
                     <Image source={coin} style={styles.boxIcon} />
                     <Text style={styles.boxText}>{item.price}</Text>
-                    </LinearGradient>
+                  </LinearGradient>
 
-                    <LinearGradient
+                  <LinearGradient
                     colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
@@ -223,24 +224,24 @@ export default function Tickets({ gameData }) {
                     <Text style={styles.boxText}>{item.remaining_entries}</Text>
                   </LinearGradient>
                 </View>
-                <View style={{ flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={[
-                      styles.playButton,
-                      {
-                        backgroundColor: isPurchased ? '#f3bc01' : '#00b63d',
-                        borderTopColor: isPurchased ? '#fbeb01' : '#00e968',
-                        borderBottomColor: isPurchased ? '#eb8d01' : '#018312',
-                      },
-                    ]}
-                    onPress={isPurchased ? handlePlay : handlePurchaseModal}>
-                    <Text style={styles.playButtonText}>
-                      {' '}
-                      {isPurchased ? 'Play Now' : 'Purchase'}
-                    </Text>
+                    <TouchableOpacity
+                      style={[
+                        styles.playButton,
+                        {
+                          backgroundColor: isPurchased ? '#f3bc01' : '#00b63d',
+                          borderTopColor: isPurchased ? '#fbeb01' : '#00e968',
+                          borderBottomColor: isPurchased ? '#eb8d01' : '#018312',
+                        },
+                      ]}
+                      onPress={isPurchased ? handlePlay : handlePurchaseModal}>
+                      <Text style={styles.playButtonText}>
+                        {' '}
+                        {isPurchased ? 'Play Now' : 'Purchase'}
+                      </Text>
 
-                  </TouchableOpacity>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
@@ -253,24 +254,30 @@ export default function Tickets({ gameData }) {
 
   return (
     <>
-      {
-        ticketData &&
-          !loader ? (
-          <View style={styles.container}>
+      <View style={styles.container}>
+        {
+          ticketData ? (!loader ? (
             <FlatList
-              data={ticketData}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollContainer}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
-              }
-            />
-          </View>
-        ) : (
-          <AnimatedLoader />
-        )}
+            data={ticketData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+            }
+          />
+          ) : (<AnimatedLoader />)) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                No games or tickets are currently available.
+              </Text>
+            </View>
+          )
+
+        }
+
+      </View>
       <Toast ref={Toast.setRef} />
     </>
   );
@@ -332,7 +339,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Audiowide-Regular',
     textAlign: 'center',
-    textDecorationLine:'underline'
+    textDecorationLine: 'underline'
   },
   boxContainer: {
     flexDirection: 'row',
@@ -401,5 +408,17 @@ const styles = StyleSheet.create({
     bottom: hp('1%'),
     right: hp('1%'),
     padding: hp('0.5%'),
-  }
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    textAlign: 'center',
+    paddingHorizontal: hp('2%'),
+  },
 });

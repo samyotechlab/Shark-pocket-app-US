@@ -12,7 +12,9 @@ export default function DailyWeeklyBar() {
 
   const route = useRoute();
   const { gameData, status } = route.params
+  console.log("status",status)
   const myGames = gameData.filter(game => game?.status === 1);
+  const myAllGames = gameData.filter(game => game?.status === 3);
   const [selectedTab, setSelectedTab] = useState('Weekly');
   const handlePress = tab => {
     setSelectedTab(tab);
@@ -50,7 +52,7 @@ export default function DailyWeeklyBar() {
             status === "1" ? (
               <DailyCard gameData={gameData} frequencyStatus={"1"} />
             ) : status === "2" ? (
-              <DailyCard gameData={gameData} frequencyStatus={"2"} />
+              <DailyCard gameData={myAllGames} frequencyStatus={"2"} />
             ) : (
               <DailyCard gameData={myGames} frequencyStatus={"3"} />
             )
@@ -58,7 +60,7 @@ export default function DailyWeeklyBar() {
             status === "1" ? (
               <WeeklyCard gameData={gameData} frequencyStatus={"1"} />
             ) : status === "2" ? (
-             <WeeklyCard gameData={gameData} frequencyStatus={"2"} />
+             <WeeklyCard gameData={myAllGames} frequencyStatus={"2"} />
             ):(
               <WeeklyCard gameData={myGames} frequencyStatus={"3"} />
             )

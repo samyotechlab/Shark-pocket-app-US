@@ -27,8 +27,9 @@ const SharkPocketScreen = () => {
   const [visible, setVisible] = useState(false);
   const [loader, setLoader] = useState(false);
   const [userData, setUserData] = useState({});
-  const [isModalVisible,setIsModalVisible] = useState(false)
-  const [message,setMessage] = useState('')
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [message, setMessage] = useState('')
+  const [url,setItemUrl] = useState('')
   const data = isReady && loginData && loginData?.data;
 
   const data2 = [
@@ -47,14 +48,14 @@ const SharkPocketScreen = () => {
       icon: 'security',
       url: 'AadharDetail',
       is_verified: userData.is_aadhar_verified,
-      touch :true
+      touch: true
     },
     {
       title: 'Pan verification',
       icon: 'security',
       url: 'PanVerification',
       is_verified: userData.is_pan_verified,
-      touch :true
+      touch: true
     },
     {
       title: 'Bank Account',
@@ -78,7 +79,7 @@ const SharkPocketScreen = () => {
       icon: 'undo',
       url: 'Refund',
     },
-    
+
     {
       title: 'Terms & Conditions',
       icon: 'bookmark-outline',
@@ -104,10 +105,10 @@ const SharkPocketScreen = () => {
     if (url === "Logout") {
       setVisible(true)
     } else {
-      navigation.navigate(url, { user_id: data._id ,mobile : userData.mobile});
+      navigation.navigate(url, { user_id: data._id, mobile: userData.mobile });
     }
   }
-  const handleModal =(item)=>{
+  const handleModal = (item) => {
     setMessage(item)
     setIsModalVisible(true)
   }
@@ -144,13 +145,13 @@ const SharkPocketScreen = () => {
     }
   }, [isReady, loginData]);
 
-     useFocusEffect(
-        React.useCallback(() => {
-          if(isReady && loginData){
-            viewProfile();
-          }
-        }, [isReady])
-      );
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isReady && loginData) {
+        viewProfile();
+      }
+    }, [isReady])
+  );
 
   const VerificationIcon = ({ isVerified }) => (
     <Icon
@@ -164,23 +165,30 @@ const SharkPocketScreen = () => {
   const _renderCard = ({ item }) => {
     const isAadharVerified = userData.is_aadhar_verified === 1;
     const isPanVerified = userData.is_pan_verified === 1;
-  
-    const isDisabled =
-      (item.url === 'AadharDetail' && isAadharVerified) || 
-      (item.url === 'PanVerification' && (!isAadharVerified || isPanVerified)) || 
-      (item.url === 'BankAccount' && (!isAadharVerified || !isPanVerified)); 
-  
     return (
       <>
         <TouchableOpacity
           style={styles.cardContainer}
           onPress={() => {
-            {
-              !isDisabled ? (handleNavigation(item.url)):
-              !isAadharVerified ? (handleModal("Aadhar is not Verified, please verify aadhar first.")):
-              (handleModal("Pancard is not verified, please verify pancard first."))
+            if(item.url === "AadharDetail"){
+              !isAadharVerified ? (handleNavigation(item.url)) :("")
+            }else if(item.url === "PanVerification") {
+              !isAadharVerified ?
+               (
+               handleModal("Aadhar is not Verified, please verify aadhar first."),
+               setItemUrl("AadharDetail")
+              )
+               :
+              !isPanVerified ?(handleNavigation(item.url)) : ("")
+            }else if(item.url === "BankAccount"){
+              !isPanVerified ? (
+                handleModal("Pancard is not verified, please verify pancard first."),
+                setItemUrl("PanVerification")
+              ):
+              (handleNavigation(item.url))
+            }else{
+              handleNavigation(item.url)
             }
-           
           }}>
           <View style={{ flex: 0.5 }}>
             <LinearGradient
@@ -201,7 +209,7 @@ const SharkPocketScreen = () => {
           </View>
 
           <View style={styles.verificationIcon}>
-            {item.is_verified !== undefined  &&  (
+            {item.is_verified !== undefined && (
               <VerificationIcon isVerified={item.is_verified} />
             )}
           </View>
@@ -247,7 +255,7 @@ const SharkPocketScreen = () => {
           <TouchableOpacity
             style={styles.profileActionContainer}
             onPress={() => {
-              navigation.navigate('ViewProfile', { usersData :userData });
+              navigation.navigate('ViewProfile', { usersData: userData });
             }}>
             <Text style={styles.viewProfileText}>View Profile</Text>
           </TouchableOpacity>
@@ -275,7 +283,9 @@ const SharkPocketScreen = () => {
           </View>
         </View>
       </SafeAreaView>
-      <AlertDialogRed visible={isModalVisible} onClose={() => setIsModalVisible(false)} message={message} onOkPress={() => setIsModalVisible(false)} />
+      <AlertDialogRed visible={isModalVisible} onClose={() => setIsModalVisible(false)} message={message} onOkPress={() =>{
+         setIsModalVisible(false)
+         navigation.navigate(url,{ user_id: data._id, mobile: userData.mobile })}} />
     </>
   );
 };
@@ -304,7 +314,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: hp('2%'),
     color: 'white',
-    fontFamily:'Montserrat-SemiBold'
+    fontFamily: 'Montserrat-SemiBold'
   },
   profileHeader: {
     flexDirection: 'row',
@@ -433,7 +443,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingRight: wp('4%'),
   },
-
   verificationIcon: {
     flex: 1,
   },
