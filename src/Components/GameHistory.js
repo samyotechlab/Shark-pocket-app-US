@@ -6,8 +6,9 @@ import UpcomingGameCard from './UpcomingGameCard';
 
 const GameHistory = (props) => {
     const {gameData} = props;
-
-    const filteredData = gameData.filter((item) => item.status === 4);
+    const filteredData = Array.isArray(gameData)
+    ? gameData.filter((item) => item.status === 4)
+    : [];
 
     const renderItem = (items) => {
         return (<>
@@ -20,7 +21,7 @@ const GameHistory = (props) => {
             filteredData.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Text style={styles.emptyText}>
-                        No games or tickets are currently available.
+                        No games  are currently available.
                     </Text>
                 </View>
             ) : (        
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        backgroundColor: 'black',
     },
     emptyText: {
         color: 'white',

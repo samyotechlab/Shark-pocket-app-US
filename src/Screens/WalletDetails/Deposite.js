@@ -22,6 +22,7 @@ export default function Deposite(props) {
     setLoader(true)
     try {
       const response = await WalletTransactionList(user_id);
+      console.log("response=====>",response)
       setWalletData(response?.data);
     } catch (error) {
       console.log('error', error);

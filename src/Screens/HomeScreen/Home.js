@@ -23,7 +23,7 @@ import WinnerCard from '../../Components/WinnerCard';
 import Lighting from '../../../assets/images/Screens/Lighting.png';
 import AvailbleGameCard from '../../Components/AvailableGameCard';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import { getGameData, getVersionData } from '../../Service/Home';
+import { gameHistoryByUser, getGameData, getVersionData } from '../../Service/Home';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import MyGame from '../../Components/MyGame';
@@ -47,6 +47,7 @@ export default function HomeScreen() {
   const [usersData, setUserData] = useState({})
   const [bannerData, setBannerData] = useState([]);
   const [version, setVersion] = useState({})
+  const [gameHistory, setGameHistory] = useState([]);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const data = isReady && loginData && loginData?.data;
   const os = Platform.OS;
@@ -55,13 +56,12 @@ export default function HomeScreen() {
   const refreshData = () => {
     setRefreshing(true);
     setTimeout(() => {
+      userData();
       getAllData();
+      getHistoryData();
       setRefreshing(false);
     }, 2000);
   };
-
-
-
   const getVesion = async () => {
     try {
       const response = await getVersionData();
@@ -101,7 +101,7 @@ export default function HomeScreen() {
           );
         }
       }
-      
+
     } catch (error) {
       console.log("error", error)
     }
@@ -114,22 +114,25 @@ export default function HomeScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      userData();
-      getAllData();
-      const onBackPress = () => {
-        Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          { text: 'YES', onPress: () => BackHandler.exitApp() },
-        ]);
-        return true;
-      };
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => backHandler.remove();
-    }, [loginData]),
+      if (isReady && loginData) {
+        userData();
+        getAllData();
+        getHistoryData();
+        const onBackPress = () => {
+          Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
+            {
+              text: 'Cancel',
+              onPress: () => null,
+              style: 'cancel',
+            },
+            { text: 'YES', onPress: () => BackHandler.exitApp() },
+          ]);
+          return true;
+        };
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+        return () => backHandler.remove();
+      }
+      }, [loginData]),
   );
 
   const getAllData = async (loginData) => {
@@ -139,6 +142,19 @@ export default function HomeScreen() {
       setMyGames(response?.myGames);
       setGameData(response.data);
       setBannerData(response.banner);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  const getHistoryData = async (loginData) => {
+    setLoader(true);
+    try {
+      const response = await gameHistoryByUser(loginData ? loginData?._id : data?._id)
+      console.log("response", response)
+      setGameHistory(response.data);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -175,6 +191,7 @@ export default function HomeScreen() {
     if (isReady && loginData) {
       userData(loginData?.data);
       getAllData(loginData?.data);
+      getHistoryData(loginData?.data);
     } else {
       setLoader(true);
     }
@@ -188,7 +205,6 @@ export default function HomeScreen() {
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={styles.linearGradient}>
-
       {!loader ? (
         <>
           <View style={{ backgroundColor: '#552113' }}>
@@ -389,29 +405,33 @@ export default function HomeScreen() {
               </View>)
             }
 
-            <View style={{ flex: 1, marginTop: hp('1%') }}>
-              <View
-                style={{
-                  flex: 0.5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                  <Image source={Lighting} style={styles.light} />
-                  <Text style={styles.myGame}>GAME HISTORY</Text>
+            {
+              gameHistory.length > 0 && (
+                <View style={{ flex: 1, marginTop: hp('1%') }}>
+                <View
+                  style={{
+                    flex: 0.5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>GAME HISTORY</Text>
+                  </View>
+                  <TouchableOpacity style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+                    onPress={() => {
+                      navigation.navigate('AvailableGame', { gameData: gameHistory, status: "4" });
+                    }}
+                  >
+                    <Text style={styles.view}>View All</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
-                  onPress={() => {
-                    navigation.navigate('AvailableGame', { gameData, status: "4" });
-                  }}
-                >
-                  <Text style={styles.view}>View All</Text>
-                </TouchableOpacity>
+                <View style={{ flex: 1.5, flexDirection: 'row' }}>
+                  <GameHistory gameData={gameHistory} />
+                </View>
               </View>
-              <View style={{ flex: 1.5, flexDirection: 'row' }}>
-                <GameHistory gameData={gameData} />
-              </View>
-            </View>
+              )
+            }
           </ScrollView>
         </>
 

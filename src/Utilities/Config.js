@@ -4,6 +4,7 @@ export default {
   ResendOtp:'api/sendOtp',
   Home_Api: 'api/game/list',
   Profile: 'api/get_details',
+  GameHistoryUserById:'api/gameHistory/byUserId',
   AdharOptSend: 'api/AadharVerificationSendOtp',
   AdharVerifyOtp: 'api/AadharVerificationVerifyOtp',
   Game_Ticket_List: 'api/ticket/getUserTicket',

@@ -14,7 +14,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const { height } = Dimensions.get('window');
 
 
-const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData }) => {
+const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData,handleWithdrawRequest }) => {
 
   return (
     <View style={styles.container}>
@@ -102,7 +102,7 @@ const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData }) => {
               </Text>
 
 
-              <TouchableOpacity style={styles.confirmButton} onPress={onClose}>
+              <TouchableOpacity style={styles.confirmButton} onPress={handleWithdrawRequest}>
                 <Text style={styles.confirmButtonText}>OKAY, GOT IT!</Text>
               </TouchableOpacity>
             </ScrollView>

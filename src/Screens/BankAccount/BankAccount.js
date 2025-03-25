@@ -170,7 +170,7 @@ export default function BankAccount() {
                     }
                 >
                     <Icon name="plus" size={15} color="#361911" />
-                    <Text style={{ color: "#efc328", fontSize: 16, fontFamily: 'Montserrat-SemiBold', marginHorizontal: 5 }}>Add Bank Details</Text>
+                    <Text style={{ color: "#efc328", fontSize: 16, fontFamily: 'Montserrat-SemiBold', marginHorizontal: 5 }}>+ Add Bank Details</Text>
                 </TouchableOpacity>
             </View>
             <View style={{ flex: 1 }}>

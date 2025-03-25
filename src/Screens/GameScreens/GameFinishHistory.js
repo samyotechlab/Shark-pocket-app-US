@@ -20,8 +20,9 @@ export default function GameFinishHistory() {
   const [loader, setLoader] = useState(false);
   const navigation = useNavigation()
   const route = useRoute();
+  console.log('route.params',route.params)
 
-  const {gameHistoryData,title} = route.params || {};
+  const {gameHistoryData,title,user_name} = route.params || {};
 
       if (!gameHistoryData) {
           return (
@@ -54,7 +55,7 @@ export default function GameFinishHistory() {
                   width: wp('89.5%'),
                 }}>
                 <View style={styles.score}>
-                  <Text style={styles.headerText}>YOUR SCORE</Text>
+                  <Text style={styles.headerText}>{user_name}</Text>
                 </View>
                 <View style={styles.scoreBox}>
                   <LinearGradient

@@ -5,6 +5,7 @@ import CommonHeader from "./CommonHeader";
 import Iconics from "react-native-vector-icons/Feather";
 
 const HeaderComponent = ({title,transactionData,status}) => {
+  console.log("transactionData",transactionData)
   const icon = {
     success:"check-circle",
     failed:"x-circle",
@@ -32,7 +33,7 @@ const HeaderComponent = ({title,transactionData,status}) => {
       <View style={styles.container}>
 
       <View style={styles.content}>
-        <Text style={styles.amount}>₹ {status === "amount" ? 77.89:(transactionData.actual_amount)}</Text>
+        <Text style={styles.amount}>₹ {status === "amount" ? 77.89:(transactionData.transaction_amount)}</Text>
         <Iconics name={icon[status]?icon[status]:"clock"} size={wp("7%")} color={color[status]?color[status]:"#FDCB50"} />
       </View>
 

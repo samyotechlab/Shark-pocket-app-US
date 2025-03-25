@@ -69,29 +69,29 @@ const ViewProfile = () => {
     }
   };
 
-  const saveUpdatedField = async (field, value) => {
-    const updatedData = { user_id: usersData._id, [field]: value };
-    setLoader(true);
+  // const saveUpdatedField = async (field, value) => {
+  //   const updatedData = { user_id: usersData._id, [field]: value };
+  //   setLoader(true);
   
-    try {
-      const response = await updateProfile(updatedData);
-      if (response.status === 1) {
-        Toast.show({ text1: `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!` });
-        setIsEditing((prev) => ({ ...prev, [field]: false }));
-      } else {
-        Toast.show({ text1: "Update failed.", type: "error" });
-      }
-    } catch (error) {
-      console.error(`Error updating ${field}:`, error);
-    } finally {
-      setLoader(false);
-    }
-  };
+  //   try {
+  //     const response = await updateProfile(updatedData);
+  //     if (response.status === 1) {
+  //       Toast.show({ text1: `${field.charAt(0).toUpperCase() + field.slice(1)} updated successfully!` });
+  //       setIsEditing((prev) => ({ ...prev, [field]: false }));
+  //     } else {
+  //       Toast.show({ text1: "Update failed.", type: "error" });
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error updating ${field}:`, error);
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
   
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  // const handleInputChange = (field, value) => {
+  //   setFormData((prev) => ({ ...prev, [field]: value }));
+  // };
 
   return (
     <View style={styles.container}>
@@ -155,18 +155,28 @@ const ViewProfile = () => {
                 <Icon name="phone-outline" size={25} color="#000000B2" />
                 <TextInput
                   value={formData.mobile}
-                  onChangeText={(text) => handleInputChange('mobile', text)}
+                  // onChangeText={(text) => handleInputChange('mobile', text)}
                   style={styles.input}
                 />
-                <TouchableOpacity style={styles.changeButton}   onPress={() => saveUpdatedField('mobile',formData.mobile)} >
+                <TouchableOpacity 
+                style={styles.changeButton}   
+                // onPress={() => saveUpdatedField('mobile',formData.mobile)} 
+                >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.inputWrapper}>
                 <Icon name="email-outline" size={25} color="#000000B2" />
-                <TextInput value={formData.email} style={styles.input} onChangeText={(text) => handleInputChange('email', text)} />
-                <TouchableOpacity style={styles.changeButton} onPress={() => saveUpdatedField('email',formData.email)} >
+                <TextInput
+                 value={formData.email}
+                  style={styles.input} 
+                  // onChangeText={(text) => handleInputChange('email', text)}
+                   />
+                <TouchableOpacity
+                 style={styles.changeButton} 
+                //  onPress={() => saveUpdatedField('email',formData.email)} 
+                 >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
               </View>

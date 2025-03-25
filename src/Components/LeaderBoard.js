@@ -136,7 +136,7 @@ export default function LeaderBoard() {
         </View>
       </View>
       <View style={{ flex: 6 }}>
-        {selectedTab === 'Local' ? <LocalLeaderBoard type="weekly" /> : <LocalLeaderBoard type="daily" />}
+        <LocalLeaderBoard type={selectedTab === "Local" ? "weekly" : "daily"} />
       </View>
     </>
   );

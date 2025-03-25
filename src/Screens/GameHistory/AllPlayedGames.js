@@ -13,7 +13,6 @@ import AvailableCard from '../../Components/AvailableCard';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 
 export default function AllPlayedGames() {
-
     const { isReady, loginData } = useLoginDataStorage()
     const [history, setHistory] = useState([]);
     const [loader, setLoader] = useState(false)
@@ -28,6 +27,7 @@ export default function AllPlayedGames() {
         try {
             setLoader(true)
             const response = await historyData(data._id);
+
             if (response) {
                 setHistory(response?.data);
             } else {
@@ -67,7 +67,7 @@ export default function AllPlayedGames() {
         return (<>
 
             <TouchableOpacity style={styles.container1} onPress={() => {
-                navigation.navigate('AllGameName', { game_id: item._id ,game_name:item.game_title})
+                navigation.navigate('AllGameName', { game_id: item._id ,title:item.game_title})
             }} >
                 <AvailableCard gameData={item} status={"4"} index={index}/>
             </TouchableOpacity>

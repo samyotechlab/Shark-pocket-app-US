@@ -99,13 +99,14 @@ export default function LocalGameBoard() {
     leaderBoardData();
   }, []);
 
-  const allGameHistory = async (user_id, _id) => {
+  const allGameHistory = async (user_id, _id,name) => {
+    console.log('user_id', name);
     setLoader(true);
     try {
       const response = await gameHistoryUser(user_id, game_id, _id);
       if (response) {
         setGameHistory(response?.data);
-        navigation.navigate('GameFinishHistory', { gameHistoryData: response?.data });
+        navigation.navigate('GameFinishHistory', { gameHistoryData: response?.data,user_name:name });
       }
     } catch (error) {
       Toast.show({
@@ -145,7 +146,7 @@ export default function LocalGameBoard() {
       <View style={styles.row}>
         <View style={styles.fixedColumns}>
           <Image source={Person4} style={styles.image} />
-          <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id)}>
+          <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id, item.userName)}>
             <Text style={[styles.cell, { width: 100, textDecorationLine: 'underline' }]}>{item.userName}</Text>
           </TouchableOpacity>
           <Text style={styles.cell}>{item.score}</Text>
@@ -212,8 +213,12 @@ export default function LocalGameBoard() {
                 ]}
                 renderItem={({ item, index }) => (
                   <TouchableOpacity 
-                    onPress={() => handleTouch(item.key === 'rank' ? 'Rank' : `Total ${item.value} Data`)}>
+                    onPress={() => handleTouch(item.key === 'rank' ? 'Rank' : `Total ${item.value} Data`)}
+                    style={styles.scrollableColumns}
+                    >
+                    <View style={{ width: wp('10%'),height:hp('15%'), justifyContent: 'center', alignItems: 'center',backgroundColor:'#FFFFFF70' }}>
                     <Text style={styles.headerCell}>{item.value}</Text>
+                    </View>  
                   </TouchableOpacity>
                 )}
                 keyExtractor={(item) => item.key}
@@ -231,10 +236,10 @@ export default function LocalGameBoard() {
                 }
               };
               return (
-                <View style={[styles.row, { backgroundColor: "white", opacity: 0.7 }]} key={index}>
+                <View style={[styles.row, { backgroundColor: "white", opacity: 0.5 }]} key={index}>
                   <View style={styles.fixedColumns}>
                     <Image source={Person4} style={styles.image} />
-                    <TouchableOpacity onPress={() => allGameHistory(item?.user_id, item?._id)}>
+                    <TouchableOpacity onPress={() => allGameHistory(item?.user_id, item?._id,item?.userName)}>
                       <Text style={[styles.cel, { width: 100, textDecorationLine: 'underline' }]}>{item?.userName}</Text>
                     </TouchableOpacity>
                     <Text style={styles.cel}>{item.score}</Text>
@@ -372,7 +377,11 @@ const styles = StyleSheet.create({
     width: wp('50%'),
   },
   scrollableColumns: {
-    width: wp('50%'),
+    borderRadius:hp('5%'),
+    width: wp('15%'),
+    height: wp('8%'), 
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
   cell: {
     width: wp('20%'),
@@ -392,7 +401,7 @@ const styles = StyleSheet.create({
     width: wp('20%'),
     textAlign: "center",
     fontFamily: 'Montserrat-SemiBold',
-    color: "#361911",
+    color: "black",
     fontSize: hp('1.5%'),
   },
 });

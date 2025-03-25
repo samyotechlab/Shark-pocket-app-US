@@ -7,88 +7,64 @@ import CommonHeader from './CommonHeader'
 import DailyCard from './DailyCard'
 import WeeklyCard from './WeeklyCard'
 
-
 export default function DailyWeeklyBar() {
-
   const route = useRoute();
-  const { gameData, status } = route.params
-  console.log("status",status)
-  const myGames = gameData.filter(game => game?.status === 1);
-  const myAllGames = gameData.filter(game => game?.status === 3);
+  const { gameData, status } = route.params;
   const [selectedTab, setSelectedTab] = useState('Weekly');
-  const handlePress = tab => {
-    setSelectedTab(tab);
+
+  const title = {
+    1:"My Game",
+    2:"Available Game",
+    3:"Upcoming Game",
+    4:"Game History",
+  }
+
+  const filteredGames = {
+    myGames: gameData.filter(game => game?.status === 1),
+    myAllGames: gameData.filter(game => game?.status === 3),
   };
-  const dynamicStyles = getDynamicStyles(selectedTab);
+
+  const handlePress = (tab) => setSelectedTab(tab);
+
+  const getGameData = () => {
+    if (status === '1') return gameData;
+    if (status === '2') return filteredGames.myAllGames;
+    if (status === '3') return filteredGames.myGames;
+    if (status === '4') return gameData
+  };
+
   return (
-    <LinearGradient
-      colors={['#361911', '#361911', '#6A1700']}
-      style={dynamicStyles.linearGradient}>
-      <CommonHeader title={ status === "1" ? 'My Game' : status === "2" ?'Available Game' : 'Upcoming Game'} />
-      <View style={{ marginTop: 10, flex: 1 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            padding: hp('2%'),
-            gap: wp('10%')
-          }}>
-
-          <TouchableOpacity onPress={() => handlePress('Weekly')}>
-            <Text
-              style={dynamicStyles.Weekly}>
-              Weekly Games
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('Daily')}>
-            <Text
-              style={dynamicStyles.Daily}>
-              Daily Games
-            </Text>
-          </TouchableOpacity>
-
+    <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
+      <CommonHeader title={title[status]?title[status]:"Game"} />
+      <View style={styles.container}>
+        <View style={styles.tabContainer}>
+          {['Weekly', 'Daily'].map((tab) => (
+            <TouchableOpacity key={tab} onPress={() => handlePress(tab)}>
+              <Text style={styles.tab(selectedTab === tab)}>{`${tab} Games`}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <View style={{ flex: 1 }}>
           {selectedTab === 'Daily' ? (
-            status === "1" ? (
-              <DailyCard gameData={gameData} frequencyStatus={"1"} />
-            ) : status === "2" ? (
-              <DailyCard gameData={myAllGames} frequencyStatus={"2"} />
-            ) : (
-              <DailyCard gameData={myGames} frequencyStatus={"3"} />
-            )
+            <DailyCard gameData={getGameData()} frequencyStatus={status} />
           ) : (
-            status === "1" ? (
-              <WeeklyCard gameData={gameData} frequencyStatus={"1"} />
-            ) : status === "2" ? (
-             <WeeklyCard gameData={myAllGames} frequencyStatus={"2"} />
-            ):(
-              <WeeklyCard gameData={myGames} frequencyStatus={"3"} />
-            )
+            <WeeklyCard gameData={getGameData()} frequencyStatus={status} />
           )}
-
         </View>
       </View>
     </LinearGradient>
-  )
+  );
 }
 
-const getDynamicStyles = selectedTab =>
-  StyleSheet.create({
-    linearGradient: {
-      flex: 1,
-    },
-    Daily: {
-      fontSize: 18,
-      color: selectedTab === 'Daily' ? '#FEB801' : '#FFFFFF',
-      fontFamily: selectedTab === 'Daily' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      borderBottomWidth: 3,
-      borderBottomColor: selectedTab === 'Daily' ? '#FEB801' : '#565656',
-    },
-    Weekly: {
-      fontSize: 18,
-      borderBottomWidth: 3,
-      borderBottomColor: selectedTab === 'Weekly' ? '#FEB801' : '#565656',
-      color: selectedTab === 'Weekly' ? '#FEB801' : '#FFFFFF',
-      fontFamily: selectedTab === 'Weekly' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-    }
-  });
+const styles = StyleSheet.create({
+  linearGradient: { flex: 1 },
+  container: { marginTop: hp('1%'), flex: 1 },
+  tabContainer: { flexDirection: 'row', padding: hp('1%'), justifyContent: 'space-evenly'},
+  tab: (isActive) => ({
+    fontSize: hp('2%'),
+    color: isActive ? '#FEB801' : '#FFFFFF',
+    fontFamily: isActive ? 'Montserrat-Bold' : 'Montserrat-Regular',
+    borderBottomWidth: hp('0.3%'),
+    borderBottomColor: isActive ? '#FEB801' : '#565656',
+  }),
+});
