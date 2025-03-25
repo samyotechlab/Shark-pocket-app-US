@@ -17,7 +17,7 @@ export const addExpectation = async (data) => {
             throw new Error(`Failed to store Data: ${response.statusText}`);
         }
     } catch (error) {
-        console.error('Error store data :', error.message || error);
+        console.error('Error store data in add :', error.message || error);
         throw error;
     }
 };
@@ -37,7 +37,7 @@ export const editExpectation = async ({user_id,game_id,userExpectations}) => {
             throw new Error(`Failed to store data: ${response.statusText}`);
         }
     } catch (error) {
-        console.error('Error store data', error.message || error);
+        console.error('Error store data in edit ', error.message || error);
         throw error;
     }
 };
@@ -51,7 +51,7 @@ export const getExpectation = async (user_id,game_id) => {
             console.log("response.data",response.data)
         }
     } catch (error) {
-        console.error('Error store data', error.message || error);
+        console.error('Error store data in get', error.message || error);
         throw error;
     }
 };

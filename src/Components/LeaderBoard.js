@@ -12,7 +12,7 @@ import Iconics from 'react-native-vector-icons/Ionicons';
 import GameInfoModal from './GameInfoModal';
 
 export default function LeaderBoard() {
-  const [selectedTab, setSelectedTab] = useState('Local');
+  const [selectedTab, setSelectedTab] = useState('Weekly');
   const [modalVisible, setModalVisible] = useState(false);
 
 
@@ -22,7 +22,7 @@ export default function LeaderBoard() {
 
   useFocusEffect(
     useCallback(() => {
-      setSelectedTab('Local');
+      setSelectedTab('Weekly');
     }, []),
   );
 
@@ -62,14 +62,14 @@ export default function LeaderBoard() {
             <View style={{ flex: 1, marginHorizontal: hp('0.5%') }}>
               <TouchableOpacity
                 onPress={() => {
-                  handlePress('Local');
+                  handlePress('Weekly');
                 }}
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: hp('1%'),
                   backgroundColor:
-                    selectedTab === 'Local'
+                    selectedTab === 'Weekly'
                       ? 'rgba(255, 255, 255, 0.1)'
                       : '#361911',
                   height: hp('5%'),
@@ -77,13 +77,13 @@ export default function LeaderBoard() {
                 <Text
                   style={{
                     fontSize: 20,
-                    color: selectedTab === 'Local' ? 'white' : '#FFFFFFB2',
+                    color: selectedTab === 'Weekly' ? 'white' : '#FFFFFFB2',
                     fontFamily: 'Montserrat-Medium',
                   }}>
                   Weekly
                 </Text>
               </TouchableOpacity>
-              {selectedTab === 'Local' && (
+              {selectedTab === 'Weekly' && (
                 <LinearGradient
                   colors={['#FEB801', '#361911']}
                   start={{ x: 0, y: 0 }}
@@ -99,14 +99,14 @@ export default function LeaderBoard() {
             <View style={{ flex: 1, marginHorizontal: hp('0.5%') }}>
               <TouchableOpacity
                 onPress={() => {
-                  handlePress('Global');
+                  handlePress('Daily');
                 }}
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: hp('1%'),
                   backgroundColor:
-                    selectedTab === 'Global'
+                    selectedTab === 'Daily'
                       ? 'rgba(255, 255, 255, 0.1)'
                       : '#361911',
                   height: hp('5%'),
@@ -114,13 +114,13 @@ export default function LeaderBoard() {
                 <Text
                   style={{
                     fontSize: 20,
-                    color: selectedTab === 'Global' ? 'white' : '#FFFFFFB2',
+                    color: selectedTab === 'Daily' ? 'white' : '#FFFFFFB2',
                     fontFamily: 'Montserrat-Medium',
                   }}>
                   Daily
                 </Text>
               </TouchableOpacity>
-              {selectedTab === 'Global' && (
+              {selectedTab === 'Daily' && (
                 <LinearGradient
                   colors={['#361911', '#FEB801']}
                   start={{ x: 0, y: 0 }}
@@ -136,7 +136,7 @@ export default function LeaderBoard() {
         </View>
       </View>
       <View style={{ flex: 6 }}>
-        <LocalLeaderBoard type={selectedTab === "Local" ? "weekly" : "daily"} />
+        <LocalLeaderBoard type={selectedTab === "Weekly" ? "weekly" : "daily"} />
       </View>
     </>
   );

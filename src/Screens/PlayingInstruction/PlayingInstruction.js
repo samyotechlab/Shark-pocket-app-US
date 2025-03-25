@@ -40,6 +40,7 @@ export default function PlayingInstruction() {
   const [loader, setLoader] = useState(false);
   const [expectation, setExpectation] = useState('')
   const [expectData, setExpectData] = useState({})
+  const [userExpectation, setUserExpectation] = useState(false)
 
   const { loginData, isReady } = useLoginDataStorage();
   const navigation = useNavigation();
@@ -85,7 +86,6 @@ export default function PlayingInstruction() {
   const stateList = async () => {
     try {
       const response = await state();
-      console.log("state=======>",response)
       checkCurrentState(response.data)
     } catch (error) {
       console.log("error", error)
@@ -96,8 +96,6 @@ export default function PlayingInstruction() {
       const response = await fetch("http://ip-api.com/json");
       const data = await response.json();
       const currentState = data.regionName;
-      console.log("dtaaaaa-->",data)
-      console.log("---->",currentState)
       const isStateInList = states.some((state) => state?.name?.toLowerCase() === currentState?.toLowerCase() ||state?.name?.includes(currentState) );
       if (!isStateInList) {
         setVisibles(true);
@@ -111,8 +109,10 @@ export default function PlayingInstruction() {
   const showExpectations = async () => {
     try {
       const response = await getExpectation(data._id, game_id)
+      console.log("response", response)
       setExpectData(response)
       if (response?.dataShow) {
+        setUserExpectation(response?.dataShow);
         setExpectation(response?.data?.userExpectations);
       }
     } catch (error) {
@@ -136,9 +136,12 @@ export default function PlayingInstruction() {
   const handleStartGame = async () => {
     let responseData;
     if (question && expectation == "") {
+      console.log("question", question)
+      console.log("expectation", expectation)
        return handleShow();
     }
       if (selectedNumber && question === undefined) {
+        console.log("selectedNumber", selectedNumber)
         navigation.navigate('GameScreen', {
           selectedNumber: selectedNumber,
           game_id: game_id,

@@ -148,7 +148,8 @@ export default function LocalGameBoard() {
           <Image source={Person4} style={styles.image} />
           <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id, item.userName)}>
             <Text style={[styles.cell, { width: 100, textDecorationLine: 'underline' }]}>{item.userName}</Text>
-          </TouchableOpacity>
+            <Text style={[styles.cel, { width: 100,fontSize:11,color:'green',marginTop:5}]}>Winnings : 3000</Text>
+            </TouchableOpacity>
           <Text style={styles.cell}>{item.score}</Text>
         </View>
         <FlatList
@@ -241,6 +242,7 @@ export default function LocalGameBoard() {
                     <Image source={Person4} style={styles.image} />
                     <TouchableOpacity onPress={() => allGameHistory(item?.user_id, item?._id,item?.userName)}>
                       <Text style={[styles.cel, { width: 100, textDecorationLine: 'underline' }]}>{item?.userName}</Text>
+                      <Text style={[styles.cel, { width: 100,fontSize:11,color:'green',marginTop:5}]}>Winnings : 3000</Text>
                     </TouchableOpacity>
                     <Text style={styles.cel}>{item.score}</Text>
                   </View>

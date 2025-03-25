@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const DailyCard = ({ gameData, frequencyStatus }) => {
   const navigation = useNavigation();
   const dailyGameData = gameData?.filter(item => item.frequency === 'daily') || [];
+  console.log('dailyGameData', dailyGameData);
 
   const handleNavigation = (item) => {
     const navigationMap = {

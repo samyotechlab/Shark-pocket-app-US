@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import { gameList } from '../Service/Game'
@@ -8,7 +8,7 @@ import AvailableCard from './AvailableCard'
 import Toast from 'react-native-toast-message'
 import useLoginDataStorage from '../Service/CustomStorageHook'
 
-export default function LocalLeaderBoard({type}) {
+export default function LocalLeaderBoard({ type }) {
   const [loader, setLoader] = useState(false)
   const [weeklyData, setWeeklyData] = useState([])
   const [dailyData, setDailyData] = useState([])
@@ -23,8 +23,10 @@ export default function LocalLeaderBoard({type}) {
     try {
       const response = await gameList(user_id);
       if (response) {
-       const weekData = response.data?.filter((item)=>item.frequency === "weekly")
-       const dayData = response.data?.filter((item)=>item.frequency === "daily")
+        const weekData = response.data?.filter((item) => item.frequency === "weekly")
+        const dayData = response.data?.filter((item) => item.frequency === "daily")
+        console.log("weekData", weekData)
+        console.log("dayData", dayData)
         setWeeklyData(weekData);
         setDailyData(dayData)
       } else {
@@ -51,19 +53,19 @@ export default function LocalLeaderBoard({type}) {
     }
   };
 
-    useEffect(() => {
-      const data = isReady && loginData && loginData?.data;
-      if (loginData && isReady) {
-        availableGames(data._id);
-        setUserId(data._id);
-      }
-    }, [isReady, loginData]);
+  useEffect(() => {
+    const data = isReady && loginData && loginData?.data;
+    if (loginData && isReady) {
+      availableGames(data._id);
+      setUserId(data._id);
+    }
+  }, [isReady, loginData]);
 
   const renderItem = ({ item, index }) => {
     return (<>
-      <View style={{ flex: 1}}>
+      <View style={{ flex: 1 }}>
         <TouchableOpacity style={styles.container1} onPress={() => {
-          navigation.navigate('LocalGameBoard', { game_id: item._id ,user_id:userId })
+          navigation.navigate('LocalGameBoard', { game_id: item._id, user_id: userId })
         }} >
           <AvailableCard gameData={item} status={"3"} index={index} />
         </TouchableOpacity>
@@ -73,24 +75,33 @@ export default function LocalLeaderBoard({type}) {
   return (
     <View style={styles.container}>
       {
-      weeklyData ? 
-        (!loader ? (<FlatList
-          data={type === "weekly" ? weeklyData :dailyData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}
-        />) : (<AnimatedLoader />)):(
+        loader ? (
+          <AnimatedLoader />
+        ) : type === "daily" && dailyData.length === 0 ? (
           <View style={styles.emptyContainer}>
-                      <Text style={styles.emptyText}>
-                        No games or tickets are currently available.
-                      </Text>
-                    </View>
+            <Text style={styles.emptyText}>
+              No games are currently available.
+            </Text>
+          </View>
+        ) : type === "weekly" && weeklyData.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              No games are currently available.
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={type === "weekly" ? weeklyData : dailyData}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}
+          />
         )
       }
-  <Toast ref={Toast.setRef} />
+      <Toast ref={Toast.setRef} />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
