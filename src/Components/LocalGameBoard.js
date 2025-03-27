@@ -27,6 +27,9 @@ import RangeInfoModal from './RangeInfoModal';
 import CommonHeader from './CommonHeader';
 import { gameHistoryUser } from '../Service/GameHistory';
 
+// Create Animated FlatList component
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 export default function LocalGameBoard() {
   const route = useRoute();
   const { game_id, user_id } = route.params;
@@ -41,36 +44,47 @@ export default function LocalGameBoard() {
   const [selectedTitle, setSelectedTitle] = useState('');
 
   const headerScrollRef = useRef(null);
-  const rowScrollRefs = useRef({});
+  // Initialize rowScrollRefs as a ref containing a Map
+  const rowScrollRefs = useRef(new Map());
   const scrollX = useRef(new Animated.Value(0)).current;
+  const isScrolling = useRef(false);
 
-  const handleHeaderScroll = (event) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    Object.values(rowScrollRefs.current).forEach((ref) => {
-      if (ref) {
-        ref.scrollToOffset({ offset: offsetX, animated: false });
-      }
-    });
-  };
-
-  const handleRowScroll = (rowId) => (event) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    if (headerScrollRef.current) {
-      headerScrollRef.current.scrollToOffset({ offset: offsetX, animated: false });
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+    {
+      useNativeDriver: true,
+      listener: ({ nativeEvent }) => {
+        if (!isScrolling.current) {
+          isScrolling.current = true;
+          syncScroll(nativeEvent.contentOffset.x);
+          setTimeout(() => {
+            isScrolling.current = false;
+          }, 50); // Debounce to prevent excessive updates
+        }
+      },
     }
-    Object.entries(rowScrollRefs.current).forEach(([id, ref]) => {
-      if (id !== rowId && ref) {
-        ref.scrollToOffset({ offset: offsetX, animated: false });
+  );
+
+  const syncScroll = (offsetX) => {
+    const scrollOptions = { offset: offsetX, animated: false };
+    if (headerScrollRef.current) {
+      headerScrollRef.current.scrollToOffset(scrollOptions);
+    }
+    rowScrollRefs.current.forEach((ref) => {
+      if (ref) {
+        ref.scrollToOffset(scrollOptions);
       }
     });
   };
 
-  const data = [
-    { id: "1", image: "https://via.placeholder.com/40", userName: "John", score: 150, rank: 1, A: 10, B: 20, C: 30, D: 40 },
-    { id: "2", image: "https://via.placeholder.com/40", userName: "Jane", score: 140, rank: 2, A: 15, B: 25, C: 35, D: 45 },
-    { id: "3", image: "https://via.placeholder.com/40", userName: "Mike", score: 130, rank: 3, A: 12, B: 22, C: 32, D: 42 },
-    { id: "4", image: "https://via.placeholder.com/40", userName: "Anna", score: 120, rank: 4, A: 18, B: 28, C: 38, D: 48 },
-  ];
+  useEffect(() => {
+    const listener = scrollX.addListener(({ value }) => {
+      if (!isScrolling.current) {
+        syncScroll(value);
+      }
+    });
+    return () => scrollX.removeListener(listener);
+  }, []);
 
   const leaderBoardData = async () => {
     setLoader(true);
@@ -99,14 +113,13 @@ export default function LocalGameBoard() {
     leaderBoardData();
   }, []);
 
-  const allGameHistory = async (user_id, _id,name) => {
-    console.log('user_id', name);
+  const allGameHistory = async (user_id, _id, name) => {
     setLoader(true);
     try {
       const response = await gameHistoryUser(user_id, game_id, _id);
       if (response) {
         setGameHistory(response?.data);
-        navigation.navigate('GameFinishHistory', { gameHistoryData: response?.data,user_name:name });
+        navigation.navigate('GameFinishHistory', { gameHistoryData: response?.data, user_name: name });
       }
     } catch (error) {
       Toast.show({
@@ -130,15 +143,24 @@ export default function LocalGameBoard() {
     }
   };
 
-  const handleTouch = (title) => {
-    setSelectedTitle(title);
-    setModalVisibles(true);
+  const titles = {
+    A: 'Total Super Number Selected',
+    B: 'Total Even Number Selected',
+    C: 'Total Prime Number Selected',
+    D: 'Total Super Number Score',
+  };
+
+  const handleTouch = (key) => {
+    if (titles[key]) {
+      setSelectedTitle(titles[key]);
+      setModalVisibles(true);
+    }
   };
 
   const renderRow = ({ item }) => {
     const rowRef = (ref) => {
       if (ref) {
-        rowScrollRefs.current[item.id] = ref;
+        rowScrollRefs.current.set(item.id || item._id || `row-${Math.random()}`, ref); // Ensure unique key
       }
     };
 
@@ -148,11 +170,15 @@ export default function LocalGameBoard() {
           <Image source={Person4} style={styles.image} />
           <TouchableOpacity onPress={() => allGameHistory(item.user_id, item._id, item.userName)}>
             <Text style={[styles.cell, { width: 100, textDecorationLine: 'underline' }]}>{item.userName}</Text>
-            <Text style={[styles.cel, { width: 100,fontSize:11,color:'green',marginTop:5}]}>Winnings : 3000</Text>
-            </TouchableOpacity>
+            {parseInt(item.winning_amount) > 0 && (
+              <Text style={[styles.cel, { width: 100, fontSize: 11, color: 'green', marginTop: 5 }]}>
+                Winnings : {parseInt(item.winning_amount)}
+              </Text>
+            )}
+          </TouchableOpacity>
           <Text style={styles.cell}>{item.score}</Text>
         </View>
-        <FlatList
+        <AnimatedFlatList
           ref={rowRef}
           horizontal
           data={[
@@ -165,9 +191,11 @@ export default function LocalGameBoard() {
           renderItem={({ item }) => <Text style={styles.cell}>{item.value}</Text>}
           keyExtractor={(item) => item.key}
           showsHorizontalScrollIndicator={false}
-          onScroll={handleRowScroll(item.id)}
-          scrollEventThrottle={1}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
           decelerationRate="fast"
+          bounces={false}
+          overScrollMode="never"
         />
       </View>
     );
@@ -181,8 +209,8 @@ export default function LocalGameBoard() {
         style={styles.linearGradient}>
         <View style={{ flex: 0.15 }}>
           <CommonHeader title={'Leader Board'} />
-          <TouchableOpacity 
-            style={{ position: 'absolute', top: hp('6%'), right: hp('1%') }} 
+          <TouchableOpacity
+            style={{ position: 'absolute', top: hp('6%'), right: hp('1%') }}
             onPress={() => {
               setModalVisible(true);
               showRange();
@@ -198,55 +226,62 @@ export default function LocalGameBoard() {
           <View style={styles.headerContainer}>
             <View style={styles.header}>
               <View style={styles.fixedColumns}>
-                <Text style={styles.headerCell}>Image</Text>
-                <Text style={styles.headerCell}>Username</Text>
-                <Text style={styles.headerCell}>Points</Text>
+                <Text style={[styles.headerCell, { width: wp('20%') }]}>Image</Text>
+                <Text style={[styles.headerCell, { width: wp('20%') }]}>Username</Text>
+                <Text style={[styles.headerCell, { width: wp('20%') }]}>Points</Text>
               </View>
-              <FlatList
-                ref={headerScrollRef}
-                horizontal
-                data={[
-                  { key: 'rank', value: 'Rank' },
-                  { key: 'A', value: 'A' },
-                  { key: 'B', value: 'B' },
-                  { key: 'C', value: 'C' },
-                  { key: 'D', value: 'D' },
-                ]}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity 
-                    onPress={() => handleTouch(item.key === 'rank' ? 'Rank' : `Total ${item.value} Data`)}
-                    style={styles.scrollableColumns}
+              <View style={{ flex: 1, marginLeft: hp('1%') }}>
+                <AnimatedFlatList
+                  ref={headerScrollRef}
+                  horizontal
+                  data={[
+                    { key: 'rank', value: 'Rank' },
+                    { key: 'A', value: 'A' },
+                    { key: 'B', value: 'B' },
+                    { key: 'C', value: 'C' },
+                    { key: 'D', value: 'D' },
+                  ]}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      disabled={item.key === 'rank'}
+                      onPress={() => handleTouch(item.key)}
+                      style={item.key === 'rank' ? styles.scrollableColumns : [styles.scrollableColumns, { backgroundColor: '#FFFFFF80' }]}
                     >
-                    <View style={{ width: wp('10%'),height:hp('15%'), justifyContent: 'center', alignItems: 'center',backgroundColor:'#FFFFFF70' }}>
-                    <Text style={styles.headerCell}>{item.value}</Text>
-                    </View>  
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.key}
-                showsHorizontalScrollIndicator={false}
-                onScroll={handleHeaderScroll}
-                scrollEventThrottle={1}
-                decelerationRate="fast"
-              />
+                      <Text style={styles.headerCell}>{item.value}</Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item.key}
+                  showsHorizontalScrollIndicator={false}
+                  onScroll={handleScroll}
+                  scrollEventThrottle={16}
+                  decelerationRate="fast"
+                  bounces={false}
+                  overScrollMode="never"
+                />
+              </View>
             </View>
 
             {filteredData.map((item, index) => {
               const rowRef = (ref) => {
                 if (ref) {
-                  rowScrollRefs.current[item?.id || index] = ref;
+                  rowScrollRefs.current.set(item?.id || item?._id || `filtered-${index}`, ref); // Unique key for filtered rows
                 }
               };
               return (
                 <View style={[styles.row, { backgroundColor: "white", opacity: 0.5 }]} key={index}>
                   <View style={styles.fixedColumns}>
                     <Image source={Person4} style={styles.image} />
-                    <TouchableOpacity onPress={() => allGameHistory(item?.user_id, item?._id,item?.userName)}>
+                    <TouchableOpacity onPress={() => allGameHistory(item?.user_id, item?._id, item?.userName)}>
                       <Text style={[styles.cel, { width: 100, textDecorationLine: 'underline' }]}>{item?.userName}</Text>
-                      <Text style={[styles.cel, { width: 100,fontSize:11,color:'green',marginTop:5}]}>Winnings : 3000</Text>
+                      {item.winning_amount > 0 && (
+                        <Text style={[styles.cel, { width: 100, fontSize: 11, color: 'green', marginTop: 5 }]}>
+                          Winnings : {item.winning_amount}
+                        </Text>
+                      )}
                     </TouchableOpacity>
                     <Text style={styles.cel}>{item.score}</Text>
                   </View>
-                  <FlatList
+                  <AnimatedFlatList
                     ref={rowRef}
                     horizontal
                     data={[
@@ -259,9 +294,11 @@ export default function LocalGameBoard() {
                     renderItem={({ item }) => <Text style={styles.cel}>{item.value}</Text>}
                     keyExtractor={(item) => item.key}
                     showsHorizontalScrollIndicator={false}
-                    onScroll={handleRowScroll(item?.id || index)}
-                    scrollEventThrottle={1}
+                    onScroll={handleScroll}
+                    scrollEventThrottle={16}
                     decelerationRate="fast"
+                    bounces={false}
+                    overScrollMode="never"
                   />
                 </View>
               );
@@ -269,7 +306,7 @@ export default function LocalGameBoard() {
 
             <FlatList
               data={gameData}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id || item._id || `game-${Math.random()}`} // Ensure unique keyExtractor
               renderItem={renderRow}
               showsVerticalScrollIndicator={false}
             />
@@ -363,7 +400,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "white",
     flexDirection: "row",
-    paddingVertical: hp('1.5%'),
+    height: 50
   },
   row: {
     flexDirection: "row",
@@ -376,14 +413,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: 'center',
-    width: wp('50%'),
+    width: wp('55%'),
   },
   scrollableColumns: {
-    borderRadius:hp('5%'),
     width: wp('15%'),
-    height: wp('8%'), 
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    borderRadius: hp('1%'),
+    marginHorizontal: 10,
+    margin: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cell: {
     width: wp('20%'),
@@ -393,7 +431,6 @@ const styles = StyleSheet.create({
     fontSize: hp('1.5%'),
   },
   headerCell: {
-    width: wp('20%'),
     color: "white",
     textAlign: "center",
     fontFamily: 'Montserrat-Bold',

@@ -22,6 +22,7 @@ export default function Winning(props) {
     setLoader(true)
     try {
       const response = await WinningList(user_id);
+      console.log("response====>",response)
       setWinningData(response?.data);
     } catch (error) {
       console.log('error', error);

@@ -79,12 +79,13 @@ const AddCashScreen = () => {
       const encryptedData = encryptData(key, amount);
       try {
         const response = await TransactionStore(usersData?._id, encryptedData);
+        console.log('response', response);
         if(response.status === 0){
           initPhonePeSDK(response);
           setData(response);
         }else{
           addBonusWallet(response)
-          initPhonePeSDK(response);
+          initPhonePeSDK(response)
           setData(response);
         }
       } catch (error) {
@@ -97,8 +98,10 @@ const AddCashScreen = () => {
   };
 
   const addBonusWallet = async (res) => {
+    console.log('res', res)
     try {
       const response = await bonusWallet(res);
+      console.log('response', response)
     } catch (error) {
       console.log("error", error)
     }
@@ -117,6 +120,7 @@ const AddCashScreen = () => {
   };
 
   const initPhonePeSDK = response => {
+    console.log('response', response.transaction_id);
     PhonePePaymentSDK.init(
       response.environment_type,
       response.merchant_id,
@@ -126,9 +130,9 @@ const AddCashScreen = () => {
       .then(result => {
         setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
         handleStartTransaction(
-          response.base64,
-          response.checksum,
-          response.callBack_url,
+          response?.base64,
+          response?.checksum,
+          response?.callBack_url,
           response?.transaction_id,
         );
       })

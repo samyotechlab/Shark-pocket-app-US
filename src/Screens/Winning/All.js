@@ -28,15 +28,18 @@ export default function All({ winningData }) {
   };
 
   const renderTransaction = ({ item }) => {
+    console.log("item",item)  
     const isDebit = item.type === 0;
+
+    console.log("isDebit",isDebit)
 
     return (
       <TouchableOpacity
         style={[
           styles.itemContainer,
         ]}
-        disabled={!isDebit}
-        onPress={() => handleNavigation(item)}
+        disabled
+        // onPress={() => handleNavigation(item)}
       >
         <View
           style={[
@@ -65,7 +68,7 @@ export default function All({ winningData }) {
           <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
         </View>
         <View>
-          <Text style={styles.amount}>₹{item.winning_amount || '₹0'}</Text>
+          <Text style={styles.amount}>₹{isDebit ? parseFloat(item?.user_amount ?? 0).toFixed(2) :parseFloat(item?.winning_amount ?? 0).toFixed(2) || '0'}</Text>
         </View>
       </TouchableOpacity>
     );

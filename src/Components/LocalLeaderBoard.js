@@ -72,7 +72,7 @@ export default function LocalLeaderBoard({ type }) {
       </View>
     </>)
   }
-  return (
+    return (
     <View style={styles.container}>
       {
         loader ? (

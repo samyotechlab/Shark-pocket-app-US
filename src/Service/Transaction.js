@@ -18,7 +18,7 @@ export const TransactionStore = async (user_id, encryptedData) => {
     try {
       const response = await apiInstance.post(Config.Bonus_wallet,{
         user_id:data.user_id,
-        transaction_id:data._id,
+        transaction_id:data.transaction_id,
         actual_amt:data.actual_amount,
         gst_amt:data.gst
       });

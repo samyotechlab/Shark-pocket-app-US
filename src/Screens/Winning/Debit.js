@@ -6,7 +6,6 @@ import {
 } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 
-// Utility to group transactions by date
 const groupByDateAndType = (data) => {
   return data.reduce((acc, item) => {
     const date = item.created_at.split(' ')[0];
@@ -26,7 +25,6 @@ export default function Debit({winningData}) {
 
   // Group walletData by date
   const groupedData = groupByDateAndType(debitTransactions);
-
 
   const handleNavigation = () => {
     navigation.navigate('DepositeDetails');
@@ -54,7 +52,7 @@ export default function Debit({winningData}) {
         <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
       </View>
       <View>
-        <Text style={styles.amount}>₹{item.winning_amount || '₹0'}</Text>
+          <Text style={styles.amount}>₹{ parseFloat(item?.user_amount ?? 0).toFixed(2) }</Text>
       </View>
     </TouchableOpacity>
   );
