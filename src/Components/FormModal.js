@@ -32,9 +32,11 @@ export default function FormModal({ visible, onClose, userData, setVisible,bankD
     };
 
     const verifyBankDetails = async () => {
+        console.log("userData",userData.mobile)
         const obj = {
             user_id: userData._id,
             name: userData.name,
+            mobileNumber:userData.mobile,
             bank_account: bankAccounts.account_no,
             ifsc: bankAccounts.ifsc_code,
         };

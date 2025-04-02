@@ -17,7 +17,8 @@ import { storeTicket } from '../../Service/Tickets';
 const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
-  const { user_id, status, amounts,ticket_id,game_id} = route.params
+  const { user_id, status, amounts, ticket_id, game_id } = route.params
+  console.log("amounts", amounts)
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
   const [data1, setData] = useState({});
@@ -70,6 +71,7 @@ const AddCashScreen = () => {
   );
 
   const handleAddCash = async () => {
+    setLoader(true);
     if (amount) {
       const mobileNumber = usersData?.mobile;
       const username = usersData?.name;
@@ -80,15 +82,16 @@ const AddCashScreen = () => {
       try {
         const response = await TransactionStore(usersData?._id, encryptedData);
         console.log('response', response);
-        if(response.status === 0){
+        if (response.status === 0) {
           initPhonePeSDK(response);
           setData(response);
-        }else{
+        } else {
           addBonusWallet(response)
           initPhonePeSDK(response)
           setData(response);
         }
       } catch (error) {
+        setLoader(false);
         console.log('error', error);
       }
     } else {
@@ -167,7 +170,7 @@ const AddCashScreen = () => {
           setisLoading(false);
           if (response?.data?.status == 1) {
             setIsPaymentSuccess("success")
-            if(status === 1){ 
+            if (status === 1) {
               handlePurchase();
               setButtonText("Start Game")
             }
@@ -195,7 +198,7 @@ const AddCashScreen = () => {
         !loader ? (<>
           <View style={styles.container}>
             <View style={styles.header}>
-              <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} >
                 <Iconics name="chevron-back" size={wp("7%")} color={"white"} />
               </TouchableOpacity>
               <View style={{ flex: 1, marginRight: hp('5%') }}>
@@ -237,7 +240,7 @@ const AddCashScreen = () => {
                     </TouchableOpacity>
                   ))}
                 </View>
-                <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash}>
+                <TouchableOpacity style={styles.withdrawButton} onPress={handleAddCash} >
                   <Text style={styles.withdrawButtonText}>ADD CASH</Text>
                 </TouchableOpacity>
               </View>
@@ -283,11 +286,11 @@ const AddCashScreen = () => {
           setCheckPaymentStatus={setCheckPaymentStatus}
           amount={amount}
           date={formattedDate}
-          buttonText = {buttonText}
-          toast = {toast}
-          ticket_id = {ticket_id}
-          game_id = {game_id}
-          user_id = {user_id}
+          buttonText={buttonText}
+          toast={toast}
+          ticket_id={ticket_id}
+          game_id={game_id}
+          user_id={user_id}
         />
 
       </>

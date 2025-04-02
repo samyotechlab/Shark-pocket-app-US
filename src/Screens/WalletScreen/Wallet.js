@@ -12,6 +12,7 @@ import { userDetail } from '../../Service/Login';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import AlertDialogRed from '../../Components/AlertDialogRed';
 
 const WalletScreen = () => {
   const navigation = useNavigation();
@@ -20,6 +21,8 @@ const WalletScreen = () => {
   const [dataUser, setData] = useState({});
   const data = isReady && loginData && loginData?.data;
   const [refreshing, setRefreshing] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const  [message,setMessage] = useState("")
 
   const refreshData = () => {
     setRefreshing(true);
@@ -63,8 +66,17 @@ const WalletScreen = () => {
 
   const total_amount = (dataUser?.total_balance) + (dataUser?.bonus_wallet) + (dataUser?.total_earning)
   
-  const handleNavigation = (name, user_id) => {
-    navigation.navigate(name, user_id);
+  const handleNavigation = (name, user_id,{check}) => {
+    if(check==1){
+      if(dataUser?.is_aadhar_verified==0){
+        setIsModalVisible(true);
+        setMessage("Please verify your aadhar card to proceed further")
+      }else{
+        navigation.navigate(name, user_id);
+      }
+    }else{
+      navigation.navigate(name, user_id);
+    }
   };
   return (
     <LinearGradient
@@ -130,10 +142,13 @@ const WalletScreen = () => {
                       <Text style={styles.label}>Deposit</Text>
                       <Text style={styles.amount}>₹ {dataUser?.total_balance || 0}</Text>
                     </View>
+                    
                     <TouchableOpacity
                       style={{ flex: 1, marginRight: hp('1%') }}
                       onPress={() => {
-                        handleNavigation('AddCash', { user_id: dataUser?._id, balance: dataUser?.total_balance, status: 2 });
+                        handleNavigation('AddCash',
+                           { user_id: dataUser?._id, balance: dataUser?.total_balance, status: 2 },
+                           {check:1});
                       }}>
                       <LinearGradient
                         colors={['#67FF00', '#67FF00', '#3E9900']}
@@ -205,7 +220,9 @@ const WalletScreen = () => {
                     <TouchableOpacity
                       style={{ flex: 1, marginRight: hp('1%') }}
                       onPress={() => {
-                        handleNavigation("WithdrawWallet", { dataUser: dataUser })
+                        handleNavigation("WithdrawWallet",
+                           { dataUser: dataUser },
+                           {check:2})
                       }}>
                       <View
                         style={[styles.withdrawButton, { backgroundColor: '#FFFFFF33', }]} >
@@ -223,7 +240,9 @@ const WalletScreen = () => {
                 <TouchableOpacity
                   style={styles.transactionContainer}
                   onPress={() => {
-                    handleNavigation('WalletDetails', { user_id: dataUser?._id });
+                    handleNavigation('WalletDetails',
+                       { user_id: dataUser?._id },
+                       {check:3});
                   }}>
                   <LinearGradient
                     colors={['#3E180E1A', '#FFFFFF1A']}
@@ -262,6 +281,9 @@ const WalletScreen = () => {
             </View>)
         }
       </ScrollView>
+      <AlertDialogRed visible={isModalVisible} onClose={() => setIsModalVisible(false)} message={message} onOkPress={() =>{
+         setIsModalVisible(false)
+         navigation.navigate("AadharDetail",{ user_id: data._id, mobile: dataUser.mobile })}} />
     </LinearGradient>
   );
 };

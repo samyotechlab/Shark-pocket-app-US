@@ -48,7 +48,6 @@ export default function Tickets({ gameData }) {
   const [modalVisible, setModalVisible] = useState(false);
   const route = useRoute();
   const { game_id } = route.params;
-  console.log("game_id", game_id)
   const [refreshing, setRefreshing] = useState(false);
   const refreshData = () => {
     setRefreshing(true);
@@ -57,6 +56,11 @@ export default function Tickets({ gameData }) {
       setRefreshing(false);
     }, 2000);
   };
+
+  async function checkState() {
+    const isStatePresent = await stateList();
+    return isStatePresent;
+  }
 
   const userData = async (loginData) => {
     setLoader(true);
@@ -92,7 +96,6 @@ export default function Tickets({ gameData }) {
 
   const renderItem = ({ item }) => {
     const isPurchased = purchasedTickets[item._id] || item.is_bought === 1;
-
     const handlePurchase = async () => {
       try {
         setVisible(false);
@@ -102,8 +105,9 @@ export default function Tickets({ gameData }) {
             (Number(response.total_balance) || 0) +
             (Number(response.total_earning) || 0) +
             (Number(response.bonus_wallet) || 0);
-          const ticket_price = item.price
+          const ticket_price = selectedItem.price
           const balance = ticket_price - total_price
+          console.log('balance', balance)
           setBalance(balance)
           setVisibles(true);
           setMessage(response.message);
@@ -129,6 +133,7 @@ export default function Tickets({ gameData }) {
     }
 
     const handlePurchaseModal = async () => {
+      const isValidState = await checkState();
       if (usersData?.is_aadhar_verified === 0) {
         setVisible(true);
         setMessage('Aadhar not Verified , Firstly Aadhar Verification...');
@@ -137,9 +142,10 @@ export default function Tickets({ gameData }) {
         setCloseVisible(true);
         setMessage('State is Not Valid');
       }
-      else if (!stateList()) {
+      else if (!isValidState) {
+        console.log("State is not valid", isValidState);
         setCloseVisible(true);
-        setMessage('State is Not Valid');
+        setMessage('State is Not Valid=====>');
       }
       else {
         setSelectedItem(item);
@@ -258,15 +264,15 @@ export default function Tickets({ gameData }) {
         {
           ticketData ? (!loader ? (
             <FlatList
-            data={ticketData}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContainer}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
-            }
-          />
+              data={ticketData}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scrollContainer}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
+              }
+            />
           ) : (<AnimatedLoader />)) : (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>

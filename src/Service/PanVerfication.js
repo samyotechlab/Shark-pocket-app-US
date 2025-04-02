@@ -6,8 +6,7 @@ export const PanVerificationData = async verificationData => {
     try {
       const response = await apiInstance.post(`${Config.PanVerification}`, {
         verificationData: verificationData,
-      });
-      
+      });  
       return response.data;
     } catch (error) {
       console.log('error------------', error.message);
@@ -16,7 +15,6 @@ export const PanVerificationData = async verificationData => {
   };
 
 export const PanDocumentUpload = async (userData)=>{
-
   try {
     const response = await apiMultipartInstance.post(`${Config.Pan_Document}`, userData);
     if (response.status === 200) {
