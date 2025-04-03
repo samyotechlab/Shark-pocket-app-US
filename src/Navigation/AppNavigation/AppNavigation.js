@@ -6,7 +6,6 @@ import Login from '../../Screens/LoginScreen/Login';
 import OtpVerify from '../../Screens/LoginScreen/OtpVerify';
 import Disclaimer from '../../Screens/LoginScreen/Disclaimer';
 import TabNavigation from '../TabNavigation';
-import Home from '../../Screens/HomeScreen/Home';
 import LocalGameBoard from '../../Components/LocalGameBoard';
 import WalletDetails from '../../Screens/WalletScreen/WalletDetails';
 import AvailableGame from '../../Screens/AvailableGame/AvailableGame';

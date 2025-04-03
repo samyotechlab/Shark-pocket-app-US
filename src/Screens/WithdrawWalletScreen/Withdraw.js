@@ -13,6 +13,7 @@ import Iconic from 'react-native-vector-icons/Ionicons';
 import { bankAccountDetails } from '../../Service/Bank';
 import { encryptData, generateKey } from '../../Utilities/utilies';
 import { useNavigation } from '@react-navigation/native';
+import { Checkbox } from 'react-native-paper'; 
 
 export default function Withdraw({ dataUser }) {
   const navigation = useNavigation();
@@ -95,17 +96,17 @@ export default function Withdraw({ dataUser }) {
     const key = await generateKey(mobileNumber, username, aadharNumber, userId);
     const data = {
       amount: amount,
+      pay_amount: tdsData.current_withdraw,
       user_id: dataUser?._id,
-      name:dataUser?.name,
+      name: dataUser?.name,
       ifsc: selectedBank.ifsc_code,
       account_number: selectedBank.account_no,
-      contact_id:dataUser?.razorpay_contact_id
+      contact_id: dataUser?.razorpay_contact_id
     }
-    const encryptedData =await encryptData(key, data);
+    const encryptedData = await encryptData(key, data);
     try {
       const response = await withdrawCash(dataUser._id, encryptedData);
-      console.log("response")
-      if(response.status === 0){
+      if (response.status === 0) {
         Toast.show({
           type: 'error',
           position: 'top',
@@ -113,7 +114,7 @@ export default function Withdraw({ dataUser }) {
           text2: response.message,
           visibilityTime: 3000
         })
-      }else{
+      } else {
         setModalVisible(!isModalVisible);
         Toast.show({
           type: 'success',
@@ -123,7 +124,7 @@ export default function Withdraw({ dataUser }) {
           visibilityTime: 3000
         })
       }
-     
+
     } catch (error) {
       console.log("error", error)
     }
@@ -162,6 +163,10 @@ export default function Withdraw({ dataUser }) {
       setVisible(false)
     }
   }
+
+  const handleBankSelection = (item) => {
+    setSelectedBank(item);
+  };
 
   return (
     <>
@@ -214,7 +219,6 @@ export default function Withdraw({ dataUser }) {
 
             <View style={styles.bankInfo}>
               <Iconics name={'bank'} size={hp('3.5%')} />
-
               <View style={styles.dropdownContainer}>
                 {dataUser?.is_account_verified == 1 ? (
                   <>
@@ -227,24 +231,31 @@ export default function Withdraw({ dataUser }) {
                     </TouchableOpacity>
 
                     {isDropdownOpen && (
-                      <FlatList
-                        data={bankDetail}
-                        keyExtractor={(item, index) => index.toString()}
-                        style={styles.dropdownList}
-                        renderItem={({ item }) => (
-                          <TouchableOpacity
-                            style={styles.dropdownItem}
-                            onPress={() => {
-                              console.log("item",item)
-                              setSelectedBank(item);
-                              setIsDropdownOpen(false);
-                            }}
-                          >
-                            <Text style={styles.bankName}>{item.bank_name}</Text>
-                            <Text style={styles.bankAccount}>{item.account_no}</Text>
-                          </TouchableOpacity>
-                        )}
-                      />
+                   <FlatList
+                   data={bankDetail}
+                   keyExtractor={(item, index) => index.toString()}
+                   style={styles.dropdownList}
+                   renderItem={({ item }) => (
+                     <TouchableOpacity
+                       style={styles.dropdownItem}
+                       onPress={() => handleBankSelection(item)}
+                       activeOpacity={0.7}
+                     >
+                       <View style={styles.bankRow}>
+                         <Checkbox
+                           status={selectedBank?.account_no === item.account_no ? 'checked' : 'unchecked'}
+                           onPress={() => handleBankSelection(item)}
+                           color="red"
+                         />
+                 
+                         <View style={styles.bankDetailsContainer}>
+                           <Text style={styles.bankName}>{item.bank_name}</Text>
+                           <Text style={styles.bankAccount}>{item.account_no}</Text>
+                         </View>
+                       </View>
+                     </TouchableOpacity>
+                   )}
+                 />
                     )}
                   </>
                 ) : (
@@ -256,10 +267,10 @@ export default function Withdraw({ dataUser }) {
           <TouchableOpacity
             style={[
               styles.withdrawButton,
-              { opacity: amount && !isLoading ? 1 : 0.5 },
+              { opacity: amount && selectedBank && !isLoading ? 1 : 0.5 },
             ]}
             onPress={handleWithdraw}
-            disabled={!amount || isLoading}
+            disabled={!amount || !selectedBank || isLoading}
           >
             <Text style={styles.withdrawButtonText}>
               {isLoading ? 'PROCESSING...' : 'WITHDRAW CASH'}
@@ -422,7 +433,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
     fontFamily: 'Montserrat-Regular',
-    // backgroundColor: 'red',
+
     paddingLeft: wp('5%')
 
   },
@@ -477,16 +488,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: hp('1%'),
-    // borderWidth: 1,
-    // borderColor: '#ccc',
     borderRadius: 8,
     backgroundColor: 'white',
   },
   dropdownList: {
     maxHeight: hp('20%'),
     backgroundColor: '#fff',
-    // borderWidth: 1,
-    // borderColor: '#ccc',
     borderRadius: 8,
     marginTop: hp('1%'),
   },
@@ -565,6 +572,14 @@ const styles = StyleSheet.create({
     fontSize: hp('1.8%'),
     fontFamily: "Montserrat-Medium",
     color: '#696969',
+  },
+  bankRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  bankDetailsContainer: {
+    marginLeft: 10,
   },
 });
 
