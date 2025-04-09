@@ -1,5 +1,5 @@
 import { Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import CommonButton from '../../Components/CommonButton'
@@ -11,6 +11,7 @@ import Toast from 'react-native-toast-message'
 import Config from '../../Utilities/Config'
 import { baseApiurl } from '../../Service/AxiosInstance'
 import CheckBox from 'react-native-check-box'
+import { useOtpVerify } from 'react-native-otp-verify'
 
 
 const headers = {
@@ -23,7 +24,8 @@ export default function Login() {
   const [mobileError, setMobileError] = useState('');
   const [loader, setLoader] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-
+  const [mobilHash,setMobilHash] = useState('')
+  const { hash } = useOtpVerify({numberOfDigits: 4});
   const validateInputs = () => {
     let valid = true;
     const mobileRegex = /^[0-9]{10}$/;
@@ -38,6 +40,12 @@ export default function Login() {
     }
     return valid;
   };
+  useEffect(() => {
+    if (hash?.length > 0) {
+      console.log('Hash received:', hash?.toString());
+      setMobilHash(hash?.toString())
+    }
+  }, [hash]);
 
   const handleLogin = () => {
     setLoader(true);
@@ -48,6 +56,7 @@ export default function Login() {
             `${baseApiurl}/${Config.Login}`,
             {
               phoneNumber,
+              mobilHash
             },
             headers,
           )
@@ -61,6 +70,7 @@ export default function Login() {
                 text2: 'Otp Send Succesffully in the given Number',
                 visibilityTime: 3000
               });
+              
               setTimeout(() => {
                 setLoader(false);
                 navigation.navigate('OtpScreen', { data: res.data.data });
@@ -87,7 +97,6 @@ export default function Login() {
     } catch (error) {
       console.log('An error occurred:', error);
       setLoader(false);
-
     }
   };
 

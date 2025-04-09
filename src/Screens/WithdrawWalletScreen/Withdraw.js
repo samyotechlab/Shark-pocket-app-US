@@ -216,6 +216,7 @@ export default function Withdraw({ dataUser }) {
           </View>
           <View style={styles.bankDetails}>
             <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
+            <Text style={[styles.bankDetailsLabel,{color:'red',fontSize:12}]}>please select bank</Text>
 
             <View style={styles.bankInfo}>
               <Iconics name={'bank'} size={hp('3.5%')} />
@@ -504,7 +505,6 @@ const styles = StyleSheet.create({
   },
   bankDetailsLabel: {
     fontSize: hp('2%'),
-    marginBottom: hp('1%'),
     color: '#000000',
     fontFamily: 'Montserrat-Medium',
   },

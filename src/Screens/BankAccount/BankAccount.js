@@ -42,8 +42,11 @@ export default function BankAccount() {
         try {
             setLoader(true);
             const response = await bankAccountDetails(user_id);
-            if (response.data.length > 0) {
+            console.log('bankAccountDetails', response);
+            if (response.status === 1) {
                 setBankAccount(response.data);
+            }else{
+                setBankAccount([]);
             }
         } catch (error) {
             console.log('error', error);
@@ -78,6 +81,7 @@ export default function BankAccount() {
         }
     };
     const handleDelete = async (account_no) => {
+        
         try {
             const response = await deleteBankAccount(user_id, account_no);
             if (response.status === 1) {
@@ -88,7 +92,7 @@ export default function BankAccount() {
                     text2: 'Bank Account Deleted Successfully',
                     visibilityTime: 3000
                 });
-                bankDetails();
+            
             } else {
                 Toast.show({
                     type: 'error',
@@ -106,6 +110,8 @@ export default function BankAccount() {
                 text2: 'Something went wrong',
                 visibilityTime: 3000
             });
+        }finally{
+            bankDetails();
         }
     };
     const handleNavigation = (item) => {
@@ -113,6 +119,7 @@ export default function BankAccount() {
     }
 
     const renderItem = ({ item }) => {
+
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.statusContainer}
@@ -147,7 +154,7 @@ export default function BankAccount() {
         <>
             <BackgroundScreen />
             <CommonHeader title={"Bank Account"} />
-            <Text style={styles.kyc}>Complete Your Bank Details  </Text>xx
+            <Text style={styles.kyc}>Complete Your Bank Details  </Text>
             <View style={{ padding: 10, margin: 10, alignItems: 'flex-end' }}>
                 <TouchableOpacity
                     style={{
