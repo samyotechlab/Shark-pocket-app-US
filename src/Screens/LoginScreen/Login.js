@@ -24,7 +24,7 @@ export default function Login() {
   const [mobileError, setMobileError] = useState('');
   const [loader, setLoader] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [mobilHash,setMobilHash] = useState('')
+  const [mobilHash,setMobilHash] = useState('');
   const { hash } = useOtpVerify({numberOfDigits: 4});
   const validateInputs = () => {
     let valid = true;
@@ -61,20 +61,16 @@ export default function Login() {
             headers,
           )
           .then(res => {
-            console.log("response=====>", res.data)
+            console.log("response=====>", res.data)   
             if (res.data.status === 1) {
-              Toast.show({
-                type: 'success',
-                position: 'top',
-                text1: 'Otp Send!',
-                text2: 'Otp Send Succesffully in the given Number',
-                visibilityTime: 3000
-              });
-              
-              setTimeout(() => {
-                setLoader(false);
-                navigation.navigate('OtpScreen', { data: res.data.data });
-              }, 3000);
+              // Toast.show({
+              //   type: 'success',
+              //   position: 'top',
+              //   text1: 'Otp Send!',
+              //   text2: 'Otp Send Succesffully in the given Number',
+              //   visibilityTime: 3000
+              // });
+              navigation.navigate('OtpScreen', { data: res.data.data });
             } else {
               setLoader(false);
               Toast.show({

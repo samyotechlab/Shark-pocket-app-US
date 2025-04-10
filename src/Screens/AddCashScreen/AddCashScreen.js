@@ -18,7 +18,7 @@ const AddCashScreen = () => {
   const navigation = useNavigation();
   const route = useRoute()
   const { user_id, status, amounts, ticket_id, game_id } = route.params
-  console.log("amounts", amounts)
+
   const [amount, setAmount] = useState(null);
   const [visible, setVisible] = useState(false);
   const [data1, setData] = useState({});

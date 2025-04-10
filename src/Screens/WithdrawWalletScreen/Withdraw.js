@@ -13,7 +13,7 @@ import Iconic from 'react-native-vector-icons/Ionicons';
 import { bankAccountDetails } from '../../Service/Bank';
 import { encryptData, generateKey } from '../../Utilities/utilies';
 import { useNavigation } from '@react-navigation/native';
-import { Checkbox } from 'react-native-paper'; 
+import { Checkbox } from 'react-native-paper';
 
 export default function Withdraw({ dataUser }) {
   const navigation = useNavigation();
@@ -130,7 +130,6 @@ export default function Withdraw({ dataUser }) {
     }
   }
 
-
   const [isModalVisible, setModalVisible] = useState(false);
   const toggleModal = async () => {
     try {
@@ -166,6 +165,7 @@ export default function Withdraw({ dataUser }) {
 
   const handleBankSelection = (item) => {
     setSelectedBank(item);
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -173,22 +173,21 @@ export default function Withdraw({ dataUser }) {
       <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} onOkPress={() => handleNavigation()} />
       <View style={{ flex: 1, backgroundColor: '#F3F3F3', marginTop: hp('2%') }}>
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-          <LinearGradient
-            colors={["#3d1911", "#6a1701"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.button}
-          >
-            <Icons name="account-balance-wallet" size={24} color={'white'} />
-            <Text style={styles.text}>Withdraw wallet Balance</Text>
-            <Text style={styles.amount}>₹ {dataUser.total_earning}</Text>
-          </LinearGradient>
-          <View style={{ marginTop: hp('1%') }}>
-            <Text style={styles.title}>Withdraw Balance</Text>
+          <View style={{ flex: 0.3 }}>
+            <LinearGradient
+              colors={["#3d1911", "#6a1701"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.button}
+            >
+              <Icons name="account-balance-wallet" size={24} color={'white'} />
+              <Text style={styles.text}>Withdraw wallet Balance</Text>
+              <Text style={styles.amount}>₹{dataUser.total_earning}</Text>
+            </LinearGradient>
           </View>
-
           {/* Input Section */}
           <View style={styles.container}>
+            <Text style={styles.title}>Withdraw Balance</Text>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Enter Amount</Text>
               <TextInput
@@ -200,9 +199,6 @@ export default function Withdraw({ dataUser }) {
                 keyboardType="numeric"
               />
             </View>
-          </View>
-
-          <View style={{ flex: 0.8, justifyContent: 'center' }}>
             <Text style={styles.infoText}>
               {tdsData.tds_tax === undefined || tdsData.tds_tax === null
                 ? `No Govt. Tax on this withdrawal ${''} `
@@ -214,76 +210,81 @@ export default function Withdraw({ dataUser }) {
               </TouchableOpacity>
             </Text>
           </View>
-          <View style={styles.bankDetails}>
-            <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
-            <Text style={[styles.bankDetailsLabel,{color:'red',fontSize:12}]}>please select bank</Text>
+          <View style={{ flex: 0.8 }}>
+            <View style={styles.bankDetails}>
+              <View style={{ flex: 0.5 }}>
+                <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
+                { !selectedBank ? <Text style={[styles.bankDetailsLabel, { color: 'red', fontSize: 12, lineHeight: hp('1.5%') }]}>please select bank</Text> :null }  
+              </View>
+              <View style={styles.bankInfo}>
+                <Iconics name={'bank'} size={hp('3.5%')} />
+                <View style={styles.dropdownContainer}>
+                  {dataUser?.is_account_verified == 1 ? (
+                    <>
+                      <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
+                        <View>
+                          <Text style={styles.bankName}>{selectedBank?.bank_name || bankDetail[0]?.bank_name}</Text>
+                          <Text style={styles.bankAccount}>{selectedBank?.account_no || bankDetail[0]?.account_no}</Text>
+                        </View>
+                        <Iconics name={isDropdownOpen ? 'chevron-up' : 'chevron-down'} size={hp('2.5%')} />
+                      </TouchableOpacity>
 
-            <View style={styles.bankInfo}>
-              <Iconics name={'bank'} size={hp('3.5%')} />
-              <View style={styles.dropdownContainer}>
-                {dataUser?.is_account_verified == 1 ? (
-                  <>
-                    <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
-                      <View>
-                        <Text style={styles.bankName}>{selectedBank?.bank_name || bankDetail[0]?.bank_name}</Text>
-                        <Text style={styles.bankAccount}>{selectedBank?.account_no || bankDetail[0]?.account_no}</Text>
-                      </View>
-                      <Iconics name={isDropdownOpen ? 'chevron-up' : 'chevron-down'} size={hp('2.5%')} />
-                    </TouchableOpacity>
+                      {isDropdownOpen && (
+                        <View style={styles.dropdownList}>
+                          <FlatList
+                            data={bankDetail}
+                            keyExtractor={(item, index) => index.toString()}
+                            showsVerticalScrollIndicator={true}
+                            renderItem={({ item }) => (
+                              <TouchableOpacity
+                                style={styles.dropdownItem}
+                                onPress={() => handleBankSelection(item)}
+                                activeOpacity={0.7}
+                              >
+                                <View style={styles.bankRow}>
+                                  <Checkbox
+                                    status={selectedBank?.account_no === item.account_no ? 'checked' : 'unchecked'}
+                                    onPress={() => handleBankSelection(item)}
+                                    color="red"
+                                  />
+                                  <View style={styles.bankDetailsContainer}>
+                                    <Text style={styles.bankName}>{item.bank_name}</Text>
+                                    <Text style={styles.bankAccount}>{item.account_no}</Text>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            )}
+                          />
+                        </View>
 
-                    {isDropdownOpen && (
-                   <FlatList
-                   data={bankDetail}
-                   keyExtractor={(item, index) => index.toString()}
-                   style={styles.dropdownList}
-                   renderItem={({ item }) => (
-                     <TouchableOpacity
-                       style={styles.dropdownItem}
-                       onPress={() => handleBankSelection(item)}
-                       activeOpacity={0.7}
-                     >
-                       <View style={styles.bankRow}>
-                         <Checkbox
-                           status={selectedBank?.account_no === item.account_no ? 'checked' : 'unchecked'}
-                           onPress={() => handleBankSelection(item)}
-                           color="red"
-                         />
-                 
-                         <View style={styles.bankDetailsContainer}>
-                           <Text style={styles.bankName}>{item.bank_name}</Text>
-                           <Text style={styles.bankAccount}>{item.account_no}</Text>
-                         </View>
-                       </View>
-                     </TouchableOpacity>
-                   )}
-                 />
-                    )}
-                  </>
-                ) : (
-                  <Text style={styles.bankAccount}>Bank Details Not Found</Text>
-                )}
+                      )}
+                    </>
+                  ) : (
+                    <Text style={styles.bankAccount}>Bank Details Not Found</Text>
+                  )}
+                </View>
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            style={[
-              styles.withdrawButton,
-              { opacity: amount && selectedBank && !isLoading ? 1 : 0.5 },
-            ]}
-            onPress={handleWithdraw}
-            disabled={!amount || !selectedBank || isLoading}
-          >
-            <Text style={styles.withdrawButtonText}>
-              {isLoading ? 'PROCESSING...' : 'WITHDRAW CASH'}
-            </Text>
-          </TouchableOpacity>
 
+          <View style={{ flex: 0.3 }}>
+            <TouchableOpacity
+              style={[
+                styles.withdrawButton,
+                { opacity: amount && selectedBank && !isLoading ? 1 : 0.5 },
+              ]}
+              onPress={handleWithdraw}
+              disabled={!amount || !selectedBank || isLoading}
+            >
+              <Text style={styles.withdrawButtonText}>
+                {isLoading ? 'PROCESSING...' : 'WITHDRAW CASH'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View style={{ flex: 0.5, backgroundColor: 'white', marginTop: hp('1%') }}>
-
-
-          <TouchableOpacity style={styles.buttonContainer}>
+        <View style={{ flex: 0.7, backgroundColor: 'white', marginTop: hp('1%')}}>
+            <TouchableOpacity style={styles.buttonContainer}>
             <View style={styles.iconContainer}>
               <Image
                 source={Tds}
@@ -295,6 +296,7 @@ export default function Withdraw({ dataUser }) {
               <Iconic name="chevron-forward-outline" size={hp('2%')} color={'black'} />
             </View>
           </TouchableOpacity>
+
           <View style={styles.featuresRow}>
             <View style={styles.feature}>
               <Image
@@ -339,6 +341,7 @@ export default function Withdraw({ dataUser }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    flex: 0.5,
   },
   inputContainer: {
     backgroundColor: '#DDF1E6',
@@ -346,14 +349,13 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderWidth: wp('0.2%'),
     borderRadius: wp('3%'),
-    paddingBottom: hp('0.7%'),
+    paddingBottom: hp('0.5%'),
   },
   label: {
     position: 'absolute',
-    top: -hp('1%'),
+    top: -hp('1.5%'),
     left: wp('35%'),
     backgroundColor: '#fff',
-    paddingHorizontal: wp('2%'),
     fontSize: hp('1.5%'),
     color: '#555',
     zIndex: 1,
@@ -384,17 +386,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#4C2C2B',
-    paddingVertical: hp('2%'),
-    marginVertical: hp('2%'),
+    paddingVertical: hp('1.5%'),
+    marginVertical: hp('1%'),
     paddingHorizontal: wp('5%'),
     borderRadius: wp('5%'),
     width: wp('90%'),
     marginLeft: wp('5%'),
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: hp('0.5%') },
-    shadowOpacity: 0.2,
-    shadowRadius: wp('1%'),
+
   },
   icon: {
     fontSize: hp('2%'),
@@ -417,7 +415,7 @@ const styles = StyleSheet.create({
     fontSize: hp('1.9%'),
     fontFamily: 'Montserrat-Medium',
     color: '#000000',
-    marginBottom: hp('2%'),
+    marginBottom: hp('1%'),
     textAlign: 'center',
   },
   inputWrapper: {
@@ -434,9 +432,8 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
     fontFamily: 'Montserrat-Regular',
-
-    paddingLeft: wp('5%')
-
+    paddingLeft: wp('5%'),
+    marginTop: hp('0.5%'),
   },
   learnMore: {
     fontSize: hp('1.5%'),
@@ -459,6 +456,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     width: wp('85%'),
     marginLeft: wp('8%'),
+    zIndex: 1,
+    position: 'relative'
   },
   withdrawButtonText: {
     fontSize: hp('2.5%'),
@@ -470,19 +469,28 @@ const styles = StyleSheet.create({
     textShadowRadius: wp('2%'),
   },
   bankDetails: {
-    padding: hp('2%'),
+    flex: 1,
+    padding: hp('1.5%'),
     backgroundColor: '#fff',
     borderRadius: 10,
     elevation: 5,
+    position: "relative",
+    zIndex: 9999999,
     margin: hp('1%'),
   },
   bankInfo: {
+    flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
+    overflow: 'visible',
     alignItems: 'center',
+    zIndex: 1,
   },
   dropdownContainer: {
     flex: 1,
     marginLeft: hp('2%'),
+    position: 'relative',
+    zIndex: 10,
   },
   dropdownHeader: {
     flexDirection: 'row',
@@ -490,23 +498,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: hp('1%'),
     borderRadius: 8,
-    backgroundColor: 'white',
   },
   dropdownList: {
-    maxHeight: hp('20%'),
-    backgroundColor: '#fff',
+    position: 'absolute',
+    top: hp('6%'), // or dynamically set using measureInWindow if needed
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
     borderRadius: 8,
-    marginTop: hp('1%'),
+    zIndex: 999,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   dropdownItem: {
     padding: hp('1%'),
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    zIndex: 9999,
+    position: 'relative',
   },
   bankDetailsLabel: {
     fontSize: hp('2%'),
     color: '#000000',
     fontFamily: 'Montserrat-Medium',
+    lineHeight: hp('3%'),
   },
   bankIcon: {
     width: wp('10%'),
@@ -532,9 +550,10 @@ const styles = StyleSheet.create({
     marginBottom: hp('1%'),
   },
   featuresRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: hp('6%'),
+    // marginTop: hp('6%'),
+    margin:hp('2%'),
+    flexDirection:'row',
+    justifyContent: 'space-between',
   },
   feature: {
     alignItems: 'center',
@@ -556,6 +575,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp('1.5%'),
     paddingHorizontal: wp('4%'),
     marginHorizontal: wp('4%'),
+    marginVertical: hp('5%'),
   },
   iconContainer: {
     marginRight: wp('3%'),
@@ -582,6 +602,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
+
 
 
 

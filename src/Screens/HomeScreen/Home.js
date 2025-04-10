@@ -222,7 +222,7 @@ export default function HomeScreen() {
               <LinearGradient colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']} style={styles.walletContainer}>
                 <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
                 <Text style={styles.walletText}>
-                  ₹ {totalAmount || 0}
+                  ₹ {totalAmount.toFixed(2) || 0}
                 </Text>
               </LinearGradient>
               <View style={styles.iconsContainer}>
