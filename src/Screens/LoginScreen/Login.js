@@ -70,6 +70,7 @@ export default function Login() {
               //   text2: 'Otp Send Succesffully in the given Number',
               //   visibilityTime: 3000
               // });
+              setLoader(false);
               navigation.navigate('OtpScreen', { data: res.data.data });
             } else {
               setLoader(false);

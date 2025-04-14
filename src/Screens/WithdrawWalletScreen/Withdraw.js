@@ -168,6 +168,12 @@ export default function Withdraw({ dataUser }) {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  useEffect(() => {
+    if (bankDetail.length === 1) {
+      handleBankSelection(bankDetail[0]);
+    }
+  }, [bankDetail]);
+
   return (
     <>
       <AlertDialogRed visible={visible} onClose={() => setVisible(false)} message={message} onOkPress={() => handleNavigation()} />
@@ -214,22 +220,34 @@ export default function Withdraw({ dataUser }) {
             <View style={styles.bankDetails}>
               <View style={{ flex: 0.5 }}>
                 <Text style={styles.bankDetailsLabel}>Send Winnings to</Text>
-                { !selectedBank ? <Text style={[styles.bankDetailsLabel, { color: 'red', fontSize: 12, lineHeight: hp('1.5%') }]}>please select bank</Text> :null }  
+                {!selectedBank ? <Text style={[styles.bankDetailsLabel, { color: 'red', fontSize: 12, lineHeight: hp('1.5%') }]}>please select bank</Text> : null}
               </View>
               <View style={styles.bankInfo}>
                 <Iconics name={'bank'} size={hp('3.5%')} />
                 <View style={styles.dropdownContainer}>
                   {dataUser?.is_account_verified == 1 ? (
                     <>
-                      <TouchableOpacity style={styles.dropdownHeader} onPress={toggleDropdown}>
+                      <TouchableOpacity
+                        style={styles.dropdownHeader}
+                        onPress={() => {
+                          if (bankDetail.length === 1) {
+                            console.log("bankDetail[0]", bankDetail[0])
+                            handleBankSelection(bankDetail[0]);
+                          } else {
+                            toggleDropdown();
+                          }
+                        }}
+                      >
                         <View>
                           <Text style={styles.bankName}>{selectedBank?.bank_name || bankDetail[0]?.bank_name}</Text>
                           <Text style={styles.bankAccount}>{selectedBank?.account_no || bankDetail[0]?.account_no}</Text>
                         </View>
-                        <Iconics name={isDropdownOpen ? 'chevron-up' : 'chevron-down'} size={hp('2.5%')} />
+                        {bankDetail.length > 1 && (
+                          <Iconics name={isDropdownOpen ? 'chevron-up' : 'chevron-down'} size={hp('2.5%')} />
+                        )}
                       </TouchableOpacity>
 
-                      {isDropdownOpen && (
+                      {isDropdownOpen && bankDetail.length > 1 && (
                         <View style={styles.dropdownList}>
                           <FlatList
                             data={bankDetail}
@@ -283,8 +301,8 @@ export default function Withdraw({ dataUser }) {
           </View>
         </View>
 
-        <View style={{ flex: 0.7, backgroundColor: 'white', marginTop: hp('1%')}}>
-            <TouchableOpacity style={styles.buttonContainer}>
+        <View style={{ flex: 0.7, backgroundColor: 'white', marginTop: hp('1%') }}>
+          <TouchableOpacity style={styles.buttonContainer}>
             <View style={styles.iconContainer}>
               <Image
                 source={Tds}
@@ -551,8 +569,8 @@ const styles = StyleSheet.create({
   },
   featuresRow: {
     // marginTop: hp('6%'),
-    margin:hp('2%'),
-    flexDirection:'row',
+    margin: hp('2%'),
+    flexDirection: 'row',
     justifyContent: 'space-between',
   },
   feature: {

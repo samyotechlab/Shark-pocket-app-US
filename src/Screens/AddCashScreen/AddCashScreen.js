@@ -83,9 +83,11 @@ const AddCashScreen = () => {
         const response = await TransactionStore(usersData?._id, encryptedData);
         console.log('response', response);
         if (response.status === 0) {
+          setLoader(false);
           initPhonePeSDK(response);
           setData(response);
         } else {
+          setLoader(false);
           addBonusWallet(response)
           initPhonePeSDK(response)
           setData(response);
@@ -101,10 +103,8 @@ const AddCashScreen = () => {
   };
 
   const addBonusWallet = async (res) => {
-    console.log('res', res)
     try {
       const response = await bonusWallet(res);
-      console.log('response', response)
     } catch (error) {
       console.log("error", error)
     }
@@ -123,7 +123,6 @@ const AddCashScreen = () => {
   };
 
   const initPhonePeSDK = response => {
-    console.log('response', response.transaction_id);
     PhonePePaymentSDK.init(
       response.environment_type,
       response.merchant_id,
