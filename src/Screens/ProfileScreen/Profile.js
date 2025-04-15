@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -229,8 +228,9 @@ const SharkPocketScreen = () => {
   };
   return (
     <>
-      <View colors={['#3D1911', '#6A1701']} style={styles.profileContainer} >
-        <View>
+      <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={styles.profileContainer} >
+        <View style={styles.profileTab}>
           <Text style={styles.profileTitle}>Profile</Text>
         </View>
         <View style={styles.profileHeader} >
@@ -248,7 +248,6 @@ const SharkPocketScreen = () => {
               <Text style={styles.profilePhone}>(+91) {userData.mobile}</Text>
               <View style={styles.profileInfoContainer}>
                 <Text style={styles.profileFullName}>{userData.name}</Text>
-                <Text style={styles.profileDot}>...</Text>
               </View>
             </View>
           </View>
@@ -261,7 +260,7 @@ const SharkPocketScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.listContainer}>
         <View style={styles.container}>
           <View style={styles.flatListContainer}>
             <FlatList
@@ -282,7 +281,8 @@ const SharkPocketScreen = () => {
             />
           </View>
         </View>
-      </SafeAreaView>
+      </View>         
+      </View>
       <AlertDialogRed visible={isModalVisible} onClose={() => setIsModalVisible(false)} message={message} onOkPress={() =>{
          setIsModalVisible(false)
          navigation.navigate(url,{ user_id: data._id, mobile: userData.mobile })}} />
@@ -291,10 +291,6 @@ const SharkPocketScreen = () => {
 };
 export default SharkPocketScreen;
 const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -304,22 +300,29 @@ const styles = StyleSheet.create({
     marginBottom: hp('1%'),
   },
   profileContainer: {
-    padding: wp('5%'),
+    flex: 0.5,
     backgroundColor: '#361911',
-
+  },
+  listContainer:{
+    flex: 1.5,
+    backgroundColor: '#fff',
+  },
+  profileTab:{
+    flex:0.5,
+    justifyContent:'flex-end',
+    marginHorizontal:hp('2%')
   },
   profileTitle: {
-    marginTop: wp('8%'),
     fontSize: wp('5%'),
-    fontWeight: '500',
-    marginBottom: hp('2%'),
     color: 'white',
-    fontFamily: 'Montserrat-SemiBold'
+    fontFamily: 'Montserrat-SemiBold',
   },
   profileHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: hp('3%'),
+    alignItems:'center',
+    flex: 1,
+    marginHorizontal:hp('2%'),
   },
   profileImageContainer: {
     width: wp('20%'),

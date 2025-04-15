@@ -78,6 +78,7 @@ export default function FloatingBoxGame() {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [generatedBoxes, setGeneratedBoxes] = useState(0);
+  const [appState, setAppState] = useState(AppState.currentState);
   const [scoreData, setScoreData] = useState(null);
   const route = useRoute();
   const [isApiCalled, setIsApiCalled] = useState(false);
@@ -100,15 +101,16 @@ export default function FloatingBoxGame() {
         setIsPaused(true);
         setIsModalVisible(true);
         soundRef.current?.pause();
-      } else if (nextAppState === 'active') {
+      } else if (appState === 'background' && nextAppState === 'active') {
         setIsModalVisible(true);
         // setIsPaused(false);
       }
+      setAppState(nextAppState);
     });
     return () => {
       subscription.remove();
     };
-  }, [AppState]);
+  }, []);
 
   useEffect(() => {
     if (!isPaused && !isGameOver) {

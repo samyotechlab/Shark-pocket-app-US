@@ -153,7 +153,6 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await gameHistoryByUser(loginData ? loginData?._id : data?._id)
-      console.log("response", response)
       setGameHistory(response.data);
     } catch (error) {
       console.log('error', error);

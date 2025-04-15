@@ -109,7 +109,6 @@ export default function PlayingInstruction() {
   const showExpectations = async () => {
     try {
       const response = await getExpectation(data._id, game_id)
-      console.log("response", response)
       setExpectData(response)
       if (response?.dataShow) {
         setUserExpectation(response?.dataShow);
@@ -141,7 +140,6 @@ export default function PlayingInstruction() {
        return handleShow();
     }
       if (selectedNumber && question === undefined) {
-        console.log("selectedNumber", selectedNumber)
         navigation.navigate('GameScreen', {
           selectedNumber: selectedNumber,
           game_id: game_id,
@@ -165,7 +163,6 @@ export default function PlayingInstruction() {
               userExpectations: expectation
             })
           }
-          console.log("responseData", responseData) 
           if (responseData.status === "success") {
             navigation.navigate('GameScreen', {
               selectedNumber: selectedNumber,

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import CommonHeader from '../../Components/CommonHeader'
@@ -12,8 +12,7 @@ import InfoModal from '../../Components/GameInfo'
 
 export default function GameName() {
   const route = useRoute();
-  const { game_id  } = route.params
-  console.log("===============>",game_id)
+  const { game_id } = route.params
   const [selectedTab, setSelectedTab] = useState('Tickets');
   const [gameData, setGameData] = useState({});
   const handlePress = tab => {
@@ -26,25 +25,29 @@ export default function GameName() {
       setGameData(response.data);
     } catch (error) {
       console.error('Error fetching game list:', error.message || error);
-      throw error; 
+      throw error;
     }
   }
   useEffect(() => {
     gameByid();
-  }, [selectedTab]); 
+  }, [selectedTab]);
   const dynamicStyles = getDynamicStyles(selectedTab);
   return (
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
       style={dynamicStyles.linearGradient}>
-      <CommonHeader title={gameData?.title} screen_name={'Tickets'}/>
-      <View style={{ marginTop: 10,flex:1}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            padding: hp('2%'),
-            justifyContent: 'space-around',
-          }}>
+      <CommonHeader title={gameData?.title} screen_name={'Tickets'} />
+      <View style={{ marginTop: hp('1.5%'), flex: 1 }}>
+        <View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              paddingVertical: hp('1%'),
+              paddingHorizontal: hp('2%'),
+            }}
+          >
           <TouchableOpacity onPress={() => handlePress('Tickets')}>
             <Text
               style={dynamicStyles.Tickets}>
@@ -63,18 +66,17 @@ export default function GameName() {
               PlayedHistory
             </Text>
           </TouchableOpacity>
-
-
+          </ScrollView>
         </View>
-     <View style={{flex:1}}>
-        {selectedTab === 'Tickets' ? (
-          <Tickets gameData={gameData}/>
-        ) : selectedTab === 'GameInfo'? (
-          <InfoModal gameData={gameData}/>
-        ):(
-          <PlayedHistory game_id={game_id} />
-        )
-        }
+        <View style={{ flex: 1 }}>
+          {selectedTab === 'Tickets' ? (
+            <Tickets gameData={gameData} />
+          ) : selectedTab === 'GameInfo' ? (
+            <InfoModal gameData={gameData} />
+          ) : (
+            <PlayedHistory game_id={game_id} />
+          )
+          }
         </View>
       </View>
     </LinearGradient>
@@ -92,6 +94,7 @@ const getDynamicStyles = selectedTab =>
       fontFamily: selectedTab === 'Tickets' ? 'Montserrat-Bold' : 'Montserrat-Regular',
       borderBottomWidth: 3,
       borderBottomColor: selectedTab === 'Tickets' ? '#FEB801' : '#565656',
+      marginHorizontal: wp('2%'),
     },
     PlayedHistory: {
       fontSize: 18,
@@ -99,6 +102,7 @@ const getDynamicStyles = selectedTab =>
       borderBottomColor: selectedTab === 'PlayedHistory' ? '#FEB801' : '#565656',
       color: selectedTab === 'PlayedHistory' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'PlayedHistory' ? 'Montserrat-Bold' : 'Montserrat-Regular',
+      marginHorizontal: wp('2%'),
     },
     GameInfo: {
       fontSize: 18,
@@ -106,5 +110,6 @@ const getDynamicStyles = selectedTab =>
       borderBottomColor: selectedTab === 'GameInfo' ? '#FEB801' : '#565656',
       color: selectedTab === 'GameInfo' ? '#FEB801' : '#FFFFFF',
       fontFamily: selectedTab === 'GameInfo' ? 'Montserrat-Bold' : 'Montserrat-Regular',
+      marginHorizontal: wp('2%'),
     }
   });
