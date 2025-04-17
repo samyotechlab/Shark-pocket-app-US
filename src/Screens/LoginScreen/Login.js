@@ -135,13 +135,12 @@ export default function Login() {
             checkedCheckBoxColor="#FFD700"
             uncheckedCheckBoxColor="#9B9B9B"
           />
-          <Text style={styles.checkboxText}>Accept all terms and conditions ?
-            <TouchableOpacity style={{ marginBottom: hp('1.1%') }} onPress={() => {
+          <Text style={styles.checkboxText}>Accept all terms and conditions?</Text>
+          <TouchableOpacity style={{ marginBottom: hp('1.1%') }} onPress={() => {
               navigation.navigate('T&CScreen')
             }}>
               <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Terms & Condition</Text>
             </TouchableOpacity>
-          </Text>
         </View>
         <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
           <CommonButton
@@ -214,11 +213,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+
+    // backgroundColor:'red'
   },
+  // checkBox:{
+  //   flex:1
+  // },
   checkboxText: {
-    fontSize: 16,
+    fontSize: 14,
     marginLeft: 8,
     color: '#FFFFFF',
+
   },
   kycText: {
     color: '#FFFFFF',

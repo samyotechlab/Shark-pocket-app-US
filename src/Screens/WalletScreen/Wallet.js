@@ -222,7 +222,7 @@ const WalletScreen = () => {
                       onPress={() => {
                         handleNavigation("WithdrawWallet",
                            { dataUser: dataUser },
-                           {check:2})
+                           {check:1})
                       }}>
                       <View
                         style={[styles.withdrawButton, { backgroundColor: '#FFFFFF33', }]} >

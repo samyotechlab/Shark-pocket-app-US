@@ -74,6 +74,11 @@ const SharkPocketScreen = () => {
       url: 'HowtoPlay',
     },
     {
+      title: 'Privacy Policy',
+      icon: 'message-arrow-right-outline',
+      url: 'PrivacyPolicy',
+    },
+    {
       title: 'Refund and Policy',
       icon: 'undo',
       url: 'Refund',

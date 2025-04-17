@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, PermissionsAndroid, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, PermissionsAndroid, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
@@ -31,13 +31,7 @@ export default function OtpVerify() {
   useEffect(() => {
     const init = async () => {
       if (Platform.OS === 'android') {
-
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          startListener();
-        }
+        startListener();
       }
     };
     init();

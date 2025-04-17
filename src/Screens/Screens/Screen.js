@@ -23,13 +23,19 @@ export const HowToPlayScreen = () => {
 
 export const RefundPolicyScreen = () => {
   return(
-    <WebViewScreen title="Refund Policy" uri={`${baseApiurl}/${Config.Refund}`} />
+    <WebViewScreen title="Refund Policy" uri="https://sharkpocket.in/refund-policy/" />
   )
 }
 
 export const TCScreen = () => {
   return(
-    <WebViewScreen title="Terms & Condition" uri={`${baseApiurl}/${Config.TermCondition}`} />
+    <WebViewScreen title="Terms & Condition" uri="https://sharkpocket.in/terms-and-condition/" />
+  )
+}
+
+export const PrivacyPolicy = () => {
+  return(
+    <WebViewScreen title="Privacy Policy" uri="https://sharkpocket.in/privacy-policy/" />
   )
 }
 

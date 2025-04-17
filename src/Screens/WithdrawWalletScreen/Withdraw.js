@@ -286,7 +286,22 @@ export default function Withdraw({ dataUser }) {
           </View>
 
           <View style={{ flex: 0.3 }}>
-            <TouchableOpacity
+            {
+              bankDetail.length === 0 ? (
+                <TouchableOpacity
+                style={[
+                  styles.withdrawButton,
+                  { opacity: amount ? 1 : 0.5 },
+                ]}
+                onPress={handleWithdraw}
+                disabled={!amount}
+              >
+                <Text style={styles.withdrawButtonText}>
+                  {isLoading ? 'PROCESSING...' : 'WITHDRAW CASH'}
+                </Text>
+              </TouchableOpacity>
+              ):(
+                <TouchableOpacity
               style={[
                 styles.withdrawButton,
                 { opacity: amount && selectedBank && !isLoading ? 1 : 0.5 },
@@ -298,6 +313,9 @@ export default function Withdraw({ dataUser }) {
                 {isLoading ? 'PROCESSING...' : 'WITHDRAW CASH'}
               </Text>
             </TouchableOpacity>
+              )
+            }
+            
           </View>
         </View>
 
