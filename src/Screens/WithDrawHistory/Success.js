@@ -13,12 +13,13 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+
 export default function Success({ data }) {
   const navigation = useNavigation();
-   
+
   const filteredData = Array.isArray(data)
-  ? data.filter((item) => item.status === 5)
-  : [];
+    ? data.filter((item) => item.status === 5)
+    : [];
 
 
   const groupedData = filteredData.reduce((groups, item) => {
@@ -40,56 +41,63 @@ export default function Success({ data }) {
     navigation.navigate('AmountDetails');
   };
 
-  const renderItem = ({ item }) => (
-    <>
-    <TouchableOpacity
-      style={styles.itemContainer}
-      onPress={handleNavigation}
-    >
-      <View style={styles.circle}>
-        <Image
-          source={require('../../../assets/images/Screens/arrow.png')}
-          style={{ height: 20, width: 20 }}
-        />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.note}>Succesful</Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
-      </View>
-      <View>
-        <Text style={styles.amount}>₹{item.amount}</Text>
-      </View>
-    </TouchableOpacity>
-    </>
-  );
+  const renderItem = ({ item }) => {
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
+    return (
+      <>
+        <TouchableOpacity
+          style={styles.itemContainer}
+          onPress={handleNavigation}
+        >
+          <View style={styles.circle}>
+            <Image
+              source={require('../../../assets/images/Screens/arrow.png')}
+              style={{ height: 20, width: 20 }}
+            />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.note}>Succesful</Text>
+            <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>
+
+          </View>
+          <View>
+            <Text style={styles.amount}>₹{item.paying_amount}</Text>
+          </View>
+        </TouchableOpacity>
+      </>
+    )
+  };
 
 
-  const renderSectionHeader = ({ section: { title } }) =>{
-    return(
+  const renderSectionHeader = ({ section: { title } }) => {
+    return (
       <View style={styles.dateContainer}>
-      <Text style={styles.date}>{title}</Text>
-    </View>
+        <Text style={styles.date}>{title}</Text>
+      </View>
     )
   }
 
   return (
     <View style={styles.container}>
       {
-        filteredData.length == 0 ?(
-             <View style={styles.noDataContainer}>
-                      <Text style={styles.noDataText}>No data found</Text>
-                    </View>
-        ):(
+        filteredData.length == 0 ? (
+          <View style={styles.noDataContainer}>
+            <Text style={styles.noDataText}>No data found</Text>
+          </View>
+        ) : (
           <SectionList
-          sections={sections}
-          renderItem={renderItem}
-          renderSectionHeader={renderSectionHeader}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-        />
+            sections={sections}
+            renderItem={renderItem}
+            renderSectionHeader={renderSectionHeader}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.list}
+          />
         )
       }
-     
+
     </View>
   );
 }
@@ -156,7 +164,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     color: '#696969',
     marginBottom: hp('2%'),
-    marginRight:hp('1%')
+    marginRight: hp('1%')
   },
   noDataContainer: {
     flex: 1,

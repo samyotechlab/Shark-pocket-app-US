@@ -30,32 +30,38 @@ export default function Debit({winningData}) {
     navigation.navigate('DepositeDetails');
   };
 
-  const renderTransaction = ({ item }) => (
-    <TouchableOpacity
-      style={styles.itemContainer}
-      onPress={handleNavigation}
-    >
-      <View style={[styles.circle, { backgroundColor: '#F100001A' }]}>
-        <Image
-          source={require('../../../assets/images/Screens/arrow.png')}
-          style={{
-            height: 20,
-            width: 20,
-            tintColor: 'red',
-          }}
-        />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={[styles.note, { color: '#F10000' }]}>
-          {item.transaction_note || 'No Note'}
-        </Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
-      </View>
-      <View>
-          <Text style={styles.amount}>₹{ parseFloat(item?.user_amount ?? 0).toFixed(2) }</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderTransaction = ({ item }) => {
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
+    return (
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={handleNavigation}
+      >
+        <View style={[styles.circle, { backgroundColor: '#F100001A' }]}>
+          <Image
+            source={require('../../../assets/images/Screens/arrow.png')}
+            style={{
+              height: 20,
+              width: 20,
+              tintColor: 'red',
+            }}
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={[styles.note, { color: '#F10000' }]}>
+            {item.transaction_note || 'No Note'}
+          </Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
+        </View>
+        <View>
+            <Text style={styles.amount}>₹{ parseFloat(item?.user_amount ?? 0).toFixed(2) }</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  };
 
   const renderSection = ({ item }) => (
     

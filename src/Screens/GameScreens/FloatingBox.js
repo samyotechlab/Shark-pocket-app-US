@@ -10,6 +10,7 @@ import {
   ImageBackground,
   AppState,
   Modal,
+  BackHandler,
 } from 'react-native';
 import Coin from '../../../assets/images/Screens/CoinStack.png';
 import Iconicons from 'react-native-vector-icons/Entypo';
@@ -31,7 +32,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { finalScore } from '../../Service/Game';
 import blurImage from '../../../assets/images/SVG/ellipse-blur.png';
 import { BoxShadow } from 'react-native-shadow';
-import AlertDialogGreen from '../../Components/AlertDialogGreen';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { encryptData, generateKey } from '../../Utilities/utilies';
@@ -41,19 +41,39 @@ const { width, height } = Dimensions.get('window');
 // Track used numbers to prevent repetition
 const usedNumbers = new Set();
 
-const getRandomNumber = () => {
+// Generate all possible numbers in ranges
+const generateNumberPool = () => {
   const ranges = [
     { min: 1, max: 100 },
     { min: 201, max: 300 },
     { min: 3001, max: 3100 },
   ];
 
-  let number;
-  do {
-    const range = ranges[Math.floor(Math.random() * ranges.length)];
-    number = Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
-  } while (usedNumbers.has(number) && usedNumbers.size < 300);
+  const numbers = [];
+  ranges.forEach(range => {
+    for (let i = range?.min; i <= range?.max; i++) {
+      numbers.push(i);
+    }
+  });
 
+  // Shuffle array
+  for (let i = numbers?.length - 1; i > 0; i--) {
+    const j = Math?.floor(Math?.random() * (i + 1));
+    [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+  }
+
+  return numbers;
+};
+
+const numberPool = generateNumberPool();
+
+const getRandomNumber = () => {
+  if (numberPool.length === 0) {
+    // Reset pool if exhausted
+    numberPool.push(...generateNumberPool());
+  }
+
+  const number = numberPool.pop();
   usedNumbers.add(number);
   return number;
 };
@@ -97,20 +117,31 @@ export default function FloatingBoxGame() {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'background') {
+      if (nextAppState === 'background' && !isGameOver) {
         setIsPaused(true);
         setIsModalVisible(true);
         soundRef.current?.pause();
-      } else if (appState === 'background' && nextAppState === 'active') {
+      } else if (appState === 'background' && nextAppState === 'active' && !isGameOver) {
         setIsModalVisible(true);
-        // setIsPaused(false);
       }
       setAppState(nextAppState);
     });
+
+    // Handle back button
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (!isGameOver) {
+        setIsPaused(true);
+        setIsModalVisible(true);
+        return true;
+      }
+      return false;
+    });
+
     return () => {
       subscription.remove();
+      backHandler.remove();
     };
-  }, []);
+  }, [appState, isGameOver]);
 
   useEffect(() => {
     if (!isPaused && !isGameOver) {
@@ -150,6 +181,7 @@ export default function FloatingBoxGame() {
   useEffect(() => {
     if (isGameOver) {
       soundRef.current?.stop();
+      setIsModalVisible(false);
     } else if (isMusicPlaying && !isPaused) {
       soundRef.current?.play();
     }
@@ -199,7 +231,7 @@ export default function FloatingBoxGame() {
             setIsApiCalled(true);
             handleCallApi();
           }
-          return () => clearInterval(interval);
+          return;
         }
 
         const startY = height;
@@ -315,15 +347,15 @@ export default function FloatingBoxGame() {
       prev.map(item =>
         item.id === box.id
           ? {
-              ...item,
-              feedbackColor: feedbackColor,
-              feedbackImage: feedbackImage,
-              textColor: textColor,
-              feedbackBgColor: feedbackBgColor,
-              feedbackBorderColor: feedbackBorderColor,
-              canClick: false,
-              actionType: actionType,
-            }
+            ...item,
+            feedbackColor: feedbackColor,
+            feedbackImage: feedbackImage,
+            textColor: textColor,
+            feedbackBgColor: feedbackBgColor,
+            feedbackBorderColor: feedbackBorderColor,
+            canClick: false,
+            actionType: actionType,
+          }
           : item,
       ),
     );
@@ -356,6 +388,8 @@ export default function FloatingBoxGame() {
       }
     } catch (error) {
       console.log('error', error);
+      setIsGameOver(true); // Ensure game over even if API fails
+      setStatus(0);
     }
   };
 
@@ -433,15 +467,15 @@ export default function FloatingBoxGame() {
 
         {isPaused && !isModalVisible && <PauseOverlay />}
 
-        {isGameOver ? (
-          status === 0 ? (
-            <GameFinishScreen
-              isVisible={isGameOver}
-              onClose={closeModal}
-              gameHistoryData={scoreData}
-            />
-          ) : null
-        ) : (
+        {isGameOver && (
+          <GameFinishScreen
+            isVisible={isGameOver}
+            onClose={closeModal}
+            gameHistoryData={scoreData}
+          />
+        )}
+
+        {!isGameOver && (
           <>
             <View style={styles.header}>
               <View style={styles.timerContainer}>
@@ -496,6 +530,7 @@ export default function FloatingBoxGame() {
                       transform: [
                         { translateX: box.x },
                         { translateY: box.y },
+
                         {
                           rotate: box.shakeAnimation.interpolate({
                             inputRange: [-1, 1],

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   heightPercentageToDP as hp,
@@ -14,6 +14,7 @@ import GameInfoModal from './GameInfoModal';
 export default function LeaderBoard() {
   const [selectedTab, setSelectedTab] = useState('Weekly');
   const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation()
 
 
   const handlePress = tab => {
@@ -34,7 +35,7 @@ export default function LeaderBoard() {
         <View style={styles.leaderBoard}>
           <Text style={styles.leaderTxt}>Leader Board</Text>
           <TouchableOpacity style={styles.button} onPress={() => {
-            setModalVisible(true)
+            navigation.navigate('PointsSelection')
 
           }}>
             <LinearGradient

@@ -11,6 +11,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const UpcomingGameCard = ({ items ,status}) => {
   const navigation = useNavigation()
   const { index,item } = items
+
+  console.log("item--",item)
   const game_color = item.gameColor 
   const Colors = {
     yellow: ['#F38424', '#F7A552', '#F9D479'],
@@ -26,9 +28,9 @@ const UpcomingGameCard = ({ items ,status}) => {
   }
   const handleNavigation = () => {
     if(status === "1"){
-      navigation.navigate('AllGameName', { game_id: item._id,game_name:item.title })
+      navigation.navigate('AllGameName', { game_id: item._id,title:item.title,game_info:item.game_info })
     }else{
-      navigation.navigate('UpcomingGameInfo', { game_id: item._id,game_name:item.title })
+      navigation.navigate('UpcomingGameInfo', { game_id: item._id,game_name:item.title,game_info:item.game_info})
     }
   }
   return (

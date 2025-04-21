@@ -11,7 +11,7 @@ export const FAQScreen = () => {
 
 export const ContactScreen = () => {
   return(
-    <WebViewScreen title="Contact Us" uri={`${baseApiurl}/${Config.Contact}`} />
+    <WebViewScreen title="Contact Us" uri="https://sharkpocket.in/#contact" />
   )
 }
 
@@ -36,6 +36,11 @@ export const TCScreen = () => {
 export const PrivacyPolicy = () => {
   return(
     <WebViewScreen title="Privacy Policy" uri="https://sharkpocket.in/privacy-policy/" />
+  )
+}
+export const PointsSelection = () => {
+  return(
+    <WebViewScreen title="Points Selection" uri="https://sharkpocket.in/pointing-system/" />
   )
 }
 

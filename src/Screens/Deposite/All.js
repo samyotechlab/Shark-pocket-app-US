@@ -29,6 +29,10 @@ export default function All(props) {
   };
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
     const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
 
     return (
@@ -63,7 +67,7 @@ export default function All(props) {
           >
             {item.transaction_note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : '0'} pm </Text>
+         <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>

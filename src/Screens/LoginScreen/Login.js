@@ -24,11 +24,11 @@ export default function Login() {
   const [mobileError, setMobileError] = useState('');
   const [loader, setLoader] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [mobilHash,setMobilHash] = useState('');
-  const { hash } = useOtpVerify({numberOfDigits: 4});
+  const [mobilHash, setMobilHash] = useState('');
+  const { hash } = useOtpVerify({ numberOfDigits: 4 });
   const validateInputs = () => {
     let valid = true;
-    const mobileRegex = /^[0-9]{10}$/;
+    const mobileRegex = /^[6-9]\d{9}$/;
     if (!phoneNumber.trim()) {
       setMobileError('Mobile number is required');
       valid = false;
@@ -61,15 +61,8 @@ export default function Login() {
             headers,
           )
           .then(res => {
-            console.log("response=====>", res.data)   
+            console.log("response=====>", res.data)
             if (res.data.status === 1) {
-              // Toast.show({
-              //   type: 'success',
-              //   position: 'top',
-              //   text1: 'Otp Send!',
-              //   text2: 'Otp Send Succesffully in the given Number',
-              //   visibilityTime: 3000
-              // });
               setLoader(false);
               navigation.navigate('OtpScreen', { data: res.data.data });
             } else {
@@ -84,7 +77,6 @@ export default function Login() {
             }
           })
           .catch(err => {
-            console.log('error--->', err);
             setLoader(false);
           });
       }
@@ -118,10 +110,15 @@ export default function Login() {
               keyboardType="numeric"
               maxLength={10}
               value={phoneNumber}
-              onChangeText={(text) => setPhoneNumber(text)}
-              error={Boolean(mobileError)}
-            />
+              onChangeText={(text) => {
+                const onlyNumbers = text.replace(/[^0-9]/g, '');
+                setPhoneNumber(onlyNumbers);
 
+                if (mobileError && /^[6-9]\d{0,9}$/.test(onlyNumbers)) {
+                  setMobileError('');
+                }
+              }}
+              error={Boolean(mobileError)} />
           </View>
           {Boolean(mobileError) && (
             <Text style={styles.errorText}>{mobileError}</Text>
@@ -134,15 +131,16 @@ export default function Login() {
             isChecked={isChecked}
             checkedCheckBoxColor="#FFD700"
             uncheckedCheckBoxColor="#9B9B9B"
+            disabled={phoneNumber.trim() === ""}
           />
           <Text style={styles.checkboxText}>Accept all terms and conditions?</Text>
           <TouchableOpacity style={{ marginBottom: hp('1.1%') }} onPress={() => {
-              navigation.navigate('T&CScreen')
-            }}>
-              <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Terms & Condition</Text>
-            </TouchableOpacity>
+            navigation.navigate('T&CScreen')
+          }}>
+            <Text style={[styles.kycText, { textDecorationLine: 'underline', fontFamily: 'Montserrat-Bold', }]}> Terms & Condition</Text>
+          </TouchableOpacity>
         </View>
-        <View style={[styles.box, { padding: hp('2%'), position: 'relative' }]}>
+        <View style={[styles.box, { position: 'relative' }]}>
           <CommonButton
             title={loader ? 'Loading...' : 'Login'}
             onPress={handleLogin}
@@ -206,7 +204,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 10, 
+    borderRadius: 10,
     zIndex: 10,
   },
   checkboxContainer: {

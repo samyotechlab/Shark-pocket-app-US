@@ -37,7 +37,7 @@ export default function AvailableCard({ gameData, status }) {
   const { gradient, borderColor, borderBottom } = colorTheme[gameColor] || colorTheme.yellow;
 
   const getFormattedDate = () =>
-    formatDate(status === '4' ? gameData?.game_start_date : gameData?.start_date);
+    formatDate(status === '4' ? gameData?.game_end_date : gameData?.end_date);
 
   const getTitle = () => (status === '4' ? gameData?.game_title : gameData?.title);
 
@@ -53,12 +53,12 @@ export default function AvailableCard({ gameData, status }) {
     <View style={[styles.cardWrapper, { borderBottomColor: borderBottom }]}>
       <LinearGradient colors={gradient} start={{ x: 0, y: 0.5 }} end={{ x: 0.8, y: 1 }} style={[styles.card, { borderColor }]}>
         <View style={styles.content}>
-          <Image source={Game} style={styles.characterImage} />
+          <Image source={gameData.imageUrl ? {uri:gameData?.imageUrl}:Game} style={styles.characterImage} />
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>{getTitle()}</Text>
             <Text style={styles.description}>{getDescription()}</Text>
             <Text style={styles.startText}>
-              Start <Text style={styles.dateText}>{getFormattedDate()}</Text>
+              Expires On <Text style={styles.dateText}>{getFormattedDate()}</Text>
             </Text>
             {getWinningPrice() && (
               <View style={styles.buttonContainer}>
@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
   },
   characterImage: {
     width: wp(25),
-    maxHeight: hp(20),
+    // maxHeight: hp(20),
+    height:hp(20),
     resizeMode: 'contain',
   },
   textContainer: {

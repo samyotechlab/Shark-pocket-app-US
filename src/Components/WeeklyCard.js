@@ -12,11 +12,11 @@ const WeeklyCard = ({ gameData, frequencyStatus }) => {
 
   const handleNavigation = (item) => {
     const navigationMap = {
-      "4": { screen: "AllGameName", params: { game_id: item._id, title: item.title } },
-      "3": { screen: "UpcomingGameInfo", params: { game_id: item._id, game_name: item.title } },
+      "4": { screen: "AllGameName", params: { game_id: item._id, title: item.title,game_info:item.game_info } },
+      "3": { screen: "UpcomingGameInfo", params: { game_id: item._id, game_name: item.title,game_info:item.game_info } },
     };
 
-    const { screen, params } = navigationMap[frequencyStatus] || { screen: "GameName", params: { game_id: item._id, title: item.title } };
+    const { screen, params } = navigationMap[frequencyStatus] || { screen: "GameName", params: { game_id: item._id, title: item.title,game_info:item.game_info } };
     navigation.navigate(screen, params);
   };
 

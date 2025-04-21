@@ -33,41 +33,41 @@ const ViewProfile = () => {
   });
 
 
-  const openImagePicker = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    })
-      .then(image => {
-        setProfileImage(image?.path);
-        uploadImageToServer(image?.path);
-      }).catch((error) => {
-        console.log(error)
-      })
-  };
+  // const openImagePicker = () => {
+  //   ImagePicker.openPicker({
+  //     width: 300,
+  //     height: 400,
+  //     cropping: true,
+  //   })
+  //     .then(image => {
+  //       setProfileImage(image?.path);
+  //       uploadImageToServer(image?.path);
+  //     }).catch((error) => {
+  //       console.log(error)
+  //     })
+  // };
 
-  const uploadImageToServer = async (image) => {
-    const data = new FormData();
+  // const uploadImageToServer = async (image) => {
+  //   const data = new FormData();
     
-    data.append('avatar', {
-      uri: image,
-      type: 'image/jpeg',
-      name: '12345.jpg',
-    });
-    data.append('user_id', usersData._id);
-    setLoader(true)
-    try {
-      const response = await updateImage(data)
-      if (response.status == 1) {
-        handleInputChange('avatar', response.data.avatar);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    } finally {
-      setLoader(false)
-    }
-  };
+  //   data.append('avatar', {
+  //     uri: image,
+  //     type: 'image/jpeg',
+  //     name: '12345.jpg',
+  //   });
+  //   data.append('user_id', usersData._id);
+  //   setLoader(true)
+  //   try {
+  //     const response = await updateImage(data)
+  //     if (response.status == 1) {
+  //       handleInputChange('avatar', response.data.avatar);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   } finally {
+  //     setLoader(false)
+  //   }
+  // };
 
   // const saveUpdatedField = async (field, value) => {
   //   const updatedData = { user_id: usersData._id, [field]: value };
@@ -114,7 +114,9 @@ const ViewProfile = () => {
                     : require('../../../assets/images/Screens/profile.jpeg')}
                   style={styles.profileImage}
                 />
-                <TouchableOpacity style={styles.cameraIcon} onPress={openImagePicker}>
+                <TouchableOpacity style={styles.cameraIcon} 
+                // onPress={openImagePicker}
+                >
                   <Icon name="camera-outline" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
@@ -158,12 +160,13 @@ const ViewProfile = () => {
                   // onChangeText={(text) => handleInputChange('mobile', text)}
                   style={styles.input}
                 />
-                <TouchableOpacity 
+                {/* <TouchableOpacity 
                 style={styles.changeButton}   
-                // onPress={() => saveUpdatedField('mobile',formData.mobile)} 
+                disabled
+                onPress={() => saveUpdatedField('mobile',formData.mobile)} 
                 >
                   <Text style={styles.changeText}>CHANGE</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
 
               <View style={styles.inputWrapper}>
@@ -171,11 +174,11 @@ const ViewProfile = () => {
                 <TextInput
                  value={formData.email}
                   style={styles.input} 
-                  // onChangeText={(text) => handleInputChange('email', text)}
+                  onChangeText={(text) => handleInputChange('email', text)}
                    />
                 <TouchableOpacity
                  style={styles.changeButton} 
-                //  onPress={() => saveUpdatedField('email',formData.email)} 
+                 onPress={() => saveUpdatedField('email',formData.email)} 
                  >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>

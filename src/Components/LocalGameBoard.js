@@ -32,7 +32,8 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 export default function LocalGameBoard() {
   const route = useRoute();
-  const { game_id, user_id } = route.params;
+  const { game_id, user_id,screen_name } = route.params;
+  console.log("screenNmae",screen_name)
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
@@ -208,7 +209,7 @@ export default function LocalGameBoard() {
         colors={['#361911', '#361911', '#6A1700']}
         style={styles.linearGradient}>
         <View style={{ flex: 0.15 }}>
-          <CommonHeader title={'Leader Board'} />
+          <CommonHeader title={'Leader Board'} screen_name={screen_name}/>
           <TouchableOpacity
             style={{ position: 'absolute', top: hp('6%'), right: hp('1%') }}
             onPress={() => {

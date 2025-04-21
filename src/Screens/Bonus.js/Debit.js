@@ -20,13 +20,17 @@ export default function Debit(props) {
   const { bonusData = [] } = props;
   const navigation = useNavigation();
   const debitTransactions = Array.isArray(bonusData)
-    ? bonusData.filter((item) => item.type === 1)
+    ? bonusData.filter((item) => item.type === 0)
     : [];
 
 
   const groupedData = groupByDateAndType(debitTransactions);
 
   const renderTransaction = ({ item }) => {
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
 
     const transaction_amount = parseFloat(item.gst_amount ?? 0).toFixed(2)
     return (<TouchableOpacity
@@ -46,7 +50,7 @@ export default function Debit(props) {
         <Text style={[styles.note, { color: '#F10000' }]}>
           {item.note || 'No Note'}
         </Text>
-        <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
       </View>
       <View>
         <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>

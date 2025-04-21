@@ -70,7 +70,7 @@ const PlayedHistory = () => {
   }, [isReady, loginData])
 
   const handleNavigation = ()=>{
-    navigation.navigate('LocalGameBoard', { game_id: game_id })
+    navigation.navigate('LocalGameBoard', { game_id: game_id,user_id: data._id })
   }
 
   const renderItem = ({ item }) => {

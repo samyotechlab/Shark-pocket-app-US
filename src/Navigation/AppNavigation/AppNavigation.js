@@ -28,7 +28,7 @@ import PanVerfication from '../../Screens/PanVerfication/PanVerification';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
-import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen, PrivacyPolicy } from '../../Screens/Screens/Screen';
+import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen, PrivacyPolicy, PointsSelection } from '../../Screens/Screens/Screen';
 import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
 import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
 import UploadDocuments from '../../Components/UploadDocuments';
@@ -305,6 +305,13 @@ export default function AppNavigation() {
         <Stack.Screen
           name="SupportScreen"
           component={SupportScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="PointsSelection"
+          component={PointsSelection}
           options={{
             headerShown: false,
           }}

@@ -169,7 +169,7 @@ export default function AadharDetail() {
                         <Text style={styles.errorText}>{aadharError}</Text>
                     )}
                 </View>
-                <View style={[{ padding: hp('1%') }]}>
+                <View style={[{ paddingTop: hp('2%') }]}>
                     <CommonButton
                         title={loader ? 'Loading...' : 'Save'}
                         onPress={handleAadharDetail}

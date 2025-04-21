@@ -9,7 +9,7 @@ import {
   Modal,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Coin from '../../../assets/images/Screens/CoinStack.png';
 import {
   widthPercentageToDP as wp,
@@ -20,7 +20,9 @@ export default function GameFinishScreen({
   isVisible,
   onClose,
   gameHistoryData,
-}) {
+})
+ {
+  console.log("gameHistoryData",gameHistoryData)
   const navigation = useNavigation();
   return (
     <Modal
@@ -33,14 +35,14 @@ export default function GameFinishScreen({
           <View style={styles.container}>
             <LinearGradient
               colors={['#F38424', '#F7A552', '#F9D479']}
-              start={{x: 0, y: 0.5}}
-              end={{x: 1, y: 0.5}}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
               style={styles.underContainer}>
               <View style={styles.headerContainer}>
                 <LinearGradient
                   colors={['#F38424', '#F7C929', '#F9D479']}
-                  start={{x: 0, y: 0.5}}
-                  end={{x: 1, y: 0.5}}
+                  start={{ x: 0, y: 0.5 }}
+                  end={{ x: 1, y: 0.5 }}
                   style={{
                     flex: 1,
                     borderRadius: wp('2%'),
@@ -53,8 +55,8 @@ export default function GameFinishScreen({
                   <View style={styles.scoreBox}>
                     <LinearGradient
                       colors={['#00E000', '#00B300', '#00B300']}
-                      start={{x: 0, y: 0.5}}
-                      end={{x: 1, y: 0.5}}
+                      start={{ x: 0, y: 0.5 }}
+                      end={{ x: 1, y: 0.5 }}
                       style={styles.scoreBox1}>
                       <Image source={Coin} style={styles.coinImage} />
                       <Text style={styles.scoreText}>
@@ -65,7 +67,7 @@ export default function GameFinishScreen({
                 </LinearGradient>
               </View>
 
-              <View style={{flex: 2, margin: wp('3%')}}>
+              <View style={{ flex: 2, margin: wp('3%') }}>
                 <ScrollView style={styles.tableContainer}>
                   {/* {Object.entries(gameHistoryData).map(
                     ([key, value], index) => (
@@ -76,7 +78,7 @@ export default function GameFinishScreen({
                       </View>
                     ),
                   )} */}
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -84,13 +86,13 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Double</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.double_digit.assignedScore}*{gameHistoryData.double_digit.selected}</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>
                           {gameHistoryData.double_digit.score}
                         </Text>
@@ -98,8 +100,8 @@ export default function GameFinishScreen({
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -107,7 +109,7 @@ export default function GameFinishScreen({
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -115,20 +117,20 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Triple</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.triple_digit.assignedScore}*{gameHistoryData.triple_digit.selected}</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.triple_digit.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -136,7 +138,7 @@ export default function GameFinishScreen({
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -144,20 +146,20 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Quadraple</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.quadruple_digit.assignedScore}*{gameHistoryData.quadruple_digit.selected}</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.quadruple_digit.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -165,7 +167,7 @@ export default function GameFinishScreen({
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -173,20 +175,20 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Prime</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.prime_number.assignedScore}*{gameHistoryData.prime_number.selected}</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.prime_number.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -194,7 +196,7 @@ export default function GameFinishScreen({
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -202,20 +204,20 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Super</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.super_number.assignedScore}*{gameHistoryData.super_number.selected}</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.super_number.score}</Text>
                       </View>
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -223,7 +225,7 @@ export default function GameFinishScreen({
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -231,20 +233,20 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Bonus</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>-</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.bonus_point_score.bonusPoints + gameHistoryData.bonus_point_score.superPoints}</Text>
                       </View>
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -252,7 +254,7 @@ export default function GameFinishScreen({
                       }}
                     />
                   </View>
-                  <View style={{flex: 1, paddingBottom: 10}}>
+                  <View style={{ flex: 1, paddingBottom: 10 }}>
                     <View
                       style={{
                         flex: 1,
@@ -260,20 +262,20 @@ export default function GameFinishScreen({
                         flexDirection: 'row',
                         paddingBlock: 6,
                       }}>
-                      <View style={{flex: 1.5}}>
+                      <View style={{ flex: 1.5 }}>
                         <Text style={styles.txt}>Wrong</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>-</Text>
                       </View>
-                      <View style={{flex: 1}}>
+                      <View style={{ flex: 1 }}>
                         <Text style={styles.txt}>{gameHistoryData.wrong_selection_score}</Text>
                       </View>
                     </View>
                     <LinearGradient
                       colors={['#999999', '#FFFFFF', '#999999']}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       style={{
                         height: 1,
                         marginTop: 10,
@@ -285,16 +287,31 @@ export default function GameFinishScreen({
                 <View
                   style={{
                     flex: 0.3,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    flexDirection: 'row'
                   }}>
-                  <TouchableOpacity
-                    style={styles.homeButton}
-                    onPress={() => {
-                      navigation.navigate('HomeScreen',{screen:"Home"})
-                    }}>
-                    <Text style={styles.homeButtonText}>HOME</Text>
-                  </TouchableOpacity>
+                  <View
+                    style={styles.homeContainer}
+                  >
+                    <TouchableOpacity
+                      style={styles.homeButton}
+                      onPress={() => {
+                        navigation.navigate('HomeScreen', { screen: "Home" })
+                      }}>
+                      <Text style={styles.homeButtonText}>Home</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={styles.homeContainer}
+                  >
+                    <TouchableOpacity
+                      style={styles.homeButton}
+                      onPress={() => {
+                        navigation.navigate('LocalGameBoard', { game_id: gameHistoryData.game_id, user_id: gameHistoryData.user_id,screen_name:"LeaderBoard"})
+                      }}
+                    >
+                      <Text style={styles.homeButtonText}>Leader Board</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </LinearGradient>
@@ -340,7 +357,7 @@ const styles = StyleSheet.create({
     margin: wp('5%'),
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 1,
     backgroundColor: '#F2E30B',
@@ -354,7 +371,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 10,
     shadowRadius: 1,
   },
@@ -374,7 +391,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 5,
     shadowColor: 'white',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     alignItems: 'center',
@@ -427,27 +444,32 @@ const styles = StyleSheet.create({
   },
   homeButton: {
     // flex:1.5,
+    margin: hp('1%'),
+    borderRadius: hp('5%'),
+    paddingTop: hp('1.5%'),
+    paddingBottom: hp('1.5%'),
     backgroundColor: '#F2BB00',
-    borderRadius: wp('10%'),
-    margin: wp('3.5%'),
     borderColor: '#000000',
     borderWidth: 1,
-    borderRadius: 50,
     elevation: 5,
     shadowColor: 'white',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: wp('3%'),
-    paddingHorizontal: wp('13%'),
+  },
+  homeContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
   homeButtonText: {
-    fontSize: 28,
+    fontSize: 20,
     fontFamily: 'LilitaOne-Regular',
     color: '#FFF',
     textAlign: 'center',
+    textTransform: 'uppercase'
+
   },
   txt: {
     color: '#FFFFFF',

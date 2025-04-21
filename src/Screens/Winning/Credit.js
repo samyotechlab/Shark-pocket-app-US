@@ -31,8 +31,13 @@ export default function Credit({winningData}) {
     navigation.navigate('DepositeDetails');
   };
 
-  const renderTransaction = ({ item }) => (
-    <TouchableOpacity
+  const renderTransaction = ({ item }) => {
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
+    return (
+      <TouchableOpacity
       style={styles.itemContainer}
       onPress={handleNavigation}
     >
@@ -50,13 +55,14 @@ export default function Credit({winningData}) {
         <Text style={[styles.note, { color: '#696969' }]}>
           {item.transaction_note || 'No Note'}
         </Text>
-        <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
       </View>
       <View>
           <Text style={styles.amount}>₹{ parseFloat(item?.winning_amount ?? 0).toFixed(2) }</Text>
       </View>
     </TouchableOpacity>
-  );
+    )
+  };
 
   const renderSection = ({ item }) => (
     

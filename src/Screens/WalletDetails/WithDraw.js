@@ -22,6 +22,7 @@ const WithdrawHistory = (props) => {
     setLoader(true)
     try {
       const response = await withdrawHistory(user_id);
+      console.log("response in withdraw",response)
       setData(response.data);
     } catch (error) {
       console.log('error', error);

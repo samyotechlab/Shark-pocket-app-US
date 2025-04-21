@@ -11,7 +11,10 @@ export default function CommonHeader({ title, screen_name, game_id }) {
       navigation.navigate('GameName', { game_id: game_id });
     } else if (screen_name === 'Tickets') {
       navigation.navigate('HomeScreen', { screen: 'Home' });
-    } else {
+    }else if (screen_name === "LeaderBoard"){
+      navigation.navigate('HomeScreen', { screen: 'Result' });
+    }
+     else {
       navigation.goBack();
     }
   };

@@ -27,12 +27,12 @@ export default function All({ winningData }) {
     navigation.navigate('DepositeDetails', { item :item,page:"winning"});
   };
 
-  const renderTransaction = ({ item }) => {
-    console.log("item",item)  
+  const renderTransaction = ({ item }) => { 
     const isDebit = item.type === 0;
-
-    console.log("isDebit",isDebit)
-
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
     return (
       <TouchableOpacity
         style={[
@@ -65,7 +65,7 @@ export default function All({ winningData }) {
           >
             {item.transaction_note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
         </View>
         <View>
           <Text style={styles.amount}>₹{isDebit ? parseFloat(item?.user_amount ?? 0).toFixed(2) :parseFloat(item?.winning_amount ?? 0).toFixed(2) || '0'}</Text>

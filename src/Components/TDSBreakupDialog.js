@@ -15,7 +15,7 @@ const { height } = Dimensions.get('window');
 
 
 const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData,handleWithdrawRequest }) => {
-
+ console.log("tdsData-->",tdsData)
   return (
     <View style={styles.container}>
       <Modal

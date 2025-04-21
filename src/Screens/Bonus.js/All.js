@@ -32,6 +32,10 @@ export default function All(props) {
   const renderTransaction = ({ item }) => {
     const isDebit = item.type === 0;
     const transaction_amount =  parseFloat(item?.gst_amount ?? 0).toFixed(2)
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
 
     return (
       <TouchableOpacity
@@ -65,7 +69,7 @@ export default function All(props) {
           >
             {item.note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount|| '₹0'}</Text>

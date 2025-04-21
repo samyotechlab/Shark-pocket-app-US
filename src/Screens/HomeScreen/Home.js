@@ -65,6 +65,7 @@ export default function HomeScreen() {
   const getVesion = async () => {
     try {
       const response = await getVersionData();
+      console.log("response",response)
       setVersion(response.data)
       if (os === 'android') {
         if (response.data.android !== appVersion) {
@@ -73,12 +74,8 @@ export default function HomeScreen() {
             "Newer version available. Please update it.",
             [
               {
-                text: "Cancel",
-                style: "cancel"
-              },
-              {
                 text: "Update",
-                onPress: () => Linking.openURL("https://play.google.com/store/apps/details?id=YOUR_APP_PACKAGE_NAME")
+                onPress: () => Linking.openURL("https://sharkpocket.in/")
               }
             ]
           );
@@ -139,9 +136,10 @@ export default function HomeScreen() {
     setLoader(true);
     try {
       const response = await getGameData(loginData ? loginData?._id : data?._id)
+      console.log("response?.data",response?.data)
       setMyGames(response?.myGames);
-      setGameData(response.data);
-      setBannerData(response.banner);
+      setGameData(response?.data);
+      setBannerData(response?.banner);
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -279,7 +277,7 @@ export default function HomeScreen() {
               )}
             </>
 
-            {
+            {/* {
               Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
                 <View style={{ flex: 1, marginTop: hp('1%') }}>
                   <View
@@ -308,7 +306,7 @@ export default function HomeScreen() {
               ) : (
                 <AnimatedLoader />
               )
-            }
+            } */}
 
             {
               Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (

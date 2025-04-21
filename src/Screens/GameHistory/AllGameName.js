@@ -9,9 +9,9 @@ import { useRoute } from '@react-navigation/native'
 
 export default function AllGameName() {
   const route = useRoute()
-  console.log(route.params)
+  console.log("route.params",route.params)
   const {title} = route.params
-  console.log(title)
+  console.log("title",title)
 
   return (
  <LinearGradient

@@ -25,8 +25,6 @@ export default function LocalLeaderBoard({ type }) {
       if (response) {
         const weekData = response.data?.filter((item) => item.frequency === "weekly")
         const dayData = response.data?.filter((item) => item.frequency === "daily")
-        console.log("weekData", weekData)
-        console.log("dayData", dayData)
         setWeeklyData(weekData);
         setDailyData(dayData)
       } else {

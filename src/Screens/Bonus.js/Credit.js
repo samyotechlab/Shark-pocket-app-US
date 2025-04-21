@@ -21,17 +21,22 @@ export default function Credit(props) {
   const { bonusData = [] } = props;
   const navigation = useNavigation();
   const creditTransactions = Array.isArray(bonusData)
-    ? bonusData.filter((item) => item.type === 0)
+    ? bonusData.filter((item) => item.type === 1)
     : [];
 
   const groupedData = groupByDateAndType(creditTransactions);
 
 
   const handleNavigation = (item) => {
+    
     navigation.navigate('DepositeDetails', { item :item,page:"bonus"});
   };
 
   const renderTransaction = ({ item }) => {
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
     const transaction_amount =  parseFloat(item?.gst_amount ?? 0).toFixed(2)
     return (<>
       <TouchableOpacity
@@ -52,7 +57,7 @@ export default function Credit(props) {
           <Text style={[styles.note, { color: '#696969' }]}>
             {item.note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.request_raised ? item.request_raised.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>

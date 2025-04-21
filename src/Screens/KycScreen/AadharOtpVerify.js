@@ -152,11 +152,9 @@ export default function AadharOtpVerify() {
     }
   }
   const closeConfirmation = async ()=>{
-    console.log("hellooooo")
     setVisible(false)
     try {
       const response = await AadharVerificationRejection(user_id)
-      console.log("response",response)
       if(response.status === 1){
         navigation.navigate("AadharDetail",{user_id:user_id})
       }

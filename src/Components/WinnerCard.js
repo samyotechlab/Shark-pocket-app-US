@@ -5,6 +5,7 @@ import Carousel from 'react-native-reanimated-carousel';
 const { width } = Dimensions.get('window');
 const WinnerCard = (props) => {
   const { data } = props
+  console.log("data",data)
 
   const renderItem = ({ item }) => {
     const clickable = item?.isClickable === true;

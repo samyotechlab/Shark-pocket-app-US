@@ -6,6 +6,7 @@ import {
 } from 'react-native-responsive-screen';
 
 export default function GameInfo({ gameData }) {
+    console.log("gameData",gameData)
     return (
 
         <View>
@@ -13,14 +14,7 @@ export default function GameInfo({ gameData }) {
                 <View style={styles.card}>
                     <Text style={styles.title}>📜 Game Info</Text>
                     <Text style={styles.text}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin sit purus purus massa gravida.
+                      {gameData.game_info}
                     </Text>
                 </View>
             </ScrollView>

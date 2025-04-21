@@ -28,10 +28,14 @@ export default function Credit(props) {
 
 
   const handleNavigation = (item) => {
-    navigation.navigate('DepositeDetails',{item});
+    navigation.navigate('DepositeDetails', { item });
   };
 
   const renderTransaction = ({ item }) => {
+    const createdAt = item.created_at || 'n/a';
+    const [, time, period] = createdAt.split(" ");
+    const [hour, minute] = time.split(":");
+    const hourMinuteOnly = `${hour}:${minute} ${period}`;
     const transaction_amount = parseFloat(item.transaction_amount).toFixed(2)
     return (<>
       <TouchableOpacity
@@ -52,7 +56,7 @@ export default function Credit(props) {
           <Text style={[styles.note, { color: '#696969' }]}>
             {item.transaction_note || 'No Note'}
           </Text>
-          <Text style={styles.time}>{item.created_at ? item.created_at.split(' ')[1].substring(0, 5) : 'N/A'} pm</Text>
+          <Text style={styles.time}>{item.created_at ? hourMinuteOnly : 'N/A'}</Text>   
         </View>
         <View>
           <Text style={styles.amount}>₹{transaction_amount || '₹0'}</Text>

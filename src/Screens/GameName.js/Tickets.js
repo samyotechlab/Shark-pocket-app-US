@@ -18,7 +18,7 @@ import {
 } from 'react-native-responsive-screen';
 import { storeTicket, ticketList } from '../../Service/Tickets';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
-import coin from '../../../assets/images/Screens/coin.png';
+import coin from '../../../assets/images/Screens/coin2.png';
 import ticket from '../../../assets/images/Screens/ticket.png';
 import timer from '../../../assets/images/Screens/timer.png';
 import AlertDialog from '../../Components/AlertDialogRed';
@@ -49,6 +49,7 @@ export default function Tickets({ gameData }) {
   const route = useRoute();
   const { game_id } = route.params;
   const [refreshing, setRefreshing] = useState(false);
+  const [isBtnDisabled, setIsBtnDisabled] = useState(false); 
   const refreshData = () => {
     setRefreshing(true);
     setTimeout(() => {
@@ -133,6 +134,7 @@ export default function Tickets({ gameData }) {
     }
 
     const handlePurchaseModal = async () => {
+      setIsBtnDisabled(true);
       const isValidState = await checkState();
       if (usersData?.is_aadhar_verified === 0) {
         setVisible(true);
@@ -167,12 +169,16 @@ export default function Tickets({ gameData }) {
         question: question
       });
     };
+    const handleClose =() =>{
+      setIsBtnDisabled(false)
+      setVisible(false)
+    }
     return (
       <>
 
         <AlertDialogGreen
           visible={visible}
-          onClose={() => setVisible(false)}
+          onClose={() => handleClose()}
           onOkPress={okPress === 'handleAadhar' ? handleAadhar : handlePurchase}
           message={message}
         />
@@ -241,6 +247,7 @@ export default function Tickets({ gameData }) {
                           borderBottomColor: isPurchased ? '#eb8d01' : '#018312',
                         },
                       ]}
+                      disabled={isBtnDisabled}
                       onPress={isPurchased ? handlePlay : handlePurchaseModal}>
                       <Text style={styles.playButtonText}>
                         {' '}
@@ -368,8 +375,8 @@ const styles = StyleSheet.create({
     marginBottom: hp('0.5%'),
   },
   boxIcon1: {
-    width: wp('5%'),
-    height: wp('5%'),
+    width: wp('6%'),
+    height: wp('6%'),
     marginBottom: hp('0.5%'),
     resizeMode: 'contain',
   },

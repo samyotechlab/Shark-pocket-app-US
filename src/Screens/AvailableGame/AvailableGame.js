@@ -13,12 +13,13 @@ export default function AvailableGame() {
   const navigation = useNavigation();
   const route = useRoute();
   const { gameData, status } = route.params;
+  console.log("gameData",gameData)
   const [disabled, setDisabled] = useState(false);
 
   const titleMap = {
     "5": "Daily Game",
     "6": "Weekly Game",
-  };2
+  };
 
   const title = titleMap[status] || "Available Games";
 
@@ -33,12 +34,12 @@ export default function AvailableGame() {
   }, [gameData, status]);
 
   const handleNavigation = (item) => {
+    console.log()
     const navigationMap = {
-      "4": { screen: "AllGameName", params: { game_id: item._id, title: item.title } },
-      "3": { screen: "UpcomingGameInfo", params: { game_id: item._id, game_name: item.title } },
+      "4": { screen: "AllGameName", params: { game_id: item._id, title: item.title,game_info:item.game_info } },
+      "3": { screen: "UpcomingGameInfo", params: { game_id: item._id, game_name: item.title,game_info:item.game_info } },
     };
-
-    const { screen, params } = navigationMap[status] || { screen: "GameName", params: { game_id: item._id, title: item.title } };
+    const { screen, params } = navigationMap[status] || { screen: "GameName", params: { game_id: item._id, title: item.title ,game_info:item.game_info} };
     navigation.navigate(screen, params);
   };
 
