@@ -5,20 +5,18 @@ import Carousel from 'react-native-reanimated-carousel';
 const { width } = Dimensions.get('window');
 const WinnerCard = (props) => {
   const { data } = props
-  console.log("data",data)
 
   const renderItem = ({ item }) => {
     const clickable = item?.isClickable === true;
 
     const openLink = () => {
-      Linking.openURL(item.sourceUrl).catch(err => console.error("Failed to open URL:", err));
+      Linking.openURL(item?.sourceUrl).catch(err => console.error("Failed to open URL:", err));
     };
 
     return (
       <TouchableOpacity style={styles.container} disabled={!clickable} onPress={openLink}>
         <Image
           source={{ uri: item?.bannerUrl }}
-          // source={require('../../assets/images/Screens/banner.jpg') }
           style={styles.profileImage}
         />
       </TouchableOpacity>
@@ -27,7 +25,7 @@ const WinnerCard = (props) => {
 
   return (
     <>
-      {!data.length ? (
+      {!data?.length ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
             No games or tickets are currently available.

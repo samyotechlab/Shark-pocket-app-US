@@ -1,3 +1,5 @@
+import App from "../../App";
+
 export default {
   Login: 'api/login',
   OtpVerify: 'api/verifyOtp',
@@ -37,6 +39,7 @@ export default {
   Winning: 'api/winnings/byUserId',
   Wallet_Store: 'api/wallet_request/store',
   Wallet_Request: 'api/wallet_request/list',
+  Approved_Request: 'api/wallet_request/approved',
   Final_Score: 'api/finalScore',
   Bonus_Data: 'api/bonusWallet/byUserId',
   EditProfile: 'api/editProfile',

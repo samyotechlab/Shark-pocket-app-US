@@ -11,8 +11,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 const UpcomingGameCard = ({ items ,status}) => {
   const navigation = useNavigation()
   const { index,item } = items
-
-  console.log("item--",item)
   const game_color = item.gameColor 
   const Colors = {
     yellow: ['#F38424', '#F7A552', '#F9D479'],

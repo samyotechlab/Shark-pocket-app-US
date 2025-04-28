@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import sharkLogo from '../../../assets/images/Screens/sharkLogo.png';
 import bell from '../../../assets/images/Screens/bell.png';
@@ -31,7 +31,7 @@ import UpcomingGame from '../../Components/UpcomingGame';
 import CloseDialog from '../../Components/CloseDialog';
 import { userDetail } from '../../Service/Login';
 import GameHistory from '../../Components/GameHistory';
-import shark from '../../../assets/images/Applogo/Sharkpocket1.png'
+import shark from '../../../assets/images/Applogo/Sharkpocket1.png';
 import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
@@ -44,84 +44,155 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
-  const [usersData, setUserData] = useState({})
+  const [usersData, setUserData] = useState(null); // Changed to null for clearer loading state
   const [bannerData, setBannerData] = useState([]);
-  const [version, setVersion] = useState({})
+  const [version, setVersion] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const data = isReady && loginData && loginData?.data;
   const os = Platform.OS;
   const appVersion = DeviceInfo.getVersion();
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      userData();
-      getAllData();
-      getHistoryData();
-      setRefreshing(false);
-    }, 2000);
-  };
-  const getVesion = async () => {
+    setLoader(true);
+    Promise.all([fetchUserData(), fetchGameData(), fetchHistoryData()])
+      .then(() => {
+        setRefreshing(false);
+        setLoader(false);
+      })
+      .catch((error) => {
+        setRefreshing(false);
+        setLoader(false);
+      });
+  }, []);
+
+  const getVersion = async () => {
     try {
       const response = await getVersionData();
-      console.log("response",response)
-      setVersion(response.data)
+      setVersion(response.data);
       if (os === 'android') {
         if (response.data.android !== appVersion) {
           Alert.alert(
-            "Update Available",
-            "Newer version available. Please update it.",
+            'Update Available',
+            'Newer version available. Please update it.',
             [
               {
-                text: "Update",
-                onPress: () => Linking.openURL("https://sharkpocket.in/")
-              }
-            ]
+                text: 'Update',
+                onPress: () => Linking.openURL('https://sharkpocket.in/'),
+              },
+            ],
           );
         }
-      } else if (os === "ios") {
+      } else if (os === 'ios') {
         if (response.data.ios !== appVersion) {
           Alert.alert(
-            "Update Available",
-            "Newer version available. Please update it.",
+            'Update Available',
+            'Newer version available. Please update it.',
             [
+              { text: 'Cancel', style: 'cancel' },
               {
-                text: "Cancel",
-                style: "cancel"
+                text: 'Update',
+                onPress: () => Linking.openURL('https://apps.apple.com/app/idYOUR_APP_ID'),
               },
-              {
-                text: "Update",
-                onPress: () => Linking.openURL("https://apps.apple.com/app/idYOUR_APP_ID")
-              }
-            ]
+            ],
           );
         }
       }
-
     } catch (error) {
-      console.log("error", error)
+      console.log('Version error:', error);
     }
-  }
+  };
 
   useEffect(() => {
-    getVesion();
+    getVersion();
   }, []);
 
+  const fetchUserData = useCallback(async () => {
+    if (!data?._id) {
+      return;
+    }
+    setLoader(true);
+    try {
+      const response = await userDetail(data._id);
+      if (response?.data) {
+        const formattedData = {
+          ...response.data,
+          total_balance: parseFloat(response.data.total_balance || 0).toFixed(2),
+          bonus_wallet: parseFloat(response.data.bonus_wallet || 0).toFixed(2),
+          total_earning: parseFloat(response.data.total_earning || 0).toFixed(2),
+        };
+        setUserData(formattedData);
+      } else {
+        setUserData({});
+      }
+    } catch (error) {
+      setUserData({});
+    } finally {
+      setLoader(false);
+    }
+  }, [data]);
+
+  const fetchGameData = useCallback(async () => {
+    if (!data?._id) return;
+    setLoader(true);
+    try {
+      const response = await getGameData(data._id);
+      setGameData(response?.data || []);
+      setMyGames(response?.myGames || []);
+      setBannerData(response?.banner || []);
+    } catch (error) {
+      console.log('Game data error:', error);
+    } finally {
+      setLoader(false);
+    }
+  }, [data]);
+
+  const fetchHistoryData = useCallback(async () => {
+    if (!data?._id) return;
+    setLoader(true);
+    try {
+      const response = await gameHistoryByUser(data._id);
+      setGameHistory(response.data || []);
+    } catch (error) {
+      console.log('Game history error:', error);
+    } finally {
+      setLoader(false);
+    }
+  }, [data]);
+
+  // Memoize data fetching based on isReady and loginData
+  const memoizedData = useMemo(() => {
+    if (isReady && loginData) {
+      return Promise.all([fetchUserData(), fetchGameData(), fetchHistoryData()]);
+    }
+    return Promise.resolve();
+  }, [isReady, loginData, fetchUserData, fetchGameData, fetchHistoryData]);
+
+  useEffect(() => {
+    if (isReady && loginData) {
+      setLoader(true);
+      memoizedData
+        .then(() => {
+          setLoader(false);
+        })
+        .catch((error) => {
+          setLoader(false);
+        });
+    } else {
+      setLoader(true);
+    }
+  }, [isReady, loginData, memoizedData]);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (isReady && loginData) {
-        userData();
-        getAllData();
-        getHistoryData();
+        memoizedData
+          .then(() => console.log('Focus data fetch completed'))
+          .catch((error) => console.log('Focus data fetch error:', error));
         const onBackPress = () => {
           Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
-            {
-              text: 'Cancel',
-              onPress: () => null,
-              style: 'cancel',
-            },
+            { text: 'Cancel', onPress: () => null, style: 'cancel' },
             { text: 'YES', onPress: () => BackHandler.exitApp() },
           ]);
           return true;
@@ -129,35 +200,14 @@ export default function HomeScreen() {
         const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
         return () => backHandler.remove();
       }
-      }, [loginData]),
+    }, [isReady, loginData, memoizedData]),
   );
 
-  const getAllData = async (loginData) => {
-    setLoader(true);
-    try {
-      const response = await getGameData(loginData ? loginData?._id : data?._id)
-      console.log("response?.data",response?.data)
-      setMyGames(response?.myGames);
-      setGameData(response?.data);
-      setBannerData(response?.banner);
-    } catch (error) {
-      console.log('error', error);
-    } finally {
-      setLoader(false);
-    }
-  };
-
-  const getHistoryData = async (loginData) => {
-    setLoader(true);
-    try {
-      const response = await gameHistoryByUser(loginData ? loginData?._id : data?._id)
-      setGameHistory(response.data);
-    } catch (error) {
-      console.log('error', error);
-    } finally {
-      setLoader(false);
-    }
-  };
+  const totalAmount = usersData
+    ? parseFloat(usersData.total_balance || 0) +
+      parseFloat(usersData.bonus_wallet || 0) +
+      parseFloat(usersData.total_earning || 0)
+    : 0;
 
   const AvailableGame = Array.isArray(gameData)
     ? gameData.filter((item) => item.status === 3)
@@ -167,63 +217,41 @@ export default function HomeScreen() {
     ? gameData.filter((item) => item.status === 1)
     : [];
 
-  const userData = async (loginData) => {
-    setLoader(true);
-    try {
-      const response = await userDetail(loginData ? loginData?._id : data?._id);
-      const formattedData = {
-        ...response.data,
-        total_balance: parseFloat(response?.data?.total_balance || 0).toFixed(2),
-        bonus_wallet: parseFloat(response?.data?.bonus_wallet || 0).toFixed(2),
-        total_earning: parseFloat(response?.data?.total_earning || 0).toFixed(2),
-      };
-      setUserData(formattedData);
-    } catch (error) {
-      console.log('error', error);
-    } finally {
-      setLoader(false);
-    }
-  };
-  useEffect(() => {
-    if (isReady && loginData) {
-      userData(loginData?.data);
-      getAllData(loginData?.data);
-      getHistoryData(loginData?.data);
-    } else {
-      setLoader(true);
-    }
-  }, [isReady, loginData]);
-  const totalAmount =
-    parseFloat(usersData?.total_balance || 0) +
-    parseFloat(usersData?.bonus_wallet || 0) +
-    parseFloat(usersData?.total_earning || 0);
   return (
-
-    <LinearGradient
-      colors={['#361911', '#361911', '#6A1700']}
-      style={styles.linearGradient}>
+    <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
       {!loader ? (
         <>
           <View style={{ backgroundColor: '#552113' }}>
             <View style={styles.container}>
-
-              <TouchableOpacity style={styles.logoContainer} onPress={() => navigation.navigate('ViewProfile', { usersData: usersData, status: 1 })}>
+              <TouchableOpacity
+                style={styles.logoContainer}
+                onPress={() =>
+                  navigation.navigate('ViewProfile', { usersData: usersData || {}, status: 1 })
+                }
+              >
                 <Image source={sharkLogo} style={styles.logo} />
               </TouchableOpacity>
 
-              <View style={styles.logo1Container} >
+              <View style={styles.logo1Container}>
                 <Image source={shark} style={styles.logo} />
               </View>
 
-
-              <LinearGradient colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']} style={styles.walletContainer}>
-                <Image source={{ uri: "https://img.icons8.com/color/48/wallet--v1.png" }} style={styles.walletIcon} />
-                <Text style={styles.walletText}>
-                  ₹ {totalAmount.toFixed(2) || 0}
-                </Text>
+              <LinearGradient
+                colors={['#FFFFFF1A', '#FFFFFF1A', '#5521131A']}
+                style={styles.walletContainer}
+              >
+                <Image
+                  source={{ uri: 'https://img.icons8.com/color/48/wallet--v1.png' }}
+                  style={styles.walletIcon}
+                />
+                {usersData ? (
+                  <Text style={styles.walletText}>₹ {totalAmount.toFixed(2)}</Text>
+                ) : (
+                  <Text style={styles.walletText}>Loading...</Text>
+                )}
               </LinearGradient>
               <View style={styles.iconsContainer}>
-                <TouchableOpacity onPress={() => { navigation.navigate('Notification') }}>
+                <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
                   <Image source={bell} style={styles.icon} />
                 </TouchableOpacity>
               </View>
@@ -235,189 +263,127 @@ export default function HomeScreen() {
             scrollEnabled={scrollEnabled}
             contentContainerStyle={{ flexGrow: 1, margin: hp('1%') }}
             showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
-            }
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshData} />}
           >
-
             <View style={{ flex: 1, marginTop: hp('1%') }}>
               <WinnerCard data={bannerData} />
             </View>
 
-            <>
-              {Array.isArray(myGame) && myGame.length > 0 ? (
-                <View style={{ flex: 1 }}>
-                  <View
-                    style={{
-                      flex: 0.5,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
-                      <Image source={Lighting} style={styles.light} />
-                      <Text style={styles.myGame}>MY GAMES</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
-                      onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData: myGame, status: "1" });
-                      }}
-                    >
-                      <Text style={styles.view}>View All</Text>
-                    </TouchableOpacity>
+            {Array.isArray(myGame) && myGame.length > 0 ? (
+              <View style={{ flex: 1 }}>
+                <View style={{ flex: 0.5, flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>MY GAMES</Text>
                   </View>
-                  <View style={{ flex: 1.5, flexDirection: 'row' }}>
-                    <MyGame myGame={myGame} />
-                  </View>
+                  <TouchableOpacity
+                    style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
+                    onPress={() => {
+                      navigation.navigate('AvailableGame', { gameData: myGame, status: '1' });
+                    }}
+                  >
+                    <Text style={styles.view}>View All</Text>
+                  </TouchableOpacity>
                 </View>
-              ) : (
-                <View style={{ flex: 1 }}>
-
+                <View style={{ flex: 1.5, flexDirection: 'row' }}>
+                  <MyGame myGame={myGame} />
                 </View>
-              )}
-            </>
+              </View>
+            ) : (
+              <View style={{ flex: 1 }} />
+            )}
 
-            {/* {
-              Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
-                <View style={{ flex: 1, marginTop: hp('1%') }}>
-                  <View
-                    style={{
-                      flex: 0.5,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
-                      <Image source={Lighting} style={styles.light} />
-                      <Text style={styles.myGame}>AVAILABLE GAMES</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
-                      onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData, status: "2" });
-                      }}
-                    >
-                      <Text style={styles.view}>View All</Text>
-                    </TouchableOpacity>
+            {Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
+              <View style={{ flex: 1, marginTop: hp('1%') }}>
+                <View style={{ flex: 0.5, flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>WEEKLY GAMES</Text>
                   </View>
-                  <View style={{ flex: 1.5 }}>
-                    <AvailbleGameCard gameData={gameData} availability="1" setScrollEnabled={setScrollEnabled} />
-                  </View>
+                  <TouchableOpacity
+                    style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
+                    onPress={() => {
+                      navigation.navigate('AvailableGame', { gameData, status: '6' });
+                    }}
+                  >
+                    <Text style={styles.view}>View All</Text>
+                  </TouchableOpacity>
                 </View>
-              ) : (
-                <AnimatedLoader />
-              )
-            } */}
-
-            {
-              Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
-                <View style={{ flex: 1, marginTop: hp('1%') }}>
-                  <View
-                    style={{
-                      flex: 0.5,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
-                      <Image source={Lighting} style={styles.light} />
-                      <Text style={styles.myGame}>WEEKLY GAMES</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
-                      onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData, status: "6" });
-                      }}
-                    >
-                      <Text style={styles.view}>View All</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{ flex: 1.5, marginLeft: hp('0.7%') }}>
-                    <AvailbleGameCard gameData={gameData} availability="3" setScrollEnabled={setScrollEnabled} />
-                  </View>
+                <View style={{ flex: 1.5, marginLeft: hp('0.7%') }}>
+                  <AvailbleGameCard
+                    gameData={gameData}
+                    availability="3"
+                    setScrollEnabled={setScrollEnabled}
+                  />
                 </View>
-              ) : (
-                <AnimatedLoader />
-              )
-            }
-            {
-              Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
-                <View style={{ flex: 1, marginTop: hp('1%') }}>
-                  <View
-                    style={{
-                      flex: 0.5,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
-                      <Image source={Lighting} style={styles.light} />
-                      <Text style={styles.myGame}>DAILY GAMES</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
-                      onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData, status: "5" });
-                      }}
-                    >
-                      <Text style={styles.view}>View All</Text>
-                    </TouchableOpacity>
+              </View>
+            ) : (
+              <AnimatedLoader />
+            )}
+
+            {Array.isArray(AvailableGame) && AvailableGame.length > 0 ? (
+              <View style={{ flex: 1, marginTop: hp('1%') }}>
+                <View style={{ flex: 0.5, flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>DAILY GAMES</Text>
                   </View>
-                  <View style={{ flex: 1.5, marginLeft: hp('0.7%') }}>
-                    <AvailbleGameCard gameData={gameData} availability="2" setScrollEnabled={setScrollEnabled} />
-                  </View>
+                  <TouchableOpacity
+                    style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
+                    onPress={() => {
+                      navigation.navigate('AvailableGame', { gameData, status: '5' });
+                    }}
+                  >
+                    <Text style={styles.view}>View All</Text>
+                  </TouchableOpacity>
                 </View>
-              ) : (
-                <AnimatedLoader />
-              )
-            }
-
-
-
-            {
-              Array.isArray(UpcomingGames) && UpcomingGames.length > 0 ? (
-                <View style={{ flex: 1, marginTop: hp('1%') }}>
-                  <View
-                    style={{
-                      flex: 0.5,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                      <Image source={Lighting} style={styles.light} />
-                      <Text style={styles.myGame}>UPCOMING GAMES</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
-                      onPress={() => {
-                        navigation.navigate('AvailableGame', { gameData, status: "3" });
-                      }}
-                    >
-                      <Text style={styles.view}>View All</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{ flex: 1.5, flexDirection: 'row' }}>
-                    <UpcomingGame gameData={gameData} />
-                  </View>
+                <View style={{ flex: 1.5, marginLeft: hp('0.7%') }}>
+                  <AvailbleGameCard
+                    gameData={gameData}
+                    availability="2"
+                    setScrollEnabled={setScrollEnabled}
+                  />
                 </View>
-              ) : (<View style={{ flex: 1 }}>
+              </View>
+            ) : (
+              <AnimatedLoader />
+            )}
 
-              </View>)
-            }
+            {Array.isArray(UpcomingGames) && UpcomingGames.length > 0 ? (
+              <View style={{ flex: 1, marginTop: hp('1%') }}>
+                <View style={{ flex: 0.5, flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+                    <Image source={Lighting} style={styles.light} />
+                    <Text style={styles.myGame}>UPCOMING GAMES</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}
+                    onPress={() => {
+                      navigation.navigate('AvailableGame', { gameData, status: '3' });
+                    }}
+                  >
+                    <Text style={styles.view}>View All</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1.5, flexDirection: 'row' }}>
+                  <UpcomingGame gameData={gameData} />
+                </View>
+              </View>
+            ) : (
+              <View style={{ flex: 1 }} />
+            )}
 
-            {
-              gameHistory.length > 0 && (
-                <View style={{ flex: 1, marginTop: hp('1%') }}>
-                <View
-                  style={{
-                    flex: 0.5,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
+            {gameHistory.length > 0 && (
+              <View style={{ flex: 1, marginTop: hp('1%') }}>
+                <View style={{ flex: 0.5, flexDirection: 'row', alignItems: 'center' }}>
                   <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
                     <Image source={Lighting} style={styles.light} />
                     <Text style={styles.myGame}>GAME HISTORY</Text>
                   </View>
-                  <TouchableOpacity style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}
                     onPress={() => {
-                      navigation.navigate('AvailableGame', { gameData: gameHistory, status: "4" });
+                      navigation.navigate('AvailableGame', { gameData: gameHistory, status: '4' });
                     }}
                   >
                     <Text style={styles.view}>View All</Text>
@@ -427,12 +393,9 @@ export default function HomeScreen() {
                   <GameHistory gameData={gameHistory} />
                 </View>
               </View>
-              )
-            }
+            )}
           </ScrollView>
         </>
-
-
       ) : (
         <AnimatedLoader />
       )}

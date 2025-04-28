@@ -13,7 +13,7 @@ export default function LocalLeaderBoard({ type }) {
   const [weeklyData, setWeeklyData] = useState([])
   const [dailyData, setDailyData] = useState([])
   const navigation = useNavigation();
-  const { loginData, isReady, storeLoginData } = useLoginDataStorage();
+  const { loginData, isReady } = useLoginDataStorage();
   const [userId, setUserId] = useState('');
 
   let msg;

@@ -51,7 +51,7 @@ export default function AvailableGame() {
 
   return (
     <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
-      {["1", "2", "3", "4"].includes(status) ? (
+      {["1", "2", "3", "4","5","6"].includes(status) ? (
         <DailyWeeklyBar gameData={gameData} />
       ) : (
         <>

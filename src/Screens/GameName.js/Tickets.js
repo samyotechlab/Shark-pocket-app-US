@@ -79,6 +79,7 @@ export default function Tickets({ gameData }) {
     setLoader(true);
     try {
       const response = await ticketList(game_id, data._id);
+      console.log('response', response);
       setTicketData(response.data);
     } catch (error) {
       console.log('error', error);
@@ -96,11 +97,13 @@ export default function Tickets({ gameData }) {
   }, [isReady, loginData]);
 
   const renderItem = ({ item }) => {
+    console.log('item', item.is_bought);
     const isPurchased = purchasedTickets[item._id] || item.is_bought === 1;
     const handlePurchase = async () => {
       try {
         setVisible(false);
         const response = await storeTicket(game_id, selectedItem._id, data._id);
+        console.log('response', response);
         if (response.status === 0) {
           const total_price =
             (Number(response.total_balance) || 0) +

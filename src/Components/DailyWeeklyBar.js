@@ -17,6 +17,8 @@ export default function DailyWeeklyBar() {
     2:"Available Game",
     3:"Upcoming Game",
     4:"Game History",
+    5:"Daily Game",
+    6:"Weekly Game",
   }
 
   const filteredGames = {
@@ -31,6 +33,8 @@ export default function DailyWeeklyBar() {
     if (status === '2') return filteredGames.myAllGames;
     if (status === '3') return filteredGames.myGames;
     if (status === '4') return gameData
+    if (status === '5') return filteredGames.myAllGames
+    if (status === '6') return filteredGames.myAllGames
   };
 
   return (

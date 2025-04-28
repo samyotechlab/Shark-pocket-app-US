@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Iconics from 'react-native-vector-icons/FontAwesome';
 import AlertDialogRed from '../../Components/AlertDialogRed';
-import { showTds, withdrawCash } from '../../Service/WithDraw';
+import { approvedRequest, showTds, withdrawCash } from '../../Service/WithDraw';
 import Toast from 'react-native-toast-message';
 import Tds from '../../../assets/images/Screens/tds.png';
 import Iconic from 'react-native-vector-icons/Ionicons';
@@ -25,8 +25,7 @@ export default function Withdraw({ dataUser }) {
   const [tdsData, setTdsData] = useState({})
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedBank, setSelectedBank] = useState(bankDetail[0] || null);
-  const [account, setAccount] = useState('')
-  // console.log("dataUser",dataUser)
+  const [account, setAccount] = useState('')  // console.log("dataUser",dataUser)
   const handleWithdraw = () => {
     if (parseFloat(amount) > dataUser.total_earning) {
       setVisible(true);
@@ -106,6 +105,7 @@ export default function Withdraw({ dataUser }) {
     const encryptedData = await encryptData(key, data);
     try {
       const response = await withdrawCash(dataUser._id, encryptedData);
+      console.log("response", response.data)
       if (response.status === 0) {
         Toast.show({
           type: 'error',
@@ -115,20 +115,75 @@ export default function Withdraw({ dataUser }) {
           visibilityTime: 3000
         })
       } else {
+        console.log("response.data", response.data)
         setModalVisible(!isModalVisible);
-        Toast.show({
-          type: 'success',
-          position: 'top',
-          text1: 'Withdraw Request',
-          text2: 'Withdraw Request generate successfully',
-          visibilityTime: 3000
-        })
+        handleApproveRequest(response.data);
+        // Toast.show({
+        //   type: 'success',
+        //   position: 'top',
+        //   text1: 'Withdraw Request',
+        //   text2: 'Withdraw Request generate successfully',
+        //   visibilityTime: 3000
+        // })
       }
 
     } catch (error) {
       console.log("error", error)
     }
   }
+
+  const handleApproveRequest = async (requestId) => {
+    console.log("requestId", requestId)
+    setModalVisible(!isModalVisible);
+    console.log(" dataUser?.name", dataUser?.name)
+    console.log(" dataUser?.mobile", dataUser?.mobile)
+    const mobileNumber = dataUser?.mobile;
+    const username = dataUser?.name;
+    const aadharNumber = dataUser?.aadhaar;
+    const userId = dataUser?._id
+    const key = await generateKey(mobileNumber, username, aadharNumber, userId);
+    console.log("key", key)
+    const data = {
+      _id: requestId,
+      amount: amount,
+      pay_amount: tdsData.current_withdraw,
+      user_id: dataUser?._id,
+      name: dataUser?.name,
+      ifsc: selectedBank.ifsc_code,
+      account_number: selectedBank.account_no,
+      mobileNumber : dataUser?.mobile,
+    }
+    console.log("data", data)
+    const encryptedData = await encryptData(key, data);
+    console.log("encryptedData", encryptedData)
+     try {
+      const response = await approvedRequest(dataUser._id,encryptedData);
+
+      console.log("response", response)
+      if (response.status === 1) {
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Withdraw Request amount credited successfully to your bank account',
+          text2: response.message,
+          visibilityTime: 3000
+        })
+      } else {
+        setModalVisible(!isModalVisible);
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'approved Request failed',
+          text2: response.message,
+          visibilityTime: 3000
+        })
+      } 
+     } catch (error) {
+      console.log("error", error)
+     }
+  }
+
+ 
 
   const [isModalVisible, setModalVisible] = useState(false);
   const toggleModal = async () => {
