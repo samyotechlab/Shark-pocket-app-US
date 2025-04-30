@@ -7,7 +7,6 @@ import {
 } from 'react-native-responsive-screen';
 
 export default function Pending({ data }) {
-  
   const filteredData = Array.isArray(data)
   ? data.filter((item) => item.status === 0)
   : [];
@@ -28,7 +27,7 @@ export default function Pending({ data }) {
 
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemContainer}>
+    <TouchableOpacity style={styles.itemContainer} >
       <View style={styles.circle} >
         <Image source={require("../../../assets/images/Screens/arrow.png")}
           style={{ height: 20, width: 20, tintColor: '#FF8400' }}

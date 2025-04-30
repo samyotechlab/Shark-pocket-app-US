@@ -44,7 +44,7 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState('');
-  const [usersData, setUserData] = useState(null); // Changed to null for clearer loading state
+  const [usersData, setUserData] = useState(null);
   const [bannerData, setBannerData] = useState([]);
   const [version, setVersion] = useState({});
   const [gameHistory, setGameHistory] = useState([]);
@@ -251,7 +251,9 @@ export default function HomeScreen() {
                 )}
               </LinearGradient>
               <View style={styles.iconsContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Notification',{
+                  user_id: data._id,
+                })}>
                   <Image source={bell} style={styles.icon} />
                 </TouchableOpacity>
               </View>

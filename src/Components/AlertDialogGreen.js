@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-const AlertDialogGreen = ({ visible, onClose, onOkPress, message,ok}) => {
+const AlertDialogGreen = ({ visible, onClose, onOkPress, message,countData}) => {
+  console.log("countData", countData)
   return (
     <Modal
       transparent={true}
@@ -25,20 +26,31 @@ const AlertDialogGreen = ({ visible, onClose, onOkPress, message,ok}) => {
             <Text style={styles.message}>{message}</Text>
           </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={onClose}>
-              <Text style={styles.cancelText}>No</Text>
+          {
+            countData === "count" ? (
+              <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={onClose}>
+              <Text style={styles.cancelText}>Ok</Text>
             </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                onOkPress();
-              }}
-            >
-              <Text style={styles.okText}>Yes</Text>
-            </TouchableOpacity>
-          </View>
+            ):(
+              <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.button} onPress={onClose}>
+                <Text style={styles.cancelText}>No</Text>
+              </TouchableOpacity>
+  
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  onOkPress();
+                }}
+              >
+                <Text style={styles.okText}>Yes</Text>
+              </TouchableOpacity>
+            </View>
+            )
+}
         </View>
       </View>
     </Modal>

@@ -9,21 +9,26 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Iconicons from 'react-native-vector-icons/Feather';
 import { Divider } from 'react-native-paper';
 import HeaderComponent from './HeaderComponent';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 export default function AmountDetails() {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const {item} = route.params;
+  console.log(item, "item");
   const copyToClipboard = () => {
-    Clipboard.setString("DD2024111314031724039756");
+    Clipboard.setString(item.reference_id);
   };
   return (
     <>
-      <HeaderComponent title={"Amount Details"} status={"deposite"} />
+      <HeaderComponent title={"Amount Details"} transactionData={item} status={"deposite"} />
       <SafeAreaView style={styles.main}>
         <View style={styles.section}>
-          <Text style={styles.transaction}>Transaction ID</Text>
+          <Text style={styles.transaction}>Reference ID</Text>
         </View>
         <View style={[styles.row, styles.spaceBetween]}>
           <Text style={styles.extraSmallFont}>
-            DD2024111314031724039756
+            {item.reference_id}
           </Text>
           <TouchableOpacity style={[styles.row, styles.copyButton]} onPress={copyToClipboard}>
             <Icon name="clone" size={10} color="#000" />
@@ -32,9 +37,8 @@ export default function AmountDetails() {
         </View>
 
         <Divider style={styles.divider} />
-
         <Text style={styles.to}>To</Text>
-        <Text style={[styles.amount, { paddingHorizontal: hp(2) }]}>ICICI Bank LIMITED XXXXXX456</Text>
+        <Text style={[styles.amount, { paddingHorizontal: hp(2) }]}>{item?.bank_name} {item?.account_number}</Text>
 
         {/* Additional Information */}
         <View style={[styles.innerDeposit, { backgroundColor: 'transparent' }]}>
@@ -43,26 +47,28 @@ export default function AmountDetails() {
               <Iconicons name="check-circle" size={25} color="#000000CC" />
               <Text style={styles.request}>Request Raised</Text>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>13 Nov 2024, 7:33 PM</Text>
+            <Text style={[styles.amount, { fontSize: 12 }]}>{item?.created_at}</Text>
           </View>
           <View style={styles.depositRow}>
             <View style={styles.circle}>
               <Iconicons name="check-circle" size={25} color="#000000CC" />
               <Text style={styles.request}>Deposit Successful</Text>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>13 Nov 2024, 7:33 PM</Text>
+            <Text style={[styles.amount, { fontSize: 12 }]}>{item?.updated_at}</Text>
           </View>
           <View style={styles.depositRow}>
             <View style={styles.circle}>
               <Iconicons name="check-circle" size={25} color="#000000CC" />
               <Text style={styles.request}>Deposit Successful</Text>
             </View>
-            <Text style={[styles.amount, { fontSize: 12 }]}>13 Nov 2024, 7:33 PM</Text>
+            <Text style={[styles.amount, { fontSize: 12 }]}>{item?.updated_at}</Text>
           </View>
         </View>
 
         <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: wp(5) }}>
-          <TouchableOpacity style={styles.optionsRow} >
+          <TouchableOpacity style={styles.optionsRow} onPress={()=>{
+            navigation.navigate('Support',{user_id:item.user_id})
+          }}>
             <View style={styles.row}>
               <Icon name="question-circle-o" size={20} color="#000000B2" />
               <Text style={styles.amount}>Need Help</Text>

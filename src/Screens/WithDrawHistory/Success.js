@@ -37,8 +37,10 @@ export default function Success({ data }) {
     data: groupedData[date],
   }));
 
-  const handleNavigation = () => {
-    navigation.navigate('AmountDetails');
+  const handleNavigation = (item) => {
+    navigation.navigate('AmountDetails',{
+      item: item,
+    });
   };
 
   const renderItem = ({ item }) => {
@@ -50,7 +52,9 @@ export default function Success({ data }) {
       <>
         <TouchableOpacity
           style={styles.itemContainer}
-          onPress={handleNavigation}
+          onPress={()=>{
+            handleNavigation(item)
+          }}
         >
           <View style={styles.circle}>
             <Image
@@ -64,7 +68,7 @@ export default function Success({ data }) {
 
           </View>
           <View>
-            <Text style={styles.amount}>₹{item.paying_amount}</Text>
+            <Text style={styles.amount}>₹{parseFloat(item.paying_amount).toFixed(2)}</Text>
           </View>
         </TouchableOpacity>
       </>

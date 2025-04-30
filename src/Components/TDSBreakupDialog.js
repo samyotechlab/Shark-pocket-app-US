@@ -74,7 +74,7 @@ const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData,handleWithdr
                 </View>
                 <View style={styles.row}>
                   <Text style={styles.rowLabel}>30% Govt. Tax (TDS)</Text>
-                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.tds_tax).toFixed(2)}</Text>
+                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.tds_tax_total).toFixed(2)}</Text>
                 </View>
                 <View style={styles.row}>
                   <Text style={styles.rowLabel}>Tax (TDS) Paid Till Date</Text>
@@ -82,7 +82,7 @@ const TDSBreakupDialog = ({ isVisible, onClose, setTdsData, tdsData,handleWithdr
                 </View>
                 <View style={styles.row}>
                   <Text style={styles.rowLabel}>Tax (TDS) On This Withdrawal</Text>
-                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.total_tax).toFixed(2)}</Text>
+                  <Text style={styles.rowValue}>₹{parseFloat(tdsData.tds_on_current_withdrawal).toFixed(2)}</Text>
                 </View>
                 <View style={styles.separator} />
                 <View style={styles.row}>

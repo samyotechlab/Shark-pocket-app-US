@@ -25,6 +25,10 @@ const HeaderComponent = ({title,transactionData,status}) => {
     failed:"#D80000",
     deposite:"transparent"
   }
+  const amount = {
+    amount: "77.89",
+    deposite: parseFloat(transactionData.paying_amount).toFixed(2),
+  } 
   return (
 <>
     <View style={styles.main}>
@@ -32,7 +36,7 @@ const HeaderComponent = ({title,transactionData,status}) => {
       <View style={styles.container}>
 
       <View style={styles.content}>
-        <Text style={styles.amount}>₹ {status === "amount" ? 77.89:(transactionData.transaction_amount)}</Text>
+        <Text style={styles.amount}>₹ {amount[status]?amount[status]: (transactionData.transaction_amount)}</Text>
         <Iconics name={icon[status]?icon[status]:"clock"} size={wp("7%")} color={color[status]?color[status]:"#FDCB50"} />
       </View>
 
@@ -40,7 +44,7 @@ const HeaderComponent = ({title,transactionData,status}) => {
       <View style={[styles.successBadge,{backgroundColor:backgroundColor[status]?backgroundColor[status]:"#FDCB50"}]}>
           <Text style={styles.successText}>{message[status]?message[status]:"Checking"}</Text>
         </View>       
-         <Text style={styles.date}>•{status === "amount" ? ("03-03-2025"):(transactionData.deposite_date)}</Text>
+         <Text style={styles.date}>•{status === "amount"? ("03-03-2025"):status === "deposite" ?(transactionData.updated_at) :(transactionData.deposite_date)}</Text>
       </View>
     </View>
     </View>

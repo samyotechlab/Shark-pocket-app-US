@@ -12,12 +12,12 @@ const { width,height } = Dimensions.get('window');
 
 const AvailbleGameCard = (props) => {
   const navigation = useNavigation();
-  const { gameData, availability,setScrollEnabled } = props
+  const { gameData, availability,setScrollEnabled ,cardName} = props
   let myGameData = []
   let data = []
 
   const getResponsiveHeight = () => {
-    const baseHeight = height * 0.24;
+    const baseHeight = height * 0.26;
     const adjustedHeight = PixelRatio.roundToNearestPixel(baseHeight);
     return adjustedHeight;
 };

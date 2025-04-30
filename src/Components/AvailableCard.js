@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     borderBottomEndRadius: wp(8),
   },
   card: {
+    // flex:1,
     borderRadius: wp(3),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: hp(0.5) },
@@ -102,7 +103,6 @@ const styles = StyleSheet.create({
   },
   characterImage: {
     width: wp(25),
-    // maxHeight: hp(20),
     height:hp(20),
     resizeMode: 'contain',
   },

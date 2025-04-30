@@ -49,7 +49,9 @@ export default function Tickets({ gameData }) {
   const route = useRoute();
   const { game_id } = route.params;
   const [refreshing, setRefreshing] = useState(false);
-  const [isBtnDisabled, setIsBtnDisabled] = useState(false); 
+  const [isBtnDisabled, setIsBtnDisabled] = useState(false);
+  const [ticketCount, setTicketCount] = useState(false);
+  const [countData, setCountData] = useState('')
   const refreshData = () => {
     setRefreshing(true);
     setTimeout(() => {
@@ -67,6 +69,7 @@ export default function Tickets({ gameData }) {
     setLoader(true);
     try {
       const response = await userDetail(loginData ? loginData?._id : data?._id);
+      console.log('response=====>', response);
       setUserData(response.data);
     } catch (error) {
       console.log('error', error);
@@ -97,13 +100,17 @@ export default function Tickets({ gameData }) {
   }, [isReady, loginData]);
 
   const renderItem = ({ item }) => {
-    console.log('item', item.is_bought);
     const isPurchased = purchasedTickets[item._id] || item.is_bought === 1;
+    const isTicketCount = ticketCount[item._id] || item.purchase_count >= item.minimum_ticket_count;
+    console.log("isTicketCount", isTicketCount)
+    console.log("item.purchase_count", item.purchase_count)
+    console.log("item.minimum_ticket_count", item.minimum_ticket_count)
+
+
     const handlePurchase = async () => {
       try {
         setVisible(false);
         const response = await storeTicket(game_id, selectedItem._id, data._id);
-        console.log('response', response);
         if (response.status === 0) {
           const total_price =
             (Number(response.total_balance) || 0) +
@@ -111,11 +118,12 @@ export default function Tickets({ gameData }) {
             (Number(response.bonus_wallet) || 0);
           const ticket_price = selectedItem.price
           const balance = ticket_price - total_price
-          console.log('balance', balance)
           setBalance(balance)
           setVisibles(true);
           setMessage(response.message);
         } else {
+          setTicketCount(prev => ({ ...prev, [selectedItem._id]: false }))
+          console.log("ticketCount", ticketCount)
           setPurchasedTickets(prev => ({ ...prev, [selectedItem._id]: true }));
           Toast.show({
             type: 'success',
@@ -148,9 +156,8 @@ export default function Tickets({ gameData }) {
         setMessage('State is Not Valid');
       }
       else if (!isValidState) {
-        console.log("State is not valid", isValidState);
         setCloseVisible(true);
-        setMessage('State is Not Valid=====>');
+        setMessage('State is Not Valid');
       }
       else {
         setSelectedItem(item);
@@ -172,18 +179,24 @@ export default function Tickets({ gameData }) {
         question: question
       });
     };
-    const handleClose =() =>{
+    const handleClose = () => {
       setIsBtnDisabled(false)
       setVisible(false)
+      setCountData('')
+    }
+    const toggleModel = () => {
+      setVisible(true)
+      setMessage('To start the game, the purchased tickets count must be greater than or equal to the minimum ticket count.')
+      setCountData('count')
     }
     return (
       <>
-
         <AlertDialogGreen
           visible={visible}
           onClose={() => handleClose()}
           onOkPress={okPress === 'handleAadhar' ? handleAadhar : handlePurchase}
           message={message}
+          countData={countData}
         />
         <AlertDialog
           visible={visibles}
@@ -240,7 +253,59 @@ export default function Tickets({ gameData }) {
                   </LinearGradient>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <View style={styles.buttonContainer}>
+                  <View style={ styles.buttonContainer }>
+                    {/* {
+                      isPurchased ? (
+                        isTicketCount ?(
+                          <TouchableOpacity
+                            style={[
+                              styles.playButton,
+                              {
+                                backgroundColor: '#f3bc01',
+                                borderTopColor: '#fbeb01',
+                                borderBottomColor: '#eb8d01',
+                              },
+                            ]}
+                            disabled={isBtnDisabled}
+                            onPress={handlePlay}>
+                            <Text style={styles.playButtonText}>
+                              {' '}
+                              Play Now
+                            </Text>
+                          </TouchableOpacity>
+                        ):(
+                          <View>
+                          <Text style={styles.disclaimerText}>
+                            To start the game, the purchased tickets count must be greater than or equal to the minimum ticket count.
+                          </Text>
+                          <Text style={styles.countText}>
+                            Minimum Count: <Text style={styles.highlightText}>{item.minimum_ticket_count}</Text>
+                          </Text>
+                          <Text style={styles.countText}>
+                            Purchase Count: <Text style={styles.highlightText}>{item.purchase_count}</Text>
+                          </Text>
+                        </View>
+                        )
+                      ):(
+                      <TouchableOpacity
+                        style={[
+                          styles.playButton,
+                          {
+                            backgroundColor: isPurchased ? '#f3bc01' : '#00b63d',
+                            borderTopColor: isPurchased ? '#fbeb01' : '#00e968',
+                            borderBottomColor: isPurchased ? '#eb8d01' : '#018312',
+                          },
+                        ]}
+                        disabled={isBtnDisabled}
+                        onPress={isPurchased ? handlePlay : handlePurchaseModal}>
+                        <Text style={styles.playButtonText}>
+                          {' '}
+                          {isPurchased ? 'Play Now' : 'Purchase'}
+                        </Text>
+                      </TouchableOpacity>
+                      )
+                    } */}
+
                     <TouchableOpacity
                       style={[
                         styles.playButton,
@@ -251,13 +316,13 @@ export default function Tickets({ gameData }) {
                         },
                       ]}
                       disabled={isBtnDisabled}
-                      onPress={isPurchased ? handlePlay : handlePurchaseModal}>
+                      onPress={isPurchased ? isTicketCount ? handlePlay : toggleModel : handlePurchaseModal}>
                       <Text style={styles.playButtonText}>
                         {' '}
                         {isPurchased ? 'Play Now' : 'Purchase'}
                       </Text>
-
                     </TouchableOpacity>
+
                   </View>
                 </View>
               </View>
@@ -419,6 +484,14 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,
     textTransform: 'uppercase',
   },
+  playCountText: {
+
+    fontSize: wp('3%'),
+    fontFamily: 'LilitaOne-Regular',
+    textShadowRadius: 1,
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
   infoIconContainer: {
     position: 'absolute',
     bottom: hp('1%'),
@@ -436,5 +509,25 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     paddingHorizontal: hp('2%'),
+  },
+  disclaimerContainer: {
+    borderRadius: 10,
+    marginVertical: 5,
+
+  },
+
+  disclaimerText: {
+    fontSize: wp('2.5%'),
+    fontFamily: 'Montserrat-SemiBold',
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+
+  countText: {
+    fontSize: wp('3%'),
+    color: '#000000',
+    fontFamily: 'Audiowide-Regular',
+    textAlign: 'center',
   },
 });

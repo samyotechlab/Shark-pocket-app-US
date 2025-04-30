@@ -17,7 +17,7 @@ import AnimatedLoader from '../../Components/AnimatedLoader';
 import { useRoute } from '@react-navigation/native';
 export default function Notification() {
   const route = useRoute()
-  const {user_id} = route
+  const {user_id} = route.params
   const [notification, setNotificationData] = useState([]);
   const [loader, setLoader] = useState(false);
 

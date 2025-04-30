@@ -13,6 +13,8 @@ const UpcomingGame = (props) => {
     const renderItem = (items) => {
         return (<>
            <UpcomingGameCard items={items} />
+                 {/* <AvailableCard gameData={items} status={status === "1" ? "4" : "2"} /> */}
+           
         </>)
     }
     return (

@@ -10,7 +10,8 @@ import WeeklyCard from './WeeklyCard'
 export default function DailyWeeklyBar() {
   const route = useRoute();
   const { gameData, status } = route.params;
-  const [selectedTab, setSelectedTab] = useState('Weekly');
+  const days = status === '5' ? 'Daily' : 'Weekly';
+  const [selectedTab, setSelectedTab] = useState(days);
 
   const title = {
     1:"My Game",
