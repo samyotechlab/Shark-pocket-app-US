@@ -18,7 +18,6 @@ const PlayedHistory = () => {
   const route = useRoute()
   const [refreshing, setRefreshing] = useState(false);
   const { game_id ,title} = route.params
-  console.log("title",title)  
   let msg
 
   const refreshData = () => {

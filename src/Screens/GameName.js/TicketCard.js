@@ -80,6 +80,7 @@ export default function TicketCard({
       ticket_id: ticket._id,
       game_id: gameId,
     });
+    setIsBtnDisabled(false);
   };
 
   const handlePlay = () => {
@@ -102,6 +103,11 @@ export default function TicketCard({
     setCountData('');
   };
 
+  const handleDialogClose = () => {
+    setIsBtnDisabled(false);
+    setVisibles(false);
+  }
+
   return (
     <>
       <AlertDialogGreen
@@ -113,7 +119,7 @@ export default function TicketCard({
       />
       <AlertDialog
         visible={visibles}
-        onClose={() => setVisibles(false)}
+        onClose={handleDialogClose}
         onOkPress={handleNavigate}
         message={message}
         show={true}

@@ -33,6 +33,7 @@ import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
 import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
 import UploadDocuments from '../../Components/UploadDocuments';
 import SupportScreen from '../../Components/SupportScreen';
+import LocalGameDescription from '../../Components/LocalGameDescription';
 
 export default function AppNavigation() {
   const Stack = createStackNavigator();
@@ -312,6 +313,13 @@ export default function AppNavigation() {
         <Stack.Screen
           name="PointsSelection"
           component={PointsSelection}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="LocalGameDescription"
+          component={LocalGameDescription}
           options={{
             headerShown: false,
           }}

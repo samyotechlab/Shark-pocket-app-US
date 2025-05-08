@@ -13,7 +13,6 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import TransactionCard from './TransactionCard';
 import styles from './styles';
 
-
 export default function WalletScreen() {
   const navigation = useNavigation();
   const { loginData, isReady } = useLoginDataStorage();
@@ -27,6 +26,7 @@ export default function WalletScreen() {
     refreshData,
     setIsModalVisible,
     setMessage,
+    setLoader
   } = useWalletData(userId);
 
   const totalAmount =
@@ -70,8 +70,8 @@ export default function WalletScreen() {
           </View>
         </View>
 
-        {userData?._id ? (
-          !loader ? (
+        {!loader ? (
+          userData?._id ? (
             <>
               <WalletBalance totalAmount={totalAmount} />
               <View style={styles.cardContainer}>
@@ -122,13 +122,14 @@ export default function WalletScreen() {
               />
             </>
           ) : (
-            <View style={styles.loaderContainer}>
-              <AnimatedLoader />
+            <View style={styles.noDataContainer}>
+              <Text style={styles.noDataText}>No data found</Text>
             </View>
+
           )
         ) : (
-          <View style={styles.noDataContainer}>
-            <Text style={styles.noDataText}>No data found</Text>
+          <View style={styles.loaderContainer}>
+            <AnimatedLoader />
           </View>
         )}
       </ScrollView>

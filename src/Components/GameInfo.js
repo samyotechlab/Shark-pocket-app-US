@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     },
     dropdownMenu: {
         position: 'absolute',
-        top: hp('4.3%'), // Positions dropdown below the picker
+        top: hp('4.3%'),
         right: 0,
         left: 0,
         width: wp('40%'),

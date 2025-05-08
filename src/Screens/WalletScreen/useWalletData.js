@@ -52,5 +52,6 @@ export default function useWalletData(userId) {
     refreshData,
     setIsModalVisible,
     setMessage,
+    setLoader
   };
 }

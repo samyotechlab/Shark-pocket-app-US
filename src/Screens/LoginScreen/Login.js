@@ -42,7 +42,6 @@ export default function Login() {
   };
   useEffect(() => {
     if (hash?.length > 0) {
-      console.log('Hash received:', hash?.toString());
       setMobilHash(hash?.toString())
     }
   }, [hash]);

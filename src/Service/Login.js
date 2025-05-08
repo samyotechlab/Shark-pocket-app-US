@@ -1,8 +1,6 @@
-import apiInstance, { baseApiurl } from "./AxiosInstance";
+import apiInstance from "./AxiosInstance";
 import Config from "../Utilities/Config";
 import apiMultipartInstance from "./ApiMultiPartInstance";
-import axios from "axios";
-
 export const userDetail = async user_id => {
   try {
     const response = await apiInstance.post(`${Config.Profile}`, {
@@ -12,7 +10,7 @@ export const userDetail = async user_id => {
       return response.data;
     }
   } catch (error) {
-    console.log('error======>', error);
+    console.log('error', error);
     throw error;
   }
 };
@@ -26,7 +24,7 @@ export const updateProfile = async userData => {
       return response.data;
     }
   } catch (error) {
-    console.log('error======>', error);
+    console.log('error', error);
     throw error;
   }
 };

@@ -13,7 +13,6 @@ export default function AvailableGame() {
   const navigation = useNavigation();
   const route = useRoute();
   const { gameData, status } = route.params;
-  console.log("gameData",gameData)
   const [disabled, setDisabled] = useState(false);
 
   const titleMap = {
