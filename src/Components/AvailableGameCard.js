@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, Text, Dimensions, View, ScrollView, PixelRatio } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { StyleSheet, TouchableOpacity, Text, Dimensions, View, PixelRatio } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 import {
@@ -8,86 +8,80 @@ import {
 } from 'react-native-responsive-screen';
 import AvailableCard from './AvailableCard';
 
-const { width,height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const AvailbleGameCard = (props) => {
+const AvailableGameCard = ({ gameData, availability, setScrollEnabled, cardName }) => {
   const navigation = useNavigation();
-  const { gameData, availability,setScrollEnabled ,cardName} = props
-  let myGameData = []
-  let data = []
 
-  const getResponsiveHeight = () => {
-    const baseHeight = height * 0.26;
-    const adjustedHeight = PixelRatio.roundToNearestPixel(baseHeight);
-    return adjustedHeight;
-};
+  const carouselHeight = useMemo(() => {
+    const baseHeight = height * 0.25;
+    return PixelRatio.roundToNearestPixel(baseHeight);
+  }, []);
 
-const carouselHeight =getResponsiveHeight(); 
+  const filteredData = useMemo(() => {
+    let filtered = gameData.filter((game) => game.status === 3);
 
-  if (availability === '2') {
-     myGameData = gameData?.filter((game) => game.status === 3) 
-     data =  myGameData?.filter((item)=>item.frequency === "daily")
-  }else if(availability === "3"){
-     myGameData = gameData?.filter((game) => game.status === 3) 
-     data =  myGameData?.filter((item)=>item.frequency === "weekly")
-  }else{
-    data = gameData?.filter((game) => game.status === 3) 
-  }
+    if (availability === '2') {
+      filtered = filtered.filter((item) => item.frequency === 'daily');
+    } else if (availability === '3') {
+      filtered = filtered.filter((item) => item.frequency === 'weekly');
+    }
+
+    return filtered;
+  }, [gameData, availability]);
 
   const handleNavigation = (item) => {
-    navigation.navigate('GameName', { game_id: item._id , title: item.title });
+    navigation.navigate('GameName', { game_id: item._id, title: item.title });
   };
 
   const renderItem = ({ item, index }) => (
     <TouchableOpacity
       style={styles.cardContainer}
-      onPress={() => {
-        handleNavigation(item);
-      }}
+      onPress={() => handleNavigation(item)}
     >
-      <AvailableCard gameData={item} status={'1'} index={index} />
+      <AvailableCard gameData={item} status="1" index={index} />
     </TouchableOpacity>
   );
 
+  if (!filteredData.length) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>
+          No games or tickets are currently available.
+        </Text>
+      </View>
+    );
+  }
+
   return (
-    <>
-      {!data.length ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
-            No games or tickets are currently available.
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.container}>
-          <Carousel
-            data={data}
-            renderItem={renderItem}
-            width={width}
-            height={carouselHeight}
-            loop={true}
-            autoPlay={true}
-            autoPlayInterval={5000}
-            mode='stack-horizontal-right'
-            pagingEnabled={true}
-            style={[styles.carouselContainer]}
-            panGestureHandlerProps={{
-              activeOffsetX: [-10, 10], 
-              failOffsetY: [-10, 10], 
-            }}
-            onTouchStart={() => setScrollEnabled(false)}
-            onTouchEnd={() => setScrollEnabled(true)} 
-            onTouchCancel={() => setScrollEnabled(true)} 
-          />
-        </View>
-      )}
-    </>
+    <View style={styles.container}>
+      <Carousel
+        data={filteredData}
+        renderItem={renderItem}
+        width={width}
+        height={carouselHeight}
+        loop
+        autoPlay
+        autoPlayInterval={5000}
+        mode="stack-horizontal-right"
+        pagingEnabled
+        style={styles.carouselContainer}
+        panGestureHandlerProps={{
+          activeOffsetX: [-10, 10],
+          failOffsetY: [-10, 10],
+        }}
+        onTouchStart={() => setScrollEnabled(false)}
+        onTouchEnd={() => setScrollEnabled(true)}
+        onTouchCancel={() => setScrollEnabled(true)}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop:hp('1%')
+    paddingTop: hp('1%'),
   },
   emptyContainer: {
     flex: 1,
@@ -110,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AvailbleGameCard;
+export default memo(AvailableGameCard);

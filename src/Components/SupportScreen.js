@@ -18,7 +18,7 @@ const SupportScreen = () => {
     const [remark, setRemark] = useState('');
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
-    const [loader,setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
 
 
     useEffect(() => {
@@ -66,8 +66,8 @@ const SupportScreen = () => {
             setValue(null);
             setRemark('');
         } catch (error) {
-            console.log("error",error)
-        }finally{
+            console.log("error", error)
+        } finally {
             setLoader(false)
         }
 
@@ -109,12 +109,12 @@ const SupportScreen = () => {
                     multiline
                 />
 
-               <TouchableOpacity
-                                           style={[styles.button]}
-                                           onPress={handleSubmit}
-                                       >
-                                           <Text style={[styles.buttonText]}>{loader ? 'Loading...' : 'Submit'}</Text>
-                                       </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.button]}
+                    onPress={handleSubmit}
+                >
+                    <Text style={[styles.buttonText]}>{loader ? 'Loading...' : 'Submit'}</Text>
+                </TouchableOpacity>
             </ScrollView>
             <Toast ref={Toast.setRef} />
         </>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF80',
         color: '#fff',
         textAlignVertical: 'top',
-        marginTop:20
+        marginTop: 20
     },
     button: {
         width: '93%',
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 12,
         elevation: 15,
-        marginTop:50
+        marginTop: 50
     },
     buttonText: {
         color: '#F5D236',

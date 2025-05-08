@@ -4,7 +4,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const AlertDialogGreen = ({ visible, onClose, onOkPress, message,countData}) => {
-  console.log("countData", countData)
   return (
     <Modal
       transparent={true}

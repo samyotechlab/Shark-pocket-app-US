@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, View, Text } from 'react-native';
+import { StyleSheet, FlatList, View, Text } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import UpcomingGameCard from './UpcomingGameCard';
 

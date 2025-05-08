@@ -14,6 +14,7 @@ export default function UpcomingGameInfo() {
   const route = useRoute()
   console.log("route.params",route.params)
   const gameData = route.params
+  console.log("gameData======>",gameData.game_name)
   return (
     <LinearGradient
       colors={['#361911', '#361911', '#6A1700']}
@@ -23,10 +24,10 @@ export default function UpcomingGameInfo() {
         <View
           style={{
             flexDirection: 'row',
-            padding: hp('2%'),
+            padding: hp('1%'),
             gap: wp('10%')
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity>  
             <Text
               style={styles.GameInfo}>
               Game Info

@@ -19,7 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Entypo';
-import Person4 from '../../assets/images/Screens/Person4.jpeg';
+import Person4 from '../../assets/images/Screens/avatar.webp';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { leaderBoard, rangeShow } from '../Service/LeaderBoard';
 import Toast from 'react-native-toast-message';
@@ -33,7 +33,6 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default function LocalGameBoard() {
   const route = useRoute();
   const { game_id, user_id,screen_name } = route.params;
-  console.log("screenNmae",screen_name)
   const navigation = useNavigation();
   const [loader, setLoader] = useState(false);
   const [gameData, setGameData] = useState([]);
@@ -307,7 +306,7 @@ export default function LocalGameBoard() {
 
             <FlatList
               data={gameData}
-              keyExtractor={(item) => item.id || item._id || `game-${Math.random()}`} // Ensure unique keyExtractor
+              keyExtractor={(item) => item.id || item._id || `game-${Math.random()}`} 
               renderItem={renderRow}
               showsVerticalScrollIndicator={false}
             />

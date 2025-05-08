@@ -43,7 +43,8 @@ export default function AvailableCard({ gameData, status }) {
 
   const getDescription = () => {
     if (status === '4') return gameData?.game_description;
-    return status === '1' ? truncateText(gameData?.description, 20) : gameData?.description;
+    // return status === '1' ? truncateText(gameData?.description, 15) : gameData?.description;
+    return status === '1' ? gameData?.description : gameData?.description;
   };
 
   const getWinningPrice = () =>
