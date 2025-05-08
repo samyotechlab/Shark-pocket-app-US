@@ -1,13 +1,14 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import React, { useState } from 'react';
+import { SafeAreaView, View } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import CommonHeader from '../../Components/CommonHeader';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import TabNavigation from './TabNavigation';
 import Deposite from '../WalletDetails/Deposite';
 import Bonus from '../WalletDetails/Bonus';
 import Winning from '../WalletDetails/Winning';
 import WithDraw from '../WalletDetails/WithDraw';
-import { useRoute } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import styles from './styles';
 
 export default function WalletDetails() {
   const route = useRoute();
@@ -15,106 +16,30 @@ export default function WalletDetails() {
   const [selectedTab, setSelectedTab] = useState('Deposite');
   const [loader, setLoader] = useState(false);
 
-  const handlePress = (tab) => {
-    setSelectedTab(tab);
+  const renderContent = () => {
+    if (loader) return <AnimatedLoader />;
+    switch (selectedTab) {
+      case 'Deposite':
+        return <Deposite user_id={user_id} />;
+      case 'Bonus':
+        return <Bonus user_id={user_id} />;
+      case 'Winning':
+        return <Winning user_id={user_id} />;
+      case 'Withdraw':
+        return <WithDraw user_id={user_id} />;
+      default:
+        return null;
+    }
   };
 
-  const dynamicStyles = getDynamicStyles(selectedTab);
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#361911' }}>
-      <CommonHeader title={'Wallet Details'} />
-      <View style={{ flex: 1}}>
-        <View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            paddingVertical: hp('1%'),
-            paddingHorizontal: hp('2%'),
-          }}
-        >
-          <TouchableOpacity onPress={() => handlePress('Deposite')}>
-            <Text style={dynamicStyles.deposite}>Deposite</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('Bonus')}>
-            <Text style={dynamicStyles.bonus}>Bonus</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('Winning')}>
-            <Text style={dynamicStyles.winning}>Winning</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handlePress('Withdraw')}>
-            <Text style={dynamicStyles.withdraw}>WithDraw</Text>
-          </TouchableOpacity>
-     
-        </ScrollView>
-        </View>
-        <View style={{ flex: 1 }}>
-          {selectedTab === 'Deposite' ? (
-            !loader ? (
-              <Deposite user_id={user_id} />
-            ) : (
-              <AnimatedLoader />
-            )
-          ) : selectedTab === 'Bonus' ? (
-            !loader ? (
-              <Bonus user_id={user_id} />
-            ) : (
-              <AnimatedLoader />
-            )
-          ) : selectedTab === 'Winning' ? (
-            !loader ? (
-              <Winning user_id={user_id} />
-            ) : (
-              <AnimatedLoader />
-            )
-          ) : (
-            !loader ? (
-              <WithDraw user_id={user_id} />
-            ) : (
-              <AnimatedLoader />
-            )
-          )}
-        </View>
+    <SafeAreaView style={styles.container}>
+      <CommonHeader title="Wallet Details" />
+      <View style={styles.content}>
+        <TabNavigation selectedTab={selectedTab} onSelectTab={setSelectedTab} />
       </View>
+      <View style={styles.tabContent}>{renderContent()}</View>
     </SafeAreaView>
   );
 }
-
-const getDynamicStyles = (selectedTab) =>
-  StyleSheet.create({
-    deposite: {
-      fontSize: wp('4.5%'),
-      color: selectedTab === 'Deposite' ? '#FEB801' : '#FFFFFF',
-      fontFamily: selectedTab === 'Deposite' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      borderBottomWidth: hp('0.5%'),
-      borderBottomColor: selectedTab === 'Deposite' ? '#FEB801' : '#565656',
-      marginHorizontal: wp('2%'),
-    },
-    bonus: {
-      fontSize: wp('4.5%'),
-      borderBottomWidth: hp('0.5%'),
-      borderBottomColor: selectedTab === 'Bonus' ? '#FEB801' : '#565656',
-      color: selectedTab === 'Bonus' ? '#FEB801' : '#FFFFFF',
-      fontFamily: selectedTab === 'Bonus' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      marginHorizontal: wp('2%'),
-    },
-    winning: {
-      fontSize: wp('4.5%'),
-      borderBottomWidth: hp('0.5%'),
-      borderBottomColor: selectedTab === 'Winning' ? '#FEB801' : '#565656',
-      color: selectedTab === 'Winning' ? '#FEB801' : '#FFFFFF',
-      fontFamily: selectedTab === 'Winning' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      marginHorizontal: wp('2%'),
-    },
-    withdraw: {
-      fontSize: wp('4.5%'),
-      borderBottomWidth: hp('0.5%'),
-      borderBottomColor: selectedTab === 'Withdraw' ? '#FEB801' : '#565656',
-      color: selectedTab === 'Withdraw' ? '#FEB801' : '#FFFFFF',
-      fontFamily: selectedTab === 'Withdraw' ? 'Montserrat-Bold' : 'Montserrat-Regular',
-      marginHorizontal: wp('2%'),
-    },
-  });
 

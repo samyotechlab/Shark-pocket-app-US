@@ -22,7 +22,6 @@ export default function Deposite(props) {
     setLoader(true)
     try {
       const response = await WalletTransactionList(user_id);
-      console.log("response=====>",response)
       setWalletData(response?.data);
     } catch (error) {
       console.log('error', error);
@@ -41,9 +40,8 @@ export default function Deposite(props) {
         style={{
           flex:1,
           flexDirection: 'row',
-         padding: hp('2%'),
+         padding: hp('1%'),
          gap:wp('3%'),
-        //  backgroundColor:'red'
         }}>
         <TouchableOpacity
           onPress={() => {

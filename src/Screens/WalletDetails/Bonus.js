@@ -41,7 +41,7 @@ export default function Bonus(props) {
         style={{
           flex:1,
           flexDirection: 'row',
-         padding: hp('2%'),
+         padding: hp('1%'),
          gap:wp('3%'),
         }}>
         <TouchableOpacity
