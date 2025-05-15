@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet,} from 'react-native'
 import React from 'react'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import SplashScreen from '../../Screens/SplashScreen/SplashScreen';
@@ -28,7 +28,7 @@ import PanVerfication from '../../Screens/PanVerfication/PanVerification';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
-import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen, PrivacyPolicy, PointsSelection } from '../../Screens/Screens/Screen';
+import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen, PrivacyPolicy, PointsSelection, WithDrawPolicy } from '../../Screens/Screens/Screen';
 import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
 import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
 import UploadDocuments from '../../Components/UploadDocuments';
@@ -304,15 +304,15 @@ export default function AppNavigation() {
           }}
         />
         <Stack.Screen
-          name="SupportScreen"
-          component={SupportScreen}
+          name="PointsSelection"
+          component={PointsSelection}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="PointsSelection"
-          component={PointsSelection}
+          name="WithDrawPolicy"
+          component={WithDrawPolicy}
           options={{
             headerShown: false,
           }}

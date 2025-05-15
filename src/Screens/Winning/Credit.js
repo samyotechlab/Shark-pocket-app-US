@@ -39,7 +39,6 @@ export default function Credit({winningData}) {
     return (
       <TouchableOpacity
       style={styles.itemContainer}
-      onPress={handleNavigation}
     >
       <View style={[styles.circle, { backgroundColor: '#03C5263A' }]}>
         <Image

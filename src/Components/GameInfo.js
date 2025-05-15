@@ -7,6 +7,7 @@ import {
 } from 'react-native-responsive-screen';
 
 export default function GameInfo({ gameData }) {
+    console.log("gameData.game_info", gameData.game_info);
     const [selectedLanguage, setSelectedLanguage] = useState(
         Array.isArray(gameData?.game_info) && gameData?.game_info?.[0]?.language
             ? gameData.game_info[0].language
@@ -18,21 +19,20 @@ export default function GameInfo({ gameData }) {
         ? gameData.game_info.find((info) => info.language === selectedLanguage)?.description
         : 'No description available';
 
-
     return (
         <View style={styles.container}>
-            <View style={styles.dropdownContainer}>
-                <TouchableOpacity
-                    style={styles.pickerButton}
-                    onPress={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                    <Text style={styles.pickerText}>{selectedLanguage}</Text>
-                    <Icon name="chevron-down" size={15} color="#742D1A" />
-                </TouchableOpacity>
-                {isDropdownOpen && (
-                    <View style={styles.dropdownMenu}>
-                        {Array.isArray(gameData?.game_info) && gameData.game_info.length > 0 ? (
-                            gameData.game_info.map((info) => (
+            {Array.isArray(gameData?.game_info) && gameData.game_info.length > 0 && (
+                <View style={styles.dropdownContainer}>
+                    <TouchableOpacity
+                        style={styles.pickerButton}
+                        onPress={() => setIsDropdownOpen(!isDropdownOpen)}
+                    >
+                        <Text style={styles.pickerText}>{selectedLanguage}</Text>
+                        <Icon name="chevron-down" size={15} color="#742D1A" />
+                    </TouchableOpacity>
+                    {isDropdownOpen && (
+                        <View style={styles.dropdownMenu}>
+                            {gameData.game_info.map((info) => (
                                 <TouchableOpacity
                                     key={info._id}
                                     style={styles.dropdownItem}
@@ -43,13 +43,11 @@ export default function GameInfo({ gameData }) {
                                 >
                                     <Text style={styles.dropdownItemText}>{info.language}</Text>
                                 </TouchableOpacity>
-                            ))
-                        ) : (
-                            <Text style={styles.dropdownItemText}>No languages available</Text>
-                        )}
-                    </View>
-                )}
-            </View>
+                            ))}
+                        </View>
+                    )}
+                </View>
+            )}
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.card}>
                     <Text style={styles.title}>📜 Game Info</Text>
@@ -120,12 +118,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        gap: 50
+        gap: 50,
     },
     pickerText: {
         fontSize: wp('4%'),
         color: '#742D1A',
-        fontFamily: 'Montserrat-SemiBold'
+        fontFamily: 'Montserrat-SemiBold',
     },
     dropdownMenu: {
         position: 'absolute',
@@ -152,13 +150,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: wp('0.1%'),
         borderBottomColor: '#742D1A',
-
     },
     dropdownItemText: {
         fontSize: wp('3.5%'),
         color: '#742D1A',
         textAlign: 'center',
-        fontFamily: 'Montserrat-SemiBold'
+        fontFamily: 'Montserrat-SemiBold',
     },
     text: {
         fontSize: wp('4%'),

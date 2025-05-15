@@ -1,15 +1,14 @@
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackgroundScreen from '../../Components/BackgroundScreen'
 import CommonButton from '../../Components/CommonButton'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import Toast from 'react-native-toast-message'
 import CommonHeader from '../../Components/CommonHeader'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { AadharDocumentUpload, AdharVerificationSendOtp } from '../../Service/AadharVerification'
+import { AadharDocumentUpload, AdharVerificationSendOtp, getAadharDetails } from '../../Service/AadharVerification'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from 'react-native-image-crop-picker';
-import { PanDocumentUpload } from '../../Service/PanVerfication'
 
 export default function AadharDetail() {
     const route = useRoute()
@@ -22,8 +21,9 @@ export default function AadharDetail() {
     const [responseData, setResponse] = useState(1)
     const [uploadedImage, setUploadedImage] = useState(null);
     const [uploadedImages, setUploadedImages] = useState(null);
-
-
+    const [aadharUploadData, setAadharUploadData] = useState({})
+    const [uploadStatus, setUploadStatus] = useState(false)
+    const [imageShow, setImageShow] = useState(false)
 
     const validateInputs = () => {
         let valid = true;
@@ -52,6 +52,8 @@ export default function AadharDetail() {
                 console.log(error)
             })
     };
+
+
     const openImagePickers = () => {
         ImagePicker.openPicker({
             width: 300,
@@ -64,6 +66,26 @@ export default function AadharDetail() {
                 console.log(error)
             })
     };
+    const aadharDetails = async () => {
+        setLoader(true);
+        try {
+            const response = await getAadharDetails(user_id);
+            console.log("responseof aadhar card ", response)
+            if (response.status === 1) {
+                setAadharUploadData(response.data);
+                setUploadStatus(true)
+            } else {
+                setUploadStatus(false)
+            }
+        } catch (error) {
+            console.log("error====>", error)
+        } finally {
+            setLoader(false);
+        }
+    };
+    useEffect(() => {
+        aadharDetails()
+    }, []);
     const handleUploadDocument = async () => {
         const data = new FormData();
         data.append('aadhar_front', {
@@ -90,6 +112,7 @@ export default function AadharDetail() {
                     visibilityTime: 3000
                 })
             }
+            navigation.navigate('HomeScreen', { screen: 'Profile' });
         } catch (error) {
             console.error('Error uploading image:', error);
         } finally {
@@ -110,7 +133,7 @@ export default function AadharDetail() {
                         text2: 'Otp Send Succesffully in your given phone Number',
                         visibilityTime: 5000
                     });
-                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number, game_id ,mobile})
+                    navigation.navigate("AadharOtpVerify", { data: response.data, user_id, aadhaar_number, game_id, mobile })
                     setLoader(false)
                     setAadharCard(response.data)
                 } else {
@@ -120,6 +143,7 @@ export default function AadharDetail() {
                         position: 'top',
                         text1: response?.message,
                         text2: "something went wrong please try after some time",
+                        text3: "please upload document below",
                         visibilityTime: 4000,
                     });
                     setLoader(false)
@@ -150,114 +174,139 @@ export default function AadharDetail() {
             <BackgroundScreen />
             <CommonHeader title={"KYC"} />
             <Text style={styles.kyc}>Complete Your KYC </Text>
-            <View style={styles.container}>
-                <View style={[{ justifyContent: 'center', marginVertical: hp('2%') }]}>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Enter Aadhar Number"
-                            placeholderTextColor="#FFFFFFCC"
-                            keyboardType="numeric"
-                            maxLength={12}
-                            value={aadhaar_number}
-                            onChangeText={(text) => setAadharNumber(text)}
-                            error={Boolean(aadharError)}
-                        />
+            {
+                !uploadStatus ? (
+                    <>
+                        <View style={styles.container}>
+                            <View style={[{ justifyContent: 'center', marginVertical: hp('2%') }]}>
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Enter Aadhar Number"
+                                        placeholderTextColor="#FFFFFFCC"
+                                        keyboardType="numeric"
+                                        maxLength={12}
+                                        value={aadhaar_number}
+                                        onChangeText={(text) => setAadharNumber(text)}
+                                        error={Boolean(aadharError)}
+                                    />
 
-                    </View>
-                    {Boolean(aadharError) && (
-                        <Text style={styles.errorText}>{aadharError}</Text>
-                    )}
-                </View>
-                <View style={[{ paddingTop: hp('2%') }]}>
-                    <CommonButton
-                        title={loader ? 'Loading...' : 'Save'}
-                        onPress={handleAadharDetail}
-                        disabled={loader}
-                    />
-                    <Text style={styles.kycText}>
-                        Why do we need Aadhar Verification?
-                    </Text>
-                </View>
-            </View>
-            <View style={styles.container1}>
-                {
-                    responseData == 0 && (
-                        <View style={{ gap: 20, justifyContent: 'center', alignItems: 'center' }}>
-                            <TouchableOpacity
-                                style={{
-                                    height: hp('20%'),
-                                    width: wp('80%'),
-                                    borderWidth: 1,
-                                    borderColor: '#ccc',
-                                    borderRadius: 8,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    backgroundColor: '#FFFFFF80',
-                                }}
-                                onPress={openImagePicker}
-                            >
-                                {uploadedImage ? (
-                                    <Image
-                                        source={{ uri: uploadedImage?.path }}
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            borderRadius: 8,
-                                            resizeMode: 'cover',
-                                        }}
-                                    />
-                                ) : (
-                                    <View style={{ alignItems: 'center' }}>
-                                        <Icon name="upload" size={30} color="#3E3E3E" />
-                                        <Text style={{ marginTop: 8, color: '#3E3E3E', fontSize: 16 }}>
-                                            Upload Front AadharCard
-                                        </Text>
-                                    </View>
+                                </View>
+                                {Boolean(aadharError) && (
+                                    <Text style={styles.errorText}>{aadharError}</Text>
                                 )}
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{
-                                    height: hp('20%'),
-                                    width: wp('80%'),
-                                    borderWidth: 1,
-                                    borderColor: '#ccc',
-                                    borderRadius: 8,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    backgroundColor: '#FFFFFF80',
-                                }}
-                                onPress={openImagePickers}
-                            >
-                                {uploadedImages ? (
-                                    <Image
-                                        source={{ uri: uploadedImages?.path }}
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            borderRadius: 8,
-                                            resizeMode: 'cover',
-                                        }}
-                                    />
-                                ) : (
-                                    <View style={{ alignItems: 'center' }}>
-                                        <Icon name="upload" size={30} color="#3E3E3E" />
-                                        <Text style={{ marginTop: 8, color: '#3E3E3E', fontSize: 16 }}>
-                                            Upload Back AadharCard
-                                        </Text>
-                                    </View>
-                                )}
-                            </TouchableOpacity>
+                            </View>
+                            <View style={[{ paddingTop: hp('2%') }]}>
+                                <CommonButton
+                                    title={loader ? 'Loading...' : 'Save'}
+                                    onPress={handleAadharDetail}
+                                    disabled={loader}
+                                />
+                                <Text style={styles.kycText}>
+                                    Why do we need Aadhar Verification?
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.container1}>
                             {
-                                uploadedImage && (<View style={{ padding: wp('5%') }}>
-                                    <CommonButton title={loader ? 'Loading...' : 'Upload Documnet'} onPress={handleUploadDocument} />
-                                </View>)
+                                responseData == 0 && (
+                                    <View style={{ gap: 20, justifyContent: 'center', alignItems: 'center' }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                height: hp('20%'),
+                                                width: wp('80%'),
+                                                borderWidth: 1,
+                                                borderColor: '#ccc',
+                                                borderRadius: 8,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                backgroundColor: '#FFFFFF80',
+                                            }}
+                                            onPress={openImagePicker}
+                                        >
+                                            {uploadedImage ? (
+                                                <Image
+                                                    source={{ uri: uploadedImage?.path }}
+                                                    style={{
+                                                        height: '100%',
+                                                        width: '100%',
+                                                        borderRadius: 8,
+                                                        resizeMode: 'cover',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <View style={{ alignItems: 'center' }}>
+                                                    <Icon name="upload" size={30} color="#3E3E3E" />
+                                                    <Text style={{ marginTop: 8, color: '#3E3E3E', fontSize: 16 }}>
+                                                        Upload Front AadharCard
+                                                    </Text>
+                                                </View>
+                                            )}
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={{
+                                                height: hp('20%'),
+                                                width: wp('80%'),
+                                                borderWidth: 1,
+                                                borderColor: '#ccc',
+                                                borderRadius: 8,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                backgroundColor: '#FFFFFF80',
+                                            }}
+                                            onPress={openImagePickers}
+                                        >
+                                            {uploadedImages ? (
+                                                <Image
+                                                    source={{ uri: uploadedImages?.path }}
+                                                    style={{
+                                                        height: '100%',
+                                                        width: '100%',
+                                                        borderRadius: 8,
+                                                        resizeMode: 'cover',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <View style={{ alignItems: 'center' }}>
+                                                    <Icon name="upload" size={30} color="#3E3E3E" />
+                                                    <Text style={{ marginTop: 8, color: '#3E3E3E', fontSize: 16 }}>
+                                                        Upload Back AadharCard
+                                                    </Text>
+                                                </View>
+                                            )}
+                                        </TouchableOpacity>
+                                        {
+                                            uploadedImage && (<View style={{ padding: wp('5%') }}>
+                                                <CommonButton title={loader ? 'Loading...' : 'Upload Documnet'} onPress={handleUploadDocument} />
+                                            </View>)
+                                        }
+
+                                    </View>
+                                )
+                            }
+                        </View>
+                    </>) : (<>
+                        <View style={styles.container2}>
+                            <TouchableOpacity onPress={() => setImageShow(true)}>
+                                <Text style={styles.documentText}>{aadharUploadData.aadhar_front}</Text>
+                            </TouchableOpacity>
+                            <Text style={[styles.documentText, { color: 'red', fontFamily: 'Montserrat-SemiBold' }]}>Click Here</Text>
+                            {
+                                imageShow ? (<Image
+                                    source={{ uri: aadharUploadData.imageUrl }} // Replace with actual image URL
+                                    style={styles.image}
+                                    resizeMode="contain"
+                                />) : ("")
                             }
 
+                            {/* <View style={styles.documentContainer}>
+                                         
+                                            
+                                              <Text style={styles.documentText}>This is your PAN document</Text>
+                                          </View> */}
+                            <Text style={styles.adminText}>Your Documents are submitted and under progress for Validation</Text>
                         </View>
-                    )
-                }
-            </View>
+                    </>)}
             <Toast ref={Toast.setRef} />
         </>
     )
@@ -314,5 +363,36 @@ const styles = StyleSheet.create({
         fontFamily: 'Montserrat-Regular',
         paddingHorizontal: hp('2%'),
         paddingVertical: hp('2%'),
-    }
+    },
+    container2: {
+        flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        padding: 20,
+    },
+    documentContainer: {
+        width: '90%',
+        height: 250,
+        backgroundColor: '#FFFFFF80',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 5,
+        padding: 10,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+        marginBottom: 10,
+    },
+    documentText: {
+        fontSize: 14,
+        color: '#EFC328',
+        fontFamily: 'Montserrat-Medium',
+        textAlign: 'center'
+    },
 })

@@ -72,3 +72,18 @@ export const AadharVerificationRejection = async (user_id)=>{
     throw error;
   }
 }
+
+export const getAadharDetails = async (user_id)=>{
+  console.log
+  try {
+    const response = await apiInstance.get(`${Config.Aadhar_Detail}/${user_id}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error show image:', error.response || error.message);
+    throw error;
+  }
+}

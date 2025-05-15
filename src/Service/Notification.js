@@ -12,3 +12,15 @@ export const notificationList = async (user_id) => {
       throw error;
     }
   };
+
+  export const unReadMsgCount = async (user_id) => {
+    try {
+      const response = await apiInstance.post(`${Config.unReadMsg}`,{
+        user_id
+      });
+      return response.data;
+    } catch (error) {
+      console.log('error', error);
+      throw error;
+    }
+  };

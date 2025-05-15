@@ -20,7 +20,7 @@ const useTransaction = () => {
         '',
         true
       );
-
+      console.log("result",result)
       if (response.status !== 0) {
         await bonusWallet(response);
       }

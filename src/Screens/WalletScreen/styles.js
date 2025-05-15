@@ -37,7 +37,7 @@ export default StyleSheet.create({
     cardContainer: {
       backgroundColor: '#A38C85',
       borderRadius: hp('1.5%'),
-      marginTop: hp('2.5%'),
+      marginTop: hp('2%'),
     },
     divider: {
       height: 1,
@@ -92,7 +92,7 @@ export default StyleSheet.create({
       row: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: hp('2%'),
+        paddingVertical: hp('1%'),
         paddingHorizontal: wp('2%'),
       },
       iconContainer: {
@@ -157,7 +157,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         borderRadius: wp('4%'),
         marginTop: wp('6%'),
-        gap: wp('5%'),
+        justifyContent:'space-between',
         alignItems: 'center',
         paddingHorizontal: hp('2%'),
       },

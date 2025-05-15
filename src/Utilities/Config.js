@@ -1,5 +1,3 @@
-import App from "../../App";
-
 export default {
   Login: 'api/login',
   OtpVerify: 'api/verifyOtp',
@@ -36,6 +34,7 @@ export default {
   PanVerification: 'api/PanVerification',
   Notification_List: 'notification/list',
   Notification_ById:'/notification/getNotificationById',
+  unReadMsg:'/notification/updateUnReadmsg',
   Winning: 'api/winnings/byUserId',
   Wallet_Store: 'api/wallet_request/store',
   Wallet_Request: 'api/wallet_request/list',
@@ -52,6 +51,7 @@ export default {
   Aadhar_Document:'api/documents/aadhar',
   Aadhar_Verify : 'api/aadharVerificationConfirmation',
   Aadhar_Reject : 'api/aadharVerificationRejection',
+  Aadhar_Detail:'api/getAadharDetailsByUserId',
   Bank_Document:'api/documents/bank_account',
   Add_Expectation : 'api/userWinningExpectation/add',
   Edit_Expectation:'api/userWinningExpectation/edit/',

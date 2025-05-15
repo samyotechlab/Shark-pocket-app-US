@@ -44,6 +44,12 @@ export const PointsSelection = () => {
   )
 }
 
+export const WithDrawPolicy = () => {
+  return(
+    <WebViewScreen title="Withdraw Policy" uri="https://sharkpocket.in/withdrawal-policy/" />
+  )
+}
+
 // export const SupportScreen = () => {
 //   return(
 //     <WebViewScreen title="Support" uri={`${baseApiurl}/${Config.Support}`} />

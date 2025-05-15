@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import sharkLogo from '../../../assets/images/Screens/sharkLogo.png';
 import shark from '../../../assets/images/Applogo/Sharkpocket1.png';
 import bell from '../../../assets/images/Screens/bell.png';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { notificationList } from '../../Service/Notification';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Header({ usersData, totalAmount, userId, navigation }) {
+  const [notification, setNotificationData] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loader, setLoader] = useState(false);
+  
+    const notificationData = async () => {
+      setLoader(true)
+      try {
+        const response = await notificationList(userId);
+        if (response) {
+          setNotificationData(response.data);
+          setUnreadCount(response.unreadCount || 0);
+        }
+      } catch (error) {
+        console.log('error', error);
+      }finally{
+        setLoader(false)
+      }
+    };
+    useFocusEffect(
+      React.useCallback(() => {
+        notificationData();
+      }, [userId])
+    );
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity
@@ -31,10 +56,17 @@ export default function Header({ usersData, totalAmount, userId, navigation }) {
         </Text>
       </LinearGradient>
       <View style={styles.iconsContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Notification', { user_id: userId })}>
+      <TouchableOpacity onPress={() => navigation.navigate('Notification', { notification:notification,loader:loader,setLoader:setLoader,userId:userId})}>
+        <View style={styles.bellContainer}>
           <Image source={bell} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
+          {unreadCount > 0 && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{unreadCount}</Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    </View>
     </View>
   );
 }
@@ -83,15 +115,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   iconsContainer: {
-    flex: 0.5,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: wp('5%'),
+  },
+  bellContainer: {
+    position: 'relative',
   },
   icon: {
-    height: hp('4%'),
-    width: wp('8%'),
-    resizeMode: 'contain',
+    width: wp('7%'),
+    height: wp('7%'),
+  },
+  badge: {
+    position: 'absolute',
+    top: -wp('1%'), 
+    right: -wp('1%'),
+    backgroundColor: 'red',
+    borderRadius: wp('3%'),
+    width: wp('4%'),
+    height: wp('4%'),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#ffffff',
+    fontSize: wp('2.5%'),
+    fontWeight: 'bold',
   },
 });

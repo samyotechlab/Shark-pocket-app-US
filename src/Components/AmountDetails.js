@@ -21,7 +21,7 @@ export default function AmountDetails() {
   };
   return (
     <>
-      <HeaderComponent title={"Amount Details"} transactionData={item} status={"deposite"} />
+      <HeaderComponent title={"Amount Details"} transactionData={item} status={"withdraw"} />
       <SafeAreaView style={styles.main}>
         <View style={styles.section}>
           <Text style={styles.transaction}>Reference ID</Text>

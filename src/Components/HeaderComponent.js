@@ -4,51 +4,61 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import CommonHeader from "./CommonHeader";
 import Iconics from "react-native-vector-icons/Feather";
 
-const HeaderComponent = ({title,transactionData,status}) => {
+const HeaderComponent = ({ title, transactionData, status }) => {
+  console.log("deposite", transactionData)
   const icon = {
-    success:"check-circle",
-    failed:"x-circle",
-    deposite:"check-circle"
+    success: "check-circle",
+    failed: "x-circle",
+    deposite: "check-circle",
+    withdraw: "check-circle"
   }
   const color = {
-    success:"#00C659",
-    failed:"#D80000",
-    deposite:"#FFFFFF"
+    success: "#00C659",
+    failed: "#D80000",
+    deposite: "#FFFFFF",
+    withdraw: "#FFFFFF"
   }
   const message = {
-    success:"Successfull",
-    failed:"failed",
-    deposite:"Successful"
+    success: "Successfull",
+    failed: "failed",
+    deposite: "Successful",
+    withdraw: "Successful"
   }
   const backgroundColor = {
-    success:"#00C659",
-    failed:"#D80000",
-    deposite:"transparent"
+    success: "#00C659",
+    failed: "#D80000",
+    deposite: "transparent",
+    withdraw: "transparent"
   }
   const amount = {
-    amount: "77.89",
-    deposite: parseFloat(transactionData.paying_amount).toFixed(2),
-  } 
+    withdraw: parseFloat(transactionData.paying_amount).toFixed(2),
+  }
+  const date = {
+    success:(transactionData.deposite_date),
+    failed: (transactionData.deposite_date),
+    deposite: (transactionData.deposite_date),
+    withdraw: (transactionData.created_at)
+  }
   return (
-<>
-    <View style={styles.main}>
-      <CommonHeader title={title}/>
-      <View style={styles.container}>
+    <>
+      <View style={styles.main}>
+        <CommonHeader title={title} />
+        <View style={styles.container}>
 
-      <View style={styles.content}>
-        <Text style={styles.amount}>₹ {amount[status]?amount[status]: (transactionData.transaction_amount)}</Text>
-        <Iconics name={icon[status]?icon[status]:"clock"} size={wp("7%")} color={color[status]?color[status]:"#FDCB50"} />
-      </View>
+          <View style={styles.content}>
+            <Text style={styles.amount}>₹ {amount[status] ? amount[status] : (transactionData.transaction_amount)}</Text>
+            <Iconics name={icon[status] ? icon[status] : "clock"} size={wp("7%")} color={color[status] ? color[status] : "#FDCB50"} />
+          </View>
 
-      <View style={styles.statusRow}>
-      <View style={[styles.successBadge,{backgroundColor:backgroundColor[status]?backgroundColor[status]:"#FDCB50"}]}>
-          <Text style={styles.successText}>{message[status]?message[status]:"Checking"}</Text>
-        </View>       
-         <Text style={styles.date}>•{status === "amount"? ("03-03-2025"):status === "deposite" ?(transactionData.updated_at) :(transactionData.deposite_date)}</Text>
+          <View style={styles.statusRow}>
+            <View style={[styles.successBadge, { backgroundColor: backgroundColor[status] ? backgroundColor[status] : "#FDCB50" }]}>
+              <Text style={styles.successText}>{message[status] ? message[status] : "Checking"}</Text>
+            </View>
+            <Text style={styles.date}>•{date[status]?date[status]:transactionData.created_at}</Text>
+          </View>
+        </View>
       </View>
-    </View>
-    </View>
-  </>
+    </>
   );
 };
 
@@ -67,13 +77,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: hp("1%"),
-    marginTop:hp("2.5%"),
+    marginTop: hp("2.5%"),
   },
   title: {
     color: "#fff",
     marginLeft: wp("2%"),
     fontWeight: "600",
-    fontSize: wp("4.5%"), 
+    fontSize: wp("4.5%"),
   },
   content: {
     flexDirection: "row",
@@ -85,7 +95,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: wp("6%"),
-    marginLeft:wp("1%")
+    marginLeft: wp("1%")
   },
   statusRow: {
     flexDirection: "row",
@@ -96,23 +106,23 @@ const styles = StyleSheet.create({
   status: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: wp("4%"), 
+    fontSize: wp("4%"),
   },
   date: {
     color: "#fff",
     marginLeft: wp("1%"),
     fontSize: wp("4%"),
-    fontFamily:"Montserrat-Regular"
+    fontFamily: "Montserrat-Regular"
   },
   successBadge: {
     paddingVertical: hp("0.5%"),
     paddingHorizontal: wp("3%"),
-    borderRadius: 20, 
-    backgroundColor:'red'
+    borderRadius: 20,
+    backgroundColor: 'red'
   },
   successText: {
     color: "#fff",
-    fontFamily:"Montserrat-SemiBold",
+    fontFamily: "Montserrat-SemiBold",
     fontSize: wp("4%"),
   },
 });

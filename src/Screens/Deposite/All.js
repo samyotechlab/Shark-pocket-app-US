@@ -25,6 +25,7 @@ export default function All(props) {
   const groupedData = walletData.length > 0 ? groupByDateAndType(walletData) : {};
 
   const handleNavigation = (item) => {
+    console.log("item",item)
     navigation.navigate('DepositeDetails', { item: item });
   };
   const renderTransaction = ({ item }) => {

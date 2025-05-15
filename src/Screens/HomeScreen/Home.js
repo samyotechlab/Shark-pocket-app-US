@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Alert, BackHandler, Platform, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -15,9 +15,8 @@ import GameHistorySection from './GameHistorySection';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import CloseDialog from '../../Components/CloseDialog';
 import MyGame from '../../Components/MyGame';
-import AvailbleGameCard from '../../Components/AvailableGameCard';
 import UpcomingGame from '../../Components/UpcomingGame';
-
+import AvailableGameCard from '../../Components/AvailableGameCard';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -36,13 +35,65 @@ export default function HomeScreen() {
   const data = isReady && loginData?.data;
   const appVersion = DeviceInfo.getVersion();
 
-  const refreshData = useCallback(() => {
-    setRefreshing(true);
+  const fetchUserData = useCallback(async () => {
+    if (!data?._id) return;
+    try {
+      const response = await userDetail(data._id);
+      if (response?.data) {
+        setUserData({
+          ...response.data,
+          total_balance: parseFloat(response.data.total_balance || 0).toFixed(2),
+          bonus_wallet: parseFloat(response.data.bonus_wallet || 0).toFixed(2),
+          total_earning: parseFloat(response.data.total_earning || 0).toFixed(2),
+        });
+      } else {
+        setUserData({});
+      }
+    } catch (error) {
+      setUserData({});
+      console.log('User data error:', error);
+    }
+  }, [data]);
+
+  const fetchGameData = useCallback(async () => {
+    if (!data?._id) return;
+    try {
+      const response = await getGameData(data._id);
+      setGameData(response?.data || []);
+      setMyGames(response?.myGames || []);
+      setBannerData(response?.banner || []);
+    } catch (error) {
+      console.log('Game data error:', error);
+    }
+  }, [data]);
+
+  const fetchHistoryData = useCallback(async () => {
+    if (!data?._id) return;
+    try {
+      const response = await gameHistoryByUser(data._id);
+      setGameHistory(response.data || []);
+    } catch (error) {
+      console.log('Game history error:', error);
+    }
+  }, [data]);
+
+  const fetchAllData = useCallback(async () => {
+    if (!isReady || !loginData) return;
     setLoader(true);
-    Promise.all([fetchUserData(), fetchGameData(), fetchHistoryData()])
-      .then(() => setRefreshing(false))
-      .finally(() => setLoader(false));
-  }, []);
+    try {
+      await Promise.all([fetchUserData(), fetchGameData(), fetchHistoryData()]);
+    } catch (error) {
+      console.log('Data fetch error:', error);
+    } finally {
+      setLoader(false);
+    }
+  }, [isReady, loginData, fetchUserData, fetchGameData, fetchHistoryData]);
+
+  const refreshData = useCallback(async () => {
+    setRefreshing(true);
+    await fetchAllData();
+    setRefreshing(false);
+  }, [fetchAllData]);
 
   const checkAppVersion = useCallback(async () => {
     try {
@@ -69,87 +120,31 @@ export default function HomeScreen() {
     }
   }, [appVersion]);
 
-  const fetchUserData = useCallback(async () => {
-    if (!data?._id) return;
-    try {
-      const response = await userDetail(data._id);
-      if (response?.data) {
-        setUserData({
-          ...response.data,
-          total_balance: parseFloat(response.data.total_balance || 0).toFixed(2),
-          bonus_wallet: parseFloat(response.data.bonus_wallet || 0).toFixed(2),
-          total_earning: parseFloat(response.data.total_earning || 0).toFixed(2),
-        });
-      } else {
-        setUserData({});
-      }
-    } catch (error) {
-      setUserData({});
-    }
-  }, [data]);
-
-  const fetchGameData = useCallback(async () => {
-    if (!data?._id) return;
-    try {
-      const response = await getGameData(data._id);
-      setGameData(response?.data || []);
-      setMyGames(response?.myGames || []);
-      setBannerData(response?.banner || []);
-    } catch (error) {
-      console.log('Game data error:', error);
-    }
-  }, [data]);
-
-  const fetchHistoryData = useCallback(async () => {
-    if (!data?._id) return;
-    try {
-      const response = await gameHistoryByUser(data._id);
-      setGameHistory(response.data || []);
-    } catch (error) {
-      console.log('Game history error:', error);
-    }
-  }, [data]);
-
-  const memoizedDataFetch = useMemo(() => {
-    if (isReady && loginData) {
-      return Promise.all([fetchUserData(), fetchGameData(), fetchHistoryData()]);
-    }
-    return Promise.resolve();
-  }, [isReady, loginData, fetchUserData, fetchGameData, fetchHistoryData]);
-
   useEffect(() => {
     checkAppVersion();
-    if (isReady && loginData) {
-      setLoader(true);
-      memoizedDataFetch
-        .then(() => setLoader(false))
-        .catch(() => setLoader(false));
-    } else {
-      setLoader(true);
-    }
-  }, [isReady, loginData, memoizedDataFetch, checkAppVersion]);
+    fetchAllData();
+  }, [checkAppVersion, fetchAllData]);
 
   useFocusEffect(
     useCallback(() => {
-      if (isReady && loginData) {
-        memoizedDataFetch.catch((error) => console.log('Focus data fetch error:', error));
-        const onBackPress = () => {
-          Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'YES', onPress: () => BackHandler.exitApp() },
-          ]);
-          return true;
-        };
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-        return () => backHandler.remove();
-      }
-    }, [isReady, loginData, memoizedDataFetch]),
+      fetchAllData();
+      const onBackPress = () => {
+        Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
+          { text: 'Cancel', style: 'cancel' },
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => backHandler.remove();
+    }, [fetchAllData]),
   );
 
   const totalAmount = usersData
-    ? parseFloat(usersData.total_balance || 0) +
-      parseFloat(usersData.bonus_wallet || 0) +
-      parseFloat(usersData.total_earning || 0)
+    ? parseFloat(usersData?.total_balance || 0) +
+      parseFloat(usersData?.bonus_wallet || 0) +
+      parseFloat(usersData?.total_earning || 0)+
+      parseFloat(usersData?.wallet)
     : 0;
 
   const availableGames = Array.isArray(gameData)
@@ -191,7 +186,7 @@ export default function HomeScreen() {
             <GameSection
               title="WEEKLY GAMES"
               data={availableGames}
-              component={AvailbleGameCard}
+              component={AvailableGameCard}
               navigation={navigation}
               status="6"
               availability="3"
@@ -200,7 +195,7 @@ export default function HomeScreen() {
             <GameSection
               title="DAILY GAMES"
               data={availableGames}
-              component={AvailbleGameCard}
+              component={AvailableGameCard}
               navigation={navigation}
               status="5"
               availability="2"

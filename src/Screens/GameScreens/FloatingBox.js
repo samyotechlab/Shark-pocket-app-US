@@ -381,6 +381,7 @@ export default function FloatingBoxGame() {
 
     try {
       const response = await finalScore(encryptedData, routeData.user_id);
+      console.log("response ---- > ",response)
       if (response) {
         setScoreData(response.data);
         setIsGameOver(true);

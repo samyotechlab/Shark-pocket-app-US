@@ -26,9 +26,9 @@ export default function Debit({winningData}) {
   // Group walletData by date
   const groupedData = groupByDateAndType(debitTransactions);
 
-  const handleNavigation = () => {
-    navigation.navigate('DepositeDetails');
-  };
+  // const handleNavigation = () => {
+  //   navigation.navigate('DepositeDetails');
+  // };
 
   const renderTransaction = ({ item }) => {
     const createdAt = item.created_at || 'n/a';
@@ -38,7 +38,6 @@ export default function Debit({winningData}) {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
-        onPress={handleNavigation}
       >
         <View style={[styles.circle, { backgroundColor: '#F100001A' }]}>
           <Image

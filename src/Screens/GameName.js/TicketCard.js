@@ -62,7 +62,7 @@ export default function TicketCard({
     setVisible(false);
     const result = await onPurchase(ticket._id, ticket.price, () => {
       setPurchased(true);
-      setTicketCount(false);
+      // setTicketCount(false);
     });
     if (!result.success) {
       setBalance(result.balance);
@@ -91,11 +91,11 @@ export default function TicketCard({
     });
   };
 
-  const toggleModel = () => {
-    setVisible(true);
-    setMessage('To start the game, the purchased tickets count must be greater than or equal to the minimum ticket count.');
-    setCountData('count');
-  };
+  // const toggleModel = () => {
+  //   setVisible(true);
+  //   setMessage('To start the game, the purchased tickets count must be greater than or equal to the minimum ticket count.');
+  //   setCountData('count');
+  // };
 
   const handleClose = () => {
     setIsBtnDisabled(false);
@@ -185,7 +185,7 @@ export default function TicketCard({
                     },
                   ]}
                   disabled={isBtnDisabled}
-                  onPress={purchased ? (ticketCount ? handlePlay : toggleModel) : handlePurchaseModal}
+                  onPress={purchased ? handlePlay : handlePurchaseModal}
                 >
                   <Text style={styles.playButtonText}>
                     {purchased ? 'Play Now' : 'Purchase'}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import { CommonActions, useFocusEffect, useNavigation } from '@react-navigation/native';
 import useLoginDataStorage from '../../Service/CustomStorageHook';
 import { userDetail } from '../../Service/Login';
@@ -8,6 +8,7 @@ import AlertDialogRed from '../../Components/AlertDialogRed';
 import ProfileHeader from './ProfileHeader';
 import MenuItem from './MenuItem';
 import styles from './styles';
+import { notificationList } from '../../Service/Notification';
 
 const SharkPocketScreen = () => {
   const navigation = useNavigation();
@@ -18,6 +19,7 @@ const SharkPocketScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [url, setItemUrl] = useState('');
+  const [notification, setNotificationData] = useState([]);
   const data = isReady && loginData && loginData?.data;
 
   const menuItems = [
@@ -45,6 +47,7 @@ const SharkPocketScreen = () => {
     { title: 'How To Play', icon: 'message-arrow-right-outline', url: 'HowtoPlay' },
     { title: 'Privacy Policy', icon: 'message-arrow-right-outline', url: 'PrivacyPolicy' },
     { title: 'Refund and Policy', icon: 'undo', url: 'Refund' },
+    { title: 'Withdraw Policy', icon: 'security', url: 'WithDrawPolicy' },
     { title: 'Terms & Conditions', icon: 'bookmark-outline', url: 'T&CScreen' },
     { title: "FAQ's", icon: 'bookmark-outline', url: 'Faq' },
     { title: 'Support', icon: 'help-circle-outline', url: 'SupportScreen' },
@@ -81,10 +84,29 @@ const SharkPocketScreen = () => {
     }, [isReady, loginData, fetchUserProfile])
   );
 
+  const handleNotification = async () => {
+    try {
+      setLoader(true)
+      const response = await notificationList(data._id)
+      console.log("reposne",response)
+      if (response.status === 1) {
+        setNotificationData(response.data);
+         navigation.navigate('Notification', { notification:notification,loader:loader,setLoader:setLoader,userId:data._id})
+      }
+    } catch (error) {
+     console.log('error', error);
+    } finally {
+      setLoader(false)
+    }
+  }
+
   const handleNavigation = (url) => {
     if (url === 'Logout') {
       setVisible(true);
-    } else {
+    } else if (url === 'Notification') {
+      handleNotification()
+    }
+    else {
       navigation.navigate(url, { user_id: data._id, mobile: userData.mobile });
     }
   };

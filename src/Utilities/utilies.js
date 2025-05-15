@@ -45,7 +45,6 @@ export const generateKey = (mobileNumber, username, aadharNumber, userId) => {
 };
 
 export const encryptData =  (key, data) => {
-  console.log("key",key,"data",data)
   const dataString = JSON.stringify(data);
   const encrypted =  CryptoJS.AES.encrypt(dataString, key).toString();
   return encrypted;

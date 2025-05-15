@@ -63,6 +63,7 @@ export const finalScore = async (
       user_id:user_id
     });
     if (response.status === 200) {
+      console.log("response ====== > ",response)
       return response.data;
     } else {
       console.error('Failed to fetch game list. Status code:', response.status);

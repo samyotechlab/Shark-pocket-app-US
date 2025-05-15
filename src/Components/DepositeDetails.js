@@ -10,7 +10,7 @@ import Iconicons from 'react-native-vector-icons/Feather';
 import { Divider } from 'react-native-paper';
 import HeaderComponent from './HeaderComponent';
 import LinearGradient from 'react-native-linear-gradient';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { transactionDepositeData } from '../Service/Transaction';
 import Toast from 'react-native-toast-message';
 import AnimatedLoader from './AnimatedLoader';
@@ -23,6 +23,7 @@ export default function DepositeDetails() {
   const [transactionData, setTransactionData] = useState({})
   const [loader, setLoader] = useState()
   const {loginData , isReady}  = useLoginDataStorage();
+  const navigation = useNavigation()
 
   const[userData,setUserData]=useState({
     name:"",
@@ -219,7 +220,7 @@ export default function DepositeDetails() {
             </View>
 
             <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: wp(5) }}>
-              <TouchableOpacity style={styles.optionsRow} >
+              <TouchableOpacity style={styles.optionsRow} onPress={()=>navigation.navigate('Support',{user_id:item.user_id})}>
                 <View style={styles.row}>
                   <Icon name="question-circle-o" size={20} color="#000000B2" />
                   <Text style={styles.amount}>Need Help</Text>
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1),
     borderWidth: 1,
     borderRadius: wp(4),
-    borderColor: '#00000033'
+    borderColor: '#00000033',
 
   },
   divider: {

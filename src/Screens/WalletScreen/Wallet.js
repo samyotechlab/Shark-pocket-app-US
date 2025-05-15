@@ -2,6 +2,7 @@ import React from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Iconics from 'react-native-vector-icons/Ionicons';
+import Iconic from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import useWalletData from './useWalletData';
 import WalletBalance from './WalletBalance';
@@ -32,7 +33,8 @@ export default function WalletScreen() {
   const totalAmount =
     (userData?.total_balance || 0) +
     (userData?.bonus_wallet || 0) +
-    (userData?.total_earning || 0);
+    (userData?.total_earning || 0)+
+    (userData?.wallet || 0)
 
   const handleNavigation = (screen, params, check = false) => {
     if (check && userData?.is_aadhar_verified === 0) {
@@ -116,16 +118,45 @@ export default function WalletScreen() {
                     handleNavigation('WithdrawWallet', { dataUser: userData }, true)
                   }
                 />
+                <LinearGradient
+                  colors={['#999999', '#FFFFFF', '#999999']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.divider}
+                />
+                <WalletCard
+                  icon="cash-outline"
+                  label="Wallet"
+                  amount={userData?.wallet || 0}
+                />
               </View>
               <TransactionCard
                 onPress={() => handleNavigation('WalletDetails', { user_id: userId })}
               />
+              <TouchableOpacity style={styles.transactionContainer} onPress={() => {
+                handleNavigation('WithDrawPolicy')
+              }}>
+                <LinearGradient
+                  colors={['#3E180E1A', '#FFFFFF1A']}
+                  style={styles.transactionIcon}
+                >
+                  <Iconic name="payments" size={22} color="white" />
+                </LinearGradient>
+                <View>
+                  <Text style={styles.label}>Withdraw Policy</Text>
+                </View>
+                <Iconics
+                  name="chevron-forward-outline"
+                  size={25}
+                  color="white"
+                  style={styles.chevron}
+                />
+              </TouchableOpacity>
             </>
           ) : (
             <View style={styles.noDataContainer}>
               <Text style={styles.noDataText}>No data found</Text>
             </View>
-
           )
         ) : (
           <View style={styles.loaderContainer}>

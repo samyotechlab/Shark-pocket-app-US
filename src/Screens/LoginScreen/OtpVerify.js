@@ -1,20 +1,20 @@
-import { KeyboardAvoidingView, PermissionsAndroid, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import BackgroundScreen from '../../Components/BackgroundScreen'
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
-import CommonButton from '../../Components/CommonButton'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import axios from 'axios'
-import Config from '../../Utilities/Config'
-import Toast from 'react-native-toast-message'
-import useLoginDataStorage from '../../Service/CustomStorageHook'
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import BackgroundScreen from '../../Components/BackgroundScreen';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import CommonButton from '../../Components/CommonButton';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios';
+import Config from '../../Utilities/Config';
+import Toast from 'react-native-toast-message';
+import useLoginDataStorage from '../../Service/CustomStorageHook';
 import Iconics from 'react-native-vector-icons/Ionicons';
-import { baseApiurl } from '../../Service/AxiosInstance'
-import { useOtpVerify } from "react-native-otp-verify"
+import { baseApiurl } from '../../Service/AxiosInstance';
+import { useOtpVerify } from 'react-native-otp-verify';
+
 const headers = {
   'Content-Type': 'application/json',
 };
-
 
 export default function OtpVerify() {
   const route = useRoute();
@@ -28,6 +28,7 @@ export default function OtpVerify() {
   const [loader, setLoader] = useState(false);
   const [isResendDisabled, setIsResendDisabled] = useState(true);
   const { hash, otp: newOtp, message, timeoutError, stopListener, startListener } = useOtpVerify({ numberOfDigits: 4 });
+
   useEffect(() => {
     const init = async () => {
       if (Platform.OS === 'android') {
@@ -37,15 +38,22 @@ export default function OtpVerify() {
     init();
     return () => stopListener();
   }, []);
+
   useEffect(() => {
     if (newOtp) {
       console.log('newOtp received:', newOtp);
-      const otpCode = newOtp.split(' ')
+      const otpCode = newOtp.split('');
       console.log('OTP Code:', otpCode);
-      setOtp(newOtp.split(''));
+      setOtp(otpCode);
     }
   }, [newOtp]);
 
+  // Auto-call handleOtp when all 4 OTP fields are filled
+  useEffect(() => {
+    if (otp.join('').length === 4 && !loader && !otpVerified) {
+      handleOtp();
+    }
+  }, [otp]);
 
   useEffect(() => {
     let interval = null;
@@ -95,6 +103,8 @@ export default function OtpVerify() {
       return;
     }
 
+    if (loader || otpVerified) return;
+
     setLoader(true);
     try {
       axios
@@ -103,9 +113,9 @@ export default function OtpVerify() {
           {
             user_id: data.user_id,
             otp: otp.join(''),
-            mobile: data.mobile
+            mobile: data.mobile,
           },
-          headers,
+          { headers },
         )
         .then(res => {
           if (res.data.status === 1) {
@@ -114,7 +124,7 @@ export default function OtpVerify() {
               position: 'top',
               text1: 'Welcome!',
               text2: 'OTP verified successfully',
-              visibilityTime: 5000
+              visibilityTime: 5000,
             });
             setOtpVerified(true);
             setTimeout(() => {
@@ -134,7 +144,7 @@ export default function OtpVerify() {
           }
         })
         .catch(err => {
-          console.log('error--->', err);
+          console.log('error ', err);
           setLoader(false);
         });
     } catch (error) {
@@ -152,9 +162,9 @@ export default function OtpVerify() {
         .post(
           `${baseApiurl}/${Config.ResendOtp}`,
           {
-            mobile: data.mobile
+            mobile: data.mobile,
           },
-          headers,
+          { headers },
         )
         .then(res => {
           if (res.data.status === 1) {
@@ -164,7 +174,7 @@ export default function OtpVerify() {
               position: 'top',
               text1: 'OTP Sent',
               text2: 'OTP sent successfully',
-              visibilityTime: 5000
+              visibilityTime: 5000,
             });
           } else {
             setLoader(false);
@@ -179,7 +189,7 @@ export default function OtpVerify() {
         })
         .catch(err => {
           setLoader(false);
-          console.log('error--->', err);
+          console.log('error', err);
         });
     } catch (error) {
       setLoader(false);
@@ -193,9 +203,10 @@ export default function OtpVerify() {
       <KeyboardAvoidingView style={styles.container}>
         <View style={{ flex: 1, margin: wp('6%') }}>
           <View style={styles.box}>
-            <TouchableOpacity style={{ flex: 0.5, paddingTop: hp('0.5%') }} onPress={() => {
-              navigation.goBack()
-            }}>
+            <TouchableOpacity
+              style={{ flex: 0.5, paddingTop: hp('0.5%') }}
+              onPress={() => navigation.goBack()}
+            >
               <Iconics name="chevron-back" size={27} color={'white'} />
             </TouchableOpacity>
             <View style={{ flex: 1.5, marginLeft: hp('1%') }}>
@@ -214,7 +225,7 @@ export default function OtpVerify() {
                 <TextInput
                   key={index}
                   style={styles.input}
-                  value={otp[index] || ''}  // Add the || '' to handle undefined values
+                  value={otp[index] || ''}
                   onChangeText={(text) => handleChange(text, index)}
                   onKeyPress={({ nativeEvent }) =>
                     nativeEvent.key === 'Backspace' && handleBackspace(otp[index], index)
@@ -254,21 +265,21 @@ export default function OtpVerify() {
     </>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   box: {
     marginTop: hp('6%'),
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   text: {
     textAlign: 'center',
     color: '#FFFFFF',
     padding: wp('1%'),
     fontSize: hp('1.8%'),
-    lineHeight: hp('2.8%')
+    lineHeight: hp('2.8%'),
   },
   inputContainer: {
     flexDirection: 'row',
@@ -278,21 +289,19 @@ const styles = StyleSheet.create({
   },
   icon: {
     height: hp('2.5%'),
-    width: wp('2.5%')
+    width: wp('2.5%'),
   },
   headerLeft: {
     marginLeft: hp('12%'),
-    // backgroundColor:'yellow'  
   },
   headerText: {
     fontSize: hp('2.8%'),
     color: '#FFFFFF',
     fontFamily: 'Montserrat-Bold',
-    letterSpacing: wp(0.1)
+    letterSpacing: wp(0.1),
   },
   headerContent: {
     flex: 1,
-    backgroundColor: "red"
   },
   input: {
     width: 50,
@@ -309,19 +318,19 @@ const styles = StyleSheet.create({
     color: '#FCFCFC',
     textAlign: 'center',
     paddingTop: hp('5%'),
-    fontFamily: 'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
   },
   timer: {
     color: '#FCFCFC',
     textAlign: 'right',
     paddingTop: hp('2%'),
     fontFamily: 'Montserrat-Medium',
-    fontSize: hp('1.8%')
+    fontSize: hp('1.8%'),
   },
   footerText: {
     color: '#FFFFFF',
     textAlign: 'center',
-    paddingTop: hp('10%')
+    paddingTop: hp('10%'),
   },
   resendOtpButton: {
     paddingVertical: 10,
@@ -332,4 +341,4 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
   },
-})
+});

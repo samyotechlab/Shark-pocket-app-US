@@ -48,6 +48,7 @@ export default function Login() {
 
   const handleLogin = () => {
     setLoader(true);
+    console.log("hellooo")
     try {
       if (validateInputs()) {
         axios
