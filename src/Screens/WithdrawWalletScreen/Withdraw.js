@@ -106,9 +106,6 @@ const Withdraw = ({ dataUser }) => {
       console.log('TDS modal error:', error);
     }
   };
-
-  
-
   const handleWithdrawRequest = async () => {
     try {
       const key = await generateKey(dataUser.mobile, dataUser.name, dataUser.aadhaar, dataUser._id);
@@ -123,6 +120,7 @@ const Withdraw = ({ dataUser }) => {
       };
       const encryptedData = await encryptData(key, data);
       const response = await withdrawCash(dataUser._id, encryptedData);
+      console.log("response on withdraw request",response)
       if (response.status === 0) {
         Toast.show({
           type: 'error',
@@ -132,28 +130,31 @@ const Withdraw = ({ dataUser }) => {
         });
       } else {
         setModalVisible(false);
-        await handleApproveRequest(response.data);
+        await handleApproveRequest(response);
       }
     } catch (error) {
       console.log('Withdraw request error:', error);
     }
   };
 
-  const handleApproveRequest = async (requestId) => {
+  const handleApproveRequest = async (response) => {
+    const {request_id,data} = response
+    const tdsData = data
     try {
       const key = await generateKey(dataUser.mobile, dataUser.name, dataUser.aadhaar, dataUser._id);
       const data = {
-        _id: requestId,
+        _id: request_id,
         amount,
         pay_amount: parseFloat(tdsData.current_withdraw).toFixed(2),
-        user_id: dataUser._id,
-        name: dataUser.name,
+        user_id: dataUser?._id,
+        name: dataUser?.name,
         ifsc: selectedBank?.ifsc_code,
         account_number: selectedBank?.account_no,
-        mobileNumber: dataUser.mobile,
+        bank_name:selectedBank?.bank_name,
+        mobileNumber: dataUser?.mobile,
       };
       const encryptedData = await encryptData(key, data);
-      const response = await approvedRequest(dataUser._id, encryptedData);
+      const response = await approvedRequest(dataUser._id, encryptedData,tdsData);
       if (response.status === 1) {
         Toast.show({
           type: 'success',

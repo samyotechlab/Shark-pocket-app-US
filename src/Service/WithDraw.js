@@ -55,10 +55,10 @@ export const showTds = async (user_id,withdraw_request) => {
   }
 };
 
-export const approvedRequest = async (user_id, encryptedData) => {
+export const approvedRequest = async (user_id, encryptedData,tdsData) => {
   try {
     const response = await apiInstance.post(Config.Approved_Request, {
-      user_id, encryptedData
+      user_id, encryptedData,tdsData
     });
     if (response.status === 200) {
       return response.data;

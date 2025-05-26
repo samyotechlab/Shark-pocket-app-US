@@ -1,5 +1,5 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Button, SafeAreaView, StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -10,15 +10,20 @@ import Iconicons from 'react-native-vector-icons/Feather';
 import { Divider } from 'react-native-paper';
 import HeaderComponent from './HeaderComponent';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import ViewTdsModal from './ViewTdsModal';
 
 export default function AmountDetails() {
   const route = useRoute();
   const navigation = useNavigation();
-  const {item} = route.params;
-  console.log(item, "item");
+  const [isModalVisible, setModalVisible] = useState(false);
+  const { item } = route.params;
   const copyToClipboard = () => {
     Clipboard.setString(item.reference_id);
   };
+
+    const handleClose = () => {
+    setModalVisible(false);
+  }
   return (
     <>
       <HeaderComponent title={"Amount Details"} transactionData={item} status={"withdraw"} />
@@ -38,7 +43,18 @@ export default function AmountDetails() {
 
         <Divider style={styles.divider} />
         <Text style={styles.to}>To</Text>
-        <Text style={[styles.amount, { paddingHorizontal: hp(2) }]}>{item?.bank_name} {item?.account_number}</Text>
+        <Text style={[styles.amount, { paddingHorizontal: hp(2), paddingBottom: hp(1) }]}>{item?.bank_name} {item?.account_number}</Text>
+
+        <View style={{
+          flex: 0.3,
+          justifyContent: 'center',
+        }}>
+          <TouchableOpacity style={styles.showtds} onPress={()=>{
+            setModalVisible(true)
+          }}>
+            <Text style={styles.showtdstext}>View TDS Data</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Additional Information */}
         <View style={[styles.innerDeposit, { backgroundColor: 'transparent' }]}>
@@ -66,8 +82,8 @@ export default function AmountDetails() {
         </View>
 
         <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: wp(5) }}>
-          <TouchableOpacity style={styles.optionsRow} onPress={()=>{
-            navigation.navigate('Support',{user_id:item.user_id})
+          <TouchableOpacity style={styles.optionsRow} onPress={() => {
+            navigation.navigate('Support', { user_id: item.user_id })
           }}>
             <View style={styles.row}>
               <Icon name="question-circle-o" size={20} color="#000000B2" />
@@ -77,6 +93,13 @@ export default function AmountDetails() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+          {isModalVisible && (
+        <ViewTdsModal
+          isVisible={isModalVisible}
+          onClose={() => handleClose()}
+          tdsData={item.tdsData}
+        />
+      )}
     </>
   )
 }
@@ -202,4 +225,55 @@ const styles = StyleSheet.create({
     color: '#3E3E3E',
     paddingHorizontal: hp(2)
   },
+  withdrawButton: {
+    backgroundColor: '#4FBF03',
+    borderRadius: wp('3%'),
+    paddingVertical: hp('1.5%'),
+    marginBottom: hp('4%'),
+    alignItems: 'center',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    shadowColor: '#4FBF03',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 2,
+    shadowRadius: 15,
+    elevation: 10,
+    width: '90%',
+    marginLeft: '5%',
+  },
+  withdrawButtonText: {
+    fontSize: 20,
+    fontFamily: 'Inter_18pt-Bold',
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    textShadowColor: '#F88600',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 10,
+  },
+  showtds: {
+    width: wp('40%'),
+    padding: wp(2),
+    borderWidth: 1,
+    borderRadius: wp(1),
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#00000033',
+    marginLeft: hp(2),
+    backgroundColor: '#4FBF03',
+    borderColor: '#FFFFFF',
+    shadowColor: '#4FBF03',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 2,
+    shadowRadius: 15,
+    elevation: 10,
+  },
+  showtdstext:   {
+    fontSize: 16,
+    fontFamily: 'Inter_18pt-Bold',
+    color: '#FFFFFF',
+    letterSpacing: 2,
+    textShadowColor: '#F88600',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 10,
+  }
 })

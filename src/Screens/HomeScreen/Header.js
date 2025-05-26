@@ -52,7 +52,7 @@ export default function Header({ usersData, totalAmount, userId, navigation }) {
           style={styles.walletIcon}
         />
         <Text style={styles.walletText}>
-          ₹ {usersData ? totalAmount.toFixed(2) : 'Loading...'}
+          ₹ {usersData ? totalAmount.toFixed(2) : 0}
         </Text>
       </LinearGradient>
       <View style={styles.iconsContainer}>
