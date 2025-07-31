@@ -36,7 +36,7 @@ const UpcomingGame = ({ gameData, availability, setScrollEnabled, cardName }) =>
       style={styles.cardContainer}
       onPress={() => handleNavigation(item)}
     >
-      <AvailableCard gameData={item} status="1" index={index} />
+      <AvailableCard gameData={item} status="1" index={index} isComingSoon={true} />
     </TouchableOpacity>
   );
 

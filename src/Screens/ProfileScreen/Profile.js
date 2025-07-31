@@ -50,7 +50,8 @@ const SharkPocketScreen = () => {
     { title: 'Withdraw Policy', icon: 'security', url: 'WithDrawPolicy' },
     { title: 'Terms & Conditions', icon: 'bookmark-outline', url: 'T&CScreen' },
     { title: "FAQ's", icon: 'bookmark-outline', url: 'Faq' },
-    { title: 'Support', icon: 'help-circle-outline', url: 'SupportScreen' },
+    { title: 'Support', icon: 'help-circle-outline', url: 'Support' },
+    { title: 'Delete Account', icon: 'help-circle-outline', url: 'DeleteAccount' },
     { title: 'Log out', icon: 'logout', url: 'Logout' },
   ];
 

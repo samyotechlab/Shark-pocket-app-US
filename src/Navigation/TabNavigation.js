@@ -85,14 +85,17 @@ export default function TabNavigation() {
 
 
 const CustomTabButton = props => {
-    const isSelected = props.accessibilityState.selected;
-  
-    return (
-      <TouchableOpacity
-        {...props}
-        style={[props.style, styles.touchable]}
-      >
-        {isSelected ? (
+  const isSelected = props.accessibilityState?.selected ?? false;
+
+  console.log("props", props.accessibilityState);
+  console.log("isSelected", isSelected);
+
+  return (
+    <TouchableOpacity
+      {...props}
+      style={[props.style, styles.touchable]}
+    >
+      {isSelected ? (
         <LinearGradient
           colors={['#67170080', '#FAB41D80']}
           start={{ x: 0, y: 0 }}
@@ -109,9 +112,10 @@ const CustomTabButton = props => {
           {props.children}
         </View>
       )}
-      </TouchableOpacity>
-    );
-  };
+    </TouchableOpacity>
+  );
+};
+
 
 const styles = StyleSheet.create({
     touchable: {

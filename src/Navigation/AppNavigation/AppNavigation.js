@@ -28,7 +28,7 @@ import PanVerfication from '../../Screens/PanVerfication/PanVerification';
 import AllPlayedGames from '../../Screens/GameHistory/AllPlayedGames';
 import AllGameName from '../../Screens/GameHistory/AllGameName';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
-import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen, PrivacyPolicy, PointsSelection, WithDrawPolicy } from '../../Screens/Screens/Screen';
+import { FAQScreen, ContactScreen, HowToPlayScreen, RefundPolicyScreen, TCScreen, PrivacyPolicy, PointsSelection, WithDrawPolicy, DeleteAccount } from '../../Screens/Screens/Screen';
 import SelectedNumbers from '../../Screens/GameScreens/SelectedNumbers';
 import UpcomingGameInfo from '../../Components/UpcomingGameInfo';
 import UploadDocuments from '../../Components/UploadDocuments';
@@ -222,6 +222,13 @@ export default function AppNavigation() {
         <Stack.Screen
           name="T&CScreen"
           component={TCScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+         <Stack.Screen
+          name="DeleteAccount"
+          component={DeleteAccount}
           options={{
             headerShown: false,
           }}

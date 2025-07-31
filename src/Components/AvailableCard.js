@@ -8,8 +8,9 @@ import {
 } from 'react-native-responsive-screen';
 import { formatDate, truncateText } from '../Utilities/utilies';
 
-export default function AvailableCard({ gameData, status }) {
+export default function AvailableCard({ gameData, status,isComingSoon }) {
   const gameColor = gameData?.gameColor || 'yellow';
+  console.log("========>",status)
 
   const colorTheme = {
     yellow: {
@@ -58,9 +59,17 @@ export default function AvailableCard({ gameData, status }) {
           <View style={styles.textContainer}>
             <Text style={styles.headerText}>{getTitle()}</Text>
             <Text style={styles.description}>{getDescription()}</Text>
-            <Text style={styles.startText}>
+            {
+              isComingSoon? (
+                 <Text style={styles.startText}>
+                 Coming Soon
+            </Text>
+              ):(
+                 <Text style={styles.startText}>
               Expires On <Text style={styles.dateText}>{getFormattedDate()}</Text>
             </Text>
+              )
+            }
             {getWinningPrice() && (
               <View style={styles.buttonContainer}>
                 <View style={styles.button}>

@@ -70,7 +70,7 @@ export default function AadharDetail() {
         setLoader(true);
         try {
             const response = await getAadharDetails(user_id);
-            console.log("responseof aadhar card ", response)
+            console.log("responseof aadhar card", response)
             if (response.status === 1) {
                 setAadharUploadData(response.data);
                 setUploadStatus(true)
@@ -78,7 +78,7 @@ export default function AadharDetail() {
                 setUploadStatus(false)
             }
         } catch (error) {
-            console.log("error====>", error)
+            console.log("error", error)
         } finally {
             setLoader(false);
         }
@@ -86,6 +86,7 @@ export default function AadharDetail() {
     useEffect(() => {
         aadharDetails()
     }, []);
+
     const handleUploadDocument = async () => {
         const data = new FormData();
         data.append('aadhar_front', {

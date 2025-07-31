@@ -34,7 +34,7 @@ export default function PanVerfication() {
     const [visible, setVisible] = useState(false)
     const [message, setMessage] = useState('')
     const [uploadStatus, setUploadStatus] = useState(false)
-    const [imageShow,setImageShow] = useState(false)
+    const [imageShow, setImageShow] = useState(false)
     const data = isReady && loginData && loginData?.data;
 
     const viewProfile = async () => {
@@ -297,17 +297,17 @@ export default function PanVerfication() {
                         }
                     </>) : (<>
                         <View style={styles.container1}>
-                         <TouchableOpacity onPress={()=>setImageShow(true)}>
-                        <Text style={styles.documentText}>{panUploadData.pan_card}</Text>
-                        </TouchableOpacity>   
-                        <Text style={[styles.documentText,{color:'red',fontFamily:'Montserrat-SemiBold'}]}>Click Here</Text>
-                        {
-                            imageShow ? (  <Image
-                                source={{uri : panUploadData.imageUrl }} // Replace with actual image URL
-                                style={styles.image}
-                                resizeMode="contain"
-                            />):("")
-                        }
+                            <TouchableOpacity onPress={() => setImageShow(true)}>
+                                <Text style={styles.documentText}>{panUploadData.pan_card}</Text>
+                            </TouchableOpacity>
+                            <Text style={[styles.documentText, { color: 'red', fontFamily: 'Montserrat-SemiBold' }]}>Click Here</Text>
+                            {
+                                imageShow ? (<Image
+                                    source={{ uri: panUploadData.imageUrl }} // Replace with actual image URL
+                                    style={styles.image}
+                                    resizeMode="contain"
+                                />) : ("")
+                            }
 
                             {/* <View style={styles.documentContainer}>
                            
@@ -384,8 +384,8 @@ const styles = StyleSheet.create({
         // justifyContent: 'center',
         // alignItems: 'center',
         padding: 20,
-      },
-      documentContainer: {
+    },
+    documentContainer: {
         width: '90%',
         height: 250,
         backgroundColor: '#FFFFFF80',
@@ -398,23 +398,23 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
         padding: 10,
-      },
-      image: {
+    },
+    image: {
         width: '100%',
         height: '100%',
         marginBottom: 10,
-      },
-      documentText: {
+    },
+    documentText: {
         fontSize: 14,
         color: '#EFC328',
         fontFamily: 'Montserrat-Medium',
-        textAlign:'center'
-      },
-      adminText: {
+        textAlign: 'center'
+    },
+    adminText: {
         marginTop: 20,
         fontSize: 16,
         color: '#EFC328',
         fontFamily: 'Montserrat-SemiBold',
-        textAlign:'center'
-      },
+        textAlign: 'center'
+    },
 })

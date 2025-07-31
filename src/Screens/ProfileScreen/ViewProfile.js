@@ -156,6 +156,7 @@ const ViewProfile = () => {
                   value={formData.mobile}
                   // onChangeText={(text) => handleInputChange('mobile', text)}
                   style={styles.input}
+                  editable={false}
                 />
                 {/* <TouchableOpacity 
                 style={styles.changeButton}   
@@ -166,7 +167,7 @@ const ViewProfile = () => {
                 </TouchableOpacity> */}
               </View>
 
-              <View style={styles.inputWrapper}>
+              {/* <View style={styles.inputWrapper}>
                 <Icon name="email-outline" size={25} color="#000000B2" />
                 <TextInput
                   value={formData.email}
@@ -179,8 +180,14 @@ const ViewProfile = () => {
                 >
                   <Text style={styles.changeText}>CHANGE</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
+
+            <View style={styles.noteContainer}>
+          <Text style={styles.noteText}>
+            Note: All information is fetched from Aadhaar details and is not editable. Only the profile image can be updated.
+          </Text>
+        </View>
           </>
         ) : (<AnimatedLoader />)
       }
@@ -277,6 +284,18 @@ const styles = StyleSheet.create({
   saveText: {
     color: '#fff',
     fontSize: 12
+  },
+  noteContainer: {
+    marginHorizontal: 20,
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#F5F5F5', // Light background for contrast
+    borderRadius: 5,
+  },
+  noteText: {
+    fontSize: 14,
+    color: 'red', // Muted color for readability
+    lineHeight: 20,
   },
 });
 
