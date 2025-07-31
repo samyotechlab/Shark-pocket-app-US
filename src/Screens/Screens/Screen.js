@@ -33,6 +33,12 @@ export const TCScreen = () => {
   )
 }
 
+export const DeleteAccount = () => {
+  return(
+    <WebViewScreen title="Delete Account" uri="https://sharkpocket.in/delete-account" />
+  )
+}
+
 export const PrivacyPolicy = () => {
   return(
     <WebViewScreen title="Privacy Policy" uri="https://sharkpocket.in/privacy-policy/" />
