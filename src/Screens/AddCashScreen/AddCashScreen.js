@@ -199,12 +199,12 @@
 // export default AddCashScreen;
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, SafeAreaView, Alert } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Iconics from "react-native-vector-icons/Ionicons";
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { bonusWallet, checkPaymentStatus, TransactionStore } from '../../Service/Transaction';
-import PhonePePaymentSDK from 'react-native-phonepe-pg';
+// import PhonePePaymentSDK from 'react-native-phonepe-pg';
 import AlertDialogRed from '../../Components/AlertDialogRed';
 import LinearGradient from 'react-native-linear-gradient';
 import PaymentStatusCard from '../../Components/PaymentStatusCard';
@@ -270,45 +270,45 @@ const AddCashScreen = () => {
     }, [isReady])
   );
 
-  const handleAddCash = async () => {
-    setLoader(true);
-    if (amount) {
-      const mobileNumber = usersData?.mobile;
-      const username = usersData?.name;
-      const aadharNumber = usersData?.aadhaar;
-      const userId = usersData?._id
-      const key = generateKey(mobileNumber, username, aadharNumber, userId);
-      const encryptedData = encryptData(key, amount);
-      try {
-        const response = await TransactionStore(usersData?._id, encryptedData);
-        console.log('response', response);
-        if (response.status === 0) {
-          setLoader(false);
-          initPhonePeSDK(response);
-          setData(response);
-        } else {
-          setLoader(false);
-          addBonusWallet(response)
-          initPhonePeSDK(response)
-          setData(response);
-        }
-      } catch (error) {
-        setLoader(false);
-        console.log('error', error);
-      }
-    } else {
-      setVisible(true);
-      setMessage('Enter a amount')
-    }
-  };
+  // const handleAddCash = async () => {
+  //   setLoader(true);
+  //   if (amount) {
+  //     const mobileNumber = usersData?.mobile;
+  //     const username = usersData?.name;
+  //     const aadharNumber = usersData?.aadhaar;
+  //     const userId = usersData?._id
+  //     const key = generateKey(mobileNumber, username, aadharNumber, userId);
+  //     const encryptedData = encryptData(key, amount);
+  //     try {
+  //       const response = await TransactionStore(usersData?._id, encryptedData);
+  //       console.log('response', response);
+  //       if (response.status === 0) {
+  //         setLoader(false);
+  //         initPhonePeSDK(response);
+  //         setData(response);
+  //       } else {
+  //         setLoader(false);
+  //         addBonusWallet(response)
+  //         initPhonePeSDK(response)
+  //         setData(response);
+  //       }
+  //     } catch (error) {
+  //       setLoader(false);
+  //       console.log('error', error);
+  //     }
+  //   } else {
+  //     setVisible(true);
+  //     setMessage('Enter a amount')
+  //   }
+  // };
 
-  const addBonusWallet = async (res) => {
-    try {
-      const response = await bonusWallet(res);
-    } catch (error) {
-      console.log("error", error)
-    }
-  }
+  // const addBonusWallet = async (res) => {
+  //   try {
+  //     const response = await bonusWallet(res);
+  //   } catch (error) {
+  //     console.log("error", error)
+  //   }
+  // }
 
   const handlePurchase = async () => {
     try {
@@ -322,74 +322,78 @@ const AddCashScreen = () => {
     }
   };
 
-  const initPhonePeSDK = response => {
-    PhonePePaymentSDK.init(
-      response.environment_type,
-      response.merchant_id,
-      '',
-      true,
-    )
-      .then(result => {
-        setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
-        handleStartTransaction(
-          response?.base64,
-          response?.checksum,
-          response?.callBack_url,
-          response?.transaction_id,
-        );
-      })
-      .catch(error => {
-        setMessage('error:' + error.message);
-      });
-  };
+  // const initPhonePeSDK = response => {
+  //   PhonePePaymentSDK.init(
+  //     response.environment_type,
+  //     response.merchant_id,
+  //     '',
+  //     true,
+  //   )
+  //     .then(result => {
+  //       setMessage('Message: SDK Initialisation ->' + JSON.stringify(result));
+  //       handleStartTransaction(
+  //         response?.base64,
+  //         response?.checksum,
+  //         response?.callBack_url,
+  //         response?.transaction_id,
+  //       );
+  //     })
+  //     .catch(error => {
+  //       setMessage('error:' + error.message);
+  //     });
+  // };
 
 
-  const handleStartTransaction = (
-    base64,
-    checksum,
-    callBack_url,
-    transaction_id,
-  ) => {
-    PhonePePaymentSDK.startTransaction(
-      base64,
-      checksum,
-      'com.sharkpocket',
-      callBack_url,
-    )
-      .then(async res => {
-        setCheckPaymentStatus(true)
-        setMessage(JSON.stringify(res));
-        setDialog(true);
-        setisLoading(true);
-        if (res.status) {
-          const response = await checkPaymentStatus(transaction_id);
-          setTimeout(() => {
-            setCheckPaymentStatus(false)
-          }, 3000)
-          setisLoading(false);
-          if (response?.data?.status == 1) {
-            setIsPaymentSuccess("success")
-            if (status === 1) {
-              handlePurchase();
-              setButtonText("Start Game")
-            }
-            setPaymentStatus(response?.data?.message);
-          } else {
-            setIsPaymentSuccess("failed")
-            setPaymentStatus("Transaction Failed")
-          }
-        }
-      })
-      .catch(error => {
-        setMessage('error:' + error.message);
-        setCheckPaymentStatus(false)
-        setIsPaymentSuccess("")
-      });
-  };
+  // const handleStartTransaction = (
+  //   base64,
+  //   checksum,
+  //   callBack_url,
+  //   transaction_id,
+  // ) => {
+  //   PhonePePaymentSDK.startTransaction(
+  //     base64,
+  //     checksum,
+  //     'com.sharkpocket',
+  //     callBack_url,
+  //   )
+  //     .then(async res => {
+  //       setCheckPaymentStatus(true)
+  //       setMessage(JSON.stringify(res));
+  //       setDialog(true);
+  //       setisLoading(true);
+  //       if (res.status) {
+  //         const response = await checkPaymentStatus(transaction_id);
+  //         setTimeout(() => {
+  //           setCheckPaymentStatus(false)
+  //         }, 3000)
+  //         setisLoading(false);
+  //         if (response?.data?.status == 1) {
+  //           setIsPaymentSuccess("success")
+  //           if (status === 1) {
+  //             handlePurchase();
+  //             setButtonText("Start Game")
+  //           }
+  //           setPaymentStatus(response?.data?.message);
+  //         } else {
+  //           setIsPaymentSuccess("failed")
+  //           setPaymentStatus("Transaction Failed")
+  //         }
+  //       }
+  //     })
+  //     .catch(error => {
+  //       setMessage('error:' + error.message);
+  //       setCheckPaymentStatus(false)
+  //       setIsPaymentSuccess("")
+  //     });
+  // };
   const
     handleAmountPress = value => {
       setAmount(value);
     };
+
+    const handleAddCash = async () => {
+      Alert.alert("Success", "Amount added successfully")
+    }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#361911' }}>

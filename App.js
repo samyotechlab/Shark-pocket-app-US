@@ -11,10 +11,8 @@ import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import AppNavigation from './src/Navigation/AppNavigation/AppNavigation';
 import { enableScreens } from 'react-native-screens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import crashlytics from '@react-native-firebase/crashlytics';
 
 function App(){
-  crashlytics().log("crash logging!");
   //crashlytics().crash();
   enableScreens();
   return (
