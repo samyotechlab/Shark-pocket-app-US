@@ -9,6 +9,18 @@
 /* Begin PBXBuildFile section */
 		0B38CF024E32C87771A9016A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		2B9DFCCB2F5ECFB80062AB41 /* Audiowide-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCCA2F5ECFB80062AB41 /* Audiowide-Regular.ttf */; };
+		2B9DFCD92F5ECFE70062AB41 /* LilitaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCD72F5ECFE70062AB41 /* LilitaOne-Regular.ttf */; };
+		2B9DFCDA2F5ECFE70062AB41 /* LuckiestGuy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCD82F5ECFE70062AB41 /* LuckiestGuy-Regular.ttf */; };
+		2B9DFCE52F5ED0DD0062AB41 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCDC2F5ED0DD0062AB41 /* Montserrat-Bold.ttf */; };
+		2B9DFCE62F5ED0DD0062AB41 /* Inter_18pt-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCDD2F5ED0DD0062AB41 /* Inter_18pt-Bold.ttf */; };
+		2B9DFCE72F5ED0DD0062AB41 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCDE2F5ED0DD0062AB41 /* Montserrat-Light.ttf */; };
+		2B9DFCE82F5ED0DD0062AB41 /* Inter_18pt-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCDF2F5ED0DD0062AB41 /* Inter_18pt-Medium.ttf */; };
+		2B9DFCE92F5ED0DD0062AB41 /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCE02F5ED0DD0062AB41 /* Montserrat-Medium.ttf */; };
+		2B9DFCEA2F5ED0DD0062AB41 /* PatuaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCE12F5ED0DD0062AB41 /* PatuaOne-Regular.ttf */; };
+		2B9DFCEB2F5ED0DD0062AB41 /* Overlock-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCE22F5ED0DD0062AB41 /* Overlock-Bold.ttf */; };
+		2B9DFCEC2F5ED0DD0062AB41 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCE32F5ED0DD0062AB41 /* Montserrat-Regular.ttf */; };
+		2B9DFCED2F5ED0DD0062AB41 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DFCE42F5ED0DD0062AB41 /* Montserrat-SemiBold.ttf */; };
 		68C6515FC7436EA98CD450C5 /* libPods-SharkPocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38350ECECC33BDE011348C31 /* libPods-SharkPocket.a */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -19,6 +31,19 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SharkPocket/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SharkPocket/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = SharkPocket/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2B9DFCCA2F5ECFB80062AB41 /* Audiowide-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Audiowide-Regular.ttf"; path = "../assets/fonts/Audiowide-Regular.ttf"; sourceTree = "<group>"; };
+		2B9DFCD72F5ECFE70062AB41 /* LilitaOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "LilitaOne-Regular.ttf"; path = "../assets/fonts/LilitaOne-Regular.ttf"; sourceTree = "<group>"; };
+		2B9DFCD82F5ECFE70062AB41 /* LuckiestGuy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "LuckiestGuy-Regular.ttf"; path = "../assets/fonts/LuckiestGuy-Regular.ttf"; sourceTree = "<group>"; };
+		2B9DFCDB2F5ED0A50062AB41 /* LilitaOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "LilitaOne-Regular.ttf"; path = "../assets/fonts/LilitaOne-Regular.ttf"; sourceTree = "<group>"; };
+		2B9DFCDC2F5ED0DD0062AB41 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Bold.ttf"; path = "../assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		2B9DFCDD2F5ED0DD0062AB41 /* Inter_18pt-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Inter_18pt-Bold.ttf"; path = "../assets/fonts/Inter_18pt-Bold.ttf"; sourceTree = "<group>"; };
+		2B9DFCDE2F5ED0DD0062AB41 /* Montserrat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Light.ttf"; path = "../assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
+		2B9DFCDF2F5ED0DD0062AB41 /* Inter_18pt-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Inter_18pt-Medium.ttf"; path = "../assets/fonts/Inter_18pt-Medium.ttf"; sourceTree = "<group>"; };
+		2B9DFCE02F5ED0DD0062AB41 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Medium.ttf"; path = "../assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
+		2B9DFCE12F5ED0DD0062AB41 /* PatuaOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "PatuaOne-Regular.ttf"; path = "../assets/fonts/PatuaOne-Regular.ttf"; sourceTree = "<group>"; };
+		2B9DFCE22F5ED0DD0062AB41 /* Overlock-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Overlock-Bold.ttf"; path = "../assets/fonts/Overlock-Bold.ttf"; sourceTree = "<group>"; };
+		2B9DFCE32F5ED0DD0062AB41 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Regular.ttf"; path = "../assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
+		2B9DFCE42F5ED0DD0062AB41 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-SemiBold.ttf"; path = "../assets/fonts/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		38350ECECC33BDE011348C31 /* libPods-SharkPocket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SharkPocket.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = SharkPocket/AppDelegate.swift; sourceTree = "<group>"; };
 		79BA36ACEAF5EBEEF5F5E8E8 /* Pods-SharkPocket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SharkPocket.release.xcconfig"; path = "Target Support Files/Pods-SharkPocket/Pods-SharkPocket.release.xcconfig"; sourceTree = "<group>"; };
@@ -70,6 +95,19 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				2B9DFCDD2F5ED0DD0062AB41 /* Inter_18pt-Bold.ttf */,
+				2B9DFCDF2F5ED0DD0062AB41 /* Inter_18pt-Medium.ttf */,
+				2B9DFCDC2F5ED0DD0062AB41 /* Montserrat-Bold.ttf */,
+				2B9DFCDE2F5ED0DD0062AB41 /* Montserrat-Light.ttf */,
+				2B9DFCE02F5ED0DD0062AB41 /* Montserrat-Medium.ttf */,
+				2B9DFCE32F5ED0DD0062AB41 /* Montserrat-Regular.ttf */,
+				2B9DFCE42F5ED0DD0062AB41 /* Montserrat-SemiBold.ttf */,
+				2B9DFCE22F5ED0DD0062AB41 /* Overlock-Bold.ttf */,
+				2B9DFCE12F5ED0DD0062AB41 /* PatuaOne-Regular.ttf */,
+				2B9DFCD72F5ECFE70062AB41 /* LilitaOne-Regular.ttf */,
+				2B9DFCDB2F5ED0A50062AB41 /* LilitaOne-Regular.ttf */,
+				2B9DFCD82F5ECFE70062AB41 /* LuckiestGuy-Regular.ttf */,
+				2B9DFCCA2F5ECFB80062AB41 /* Audiowide-Regular.ttf */,
 				13B07FAE1A68108700A75B9A /* SharkPocket */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -158,6 +196,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B9DFCE52F5ED0DD0062AB41 /* Montserrat-Bold.ttf in Resources */,
+				2B9DFCE62F5ED0DD0062AB41 /* Inter_18pt-Bold.ttf in Resources */,
+				2B9DFCE72F5ED0DD0062AB41 /* Montserrat-Light.ttf in Resources */,
+				2B9DFCE82F5ED0DD0062AB41 /* Inter_18pt-Medium.ttf in Resources */,
+				2B9DFCE92F5ED0DD0062AB41 /* Montserrat-Medium.ttf in Resources */,
+				2B9DFCEA2F5ED0DD0062AB41 /* PatuaOne-Regular.ttf in Resources */,
+				2B9DFCEB2F5ED0DD0062AB41 /* Overlock-Bold.ttf in Resources */,
+				2B9DFCEC2F5ED0DD0062AB41 /* Montserrat-Regular.ttf in Resources */,
+				2B9DFCED2F5ED0DD0062AB41 /* Montserrat-SemiBold.ttf in Resources */,
+				2B9DFCD92F5ECFE70062AB41 /* LilitaOne-Regular.ttf in Resources */,
+				2B9DFCDA2F5ECFE70062AB41 /* LuckiestGuy-Regular.ttf in Resources */,
+				2B9DFCCB2F5ECFB80062AB41 /* Audiowide-Regular.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0B38CF024E32C87771A9016A /* PrivacyInfo.xcprivacy in Resources */,
@@ -191,9 +241,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SharkPocket/Pods-SharkPocket-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SharkPocket/Pods-SharkPocket-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -208,9 +262,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SharkPocket/Pods-SharkPocket-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SharkPocket/Pods-SharkPocket-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
