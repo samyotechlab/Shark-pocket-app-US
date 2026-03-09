@@ -1,0 +1,89 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import CommonHeader from '../../Components/CommonHeader';
+import Withdraw from './Withdraw';
+import WithdrawHistory from './WithdrawHistory';
+import { useRoute } from '@react-navigation/native';
+import AnimatedLoader from '../../Components/AnimatedLoader';
+
+const WithdrawWalletScreen = () => {
+  const route = useRoute();
+  const { dataUser } = route.params
+
+  const [selectedTab, setSelectedTab] = useState('Withdraw');
+
+  const [loader, setLoader] = useState(false);
+  const handlePress = tab => {
+    setSelectedTab(tab);
+  };
+  const dynamicStyles = getDynamicStyles(selectedTab);
+  return (
+    <SafeAreaView style={dynamicStyles.container}>
+      <CommonHeader title={"Withdraw wallet"} />
+      <View style={{ marginTop: hp('0.5%'), flex: 1 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingTop: hp('1%'),
+            paddingRight: hp('2%'),
+            paddingLeft: hp('2%'),
+            gap: wp('10%')
+          }}>
+          <TouchableOpacity onPress={() => handlePress('Withdraw')}>
+            <Text
+              style={dynamicStyles.Withdraw}>
+              Withdraw
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handlePress('WithdrawHistory')}>
+            <Text
+              style={dynamicStyles.WithdrawHistory}>
+              Withdraw History
+            </Text>
+          </TouchableOpacity>
+
+        </View>
+        {selectedTab === 'Withdraw' ? (
+          !loader ? (<Withdraw dataUser={dataUser} />) : (<AnimatedLoader />)
+        ) : (
+          !loader ? (<WithdrawHistory dataUser={dataUser} />) : (<AnimatedLoader />)
+        )}
+
+      </View>
+    </SafeAreaView>
+  );
+};
+
+const getDynamicStyles = selectedTab =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#361911',
+    },
+    Withdraw: {
+      fontSize: wp('4.5%'),
+      color: selectedTab === 'Withdraw' ? '#FEB801' : '#FFFFFF',
+      fontFamily: selectedTab === 'Withdraw' ? 'Montserrat-Bold' : 'Montserrat-Regular',
+      borderBottomWidth: hp('0.5%'),
+      borderBottomColor: selectedTab === 'Withdraw' ? '#FEB801' : '#565656',
+    },
+    WithdrawHistory: {
+      fontSize: wp('4.5%'),
+      borderBottomWidth: hp('0.5%'),
+      borderBottomColor: selectedTab === 'WithdrawHistory' ? '#FEB801' : '#565656',
+      color: selectedTab === 'WithdrawHistory' ? '#FEB801' : '#FFFFFF',
+      fontFamily: selectedTab === 'WithdrawHistory' ? 'Montserrat-Bold' : 'Montserrat-Regular',
+    }
+  });
+
+export default WithdrawWalletScreen;
