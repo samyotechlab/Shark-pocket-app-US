@@ -15,7 +15,18 @@ buildscript {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath('com.google.gms:google-services:4.4.2')
+        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.2")
     }
+}
+allprojects {
+   repositories {
+       google()
+       maven {
+            url  "https://phonepe.mycloudrepo.io/public/repositories/phonepe-intentsdk-android"
+            url "https://www.jitpack.io" 
+       }
+   }
 }
 
 apply plugin: "com.facebook.react.rootproject"

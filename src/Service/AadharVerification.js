@@ -1,0 +1,89 @@
+import axios from "axios";
+import Config from "../Utilities/Config";
+import apiInstance, { baseApiurl } from "./AxiosInstance";
+import apiMultipartInstance from "./ApiMultiPartInstance";
+
+export const AdharVerificationSendOtp = async aadhaar_number => {
+  try {
+    const response = await axios.post(`${baseApiurl}/${Config.AdharOptSend}`, {
+      aadhaar_number,
+    });
+    return response.data;
+  } catch (error) {
+    console.log('error', error);
+    throw error;
+  }
+};
+
+export const AadharVerificationVerifyOtp = async verificationData => {
+  try {
+    const response = await apiInstance.post(`${Config.AdharVerifyOtp}`, {
+      verificationData: verificationData,
+    });
+    return response.data;
+  } catch (error) {
+    console.log('error', error);
+    throw error;
+  }
+};
+
+export const AadharDocumentUpload = async (userData)=>{
+
+  try {
+    const response = await apiMultipartInstance.post(`${Config.Aadhar_Document}`, userData);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error uploading image:', error.response || error.message);
+    throw error;
+  }
+}
+
+export const AadharConfirmVerification = async (user_id)=>{
+
+  try {
+    const response = await apiInstance.post(`${Config.Aadhar_Verify}`, {user_id});
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error to verify Aadhar', error.response || error.message);
+    throw error;
+  }
+}
+
+export const AadharVerificationRejection = async (user_id)=>{
+  console.log("user_id======>",user_id)
+  try {
+    const response = await apiInstance.post(`${Config.Aadhar_Reject}`, {user_id});
+    console.log("response",response)
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error to verify Aadhar', error.response || error.message);
+    throw error;
+  }
+}
+
+export const getAadharDetails = async (user_id)=>{
+  console.log
+  try {
+    const response = await apiInstance.get(`${Config.Aadhar_Detail}/${user_id}`);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error('Unexpected response status:', response.status);
+    }
+  } catch (error) {
+    console.error('Error show image:', error.response || error.message);
+    throw error;
+  }
+}

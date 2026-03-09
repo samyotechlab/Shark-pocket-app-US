@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "957522428829",
+    "project_id": "shark-pocket",
+    "storage_bucket": "shark-pocket.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957522428829:android:a9d2d511b5d42d36576574",
+        "android_client_info": {
+          "package_name": "com.sharkpocket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFD4y8QPp5zw3kZx27DuVsRlqRZnxK70E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
