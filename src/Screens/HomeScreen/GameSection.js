@@ -38,9 +38,10 @@ const styles = StyleSheet.create({
     marginTop: hp('1%'),
   },
   header: {
-    flex: 0.5,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: wp('1%'),  
+    marginBottom: hp('0.5%'),
   },
   titleContainer: {
     flexDirection: 'row',
@@ -48,13 +49,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    paddingLeft: hp('1%'),
+    width: wp('4%'),
+    height: wp('4%'),
+    resizeMode: 'contain',
+    marginRight: wp('1.5%'),
   },
   title: {
     color: '#FFB700',
     fontFamily: 'Montserrat-Bold',
     fontSize: wp('3.5%'),
-    paddingLeft: hp('1%'),
   },
   viewAllContainer: {
     flex: 1,
@@ -68,7 +71,6 @@ const styles = StyleSheet.create({
     fontSize: wp('3%'),
   },
   content: {
-    flex: 1.5,
-    marginLeft: hp('0.7%'),
+    marginLeft: wp('2%'),
   },
 });

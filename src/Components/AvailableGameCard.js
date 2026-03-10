@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, Text, Dimensions, View, PixelRatio } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, View, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 import {
@@ -8,25 +8,22 @@ import {
 } from 'react-native-responsive-screen';
 import AvailableCard from './AvailableCard';
 
-const { width, height } = Dimensions.get('window');
-
 const AvailableGameCard = ({ gameData, availability, setScrollEnabled, cardName }) => {
   const navigation = useNavigation();
 
+  const { width, height } = useWindowDimensions();
+
   const carouselHeight = useMemo(() => {
-    const baseHeight = height * 0.25;
-    return PixelRatio.roundToNearestPixel(baseHeight);
-  }, []);
+    return height * 0.25;
+  }, [height]); 
 
   const filteredData = useMemo(() => {
     let filtered = gameData.filter((game) => game.status === 3);
-
     if (availability === '2') {
       filtered = filtered.filter((item) => item.frequency === 'daily');
     } else if (availability === '3') {
       filtered = filtered.filter((item) => item.frequency === 'weekly');
     }
-
     return filtered;
   }, [gameData, availability]);
 
@@ -68,7 +65,7 @@ const AvailableGameCard = ({ gameData, availability, setScrollEnabled, cardName 
         style={styles.carouselContainer}
         panGestureHandlerProps={{
           activeOffsetX: [-10, 10],
-          failOffsetY: [-10, 10],
+          failOffsetY:   [-10, 10],
         }}
         onTouchStart={() => setScrollEnabled(false)}
         onTouchEnd={() => setScrollEnabled(true)}
@@ -80,23 +77,24 @@ const AvailableGameCard = ({ gameData, availability, setScrollEnabled, cardName 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:       1,
     paddingTop: hp('1%'),
   },
   emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex:            1,
+    alignItems:      'center',
+    justifyContent:  'center',
+    paddingVertical: hp('2%'),
   },
   emptyText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-    textAlign: 'center',
-    paddingHorizontal: hp('2%'),
+    color:             'white',
+    fontSize:          wp('4%'),  
+    fontWeight:        '500',
+    textAlign:         'center',
+    paddingHorizontal: wp('4%'),   
   },
   cardContainer: {
-    flex: 1,
+    flex:        1,
     paddingLeft: wp('2%'),
   },
   carouselContainer: {

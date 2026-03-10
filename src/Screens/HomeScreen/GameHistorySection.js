@@ -30,41 +30,44 @@ export default function GameHistorySection({ data, navigation, setScrollEnabled 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:      1,
     marginTop: hp('1%'),
   },
   header: {
-    flex: 0.5,
-    flexDirection: 'row',
-    alignItems: 'center',
+
+    flexDirection:     'row',
+    alignItems:        'center',
+    paddingHorizontal: wp('2%'),
+    marginBottom:      hp('0.5%'),
   },
   titleContainer: {
     flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
+    flex:          1,
+    alignItems:    'center',
   },
   icon: {
-    paddingLeft: hp('1%'),
+    width:      wp('4%'),
+    height:     wp('4%'),
+    resizeMode: 'contain',
+    marginRight: wp('1.5%'),
   },
   title: {
-    color: '#FFB700',
+    color:      '#FFB700',
     fontFamily: 'Montserrat-Bold',
-    fontSize: wp('3.5%'),
-    paddingLeft: hp('1%'),
+    fontSize:   wp('3.5%'),
   },
   viewAllContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
+    flex:          1,
+    justifyContent:'flex-end',
     flexDirection: 'row',
   },
   viewAllText: {
-    color: '#FFB700',
-    fontFamily: 'Montserrat-Bold',
-    textDecorationLine: 'underline',
-    fontSize: wp('3%'),
+    color:             '#FFB700',
+    fontFamily:        'Montserrat-Bold',
+    textDecorationLine:'underline',
+    fontSize:          wp('3%'),
   },
   content: {
-    flex: 1.5,
-    flexDirection: 'row',
+    marginLeft: wp('2%'),
   },
 });

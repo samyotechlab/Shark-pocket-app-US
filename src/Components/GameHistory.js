@@ -3,58 +3,55 @@ import { StyleSheet, FlatList, View, Text } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import UpcomingGameCard from './UpcomingGameCard';
 
-
-const GameHistory = (props) => {
-    const {gameData} = props;
-    const filteredData = Array.isArray(gameData)
+const GameHistory = ({ gameData, setScrollEnabled }) => {
+  const filteredData = Array.isArray(gameData)
     ? gameData.filter((item) => item.status === 4)
     : [];
 
-    const renderItem = (items) => {
-        return (<>
-           <UpcomingGameCard items={items} status="1"/>
-        </>)
-    }
+  const renderItem = (items) => (
+    <UpcomingGameCard items={items} status="1" />
+  );
+
+  if (filteredData.length === 0) {
     return (
-        <>
-        {
-            filteredData.length === 0 ? (
-                <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>
-                        No games  are currently available.
-                    </Text>
-                </View>
-            ) : (        
-            <FlatList
-                horizontal
-                data={filteredData}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                showsHorizontalScrollIndicator={false}
-            />)
-        }
-     </>
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>
+          No games are currently available.
+        </Text>
+      </View>
     );
+  }
+
+  return (
+    <FlatList
+      horizontal
+      data={filteredData}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.flatListContent}
+    />
+  );
 };
+
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        width: hp('45%')
-    },
-    emptyContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'black',
-    },
-    emptyText: {
-        color: 'white',
-        fontSize: 18,
-        fontWeight: '500',
-        textAlign: 'center',
-        paddingHorizontal: hp('2%'),
-    },
+
+  emptyContainer: {
+    flex:            1,
+    alignItems:      'center',
+    justifyContent:  'center',
+    paddingVertical: hp('2%'),
+  },
+  emptyText: {
+    color:             'white',
+    fontSize:          wp('4%'),   
+    fontWeight:        '500',
+    textAlign:         'center',
+    paddingHorizontal: wp('4%'),    
+  },
+  flatListContent: {
+    paddingHorizontal: wp('2%'),   
+  },
 });
+
 export default GameHistory;
-
-

@@ -17,6 +17,7 @@ import CloseDialog from '../../Components/CloseDialog';
 import MyGame from '../../Components/MyGame';
 import UpcomingGame from '../../Components/UpcomingGame';
 import AvailableGameCard from '../../Components/AvailableGameCard';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -100,7 +101,7 @@ export default function HomeScreen() {
       const response = await getVersionData();
       setVersion(response.data);
       const os = Platform.OS;
-      const storeUrl = os === 'android' 
+      const storeUrl = os === 'android'
         ? 'https://sharkpocket.in/'
         : 'https://apps.apple.com/app/idYOUR_APP_ID';
       const currentVersion = os === 'android' ? response.data.android : response.data.ios;
@@ -142,9 +143,9 @@ export default function HomeScreen() {
 
   const totalAmount = usersData
     ? parseFloat(usersData?.total_balance || 0) +
-      parseFloat(usersData?.bonus_wallet || 0) +
-      parseFloat(usersData?.total_earning || 0)+
-      parseFloat(usersData?.wallet)
+    parseFloat(usersData?.bonus_wallet || 0) +
+    parseFloat(usersData?.total_earning || 0) +
+    parseFloat(usersData?.wallet)
     : 0;
 
   const availableGames = Array.isArray(gameData)
@@ -156,69 +157,75 @@ export default function HomeScreen() {
     : [];
 
   return (
-    <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
-      {loader ? (
-        <AnimatedLoader />
-      ) : (
-        <>
-          <Header 
-            usersData={usersData} 
-            totalAmount={totalAmount} 
-            userId={data?._id} 
-            navigation={navigation} 
-          />
-          <Divider color="#FFCE63" width={2.5} style={{ marginVertical: hp(0.2) }} />
-          <ScrollView
-            scrollEnabled={scrollEnabled}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshData} />}
-          >
-            <WinnerBanner data={bannerData} />
-            <GameSection
-              title="MY GAMES"
-              data={myGames}
-              component={MyGame}
+    <SafeAreaProvider>
+      <LinearGradient colors={['#361911', '#361911', '#6A1700']} style={styles.linearGradient}>
+        {loader ? (
+          <AnimatedLoader />
+        ) : (
+          <>
+            <Header
+              usersData={usersData}
+              totalAmount={totalAmount}
+              userId={data?._id}
               navigation={navigation}
-              status="1"
-              setScrollEnabled={setScrollEnabled}
             />
-            <GameSection
-              title="WEEKLY GAMES"
-              data={availableGames}
-              component={AvailableGameCard}
-              navigation={navigation}
-              status="6"
-              availability="3"
-              setScrollEnabled={setScrollEnabled}
+            <Divider
+              color="#FFCE63"
+              width={hp(0.3)}
+              style={{ marginVertical: hp(0.2) }}
             />
-            <GameSection
-              title="DAILY GAMES"
-              data={availableGames}
-              component={AvailableGameCard}
-              navigation={navigation}
-              status="5"
-              availability="2"
-              setScrollEnabled={setScrollEnabled}
-            />
-            <GameSection
-              title="UPCOMING GAMES"
-              data={upcomingGames}
-              component={UpcomingGame}
-              navigation={navigation}
-              status="3"
-              setScrollEnabled={setScrollEnabled}
-            />
-            <GameHistorySection
-              data={gameHistory}
-              navigation={navigation}
-              setScrollEnabled={setScrollEnabled}
-            />
-          </ScrollView>
-          <CloseDialog visible={visible} onClose={() => BackHandler.exitApp()} message={message} />
-        </>
-      )}
-    </LinearGradient>
+            <ScrollView
+              scrollEnabled={scrollEnabled}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshData} />}
+            >
+              <WinnerBanner data={bannerData} />
+              <GameSection
+                title="MY GAMES"
+                data={myGames}
+                component={MyGame}
+                navigation={navigation}
+                status="1"
+                setScrollEnabled={setScrollEnabled}
+              />
+              <GameSection
+                title="WEEKLY GAMES"
+                data={availableGames}
+                component={AvailableGameCard}
+                navigation={navigation}
+                status="6"
+                availability="3"
+                setScrollEnabled={setScrollEnabled}
+              />
+              <GameSection
+                title="DAILY GAMES"
+                data={availableGames}
+                component={AvailableGameCard}
+                navigation={navigation}
+                status="5"
+                availability="2"
+                setScrollEnabled={setScrollEnabled}
+              />
+              <GameSection
+                title="UPCOMING GAMES"
+                data={upcomingGames}
+                component={UpcomingGame}
+                navigation={navigation}
+                status="3"
+                setScrollEnabled={setScrollEnabled}
+              />
+              <GameHistorySection
+                data={gameHistory}
+                navigation={navigation}
+                setScrollEnabled={setScrollEnabled}
+              />
+            </ScrollView>
+            <CloseDialog visible={visible} onClose={() => BackHandler.exitApp()} message={message} />
+          </>
+        )}
+      </LinearGradient>
+    </SafeAreaProvider>
   );
 }
 

@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, FlatList, useWindowDimensions } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import PinkPrizeCard from './PinkPrizeCard';
 
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.43;
-const HORIZONTAL_PADDING = 10;
 const EMPTY_TEXT = 'No games or tickets are currently available.';
 
 const MyGame = ({ myGame }) => {
   const [carouselData, setCarouselData] = useState([]);
+
+  const { width } = useWindowDimensions();
+
+  const CARD_WIDTH         = width * 0.43;
+  const HORIZONTAL_PADDING = wp('2%'); 
 
   useEffect(() => {
     setCarouselData(myGame);
   }, [myGame]);
 
   const renderItem = ({ item }) => (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, { width: CARD_WIDTH }]}>
       <PinkPrizeCard item={item} />
     </View>
   );
@@ -38,7 +40,7 @@ const MyGame = ({ myGame }) => {
           keyExtractor={(_, index) => index.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.flatListContent}
+          contentContainerStyle={{ paddingHorizontal: HORIZONTAL_PADDING }}
         />
       )}
     </View>
@@ -49,12 +51,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: hp('1%'),
-  },
-  flatListContent: {
-    paddingHorizontal: HORIZONTAL_PADDING,
+    // backgroundColor:'yellow'
   },
   cardContainer: {
-    width: CARD_WIDTH,
     marginHorizontal: wp('1%'),
   },
   emptyContainer: {
@@ -64,10 +63,10 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: wp('4%'),      
     fontWeight: '500',
     textAlign: 'center',
-    paddingHorizontal: hp('2%'),
+    paddingHorizontal: wp('2%'),  
   },
 });
 

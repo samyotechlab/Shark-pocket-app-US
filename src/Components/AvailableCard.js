@@ -8,32 +8,32 @@ import {
 } from 'react-native-responsive-screen';
 import { formatDate, truncateText } from '../Utilities/utilies';
 
-export default function AvailableCard({ gameData, status,isComingSoon }) {
-  const gameColor = gameData?.gameColor || 'yellow';
-  console.log("========>",status)
 
-  const colorTheme = {
-    yellow: {
-      gradient: ['#F38424', '#F7A552', '#F9D479'],
-      borderColor: '#F2E30B',
-      borderBottom: '#C05112',
-    },
-    pink: {
-      gradient: ['#E3398C', '#CC8FAD'],
-      borderColor: '#5C233F',
-      borderBottom: '#E3398C',
-    },
-    green: {
-      gradient: ['#75B831', '#BAFF74'],
-      borderColor: '#78C800',
-      borderBottom: '#75B831',
-    },
-    blue: {
-      gradient: ['#0916B9', '#A1A8FF'],
-      borderColor: '#1A0DAB',
-      borderBottom: '#4644A7',
-    },
-  };
+const colorTheme = {
+  yellow: {
+    gradient: ['#F38424', '#F7A552', '#F9D479'],
+    borderColor: '#F2E30B',
+    borderBottom: '#C05112',
+  },
+  pink: {
+    gradient: ['#E3398C', '#CC8FAD'],
+    borderColor: '#5C233F',
+    borderBottom: '#E3398C',
+  },
+  green: {
+    gradient: ['#75B831', '#BAFF74'],
+    borderColor: '#78C800',
+    borderBottom: '#75B831',
+  },
+  blue: {
+    gradient: ['#0916B9', '#A1A8FF'],
+    borderColor: '#1A0DAB',
+    borderBottom: '#4644A7',
+  },
+};
+
+export default function AvailableCard({ gameData, status, isComingSoon }) {
+  const gameColor = gameData?.gameColor || 'yellow';
 
   const { gradient, borderColor, borderBottom } = colorTheme[gameColor] || colorTheme.yellow;
 
@@ -51,40 +51,67 @@ export default function AvailableCard({ gameData, status,isComingSoon }) {
   const getWinningPrice = () =>
     status === '4' ? gameData?.game_winning_price : gameData?.winning_price;
 
+  const BORDER_WIDTH = wp(1);
+
   return (
-    <View style={[styles.cardWrapper, { borderBottomColor: borderBottom }]}>
-      <LinearGradient colors={gradient} start={{ x: 0, y: 0.5 }} end={{ x: 0.8, y: 1 }} style={[styles.card, { borderColor }]}>
-        <View style={styles.content}>
-          <Image source={gameData.imageUrl ? {uri:gameData?.imageUrl}:Game} style={styles.characterImage} />
-          <View style={styles.textContainer}>
-            <Text style={styles.headerText}>{getTitle()}</Text>
-            <Text style={styles.description}>{getDescription()}</Text>
+    <>
+       <View style={[styles.cardWrapper, { borderBottomColor: borderBottom }]}>
+      <View
+        style={[
+          styles.borderContainer,
+          {
+            borderColor,
+            borderWidth: BORDER_WIDTH,
+            borderBottomWidth: 0,
+          },
+        ]}
+      >
+        <LinearGradient
+          colors={gradient}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 0.8, y: 1 }}
+          style={[
+            styles.card,
             {
-              isComingSoon? (
-                 <Text style={styles.startText}>
-                 Coming Soon
-            </Text>
-              ):(
-                 <Text style={styles.startText}>
-              Expires On <Text style={styles.dateText}>{getFormattedDate()}</Text>
-            </Text>
-              )
-            }
-            {getWinningPrice() && (
-              <View style={styles.buttonContainer}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>{getWinningPrice()} </Text>
+              borderRadius: wp(3) - BORDER_WIDTH, 
+            },
+          ]}
+        >
+          <View style={styles.content}>
+            <Image
+              source={gameData.imageUrl ? { uri: gameData?.imageUrl } : Game}
+              style={styles.characterImage}
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.headerText}>{getTitle()}</Text>
+              <Text style={styles.description}>{getDescription()}</Text>
+
+              {isComingSoon ? (
+                <Text style={styles.startText}>Coming Soon</Text>
+              ) : (
+                <Text style={styles.startText}>
+                  Expires On <Text style={styles.dateText}>{getFormattedDate()}</Text>
+                </Text>
+              )}
+
+              {getWinningPrice() && (
+                <View style={styles.buttonContainer}>
+                  <View style={styles.button}>
+                    <Text style={styles.buttonText}>{getWinningPrice()} </Text>
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
+            </View>
           </View>
-        </View>
-        <View style={styles.linesContainer}>
-          <View style={styles.line} />
-          <View style={[styles.line, styles.secondLine]} />
-        </View>
-      </LinearGradient>
+
+          <View style={styles.linesContainer}>
+            <View style={styles.line} />
+            <View style={[styles.line, styles.secondLine]} />
+          </View>
+        </LinearGradient>
+      </View>
     </View>
+    </>
   );
 }
 
@@ -94,18 +121,18 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: wp(3),
     borderBottomEndRadius: wp(8),
   },
-  card: {
-    // flex:1,
+  borderContainer: {
     borderRadius: wp(3),
+    overflow: 'hidden',         
+  },
+  card: {
+    paddingVertical: hp(0.5),
+    marginLeft: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: hp(0.5) },
     shadowOpacity: 0.3,
     shadowRadius: wp(1.5),
     elevation: 5,
-    borderWidth: wp(1),
-    paddingVertical: hp(0.5),
-    marginRight: hp(2),
-    marginLeft: 0,
   },
   content: {
     flexDirection: 'row',
@@ -113,7 +140,7 @@ const styles = StyleSheet.create({
   },
   characterImage: {
     width: wp(25),
-    height:hp(20),
+    height: hp(20),
     resizeMode: 'contain',
   },
   textContainer: {

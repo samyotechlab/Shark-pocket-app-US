@@ -7,11 +7,11 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet  } from 'react-native';
 import AppNavigation from './src/Navigation/AppNavigation/AppNavigation';
 import { enableScreens } from 'react-native-screens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 function App(){
   //crashlytics().crash();
   enableScreens();
@@ -19,14 +19,14 @@ function App(){
   <>
   <GestureHandlerRootView>
       <NavigationContainer>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaProvider style={styles.container}>
           <StatusBar
             translucent
             backgroundColor="transparent"
             barStyle="light-content"
           />
           <AppNavigation />
-        </SafeAreaView>
+        </SafeAreaProvider>
       </NavigationContainer>
       </GestureHandlerRootView>
     </>
