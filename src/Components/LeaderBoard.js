@@ -7,8 +7,6 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import LocalLeaderBoard from './LocalLeaderBoard';
-import GlobalLeaderBoard from './GlobalLeaderBoard';
-import Iconics from 'react-native-vector-icons/Ionicons';
 import GameInfoModal from './GameInfoModal';
 
 export default function LeaderBoard() {

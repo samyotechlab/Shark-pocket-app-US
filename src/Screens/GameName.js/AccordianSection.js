@@ -1,104 +1,156 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const section = {
   title: 'Description',
-  colors: ["#F2E30B",'#F5A623'], 
-  borderColor: '#FEB801', 
-  data: 'This is your full description content. You can customize this as needed. It can be longer and more detailed than the preview. You can add more lines here to test how it looks when collapsed and expanded. Enjoy building your UI!This is your full description content. You can customize this as needed. It can be longer and more detailed than the preview. You can add more lines here to test how it looks when collapsed and expanded. Enjoy building your UI!',
+  gradientColors: ['#F2E30B', '#F5A623'],
+  borderColor: '#FEB801',
+  data:
+    'This is your full description content. You can customize this as needed. It can be longer and more detailed than the preview. You can add more lines here to test how it looks when collapsed and expanded.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
 };
 
-const MAX_LINES = 1;
+const MAX_PREVIEW_LINES = 1;
+const BORDER_WIDTH = 2;
 
 const ExpandableSection = () => {
   const [expanded, setExpanded] = useState(false);
 
+
+  useWindowDimensions();
+
+  const BORDER_RADIUS = wp('3.5%');
+  const INNER_RADIUS  = BORDER_RADIUS - BORDER_WIDTH;
+
   return (
-    <View style={{ padding: 16 }}>
-      <LinearGradient
-        colors={section.colors}
+    <View style={styles.container}>
+      <View
         style={[
-          styles.tabHeader,
-          { borderColor: section.borderColor },
-          expanded ? styles.expanded : styles.collapsed,
+          styles.borderWrapper,
+          {
+            borderColor:  section.borderColor,
+            borderRadius: BORDER_RADIUS,
+            ...Platform.select({
+              ios: {
+                shadowColor:   '#000',
+                shadowOffset:  { width: 0, height: 3 },
+                shadowOpacity: 0.24,
+                shadowRadius:  5,
+              },
+              android: {
+                elevation: 5,
+              },
+            }),
+          },
         ]}
       >
-        <Text style={styles.tabHeaderText}>{section.title}</Text>
-        {expanded ? (
-          <ScrollView
-            style={styles.scrollContainer}
-            contentContainerStyle={styles.scrollContent}
-          >
-            <Text style={styles.sectionText}>
-              {section.data}
-            </Text>
-          </ScrollView>
-        ) : (
-          <Text
-            style={styles.sectionText}
-            numberOfLines={MAX_LINES}
-          >
-            {section.data}
-          </Text>
-        )}
-        <TouchableOpacity onPress={() => setExpanded(!expanded)}>
-          <Text style={styles.readMoreText}>
-            {expanded ? 'Show less' : 'Read more'}
-          </Text>
-        </TouchableOpacity>
-      </LinearGradient>
+        <LinearGradient
+          colors={section.gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{ borderRadius: INNER_RADIUS, overflow: 'hidden' }}
+        >
+          <View style={styles.innerPadding}>
+
+            <Text style={styles.title}>{section.title}</Text>
+
+            {expanded ? (
+              <ScrollView
+                style={styles.expandedScroll}
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}
+              >
+                <Text style={styles.descriptionText}>{section.data}</Text>
+              </ScrollView>
+            ) : (
+              <Text
+                style={styles.descriptionText}
+                numberOfLines={MAX_PREVIEW_LINES}
+                ellipsizeMode="tail"
+              >
+                {section.data}
+              </Text>
+            )}
+
+            <TouchableOpacity
+              style={styles.readMoreButton}
+              onPress={() => setExpanded(!expanded)}
+              activeOpacity={0.7}
+              hitSlop={{ top: 12, bottom: 12, left: 20, right: 20 }}
+            >
+              <Text style={styles.readMoreText}>
+                {expanded ? 'Show less' : 'Read more'}
+              </Text>
+            </TouchableOpacity>
+
+          </View>
+        </LinearGradient>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  tabHeader: {
-    borderRadius: 10,
-    borderWidth: 2,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+  container: {
+    paddingHorizontal: wp('4%'),
+    paddingVertical:   hp('0.8%'),
   },
-  scrollContainer: {
-    maxHeight: 100, // Limiting height to make scrolling noticeable
-    marginBottom: 6,
+  borderWrapper: {
+    borderWidth: BORDER_WIDTH,
   },
+
+  innerPadding: {
+    paddingVertical:   hp('1.2%'),
+    paddingHorizontal: wp('4.5%'),
+  },
+
+  title: {
+    fontSize:     wp('4.8%'),
+    fontWeight:   '700',
+    color:        '#1A1200',
+    marginBottom: hp('0.8%'),
+  },
+
+  descriptionText: {
+    fontSize:   wp('3.6%'),
+    lineHeight: wp('3.6%') * 1.4,
+    color:      '#3C2A1A',
+    fontWeight: '500',
+  },
+
+  expandedScroll: {
+    maxHeight: hp('14%'),
+  },
+
   scrollContent: {
-    paddingVertical: 0,
-    paddingHorizontal: 0,
+    paddingBottom: hp('0.5%'),
   },
-  collapsed: {
-    minHeight: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+
+  readMoreButton: {
+    alignSelf:         'flex-end',
+    marginTop:         hp('0.6%'),
+    paddingVertical:   hp('0.5%'),
+    paddingHorizontal: wp('3%'),
   },
-  expanded: {
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-  },
-  tabHeaderText: {
-    color: '#000000',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 6,
-  },
-  sectionText: {
-    color: '#4A2C2A',
-    fontSize: 14,
-    lineHeight: 20,
-  },
+
   readMoreText: {
-    color: '#4A2C2A',
-    fontWeight: 'bold',
-    fontSize: 14,
-    textAlign: 'right',
-    alignSelf: 'flex-end',
+    fontSize:          wp('3.8%'),
+    fontWeight:        '700',
+    color:             '#2A1A00',
+    textDecorationLine:'underline',
   },
 });
 

@@ -5,7 +5,10 @@ import {
   Text,
   View,
   RefreshControl,
+  Platform,
+  Dimensions
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Toast from 'react-native-toast-message';
@@ -17,11 +20,15 @@ import TicketCard from './TicketCard';
 import AnimatedLoader from '../../Components/AnimatedLoader';
 import useTicketData from './useTicketData';
 
+const { height } = Dimensions.get('window');
+
+
 export default function Tickets({ gameData }) {
   const navigation = useNavigation();
   const { params: { game_id } } = useRoute();
   const { loginData, isReady } = useLoginDataStorage();
   const userId = isReady && loginData?.data?._id;
+
   const {
     ticketData,
     userData,
@@ -30,7 +37,7 @@ export default function Tickets({ gameData }) {
     fetchUserData,
     fetchTickets,
     refreshData,
-    setLoader
+    setLoader,
   } = useTicketData(game_id, userId);
 
   useEffect(() => {
@@ -93,10 +100,12 @@ export default function Tickets({ gameData }) {
   );
 
   return (
-    <View style={styles.container}>
-      <AccordionSection />
-      {ticketData.length > 0 ? (
-        !loader ? (
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <View style={styles.container}>
+        <AccordionSection />
+        {loader ? (
+          <AnimatedLoader />
+        ) : ticketData.length > 0 ? (
           <FlatList
             data={ticketData}
             renderItem={renderTicket}
@@ -108,26 +117,30 @@ export default function Tickets({ gameData }) {
             }
           />
         ) : (
-          <AnimatedLoader/>
-        )
-      ) : (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
-            No games or tickets are currently available.
-          </Text>
-        </View>
-      )}
-      <Toast ref={Toast.setRef} />
-    </View>
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>
+              No games or tickets are currently available.
+            </Text>
+          </View>
+        )}
+        <Toast ref={Toast.setRef} />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
+    marginTop: Platform.OS === 'ios' ? -hp('7%'): -hp('2%'), 
+
   },
   scrollContainer: {
     paddingBottom: hp('2%'),
+    paddingHorizontal: wp('2%'),
   },
   emptyContainer: {
     flex: 1,
@@ -136,10 +149,9 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: wp('4%'),   
     fontWeight: '500',
     textAlign: 'center',
-    paddingHorizontal: hp('2%'),
+    paddingHorizontal: wp('5%'), 
   },
 });
-

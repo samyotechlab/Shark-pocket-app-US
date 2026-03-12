@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Game from '../../../assets/images/Screens/game1.png';
@@ -32,9 +33,11 @@ export default function TicketCard({
   const [okPress, setOkPress] = useState('');
   const [isBtnDisabled, setIsBtnDisabled] = useState(false);
   const [purchased, setPurchased] = useState(ticket.is_bought === 1);
-  const [ticketCount, setTicketCount] = useState(ticket.purchase_count >= ticket.minimum_ticket_count);
   const [balance, setBalance] = useState(0);
-  const [countData, setCountData] = useState('');
+
+  const BORDER_RADIUS = 16;
+  const BORDER_WIDTH = 3;  
+  const INNER_RADIUS = BORDER_RADIUS - BORDER_WIDTH;
 
   const handlePurchaseModal = async () => {
     setIsBtnDisabled(true);
@@ -62,7 +65,6 @@ export default function TicketCard({
     setVisible(false);
     const result = await onPurchase(ticket._id, ticket.price, () => {
       setPurchased(true);
-      // setTicketCount(false);
     });
     if (!result.success) {
       setBalance(result.balance);
@@ -91,22 +93,15 @@ export default function TicketCard({
     });
   };
 
-  // const toggleModel = () => {
-  //   setVisible(true);
-  //   setMessage('To start the game, the purchased tickets count must be greater than or equal to the minimum ticket count.');
-  //   setCountData('count');
-  // };
-
   const handleClose = () => {
     setIsBtnDisabled(false);
     setVisible(false);
-    setCountData('');
   };
 
   const handleDialogClose = () => {
     setIsBtnDisabled(false);
     setVisibles(false);
-  }
+  };
 
   return (
     <>
@@ -115,7 +110,6 @@ export default function TicketCard({
         onClose={handleClose}
         onOkPress={okPress === 'handleAadhar' ? handleAadhar : handlePurchase}
         message={message}
-        countData={countData}
       />
       <AlertDialog
         visible={visibles}
@@ -129,51 +123,66 @@ export default function TicketCard({
         onClose={() => BackHandler.exitApp()}
         message={message}
       />
-      <View style={styles.container}>
+
+      <View
+        style={[
+          styles.container,
+          {
+            borderRadius: BORDER_RADIUS,
+            overflow: 'hidden',
+            borderWidth: BORDER_WIDTH > 0 ? BORDER_WIDTH : 0,
+            borderColor: '#F2E30B',
+            ...Platform.select({
+              ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.25,
+                shadowRadius: 6,
+              },
+              android: {
+                elevation: 6,
+              },
+            }),
+          },
+        ]}
+      >
         <LinearGradient
           colors={['#F38424', '#F7A552', '#F9D479']}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 0.8, y: 1 }}
-          style={styles.card}
+          style={{
+            borderRadius: INNER_RADIUS,
+            overflow: 'hidden', 
+          }}
         >
           <View style={styles.content}>
             <Image source={Game} style={styles.characterImage} />
+
             <View style={styles.textContainer}>
               <Text style={styles.description}>{ticket.title}</Text>
+
               <View style={styles.headerRow}>
                 <Text style={styles.title}>Ticket Price</Text>
                 <Text style={styles.title}>Attempts</Text>
                 <Text style={styles.title}>Remaining</Text>
               </View>
+
               <View style={styles.dataRow}>
-                <LinearGradient
-                  colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.box}
-                >
-                  <Text style={[styles.boxText,{fontSize:18}]}>₹ </Text>
-                  <Text style={styles.boxText}>{ticket.price}</Text>
-                </LinearGradient>
-                <LinearGradient
-                  colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.box}
-                >
-                  <Image source={tickets}/>
+                <View style={[styles.box, { backgroundColor: '#FFDD07' }]}>
+                  <Text style={[styles.boxText, { fontSize: 18 }]}>₹ {ticket.price}</Text>
+                </View>
+
+                <View style={[styles.box, { backgroundColor: '#FFDD07' }]}>
+                  <Image source={tickets} style={{ width: 20, height: 20, marginRight: 4 }} />
                   <Text style={styles.boxText}>{ticket.entries}</Text>
-                </LinearGradient>
-                <LinearGradient
-                  colors={['#FFDD07', '#F8CB1F', '#FFDD07']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.box}
-                >
-                  <Image source={timer} />
+                </View>
+
+                <View style={[styles.box, { backgroundColor: '#FFDD07' }]}>
+                  <Image source={timer} style={{ width: 20, height: 20, marginRight: 4 }} />
                   <Text style={styles.boxText}>{ticket.remaining_entries}</Text>
-                </LinearGradient>
+                </View>
               </View>
+
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={[
@@ -199,4 +208,3 @@ export default function TicketCard({
     </>
   );
 }
-

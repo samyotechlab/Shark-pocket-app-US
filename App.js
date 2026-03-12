@@ -7,7 +7,7 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet  } from 'react-native';
+import { StatusBar, StyleSheet  } from 'react-native';
 import AppNavigation from './src/Navigation/AppNavigation/AppNavigation';
 import { enableScreens } from 'react-native-screens';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
