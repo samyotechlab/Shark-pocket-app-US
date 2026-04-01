@@ -90,6 +90,26 @@ export default StyleSheet.create({
     marginVertical: hp('0.4%'),
     // backgroundColor:'red'
   },
+
+    iconBorderWrapper: {
+    width:          wp('11%'),
+    height:         wp('11%'),
+    borderRadius:   wp('5.5%'),   // exactly half = perfect circle
+    borderWidth:    1,
+    borderColor:    '#6A1701',
+    marginRight:    wp('4%'),
+    overflow:       'hidden',     // clips gradient to circle — safe here
+                                  // because we don't need shadow on this element
+    ...Platform.select({
+      android: { elevation: 3 },
+      // No iOS shadow needed on the icon circle
+    }),
+  },
+    iconGradient: {
+    flex:           1,
+    justifyContent: 'center',
+    alignItems:     'center',
+  },
   cardImageContainer: {
     width: wp('10.5%'),
     height: wp('10.5%'),

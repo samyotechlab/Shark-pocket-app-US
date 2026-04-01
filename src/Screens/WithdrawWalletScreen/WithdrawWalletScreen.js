@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import CommonHeader from '../../Components/CommonHeader';
@@ -15,6 +14,7 @@ import Withdraw from './Withdraw';
 import WithdrawHistory from './WithdrawHistory';
 import { useRoute } from '@react-navigation/native';
 import AnimatedLoader from '../../Components/AnimatedLoader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WithdrawWalletScreen = () => {
   const route = useRoute();

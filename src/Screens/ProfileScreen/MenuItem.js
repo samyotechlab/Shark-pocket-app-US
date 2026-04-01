@@ -4,6 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import VerificationIcon from './VerificationIcon';
 import styles from './styles';
+import {
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 const MenuItem = ({ item, userData, onNavigate, onModal }) => {
   const isAadharVerified = userData.is_aadhar_verified === 1;
@@ -31,19 +34,21 @@ const MenuItem = ({ item, userData, onNavigate, onModal }) => {
 
   return (
     <TouchableOpacity style={styles.cardContainer} onPress={handlePress}>
-      <LinearGradient
-        colors={['#3D1911', '#3D1911', '#6A1701']}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={styles.cardImageContainer}
-      >
-        <Icon name={item.icon} size={styles.cardImage.width} color="#fff" style={styles.cardImage} />
-      </LinearGradient>
+      <View style={styles.iconBorderWrapper}>
+        <LinearGradient
+          colors={['#3D1911', '#3D1911', '#6A1701']}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.iconGradient}
+        >
+          <Icon name={item.icon} size={wp('5.5%')} color="#fff" style={styles.cardImage} />
+        </LinearGradient>
+      </View>
       <View style={styles.cardTextContainer}>
         <Text style={styles.cardText}>{item.title}</Text>
       </View>
       {item.is_verified !== undefined && <VerificationIcon isVerified={item.is_verified} />}
-      <Icon name="chevron-right" size={styles.arrowImage.width} color="#000000" style={styles.arrowImage} />
+      <Icon name="chevron-right" size={wp('6%')}color="#000000" style={styles.arrowImage} />
     </TouchableOpacity>
   );
 };

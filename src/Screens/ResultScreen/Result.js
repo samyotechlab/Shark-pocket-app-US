@@ -1,28 +1,35 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
-import LeaderBoard from '../../Components/LeaderBoard'
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import React from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import LeaderBoard from '../../Components/LeaderBoard';
 
 export default function ResultScreen() {
-
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      {/* Full Screen Gradient */}
       <LinearGradient
         colors={['#361911', '#361911', '#6A1700']}
-        style={styles.linearGradient}>
-          <LeaderBoard/>
+        style={styles.gradient}>
+
+        {/* Safe area INSIDE gradient */}
+        <SafeAreaView style={styles.safeArea}>
+          <LeaderBoard />
+        </SafeAreaView>
+
       </LinearGradient>
-    </SafeAreaView>
-  )
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor:'red'
   },
-  linearGradient: {
-    flex: 1,
-  }
-})
+  gradient: {
+    flex: 1, // ✅ full height
+  },
+  safeArea: {
+    flex: 1, // ✅ fill gradient
+  },
+});

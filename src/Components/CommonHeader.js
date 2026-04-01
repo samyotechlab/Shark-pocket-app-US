@@ -24,7 +24,7 @@ export default function CommonHeader({ title, screen_name, game_id }) {
         onPress={() => { handleNavigation() }}
         style={styles.back}
       >
-        <Iconics name="chevron-back" size={hp('3%')} color={'white'} style={{ paddingTop: wp('0.5%') }} />
+      <Iconics name="chevron-back" size={hp('3%')} color={'white'} style={{ paddingTop: wp('0.5%') }} />
       </TouchableOpacity>
       <View style={styles.headerLeft}>
         <Text style={styles.headerText}>{title}</Text>
@@ -36,7 +36,7 @@ export default function CommonHeader({ title, screen_name, game_id }) {
 export const styles = StyleSheet.create({
   headerContent: {
     paddingTop: hp('2%'),
-    marginTop: wp('8%'),
+    marginTop: Platform.OS === 'ios' ? wp('1%') :  wp('5%'),
     flexDirection: 'row'
   },
   headerLeft: {

@@ -28,13 +28,11 @@ export default function LeaderBoard() {
   return (
     <>
       <GameInfoModal visible={modalVisible} onClose={() => setModalVisible(false)} />
-
       <View style={{ flex: 1.5 }}>
         <View style={styles.leaderBoard}>
           <Text style={styles.leaderTxt}>Leader Board</Text>
           <TouchableOpacity style={styles.button} onPress={() => {
             navigation.navigate('PointsSelection')
-
           }}>
             <LinearGradient
               colors={["#FEB801", "#361911"]}
@@ -44,7 +42,6 @@ export default function LeaderBoard() {
             >
               <View>
                 <Text style={styles.buttonText}>Points Selection</Text>
-
               </View>
             </LinearGradient>
           </TouchableOpacity>
